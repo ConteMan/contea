@@ -8,12 +8,10 @@ browser.runtime.onConnect.addListener(function(port) {
       let data = {};
       switch (msg.type){
         case "sspai":
-          const sspai = Sspai.getInstance();
-          data = await sspai.formatData();
+          data = await Sspai.getInstance().formatData();
           break;
         case "zhihu":
-          const zhihu = Zhihu.getInstance();
-          data = await zhihu.formatData();
+          data = await Zhihu.getInstance().formatData();
           break;
       }
       await port.postMessage({'type': msg.type, 'data': data})

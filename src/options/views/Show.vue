@@ -1,37 +1,23 @@
 <template>
-  <div>
-    <a-card :hoverable="true">
-      <a-card-meta title="Card title" description="This is the description">
-        <a-avatar
-            slot="avatar"
-            src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-        />
-      </a-card-meta>
-      <div>
-        {{ sspai }}
-      </div>
-    </a-card>
-    <a-card :hoverable="true">
-      <a-card-meta title="Card title" description="This is the description">
-        <a-avatar
-            slot="avatar"
-            src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-        />
-      </a-card-meta>
-      <div>
-        {{ zhihu }}
-      </div>
-    </a-card>
-    <div>
-      <a-button @click="sendMessage('sspai')"> 少数派 </a-button>
-      <a-button @click="sendMessage('zhihu')"> 知乎 </a-button>
+  <div class="container">
+    <div class="header">
+      <span class="title">InfoHub</span>
+    </div>
+    <div class="content">
+        <info-card class="card-space"></info-card>
+        <info-card class="card-space"></info-card>
     </div>
   </div>
 </template>
 
 <script>
+import InfoCard from "@/components/InfoCard"
+
 export default {
   name: "Show",
+  components: {
+    InfoCard
+  },
   data() {
     return {
       sspai: {},
@@ -49,14 +35,26 @@ export default {
           _this[type] = msg.data;
         }
       });
-      // chrome.runtime.sendMessage({greeting: "hello"}, function(response) {
-      //   console.log(response.sspai);
-      // });
     }
   },
 }
 </script>
 
-<style scoped>
-
+<style scoped lang="less">
+  .container {
+    width: 100%;
+    padding: 24px 32px 0 32px;
+    .title {
+      color: rgba(197, 48, 48, 1);
+      font-size: 36px;
+      line-height: 150%;
+    }
+    .content {
+      width: 100%;
+      margin-top: 16px;
+      .card-space {
+        margin-bottom: 16px;
+      }
+    }
+  }
 </style>
