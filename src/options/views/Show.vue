@@ -1,11 +1,11 @@
 <template>
   <div class="container">
     <div class="header">
-      <span class="title">InfoHub</span>
+      <span class="title" @click="sendMessage('sspai')">InfoHub</span>
     </div>
     <div class="content">
-        <info-card class="card-space"></info-card>
-        <info-card class="card-space"></info-card>
+      <info-card class="card-space" :data="sspai" :loading="sspaiLoading"></info-card>
+      <info-card class="card-space" :data="zhihu" :loading="zhihuLoading"></info-card>
     </div>
   </div>
 </template>
@@ -21,22 +21,29 @@ export default {
   data() {
     return {
       sspai: {},
+      sspaiLoading: true,
       zhihu: {},
+      zhihuLoading: true,
     }
   },
   methods: {
     sendMessage(type) {
-      let _this = this
+      this[type + 'Loading'] = true;
+      let _this = this;
       let port = chrome.runtime.connect({name: "bgConnect"});
       port.postMessage({'type': type});
       port.onMessage.addListener(function(msg) {
         if (msg.type === type){
-          console.log(msg)
           _this[type] = msg.data;
+          _this[type+'Loading'] = false;
         }
       });
     }
   },
+  mounted() {
+    this.sendMessage('sspai');
+    this.sendMessage('zhihu');
+  }
 }
 </script>
 

@@ -1,4 +1,4 @@
-import {fetchAsync} from "@/utils"
+import { fetchAsync } from "@/utils"
 
 export default class Zhihu {
   constructor() {
@@ -18,10 +18,16 @@ export default class Zhihu {
 
   formatData = async () => {
     let data = {
+      site: {
+        name: '知乎',
+        url: 'https://zhihu.com'
+      },
       user: {},
       detail: {},
     };
     data.user = await this.getUser();
+    data.detail = {};
+    console.log(data);
     return data;
   }
 }
