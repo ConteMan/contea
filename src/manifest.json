@@ -5,6 +5,7 @@
   "description": "A Vue Browser Extension",
   "default_locale": "en",
   "permissions": [
+    "storage",
     "cookies",
     "<all_urls>",
     "*://*/*"
@@ -31,7 +32,6 @@
   "options_page": "options.html",
   "options_ui": {
     "page": "options.html",
-    "browser_style": false,
     "open_in_tab": true
   }
 }

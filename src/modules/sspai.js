@@ -1,47 +1,54 @@
-import { fetchAsync } from "@/utils"
-
+import request from '@/utils/request.js'
 export default class Sspai {
   constructor() {
-    this.token = '';
-    this.option = {};
+    this.baseUrl = 'https://sspai.com/api/v1'
+    this.token = ''
+    this.headers = {}
   }
 
   static getInstance() {
-    if(!this.instance) {
-      this.instance = new Sspai();
+    if (!this.instance) {
+      this.instance = new Sspai()
     }
-    return this.instance;
+    return this.instance
   }
 
-  getToken = async () => {
-    const cookie = await browser.cookies.get({url: "https://sspai.com", name: "sspai_jwt_token"});
-    this.token = cookie.value;
-    this.option.headers = {
+  // 获取 Token，并组装请求 Header
+  getToken = async() => {
+    // eslint-disable-next-line no-undef
+    const cookie = await browser.cookies.get(
+      {
+        url: 'https://sspai.com',
+        name: 'sspai_jwt_token'
+      }
+    )
+    this.token = cookie.value
+    this.headers = {
       'Authorization': 'Bearer ' + this.token,
-    };
-    return cookie.value;
+    }
+    return cookie.value
   }
 
-  getUser = async () => {
-    if(!this.token) await this.getToken();
-    return await fetchAsync('https://sspai.com/api/v1/user/info/get', this.option);
+  // 获取用户信息
+  userInfo = async() => {
+    if (!this.token) await this.getToken()
+    const url = this.baseUrl + '/user/info/get'
+    const res = await request({
+      url,
+      method: 'get',
+      headers: this.headers,
+    })
+    return res
   }
 
-  getDetail = async (slug) => {
-    if(!this.token) await this.getToken();
-    return await fetchAsync('https://sspai.com/api/v1/user/slug/info/get?slug='+ slug, this.option);
-  }
-
-  async formatData() {
-    const user = await this.getUser();
-    const detail = await this.getDetail(user.data.slug);
-    return {
-      site: {
-        name: '少数派',
-        url: 'https://sspai.com'
-      },
-      user: user.data,
-      detail: detail.data,
-    };
+  // 登录检测
+  loginStatus = async() => {
+    if (!this.token) await this.getToken()
+    const res = await this.userInfo()
+    if (!res) {
+      return 0
+    } else {
+      return 1
+    }
   }
 }

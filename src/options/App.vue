@@ -5,15 +5,17 @@
 </template>
 
 <script>
-
 export default {
   name: 'App',
 }
 </script>
 
 <style>
+html,body {
+  scroll-behavior: smooth;
+}
 html {
-  width: 400px;
-  height: 400px;
+  width: 100%;
+  height: 100%;
 }
 </style>

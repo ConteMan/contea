@@ -5,13 +5,18 @@
   "scripts": {
     "serve": "vue-cli-service build --mode development --watch",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "lint-fix": "eslint --fix --ext .js --ext .jsx --ext .vue src/"
   },
   "dependencies": {
     "ant-design-vue": "^1.6.5",
     "axios": "^0.20.0",
     "core-js": "^3.6.5",
+    "dayjs": "^1.9.8",
+    "dexie": "^3.0.3",
+    "lodash": "^4.17.20",
     "vue": "^2.6.11",
+    "vue-infinite-scroll": "^2.0.2",
     "vue-router": "^3.2.0",
     "vuex": "^3.4.0"
   },
@@ -28,7 +33,7 @@
     "less-loader": "^7.0.1",
     "sass": "^1.26.5",
     "sass-loader": "^8.0.2",
-    "vue-cli-plugin-browser-extension": "latest",
+    "vue-cli-plugin-browser-extension": "^0.25.1",
     "vue-template-compiler": "^2.6.11"
   }
 }

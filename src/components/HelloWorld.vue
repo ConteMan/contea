@@ -1,31 +1,17 @@
 <template>
-  <div>
-    <p>{{ defaultText }}</p>
+  <div class="h-container">
+    hello world
   </div>
 </template>
 
 <script>
 export default {
-  name: 'HelloWorld',
-  props: {
-    msg: {
-      type: String,
-      default: browser.i18n.getMessage('extName'),
-    },
-  },
-  mounted () {
-    browser.runtime.sendMessage({})
-  },
-  computed: {
-    defaultText () {
-      return this.msg
-    }
-  }
+  name: 'HelloWorld'
 }
 </script>
 
-<style scoped>
-p {
-  font-size: 20px;
+<style lang="less" scoped>
+.h-container {
+  width: 100%;
 }
 </style>

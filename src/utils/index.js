@@ -1,19 +1,46 @@
-let fetchAsync = async (url, option = {}) => {
-  option.credentials = 'include';
-  const response = await fetch(url, option);
-  return response.json();
-}
-
-let isJSON = (str) =>  {
+// 判断 JSON 字符串
+const isJSON = (str) => {
   if (typeof str === 'string') {
     try {
-      const obj = JSON.parse(str);
-      return !!(typeof obj == 'object' && obj);
+      const obj = JSON.parse(str)
+      return !!(typeof obj == 'object' && obj)
     } catch (e) {
-      return false;
+      return false
     }
   }
-  return !!(typeof str == 'object' && str);
+  return !!(typeof str == 'object' && str)
 }
 
-export { fetchAsync,isJSON }
+// 读取本地缓存
+const readLocalStorage = async(key) => {
+  return new Promise((resolve, reject) => {
+    // eslint-disable-next-line no-undef
+    chrome.storage.local.get([key], function(result) {
+      if (result[key] !== undefined) {
+        console.log(result[key])
+        resolve(result[key])
+      } else {
+        reject()
+      }
+    })
+  })
+}
+
+// 「睡眠」
+const sleep = async(time) => {
+  return new Promise((resolve) => setTimeout(resolve, time))
+}
+
+// 获取范围内的整数，包含最大、最小值
+const getRandomIntInclusive = (min, max) => {
+  min = Math.ceil(min)
+  max = Math.floor(max)
+  return Math.floor(Math.random() * (max - min + 1)) + min
+}
+
+export {
+  isJSON,
+  readLocalStorage,
+  sleep,
+  getRandomIntInclusive,
+}
