@@ -30,12 +30,26 @@ chrome.runtime.onMessage.addListener(async function(request, sender, sendRespons
       break
     case 'setConfig':
       data = await Service.setConfig(params)
-      console.log('set config:', data)
+      break
+    case 'setConfigs':
+      data = await Service.setConfigs(params)
+      break
+    case 'sync':
+      data = await Service.sync(params)
+      break
+    case 'test':
+      data = chrome.extension.getURL('options.html')
+      chrome.windows.create({
+        url: data,
+        type: 'popup',
+        focused: true,
+      })
       break
     default:
       data = {}
       break
   }
+  console.log('background response data:', data)
   sendResponse(
     {
       command,

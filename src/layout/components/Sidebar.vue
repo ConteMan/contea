@@ -88,8 +88,9 @@ export default {
       font-size: 20px;
       width: 100%;
       height: 49px;
-      text-align: center;
+      text-align: left;
       line-height: 50px;
+      padding: 0 8px;
       cursor: pointer;
     }
     .nav {
@@ -97,12 +98,11 @@ export default {
       width: 100%;
       height:calc(90% - 100px);
       flex-grow: 1;
-      border-top: 1px solid @border-grey;
       .sidebar-item {
         font-size: 14px;
         width: 100%;
-        padding: 16px 8px 16px 0;
-        text-align: right;
+        padding: 16px 8px;
+        text-align: left;
         cursor: pointer;
         &.active {
           color: brown;
@@ -115,14 +115,13 @@ export default {
       }
     }
     .setting {
-      padding: 4px;
+      padding: 0 8px;
       width: 100%;
       height: 50px;
       display: flex;
       flex-direction: row;
-      justify-content: center;
+      justify-content: flex-start;
       align-items: center;
-      border-top: 1px solid @border-grey;
     }
 }
 </style>

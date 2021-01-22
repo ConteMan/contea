@@ -1,5 +1,7 @@
+import request from '@/utils/request.js'
 import { list } from '@/service/info.js'
 import {
+  get as configGet,
   put as configPut,
   set as configSet,
   all as configAll,
@@ -91,5 +93,58 @@ export default class Service {
     const { key, value } = params
     const res = await configSet(key, value)
     return res ? 1 : 0
+  }
+
+  // 批量设置配置
+  setConfigs = async(params) => {
+    const { configs } = params
+    let [success, fail] = [0, 0]
+    const configNames = Object.keys(configs)
+    for (const name of configNames) {
+      const res = await configSet(name, configs[name])
+      res ? success++ : fail++
+    }
+    return { success, fail }
+  }
+
+  // 同步数据到接口
+  sync = async() => {
+    let [success, fail] = [0, 0]
+    const apiUrlObj = await configGet('sync_api_url')
+    if (!apiUrlObj) {
+      return { success, fail }
+    }
+    const apiUrl = apiUrlObj.value
+    const platform = 'all'
+    const pageSize = 20
+    let offset = 0
+    let hasMore = true
+    while (hasMore) {
+      console.log({ apiUrl, platform, offset, pageSize })
+      const infos = await list({ platform, offset, pageSize })
+      const dataLength = infos.length
+      if (dataLength) {
+        for (const item of infos) {
+          const res = await request({
+            url: apiUrl,
+            method: 'post',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            data: {
+              platformType: item.platform_type,
+              content: item,
+            }
+          })
+          res.status === 200 ? success++ : fail++
+        }
+      }
+      if (dataLength === pageSize) {
+        offset += pageSize
+      } else {
+        hasMore = false
+      }
+    }
+    return { success, fail }
   }
 }

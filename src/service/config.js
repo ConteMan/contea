@@ -73,10 +73,17 @@ const all = async() => {
 }
 
 // 设置
-const set = async(key, value) => {
+const set = async(name, value) => {
   return await db.configs
-    .where('name').equals(key)
+    .where('name').equals(name)
     .modify({ value })
 }
 
-export { put, set, all, enablePlatform, enablePlatformType }
+// 获取
+const get = async(name) => {
+  return await db.configs
+    .where('name').equals(name)
+    .first()
+}
+
+export { get, set, put, all, enablePlatform, enablePlatformType }

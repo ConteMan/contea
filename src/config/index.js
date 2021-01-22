@@ -101,6 +101,14 @@ const defaultConfig = [
     platform_type: 'flomo_memo',
     type: 1,
   },
+  // 同步接口
+  {
+    name: 'sync_api_url',
+    value: '',
+    platform: 'sync',
+    platform_type: 'sync_api',
+    type: 2,
+  },
 ]
 
 export { platforms, platform_names, platform_types, defaultConfig }
