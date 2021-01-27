@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 import { sleep, getRandomIntInclusive } from '@/utils'
 import request from '@/utils/request.js'
-import { put as infoPut } from '@/service/info.js'
+import { infoPut } from '@/service/info.js'
 import { put as platformUserPut } from '@/service/platform_user.js'
 import { enablePlatformType } from '@/service/config'
 

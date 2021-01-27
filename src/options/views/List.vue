@@ -29,7 +29,7 @@
       >
         <template v-for="item in activeData">
           <div class="list-item" :key="item.info_id">
-            <div v-if="item.platform === 'yuque'" v-html="item.description"></div>
+            <div v-if="item.platform_type === 'yuque_note'" class="yuque-note" v-html="item.info_detail.data.doclet.body"></div>
 
             <div v-if="item.platform === 'flomo'" v-html="item.content"></div>
 
@@ -200,8 +200,12 @@ export default {
             margin-right: 8px;
           }
         }
-        .item-pic {
-          width: 100%;
+        /deep/
+        .image, // 语雀图片
+        .item-pic
+        {
+          width: 100% !important;
+          margin-top: 16px;
         }
       }
     }

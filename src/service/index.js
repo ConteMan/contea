@@ -1,5 +1,8 @@
 import request from '@/utils/request.js'
-import { list } from '@/service/info.js'
+import {
+  list,
+  platformCount,
+} from '@/service/info.js'
 import {
   get as configGet,
   put as configPut,
@@ -34,7 +37,11 @@ export default class Service {
     return await list({ platform, offset, pageSize })
   }
 
-  // 启用平台
+  /**
+   * 侧边 Tab，即开启的平台
+   *
+   * @return {Array} - 平台信息数组
+   */
   tabs = async(params) => {
     const defaultTab = [
       {
@@ -42,8 +49,17 @@ export default class Service {
         name: '全部'
       }
     ]
-    const res = await enablePlatform()
-    return defaultTab.concat(res)
+    const platforms = await enablePlatform()
+    let totalCount = 0
+    if (platforms.length) {
+      for (const index in platforms) {
+        const tempCount = await platformCount(platforms[index].platform)
+        platforms[index].count = tempCount
+        totalCount += tempCount
+      }
+    }
+    defaultTab[0].count = totalCount
+    return [...defaultTab, ...platforms]
   }
 
   // 同步数据

@@ -14,7 +14,7 @@
           :key="item.platform"
           @click="changePlatform(item.platform)"
         >
-          {{ item.name }}
+          {{ item.name }} <span v-if="item.count" class="platform-count"> / {{ item.count }}</span>
         </div>
       </template>
     </div>
@@ -44,9 +44,7 @@ export default {
         this.platforms = []
       } else {
         this.platform = this.$route.params.platform
-        if (!this.getPlatforms.length) {
-          this.getPlatforms()
-        }
+        this.getPlatforms()
       }
     }
   },
@@ -108,9 +106,17 @@ export default {
           color: brown;
           font-weight: bold;
           border-bottom: 1px solid @border-grey;
+          .platform-count {
+            font-size: 12px;
+            color: brown;
+          }
         }
         &:hover {
           background-color: @border-grey;
+        }
+        .platform-count {
+          font-size: 12px;
+          color: @border-grey;
         }
       }
     }

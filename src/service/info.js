@@ -88,4 +88,33 @@ const existPlatformType = async(platformType) => {
   return !!exist
 }
 
-export { list, put as infoPut, existPlatformType }
+/**
+ * 根据平台查询信息数量
+ *
+ * @param {String} platform - 平台名称
+ *
+ * @return {Number} - 数量
+ */
+const platformCount = async(platform) => {
+  let count = 0
+  const platformTypes = await enablePlatformType(platform)
+  if (!platformTypes.length) {
+    return count
+  }
+  count = await db.infos
+    .where('platform').equals(platform)
+    .filter((item) => {
+      let res = true
+      for (const platformType of platformTypes) {
+        if (item['platform_type'] !== platformType) {
+          res = false
+          break
+        }
+      }
+      return res
+    })
+    .count()
+  return count
+}
+
+export { list, put as infoPut, existPlatformType, platformCount }
