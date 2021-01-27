@@ -1,7 +1,25 @@
 import db from '@/db'
 import { enablePlatformType } from './config.js'
 
-const list = async({ platform = 'all', offset = 0, pageSize = 10, order = 'info_created_at' } = {}) => {
+/**
+ * 列表
+ *
+ * @param {Object} param0 - 参数
+ * - @param platform - 平台
+ * - @param offset - 偏移
+ * - @param pageSize - 限制
+ * - @param order - 排序字段
+ *
+ * @return {Array} - 数据数组
+ */
+const list = async(
+  {
+    platform = 'all',
+    offset = 0,
+    pageSize = 10,
+    order = 'info_created_at'
+  } = {}
+) => {
   let res = []
   platform = platform || 'all'
   const platformTypes = await enablePlatformType(platform)
@@ -20,7 +38,14 @@ const list = async({ platform = 'all', offset = 0, pageSize = 10, order = 'info_
   return res
 }
 
-// 保存信息
+/**
+ * 保存或更新信息
+ *
+ * @param {Object} data - 数据
+ * @param {Array} filters - 过滤参数，判断数据是否已存在
+ *
+ * @return {Number} - 0 失败，1 添加，2 更新
+ */
 const put = async(data, filters) => {
   const { platform_type } = data
   const exist = await db.infos
@@ -38,8 +63,10 @@ const put = async(data, filters) => {
     .first()
   let res = 0
   if (exist) {
+    // 如果信息更新时间不一致，则更新
     if (exist.info_updated_at !== data.info_updated_at) {
       res = await db.infos.add(exist.info_id, data)
+      res ? res = 2 : res
     }
   } else {
     res = await db.infos.add(data)
@@ -47,4 +74,18 @@ const put = async(data, filters) => {
   return res
 }
 
-export { list, put }
+/**
+ * 判断平台类型是否有数据
+ *
+ * @param {String} platformType - 平台类型
+ *
+ * @return {Boolean} - true 存在，false 不存在
+ */
+const existPlatformType = async(platformType) => {
+  const exist = await db.infos
+    .where('platform_type').equals(platformType)
+    .first()
+  return !!exist
+}
+
+export { list, put as infoPut, existPlatformType }

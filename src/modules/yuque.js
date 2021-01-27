@@ -1,6 +1,6 @@
 import dayjs from 'dayjs'
 import request from '@/utils/request.js'
-import { put as infoPut } from '@/service/info.js'
+import { infoPut, existPlatformType } from '@/service/info.js'
 import { put as platformUserPut } from '@/service/platform_user.js'
 import { enablePlatformType } from '@/service/config'
 
@@ -8,6 +8,9 @@ export default class Yuque {
   constructor() {
     this.baseUrl = 'https://www.yuque.com/api'
     this.platform = 'yuque'
+    this.PLATFORM_TYPE = {
+      NOTE: 'yuque_note',
+    }
   }
 
   static getInstance() {
@@ -56,7 +59,7 @@ export default class Yuque {
     }
     const platformTypes = await enablePlatformType(this.platform)
     for (const platformType of platformTypes) {
-      if (platformType === 'yuque_note') {
+      if (platformType === this.PLATFORM_TYPE.NOTE) {
         const syncRes = await this.syncNote()
         res[platformType] = syncRes
       }
@@ -84,34 +87,80 @@ export default class Yuque {
     return res.data
   }
 
-  // 同步小记
+  /**
+   * 小记详细信息
+   *
+   * @param {Number} id - 小记 ID
+   */
+  noteDetail = async(id) => {
+    const url = this.baseUrl + '/notes/' + id
+
+    const res = await request({
+      url,
+      method: 'get',
+    })
+    return res.data
+  }
+
+  /**
+   * 同步小记
+   *
+   * @param {Object} param0 - 参数
+   * - @param {String} filter_type - 查询类型，all 全部
+   * - @param {String} order - 排序字段
+   * - @param {Number} offset - 偏移
+   * - @param {Boolean} force - 是否强制更新
+   * @returns
+   */
   syncNote = async(
     {
       filter_type = 'all',
       order = 'content_updated_at',
-      offset = 0
+      offset = 0,
+      force = false, // 强制更新
     } = {}
   ) => {
     const returnRes = {
       success: 0,
       fail: 0
     }
+
+    // 无数据时，强制更新
+    if (!force) {
+      const exist = await existPlatformType(this.PLATFORM_TYPE.NOTE)
+      exist ? force : force = !force
+    }
+
     let hasMore = true
     const pageSize = 10
     while (hasMore) {
       const res = await this.note({ filter_type, order, offset })
       const items = res['data']
+      let flag = true
       if (items.length > 0) {
         for (const item of items) {
           item.platform = this.platform
-          item.platform_type = 'yuque_note'
+          item.platform_type = this.PLATFORM_TYPE.NOTE
           item.info_created_at = dayjs(item.first_published_at).unix()
           item.info_updated_at = dayjs(item.updated_at).unix()
-          const saveRes = await infoPut(item, ['id', 'slug'])
-          saveRes ? returnRes.success++ : returnRes.fail++
+
+          const detailRes = await this.noteDetail(item.id)
+          item.info_detail = detailRes
+
+          const putRes = await infoPut(item, ['id', 'slug'])
+          if (putRes) {
+            returnRes.success++
+          } else {
+            if (!force) {
+              flag = false
+              break
+            } else {
+              returnRes.fail++
+            }
+          }
         }
       }
-      hasMore = res.meta.hasMore
+      hasMore = res.meta.hasMore && flag
       if (hasMore) {
         offset += pageSize
       }
