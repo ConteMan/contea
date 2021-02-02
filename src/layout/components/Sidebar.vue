@@ -4,25 +4,25 @@
       class="home"
       @click="turnTo({ path: '/list'})"
     >
-      <a-icon type="home" />
+      <img class="logo" title="Contea" src="../../assets/logo.png"/>
     </div>
     <div class="nav">
       <template v-for="item in platforms">
         <div
           class="sidebar-item"
           :class="{ 'active': item.platform === platform }"
+          :title="item.name"
           :key="item.platform"
           @click="changePlatform(item.platform)"
         >
-          {{ item.name }} <span v-if="item.count" class="platform-count"> / {{ item.count }}</span>
+          <a-avatar v-if="item.platform === 'all'">全部</a-avatar>
+          <a-avatar v-else :size="24" :src="item.icon"/>
         </div>
       </template>
     </div>
     <div class="setting">
-      <a-button
-        icon="setting"
-        size="small"
-        shape="circle"
+      <a-icon
+        type="setting"
         @click="turnTo({ path: '/setting' })"
       />
     </div>
@@ -86,10 +86,13 @@ export default {
       font-size: 20px;
       width: 100%;
       height: 49px;
-      text-align: left;
+      text-align: center;
       line-height: 50px;
       padding: 0 8px;
       cursor: pointer;
+      .logo {
+        height: 30px;
+      }
     }
     .nav {
       padding: 40px 0 0 0;
@@ -100,7 +103,7 @@ export default {
         font-size: 14px;
         width: 100%;
         padding: 16px 8px;
-        text-align: left;
+        text-align: center;
         cursor: pointer;
         &.active {
           color: brown;
@@ -122,11 +125,12 @@ export default {
     }
     .setting {
       padding: 0 8px;
+      font-size: 20px;
       width: 100%;
       height: 50px;
       display: flex;
       flex-direction: row;
-      justify-content: flex-start;
+      justify-content: center;
       align-items: center;
     }
 }

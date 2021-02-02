@@ -2,6 +2,7 @@ const platforms = [
   {
     platform: 'yuque',
     name: '语雀',
+    icon: 'https://gw.alipayobjects.com/zos/rmsportal/UTjFYEzMSYVwzxIGVhMu.png',
     types: [
       {
         type: 'yuque_note',
@@ -12,6 +13,7 @@ const platforms = [
   {
     platform: 'zhihu',
     name: '知乎',
+    icon: 'https://static.zhihu.com/heifetz/favicon.ico',
     type: [
       {
         type: 'zhihu_collection',
@@ -26,6 +28,7 @@ const platforms = [
   {
     platform: 'jike',
     name: '即刻',
+    icon: 'https://web.okjike.com/favicon-32x32.png',
     type: [
       {
         type: 'jike_activity',
@@ -36,6 +39,7 @@ const platforms = [
   {
     platform: 'flomo',
     name: '浮墨',
+    icon: 'https://flomoapp.com/images/logo-192x192.png',
     type: [
       {
         type: 'flomo_memo',
