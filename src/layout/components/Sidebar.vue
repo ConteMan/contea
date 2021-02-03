@@ -15,7 +15,7 @@
           :key="item.platform"
           @click="changePlatform(item.platform)"
         >
-          <a-avatar v-if="item.platform === 'all'">全部</a-avatar>
+          <a-avatar v-if="item.platform === 'all'" size="small">ALL</a-avatar>
           <a-avatar v-else :size="24" :src="item.icon"/>
         </div>
       </template>
@@ -77,7 +77,7 @@ export default {
 @border-grey: rgba(206, 206, 206, 0.4);
 
 .sidebar-container {
-    width: 100px;
+    width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -91,7 +91,7 @@ export default {
       padding: 0 8px;
       cursor: pointer;
       .logo {
-        height: 30px;
+        height: 26px;
       }
     }
     .nav {

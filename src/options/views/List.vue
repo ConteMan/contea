@@ -2,25 +2,31 @@
   <div class="list-container">
     <div class="action-bar">
       <a-space>
-        <a-button
+        <span
           v-if="platform !== 'all'"
-          size="small"
+          class="login-status"
           :style="{ color: loginStatusColor }"
+          :title="platformInfo.info.login"
+          @click=goUrl(platformInfo.info.login)
         >
         {{ loginStatusText }}
-        </a-button>
+        </span>
         <a-button
           v-if="showSync"
           icon="sync"
           size="small"
           shape="circle"
+          :loading="syncLoading"
           @click="sync"
         />
       </a-space>
     </div>
-
     <div class="list-content-container">
+      <div v-if="!activeData.length" class="empty-data">
+        No Data
+      </div>
       <div
+        v-else
         class="list-content"
         v-infinite-scroll="loadMore"
         infinite-scroll-disabled="busy"
@@ -82,7 +88,11 @@ export default {
       pageSize: 20,
 
       data: [],
-      loginStatus: 0,
+      syncLoading: false,
+      platformInfo: {
+        loginStatus: 0,
+        info: {},
+      },
     }
   },
   computed: {
@@ -90,21 +100,21 @@ export default {
       return this.data.length > 0 ? this.data : []
     },
     loginStatusColor: function() {
-      return this.loginStatus ? 'brown' : 'grey'
+      return this.platformInfo.loginStatus ? 'brown' : 'grey'
     },
     loginStatusText: function() {
-      return this.loginStatus ? '已登录' : '未登录'
+      return this.platformInfo.loginStatus ? '已登录' : '去登录'
     },
     showSync: function() {
-      return this.platform !== 'all' && this.loginStatus === 1
+      return this.platform !== 'all' && this.platformInfo.loginStatus === 1
     }
   },
   watch: {
     $route(to, from) {
-      this.init()
       this.platform = this.$route.params.platform
+      this.init()
       this.list()
-      this.getLoginStatus()
+      this.getPlatformInfo()
     }
   },
   methods: {
@@ -133,32 +143,40 @@ export default {
     },
     // 同步数据
     async sync() {
+      this.syncLoading = true
       // eslint-disable-next-line no-undef
       chrome.runtime.sendMessage({ command: 'syncInfo', params: { platforms: [this.platform] }}, (response) => {
+        this.syncLoading = false
         this.$message.success('同步成功')
+        this.init()
+        this.list()
+        this.getPlatformInfo()
         return true
       })
     },
     // 登录检测
-    async getLoginStatus() {
+    async getPlatformInfo() {
       if (this.platform === 'all') {
         return false
       }
       // eslint-disable-next-line no-undef
-      chrome.runtime.sendMessage({ command: 'getLoginStatus', params: { platforms: [this.platform] }}, (response) => {
-        this.loginStatus = response.data[this.platform]
+      chrome.runtime.sendMessage({ command: 'getPlatformInfo', params: { platforms: [this.platform] }}, (response) => {
+        this.platformInfo = response.data[this.platform]
         return true
       })
     },
     // 消息类型描述转换
     platformTypeText(platformType) {
       return platformTypes[platformType] ? platformTypes[platformType] : ''
+    },
+    goUrl(url) {
+      window.open(url, '_blank')
     }
   },
   async mounted() {
     this.platform = this.$route.params.platform
     this.list()
-    this.getLoginStatus()
+    this.getPlatformInfo()
   }
 }
 </script>
@@ -176,15 +194,23 @@ export default {
     justify-content: center;
     align-items: flex-end;
     border-bottom: 1px solid @border-grey;
+    .login-status {
+      font-size: 12px;
+      cursor: pointer;
+    }
   }
   .list-content-container {
     height: calc(100vh - 50px);
     overflow-y: auto;
     scroll-behavior: smooth;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     &::-webkit-scrollbar {
       display: none;
     }
     .list-content {
+      margin: auto;
       .list-item {
         border-bottom: 1px solid @border-grey;
         padding: 8px;
@@ -204,7 +230,7 @@ export default {
         .image, // 语雀图片
         .item-pic
         {
-          width: 100% !important;
+          max-width: 100% !important;
           margin-top: 16px;
         }
       }

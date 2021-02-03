@@ -1,4 +1,5 @@
 import request from '@/utils/request.js'
+import { getArrayItem } from '@/utils/index.js'
 import {
   list,
   platformCount,
@@ -10,7 +11,10 @@ import {
   all as configAll,
   enablePlatform
 } from '@/service/config.js'
-import { defaultConfig } from '@/config'
+import {
+  platforms as configPlatforms,
+  defaultConfig
+} from '@/config'
 
 export default class Service {
   static getInstance() {
@@ -86,6 +90,26 @@ export default class Service {
       Object.assign(statusRes, objRes)
     }
     return statusRes
+  }
+
+  // 平台信息
+  platformInfo = async(params) => {
+    const { platforms } = params
+    const infoRes = {}
+    for (const platform of platforms) {
+      const itemClass = await import('../modules/' + platform)
+      const itemInstance = itemClass.default.getInstance()
+      const res = await itemInstance.loginStatus()
+      const info = getArrayItem(configPlatforms, 'platform', platform)
+      const objRes = {
+        [platform]: {
+          loginStatus: res,
+          info,
+        }
+      }
+      Object.assign(infoRes, objRes)
+    }
+    return infoRes
   }
 
   // 获取配置

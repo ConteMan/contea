@@ -33,11 +33,22 @@ export default {
   .sidebar {
     width: 100px;
     height: 100%;
+    @media screen and (max-width: 380px) {
+      width: 50px;
+    }
   }
   .content {
     border-left: 1px solid @border-grey;
     border-right: 1px solid @border-grey;
-    width: 600px;
+    @media screen and (min-width: 800px) {
+      width: 600px;
+    }
+    @media screen and (max-width: 800px) {
+      width: calc(100% - 100px);
+    }
+    @media screen and (max-width: 380px) {
+      width: calc(100% - 50px);
+    }
     height: 100vh;
     .action-bar {
       position: fixed;

@@ -25,6 +25,9 @@ chrome.runtime.onMessage.addListener(async function(request, sender, sendRespons
     case 'getLoginStatus':
       data = await Service.loginStatus(params)
       break
+    case 'getPlatformInfo':
+      data = await Service.platformInfo(params)
+      break
     case 'getConfig':
       data = await Service.config(params)
       break

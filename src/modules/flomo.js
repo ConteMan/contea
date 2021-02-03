@@ -28,9 +28,12 @@ export default class Flomo {
       return false
     }
     const meArray = htmlDom.match(/const[\s]me[\s]=[\s]({[\s\S]*})/)
+    if (!meArray) {
+      return false
+    }
     if (meArray[1]) {
       const me = JSON.parse(meArray[1])
-      return me
+      return me || false
     } else {
       return false
     }

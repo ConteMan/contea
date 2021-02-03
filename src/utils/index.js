@@ -38,9 +38,25 @@ const getRandomIntInclusive = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
+// 获取数组项
+const getArrayItem = (array = [], key, value) => {
+  let res = {}
+  if (!array.length) {
+    return res
+  }
+  for (const item of array) {
+    if (item[key] === value) {
+      res = item
+      break
+    }
+  }
+  return res
+}
+
 export {
   isJSON,
   readLocalStorage,
   sleep,
   getRandomIntInclusive,
+  getArrayItem,
 }
