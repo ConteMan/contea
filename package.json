@@ -11,7 +11,6 @@
   "dependencies": {
     "ant-design-vue": "^1.6.5",
     "axios": "^0.21.1",
-    "clipboard": "^2.0.6",
     "core-js": "^3.6.5",
     "dayjs": "^1.9.8",
     "dexie": "^3.0.3",
@@ -28,12 +27,11 @@
     "@vue/cli-plugin-vuex": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
     "babel-eslint": "^10.1.0",
+    "babel-plugin-import": "^1.13.3",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
     "less": "^3.12.2",
     "less-loader": "^7.0.1",
-    "sass": "^1.26.5",
-    "sass-loader": "^8.0.2",
     "vue-cli-plugin-browser-extension": "^0.25.1",
     "vue-template-compiler": "^2.6.11"
   }
