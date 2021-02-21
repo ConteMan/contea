@@ -22,22 +22,18 @@
       </a-space>
     </div>
     <div class="list-content-container">
-      <div v-if="!activeData.length" class="empty-data">
-        No Data
-      </div>
       <div
-        v-else
         class="list-content"
         v-infinite-scroll="loadMore"
         infinite-scroll-disabled="busy"
         infinite-scroll-distance="200"
-        infinite-scroll-immediate-check="true"
+        infinite-scroll-immediate-check="false"
       >
         <template v-for="item in activeData">
           <div class="list-item" :key="item.info_id">
-            <div v-if="item.platform_type === 'yuque_note'" class="yuque-note" v-html="item.info_detail.data.doclet.body"></div>
+            <div v-if="['yuque_note'].includes(item.platform_type)" class="yuque-note" v-html="item.info_detail.data.doclet.body"></div>
 
-            <div v-if="item.platform === 'flomo'" v-html="item.content"></div>
+            <div v-if="item.platform_type === 'flomo_memo'" v-html="item.content"></div>
 
             <div v-if="item.platform_type === 'zhihu_activity'">
               <p>{{ item.action_text }}</p>
@@ -50,7 +46,25 @@
                 <img class="item-pic" :key="picture.picUrl" :src="picture.picUrl" />
               </template>
             </div>
-
+            <div v-if="['juejin_activity'].includes(item.platform_type)" class="juejin-activity">
+              <div class="action">
+                {{ junjinAction(item.action) }}
+              </div>
+              <div class="target">
+                <template v-if="item.action === 1">
+                  {{ item.target_data.article_info.title }}
+                </template>
+                <template v-if="[2,3].includes(item.action)">
+                  {{ item.target_data.msg_Info.content }}
+                </template>
+                <template v-if="item.action === 4">
+                  {{ item.target_data.user_name }}
+                </template>
+                <template v-if="item.action === 5">
+                  {{ item.target_data.tag_name }}
+                </template>
+              </div>
+            </div>
             <div class="info">
               <span class="time">{{ $dayjs.unix(item.info_created_at).format("YYYY-MM-DD HH:mm:ss") }}</span>
               <span class="platform-type">{{ platformTypeText(item.platform_type) }}</span>
@@ -72,6 +86,7 @@ const platformTypes = {
   zhihu_activity: '知乎动态',
   jike_activity: '即刻动态',
   flomo_memo: 'Flomo memo',
+  juejin_activity: '掘金动态',
 }
 
 export default {
@@ -171,6 +186,16 @@ export default {
     },
     goUrl(url) {
       window.open(url, '_blank')
+    },
+    junjinAction(action) {
+      const actions = {
+        1: '点赞文章',
+        2: '发表动态',
+        3: '点赞沸点',
+        4: '关注用户',
+        5: '关注标签',
+      }
+      return actions[action]
     }
   },
   async mounted() {
@@ -211,6 +236,7 @@ export default {
     }
     .list-content {
       margin: auto;
+      width: 100%;
       .list-item {
         border-bottom: 1px solid @border-grey;
         padding: 8px;

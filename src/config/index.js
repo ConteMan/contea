@@ -51,6 +51,18 @@ const platforms = [
       },
     ]
   },
+  {
+    platform: 'juejin',
+    name: ' 掘金',
+    icon: 'https://b-gold-cdn.xitu.io/favicons/v2/favicon-32x32.png',
+    login: 'https://juejin.cn/',
+    type: [
+      {
+        type: 'juejin_activity',
+        name: '掘金动态'
+      },
+    ]
+  },
 ]
 
 const platform_names = {
@@ -58,6 +70,7 @@ const platform_names = {
   zhihu: '知乎',
   jike: '即刻',
   flomo: '浮墨',
+  juejin: '掘金',
 }
 
 const platform_types = {
@@ -65,7 +78,8 @@ const platform_types = {
   zhihu_collection: '知乎收藏',
   zhihu_activity: '知乎动态',
   jike_activity: '即刻动态',
-  flomo_memo: '浮墨 memo'
+  flomo_memo: '浮墨 memo',
+  juejin_activity: '掘金动态',
 }
 
 /**
@@ -107,6 +121,13 @@ const defaultConfig = [
     value: 1,
     platform: 'flomo',
     platform_type: 'flomo_memo',
+    type: 1,
+  },
+  {
+    name: 'juejin_activity_enable',
+    value: 1,
+    platform: 'juejin',
+    platform_type: 'juejin_activity',
     type: 1,
   },
   // 同步接口

@@ -37,7 +37,7 @@ export default class Service {
   // 列表
   list = async(params) => {
     const { platform, offset, pageSize } = params
-
+    console.log({ platform, offset, pageSize })
     return await list({ platform, offset, pageSize })
   }
 

@@ -86,6 +86,24 @@
             </div>
           </a-collapse-panel>
           <a-collapse-panel
+            key="juejin"
+            header="掘金"
+            :style="customStyle"
+          >
+            <div class="setting-item">
+              <div class="title">动态</div>
+              <div class="action">
+                <a-switch
+                  checked-children="开"
+                  un-checked-children="关"
+                  :checked="Boolean(configs. juejin_activity_enable)"
+                  @change="switchChange('juejin_activity_enable', $event)"
+                />
+              </div>
+              <div class="des"></div>
+            </div>
+          </a-collapse-panel>
+          <a-collapse-panel
             key="5"
             header="实验室"
             :style="customStyle"
@@ -147,7 +165,7 @@ export default {
   name: 'Setting',
   data() {
     return {
-      activeKey: ['1', '2', '3', '4', '5'],
+      activeKey: ['1', '2', '3', '4', '5', 'juejin'],
       templates: [],
       customStyle: 'background: #fff; border-radius: 0; border: 0; overflow: hidden;',
       sync_api_host: '',
