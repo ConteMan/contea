@@ -8,9 +8,9 @@
 export default {
   name: 'App',
   created() {
-    document.title = 'Contea'
+    document.title = 'Contea';
   },
-}
+};
 </script>
 
 <style>

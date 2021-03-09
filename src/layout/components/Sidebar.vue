@@ -36,41 +36,41 @@ export default {
     return {
       platform: '',
       platforms: [],
-    }
+    };
   },
   watch: {
     $route(to, from) {
       if (to.name !== 'List') {
-        this.platforms = []
+        this.platforms = [];
       } else {
-        this.platform = this.$route.params.platform
-        this.getPlatforms()
+        this.platform = this.$route.params.platform;
+        this.getPlatforms();
       }
     }
   },
   methods: {
     turnTo(params) {
-      this.$router.push(params)
+      this.$router.push(params);
     },
     getPlatforms() {
       // eslint-disable-next-line no-undef
       chrome.runtime.sendMessage({ command: 'getTabs', params: {}}, async(response) => {
-        this.platforms = response.data
-        return true
-      })
+        this.platforms = response.data;
+        return true;
+      });
     },
     changePlatform(platform) {
-      this.platform = platform
-      this.$router.push({ name: 'List', params: { platform }})
+      this.platform = platform;
+      this.$router.push({ name: 'List', params: { platform }});
     },
   },
   created() {
     if (this.$route.name === 'List') {
-      this.platform = this.$route.params.platform
-      this.getPlatforms()
+      this.platform = this.$route.params.platform;
+      this.getPlatforms();
     }
   },
-}
+};
 </script>
 
 <style lang="less" scoped>

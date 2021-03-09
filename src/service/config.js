@@ -1,89 +1,89 @@
-import _ from 'lodash'
-import db from '@/db'
-import { platforms as allPlatforms } from '@/config'
+import _ from 'lodash';
+import db from '@/db';
+import { platforms as allPlatforms } from '@/config';
 
 // 保存信息
 const put = async(data) => {
-  const { name } = data
-  let res
+  const { name } = data;
+  let res;
   await db.transaction('rw', [db.configs], async() => {
-    const item = await db.configs.where('name').equals(name).first()
+    const item = await db.configs.where('name').equals(name).first();
     if (item) {
-      item.value = data.value
-      res = await db.configs.put(item)
+      item.value = data.value;
+      res = await db.configs.put(item);
     } else {
-      res = await db.configs.add(data)
+      res = await db.configs.add(data);
     }
-  })
-  return res
-}
+  });
+  return res;
+};
 
 // 可用平台
 const enablePlatform = async() => {
-  const enablePlatforms = []
-  const platforms = new Set()
+  const enablePlatforms = [];
+  const platforms = new Set();
   const res = await db.configs
     .where('type').equals(1)
     .and((config) => {
-      return config.value === 1
+      return config.value === 1;
     })
-    .toArray()
+    .toArray();
   res.map((config) => {
-    platforms.add(config.platform)
-  })
+    platforms.add(config.platform);
+  });
   for (const platform of platforms) {
-    const findRes = _.find(allPlatforms, ['platform', platform])
+    const findRes = _.find(allPlatforms, ['platform', platform]);
     if (findRes) {
-      enablePlatforms.push(findRes)
+      enablePlatforms.push(findRes);
     }
   }
-  return enablePlatforms
-}
+  return enablePlatforms;
+};
 
 // 可用的平台类型
 const enablePlatformType = async(platform) => {
-  const enablePlatformTypes = []
-  let res
+  const enablePlatformTypes = [];
+  let res;
   if (platform === 'all') {
     res = await db.configs
       .where('type').equals(1)
       .and((config) => {
-        return config.value === 1
+        return config.value === 1;
       })
-      .toArray()
+      .toArray();
   } else {
     res = await db.configs
       .where('platform').equals(platform)
       .and((config) => {
-        return config.value === 1 && config.type === 1
+        return config.value === 1 && config.type === 1;
       })
-      .toArray()
+      .toArray();
   }
   if (res.length > 0) {
     res.map((config) => {
-      enablePlatformTypes.push(config.platform_type)
-    })
+      enablePlatformTypes.push(config.platform_type);
+    });
   }
-  return enablePlatformTypes
-}
+  return enablePlatformTypes;
+};
 
 // 获取全部配置
 const all = async() => {
-  return await db.configs.toArray()
-}
+  return await db.configs.toArray();
+};
 
 // 设置
 const set = async(name, value) => {
   return await db.configs
     .where('name').equals(name)
-    .modify({ value })
-}
+    .modify({ value });
+};
 
 // 获取
 const get = async(name) => {
   return await db.configs
     .where('name').equals(name)
-    .first()
-}
+    .first();
+};
 
-export { get, set, put, all, enablePlatform, enablePlatformType }
+export { get, set, put, all, enablePlatform, enablePlatformType };

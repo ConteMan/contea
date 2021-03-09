@@ -1,5 +1,5 @@
-import db from '@/db'
-import { enablePlatformType } from './config.js'
+import db from '@/db';
+import { enablePlatformType } from './config.js';
 
 /**
  * 列表
@@ -20,23 +20,23 @@ const list = async(
     order = 'info_created_at'
   } = {}
 ) => {
-  let res = []
-  platform = platform || 'all'
-  const platformTypes = await enablePlatformType(platform)
+  let res = [];
+  platform = platform || 'all';
+  const platformTypes = await enablePlatformType(platform);
   if (!platformTypes.length) {
-    return res
+    return res;
   }
   res = await db.infos
     .orderBy(order)
     .reverse() // 颠倒项目顺序
     .filter(function(item) {
-      return platformTypes.includes(item.platform_type)
+      return platformTypes.includes(item.platform_type);
     })
     .offset(offset)
     .limit(pageSize) // 将结果限制为给定的项目数
-    .toArray()
-  return res
-}
+    .toArray();
+  return res;
+};
 
 /**
  * 保存或更新信息
@@ -47,32 +47,32 @@ const list = async(
  * @return {Number} - 0 失败，1 添加，2 更新
  */
 const put = async(data, filters) => {
-  const { platform_type } = data
+  const { platform_type } = data;
   const exist = await db.infos
     .where('platform_type').equals(platform_type)
     .filter((item) => {
-      let res = true
+      let res = true;
       for (const filter of filters) {
         if (item[filter] !== data[filter]) {
-          res = false
-          break
+          res = false;
+          break;
         }
       }
-      return res
+      return res;
     })
-    .first()
-  let res = 0
+    .first();
+  let res = 0;
   if (exist) {
     // 如果信息更新时间不一致，则更新
     if (exist.info_updated_at !== data.info_updated_at) {
-      res = await db.infos.add(exist.info_id, data)
-      res ? res = 2 : res
+      res = await db.infos.update(exist.info_id, data);
+      res ? res = 2 : 0;
     }
   } else {
-    res = await db.infos.add(data)
+    res = await db.infos.add(data);
   }
-  return res
-}
+  return res;
+};
 
 /**
  * 判断平台类型是否有数据
@@ -84,9 +84,9 @@ const put = async(data, filters) => {
 const existPlatformType = async(platformType) => {
   const exist = await db.infos
     .where('platform_type').equals(platformType)
-    .first()
-  return !!exist
-}
+    .first();
+  return !!exist;
+};
 
 /**
  * 根据平台查询信息数量
@@ -96,25 +96,25 @@ const existPlatformType = async(platformType) => {
  * @return {Number} - 数量
  */
 const platformCount = async(platform) => {
-  let count = 0
-  const platformTypes = await enablePlatformType(platform)
+  let count = 0;
+  const platformTypes = await enablePlatformType(platform);
   if (!platformTypes.length) {
-    return count
+    return count;
   }
   count = await db.infos
     .where('platform').equals(platform)
     .filter((item) => {
-      let res = true
+      let res = true;
       for (const platformType of platformTypes) {
         if (item['platform_type'] !== platformType) {
-          res = false
-          break
+          res = false;
+          break;
         }
       }
-      return res
+      return res;
     })
-    .count()
-  return count
-}
+    .count();
+  return count;
+};
 
-export { list, put as infoPut, existPlatformType, platformCount }
+export { list, put as infoPut, existPlatformType, platformCount };

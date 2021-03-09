@@ -15,32 +15,32 @@ export default {
         link: '',
         description: '',
       },
-    }
+    };
   },
   methods: {
     copy(text) {
-      const transfer = document.createElement('input')
-      document.body.appendChild(transfer)
-      transfer.value = text // 这里表示想要复制的内容
-      transfer.focus()
-      transfer.select()
+      const transfer = document.createElement('input');
+      document.body.appendChild(transfer);
+      transfer.value = text; // 这里表示想要复制的内容
+      transfer.focus();
+      transfer.select();
       if (document.execCommand('copy')) {
-        document.execCommand('copy')
+        document.execCommand('copy');
       }
-      transfer.blur()
-      document.body.removeChild(transfer)
+      transfer.blur();
+      document.body.removeChild(transfer);
     },
     async copyInfo(event) {
-      const host = this
+      const host = this;
       // 获取当前窗口 id
       // eslint-disable-next-line no-undef
       chrome.tabs.query({
         active: true,
         currentWindow: true
       }, function(tabs) {
-        const tabId = tabs.length ? tabs[0].id : null
-        console.log('tabId', tabId)
-        host.tabid = tabId
+        const tabId = tabs.length ? tabs[0].id : null;
+        console.log('tabId', tabId);
+        host.tabid = tabId;
         // 向当前页面注入 JavaScript 脚本
         // eslint-disable-next-line no-undef
         chrome.tabs.executeScript(tabId || null, {
@@ -51,19 +51,19 @@ export default {
           chrome.tabs.sendMessage(tabId, {
             message: 'GET_TOPIC_INFO',
           }, function(response) {
-            host.response = response
+            host.response = response;
             // 获取到返回的文章 title 、url、description
-            host.article.title = response.title
-            host.article.link = response.link
-            host.article.description = response.description
-            const copyValue = '[' + response.title + '](' + response.link + ')'
-            host.copy(copyValue)
-          })
-        })
-      })
+            host.article.title = response.title;
+            host.article.link = response.link;
+            host.article.description = response.description;
+            const copyValue = '[' + response.title + '](' + response.link + ')';
+            host.copy(copyValue);
+          });
+        });
+      });
     }
   },
-}
+};
 </script>
 
 <style lang="less">

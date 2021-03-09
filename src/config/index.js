@@ -63,7 +63,7 @@ const platforms = [
       },
     ]
   },
-]
+];
 
 const platform_names = {
   yuque: '语雀',
@@ -71,7 +71,7 @@ const platform_names = {
   jike: '即刻',
   flomo: '浮墨',
   juejin: '掘金',
-}
+};
 
 const platform_types = {
   yuque_note: '语雀小记',
@@ -80,7 +80,7 @@ const platform_types = {
   jike_activity: '即刻动态',
   flomo_memo: '浮墨 memo',
   juejin_activity: '掘金动态',
-}
+};
 
 /**
  * platform_type 类型
@@ -138,6 +138,6 @@ const defaultConfig = [
     platform_type: 'sync_api',
     type: 2,
   },
-]
+];
 
-export { platforms, platform_names, platform_types, defaultConfig }
+export { platforms, platform_names, platform_types, defaultConfig };

@@ -174,42 +174,42 @@ export default {
 
       syncLoading: false,
       saveLoading: false,
-    }
+    };
   },
   methods: {
     getPopupContainer(trigger) {
-      return trigger.parentElement
+      return trigger.parentElement;
     },
     switchChange(key, checked) {
-      this.setConfig(key, checked ? 1 : 0)
+      this.setConfig(key, checked ? 1 : 0);
     },
     toBoolean(value) {
-      return value > 0
+      return value > 0;
     },
     async getConfig() {
       // eslint-disable-next-line no-undef
       chrome.runtime.sendMessage({ command: 'getConfig', params: { type: 'all' }}, (response) => {
-        this.configs = response.data
-        return true
-      })
+        this.configs = response.data;
+        return true;
+      });
     },
     async setConfig(key, value) {
       // eslint-disable-next-line no-undef
       chrome.runtime.sendMessage({ command: 'setConfig', params: { key, value }}, (response) => {
         if (response.data) {
-          this.configs[key] = value
+          this.configs[key] = value;
           this.$notification.success({
             message: '搞定！',
             description: '',
-          })
+          });
         } else {
           this.$notification.success({
             message: '有点问题...',
             description: '',
-          })
+          });
         }
-        return true
-      })
+        return true;
+      });
     },
     async openWindowMode() {
       // eslint-disable-next-line no-undef
@@ -218,59 +218,59 @@ export default {
           this.$notification.success({
             message: '搞定！',
             description: '',
-          })
+          });
         } else {
           this.$notification.success({
             message: '有点问题...',
             description: '',
-          })
+          });
         }
-        return true
-      })
+        return true;
+      });
     },
     async setConfigs() {
-      this.saveLoading = true
+      this.saveLoading = true;
       // eslint-disable-next-line no-undef
       chrome.runtime.sendMessage({ command: 'setConfigs', params: { configs: this.configs }}, (response) => {
         if (response.data) {
           this.$notification.success({
             message: '搞定！',
             description: '成功 [ ' + response.data.success + ' ]，失败 [ ' + response.data.fail + ' ]',
-          })
+          });
         } else {
           this.$notification.success({
             message: '有点问题...',
             description: '',
-          })
+          });
         }
-        this.saveLoading = false
-        return true
-      })
+        this.saveLoading = false;
+        return true;
+      });
     },
     async sync() {
-      this.syncLoading = true
+      this.syncLoading = true;
       // eslint-disable-next-line no-undef
       chrome.runtime.sendMessage({ command: 'sync', params: { type: 'ext.getUrl' }}, (response) => {
         if (response.data) {
           this.$notification.success({
             message: '搞定！',
             description: '成功 [ ' + response.data.success + ' ]，失败 [ ' + response.data.fail + ' ]',
-          })
+          });
         } else {
           this.$notification.success({
             message: '有点问题...',
             description: '',
-          })
+          });
         }
-        this.syncLoading = false
-        return true
-      })
+        this.syncLoading = false;
+        return true;
+      });
     }
   },
   created() {
-    this.getConfig()
+    this.getConfig();
   },
-}
+};
 </script>
 
 <style lang="less" scoped>

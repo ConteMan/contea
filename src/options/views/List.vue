@@ -77,8 +77,8 @@
 </template>
 
 <script>
-import _ from 'lodash'
-import infiniteScroll from 'vue-infinite-scroll'
+import _ from 'lodash';
+import infiniteScroll from 'vue-infinite-scroll';
 
 const platformTypes = {
   yuque_note: '语雀小记',
@@ -87,7 +87,7 @@ const platformTypes = {
   jike_activity: '即刻动态',
   flomo_memo: 'Flomo memo',
   juejin_activity: '掘金动态',
-}
+};
 
 export default {
   name: 'List',
@@ -108,84 +108,84 @@ export default {
         loginStatus: 0,
         info: {},
       },
-    }
+    };
   },
   computed: {
     activeData: function() {
-      return this.data.length > 0 ? this.data : []
+      return this.data.length > 0 ? this.data : [];
     },
     loginStatusColor: function() {
-      return this.platformInfo.loginStatus ? 'brown' : 'grey'
+      return this.platformInfo.loginStatus ? 'brown' : 'grey';
     },
     loginStatusText: function() {
-      return this.platformInfo.loginStatus ? '已登录' : '去登录'
+      return this.platformInfo.loginStatus ? '已登录' : '去登录';
     },
     showSync: function() {
-      return this.platform !== 'all' && this.platformInfo.loginStatus === 1
+      return this.platform !== 'all' && this.platformInfo.loginStatus === 1;
     }
   },
   watch: {
     $route(to, from) {
-      this.platform = this.$route.params.platform
-      this.init()
-      this.list()
-      this.getPlatformInfo()
+      this.platform = this.$route.params.platform;
+      this.init();
+      this.list();
+      this.getPlatformInfo();
     }
   },
   methods: {
     init() {
-      this.offset = 0
-      this.pageSize = 20
-      this.data = []
+      this.offset = 0;
+      this.pageSize = 20;
+      this.data = [];
     },
     async list() {
-      this.busy = true
-      const { platform, offset, pageSize } = this
+      this.busy = true;
+      const { platform, offset, pageSize } = this;
       // eslint-disable-next-line no-undef
       chrome.runtime.sendMessage({ command: 'getList', params: { platform, offset, pageSize }}, (response) => {
         if (response.data.length > 0) {
-          this.data = _.concat(this.data, response.data)
-          this.busy = false
+          this.data = _.concat(this.data, response.data);
+          this.busy = false;
         } else {
-          this.busy = true
+          this.busy = true;
         }
-        return true
-      })
+        return true;
+      });
     },
     loadMore() {
-      this.offset += this.pageSize
-      this.list()
+      this.offset += this.pageSize;
+      this.list();
     },
     // 同步数据
     async sync() {
-      this.syncLoading = true
+      this.syncLoading = true;
       // eslint-disable-next-line no-undef
       chrome.runtime.sendMessage({ command: 'syncInfo', params: { platforms: [this.platform] }}, (response) => {
-        this.syncLoading = false
-        this.$message.success('同步成功')
-        this.init()
-        this.list()
-        this.getPlatformInfo()
-        return true
-      })
+        this.syncLoading = false;
+        this.$message.success('同步成功');
+        this.init();
+        this.list();
+        this.getPlatformInfo();
+        return true;
+      });
     },
     // 登录检测
     async getPlatformInfo() {
       if (this.platform === 'all') {
-        return false
+        return false;
       }
       // eslint-disable-next-line no-undef
       chrome.runtime.sendMessage({ command: 'getPlatformInfo', params: { platforms: [this.platform] }}, (response) => {
-        this.platformInfo = response.data[this.platform]
-        return true
-      })
+        this.platformInfo = response.data[this.platform];
+        return true;
+      });
     },
     // 消息类型描述转换
     platformTypeText(platformType) {
-      return platformTypes[platformType] ? platformTypes[platformType] : ''
+      return platformTypes[platformType] ? platformTypes[platformType] : '';
     },
     goUrl(url) {
-      window.open(url, '_blank')
+      window.open(url, '_blank');
     },
     junjinAction(action) {
       const actions = {
@@ -194,16 +194,16 @@ export default {
         3: '点赞沸点',
         4: '关注用户',
         5: '关注标签',
-      }
-      return actions[action]
+      };
+      return actions[action];
     }
   },
   async mounted() {
-    this.platform = this.$route.params.platform
-    this.list()
-    this.getPlatformInfo()
+    this.platform = this.$route.params.platform;
+    this.list();
+    this.getPlatformInfo();
   }
-}
+};
 </script>
 
 <style scoped lang="less">

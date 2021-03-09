@@ -1,8 +1,8 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import BaseLayout from '../../layout/BaseLayout.vue'
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import BaseLayout from '../../layout/BaseLayout.vue';
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 const routes = [
   {
@@ -27,16 +27,16 @@ const routes = [
     path: '*',
     redirect: { name: 'Main' },
   }
-]
+];
 
-const originalPush = VueRouter.prototype.push
+const originalPush = VueRouter.prototype.push;
 VueRouter.prototype.push = function push(location) {
-  return originalPush.call(this, location).catch(err => err)
-}
+  return originalPush.call(this, location).catch(err => err);
+};
 
 const router = new VueRouter({
   mode: 'hash',
   routes
-})
+});
 
-export default router
+export default router;
