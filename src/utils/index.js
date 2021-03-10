@@ -17,7 +17,6 @@ const readLocalStorage = async(key) => {
     // eslint-disable-next-line no-undef
     chrome.storage.local.get([key], function(result) {
       if (result[key] !== undefined) {
-        console.log(result[key]);
         resolve(result[key]);
       } else {
         reject();
@@ -58,10 +57,20 @@ const getArrayItem = (array = [], key, value) => {
   return res;
 };
 
-const sendMessage = (message) => {
+// 发送一次性信息
+const sendTabMessage = (tabId, message) => {
   // eslint-disable-next-line no-undef
-  chrome.runtime.sendMessage(message, function(response) {
-    console.log(response.farewell);
+  chrome.tabs.sendMessage(tabId, message);
+};
+
+// 获取当前 TAB ID
+const getTabId = () => {
+  return new Promise(resolve => {
+    // eslint-disable-next-line no-undef
+    chrome.tabs.getCurrent(tab => {
+      resolve(tab);
+      return true;
+    });
   });
 };
 
@@ -72,5 +81,6 @@ export {
   getRandomIntInclusive,
   randomSleep,
   getArrayItem,
-  sendMessage
+  sendTabMessage,
+  getTabId,
 };

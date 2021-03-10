@@ -19,8 +19,8 @@ chrome.runtime.onMessage.addListener(async function(request, sender, sendRespons
     case 'getTabs':
       data = await Service.tabs(params);
       break;
-    case 'syncInfo':
-      data = await Service.syncInfo(params);
+    case 'sync':
+      data = await Service.sync(params);
       break;
     case 'getLoginStatus':
       data = await Service.loginStatus(params);
@@ -37,8 +37,8 @@ chrome.runtime.onMessage.addListener(async function(request, sender, sendRespons
     case 'setConfigs':
       data = await Service.setConfigs(params);
       break;
-    case 'sync':
-      data = await Service.sync(params);
+    case 'queryInterface':
+      data = await Service.sync(queryInterface);
       break;
     case 'test':
       data = chrome.extension.getURL('options.html');
@@ -52,7 +52,6 @@ chrome.runtime.onMessage.addListener(async function(request, sender, sendRespons
       data = {};
       break;
   }
-  console.log('background response data:', data);
   sendResponse(
     {
       command,

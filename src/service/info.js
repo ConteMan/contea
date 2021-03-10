@@ -44,7 +44,7 @@ const list = async(
  * @param {Object} data - 数据
  * @param {Array} filters - 过滤参数，判断数据是否已存在
  *
- * @return {Number} - 0 失败，1 添加，2 更新
+ * @return {Number} - 0 失败，> 0 添加，-1 更新
  */
 const put = async(data, filters) => {
   const { platform_type } = data;
@@ -66,7 +66,7 @@ const put = async(data, filters) => {
     // 如果信息更新时间不一致，则更新
     if (exist.info_updated_at !== data.info_updated_at) {
       res = await db.infos.update(exist.info_id, data);
-      res ? res = 2 : 0;
+      res ? res = -1 : 0;
     }
   } else {
     res = await db.infos.add(data);

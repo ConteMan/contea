@@ -37,7 +37,6 @@ export default class Service {
   // 列表
   list = async(params) => {
     const { platform, offset, pageSize } = params;
-    console.log({ platform, offset, pageSize });
     return await list({ platform, offset, pageSize });
   }
 
@@ -66,13 +65,16 @@ export default class Service {
     return [...defaultTab, ...platforms];
   }
 
-  // 同步数据
-  syncInfo = async(params) => {
-    const { platforms } = params;
+  /**
+   *  同步数据
+   */
+  sync = async(params) => {
+    const { platforms, tabId } = params;
     const syncRes = {};
     for (const platform of platforms) {
-      const itemClass = await import('../modules/' + platform);
-      const itemInstance = itemClass.default.getInstance();
+      const { default: itemClass } = await import('../modules/' + platform);
+      const itemInstance = itemClass.getInstance();
+      itemInstance.setTabId(tabId);
       syncRes[platform] = await itemInstance.sync();
     }
     return syncRes;
@@ -83,8 +85,8 @@ export default class Service {
     const { platforms } = params;
     const statusRes = {};
     for (const platform of platforms) {
-      const itemClass = await import('../modules/' + platform);
-      const itemInstance = itemClass.default.getInstance();
+      const { default: itemClass } = await import('../modules/' + platform);
+      const itemInstance = itemClass.getInstance();
       const res = await itemInstance.loginStatus();
       const objRes = { [platform]: res };
       Object.assign(statusRes, objRes);
@@ -97,8 +99,8 @@ export default class Service {
     const { platforms } = params;
     const infoRes = {};
     for (const platform of platforms) {
-      const itemClass = await import('../modules/' + platform);
-      const itemInstance = itemClass.default.getInstance();
+      const { default: itemClass } = await import('../modules/' + platform);
+      const itemInstance = itemClass.getInstance();
       const res = await itemInstance.loginStatus();
       const info = getArrayItem(configPlatforms, 'platform', platform);
       const objRes = {
@@ -148,7 +150,7 @@ export default class Service {
   }
 
   // 同步数据到接口
-  sync = async() => {
+  queryInterface = async() => {
     let [success, fail] = [0, 0];
     const apiUrlObj = await configGet('sync_api_url');
     if (!apiUrlObj) {
@@ -160,7 +162,6 @@ export default class Service {
     let offset = 0;
     let hasMore = true;
     while (hasMore) {
-      console.log({ apiUrl, platform, offset, pageSize });
       const infos = await list({ platform, offset, pageSize });
       const dataLength = infos.length;
       if (dataLength) {

@@ -39,7 +39,6 @@ export default {
         currentWindow: true
       }, function(tabs) {
         const tabId = tabs.length ? tabs[0].id : null;
-        console.log('tabId', tabId);
         host.tabid = tabId;
         // 向当前页面注入 JavaScript 脚本
         // eslint-disable-next-line no-undef

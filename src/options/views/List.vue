@@ -3,6 +3,11 @@
     <div class="action-bar">
       <a-space>
         <span
+          v-if="syncLoading"
+        >
+        {{ syncRes.add }} / {{ syncRes.update }} / {{ syncRes.fail }}
+        </span>
+        <span
           v-if="platform !== 'all'"
           class="login-status"
           :style="{ color: loginStatusColor }"
@@ -79,6 +84,7 @@
 <script>
 import _ from 'lodash';
 import infiniteScroll from 'vue-infinite-scroll';
+import { getTabId } from '../../utils/index';
 
 const platformTypes = {
   yuque_note: '语雀小记',
@@ -108,6 +114,13 @@ export default {
         loginStatus: 0,
         info: {},
       },
+
+      tabId: 0,
+      syncRes: {
+        add: 0,
+        update: 0,
+        fail: 0,
+      },
     };
   },
   computed: {
@@ -132,11 +145,33 @@ export default {
       this.getPlatformInfo();
     }
   },
+  async created() {
+    const tabInfo = await getTabId();
+    this.tabId = tabInfo.id;
+    const _this = this;
+    // eslint-disable-next-line no-undef
+    chrome.runtime.onMessage.addListener(
+      function(request, sender, sendResponse) {
+        if (request.type === 'syncRes') {
+          _this.syncRes = request.res;
+        }
+      });
+  },
+  mounted() {
+    this.platform = this.$route.params.platform;
+    this.list();
+    this.getPlatformInfo();
+  },
   methods: {
     init() {
       this.offset = 0;
       this.pageSize = 20;
       this.data = [];
+      this.syncRes = {
+        add: 0,
+        update: 0,
+        fail: 0,
+      };
     },
     async list() {
       this.busy = true;
@@ -160,7 +195,7 @@ export default {
     async sync() {
       this.syncLoading = true;
       // eslint-disable-next-line no-undef
-      chrome.runtime.sendMessage({ command: 'syncInfo', params: { platforms: [this.platform] }}, (response) => {
+      chrome.runtime.sendMessage({ command: 'sync', params: { platforms: [this.platform], tabId: this.tabId }}, (response) => {
         this.syncLoading = false;
         this.$message.success('同步成功');
         this.init();
@@ -198,11 +233,6 @@ export default {
       return actions[action];
     }
   },
-  async mounted() {
-    this.platform = this.$route.params.platform;
-    this.list();
-    this.getPlatformInfo();
-  }
 };
 </script>
 

@@ -1,12 +1,14 @@
 import dayjs from 'dayjs';
 import request from '@/utils/request.js';
-import { randomSleep } from '@/utils/index.js';
+import { randomSleep, sendTabMessage } from '@/utils/index.js';
 import { infoPut, existPlatformType } from '@/service/info.js';
 import { put as platformUserPut } from '@/service/platform_user.js';
 import { enablePlatformType } from '@/service/config';
+import Base from './base';
 
-export default class Yuque {
+export default class Yuque extends Base {
   constructor() {
+    super();
     this.baseUrl = 'https://www.yuque.com/api';
     this.platform = 'yuque';
     this.PLATFORM_TYPE = {
@@ -14,12 +16,12 @@ export default class Yuque {
     };
   }
 
-  static getInstance() {
-    if (!this.instance) {
-      this.instance = new Yuque();
-    }
-    return this.instance;
-  }
+  // static getInstance() {
+  //   if (!this.instance) {
+  //     this.instance = new Yuque();
+  //   }
+  //   return this.instance;
+  // }
 
   // 个人信息
   userInfo = async() => {
@@ -121,6 +123,7 @@ export default class Yuque {
       force = false, // 强制更新
     } = {}
   ) => {
+    console.log('syncNote tabId', this.tabId);
     const returnRes = {
       add: 0,
       update: 0,
@@ -150,20 +153,23 @@ export default class Yuque {
           item.info_created_at = dayjs(item.first_published_at).unix();
           item.info_updated_at = dayjs(item.updated_at).unix();
 
+          await randomSleep(100, 2000);
           const detailRes = await this.noteDetail(item.id);
           item.info_detail = detailRes;
 
           const putRes = await infoPut(item, ['id', 'slug']);
-          if (putRes) {
-            putRes === 1 ? returnRes.add++ : returnRes.update++;
-          } else {
+          if (putRes > 0) {
+            returnRes.add++;
+          } else if (putRes === 0) {
             if (!force) {
               flag = false;
-              break;
-            } else {
-              returnRes.fail++;
             }
+            returnRes.fail++;
+          } else {
+            returnRes.update++;
           }
+          sendTabMessage(this.tabId, { type: 'syncRes', res: returnRes });
+          if (!flag) break;
         }
       }
       hasMore = res.meta.hasMore && flag;
