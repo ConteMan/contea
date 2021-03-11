@@ -52,7 +52,7 @@ export default {
     turnTo(params) {
       this.$router.push(params);
     },
-    getPlatforms() {
+    async getPlatforms() {
       // eslint-disable-next-line no-undef
       chrome.runtime.sendMessage({ command: 'getTabs', params: {}}, async(response) => {
         this.platforms = response.data;

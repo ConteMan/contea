@@ -104,7 +104,7 @@ export default {
     return {
       busy: false,
 
-      platform: '',
+      platform: 'all',
       offset: 0,
       pageSize: 20,
 
@@ -145,7 +145,7 @@ export default {
       this.getPlatformInfo();
     }
   },
-  async created() {
+  async mounted() {
     const tabInfo = await getTabId();
     this.tabId = tabInfo.id;
     const _this = this;
@@ -156,8 +156,6 @@ export default {
           _this.syncRes = request.res;
         }
       });
-  },
-  mounted() {
     this.platform = this.$route.params.platform;
     this.list();
     this.getPlatformInfo();

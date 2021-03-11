@@ -161,6 +161,8 @@
 </template>
 
 <script>
+import { getTabId } from '../../utils/index';
+
 export default {
   name: 'Setting',
   data() {
@@ -174,7 +176,13 @@ export default {
 
       syncLoading: false,
       saveLoading: false,
+      tabId: 0,
     };
+  },
+  async mounted() {
+    const tabInfo = await getTabId();
+    this.tabId = tabInfo.id;
+    this.getConfig();
   },
   methods: {
     getPopupContainer(trigger) {
@@ -213,20 +221,15 @@ export default {
     },
     async openWindowMode() {
       // eslint-disable-next-line no-undef
-      chrome.runtime.sendMessage({ command: 'test', params: { type: 'ext.getUrl' }}, (response) => {
-        if (response.data) {
-          this.$notification.success({
-            message: '搞定！',
-            description: '',
-          });
-        } else {
-          this.$notification.success({
-            message: '有点问题...',
-            description: '',
-          });
-        }
-        return true;
+      const url = chrome.extension.getURL('options.html');
+      // eslint-disable-next-line no-undef
+      chrome.windows.create({
+        url,
+        type: 'popup',
+        focused: true,
       });
+      // eslint-disable-next-line no-undef
+      chrome.tabs.remove([this.tabId]);
     },
     async setConfigs() {
       this.saveLoading = true;
@@ -266,9 +269,6 @@ export default {
         return true;
       });
     }
-  },
-  mounted() {
-    this.getConfig();
   },
 };
 </script>

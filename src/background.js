@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 import service from './service';
 
-chrome.runtime.onMessage.addListener(async function(request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   const Service = service.getInstance();
   const { command, params } = request;
 
@@ -11,54 +11,49 @@ chrome.runtime.onMessage.addListener(async function(request, sender, sendRespons
 
   switch (command) {
     case 'getRandom':
-      data = await Service.random(params);
+      data = Service.random(params);
       break;
     case 'getList':
-      data = await Service.list(params);
+      data = Service.list(params);
       break;
     case 'getTabs':
-      data = await Service.tabs(params);
+      data = Service.tabs(params);
       break;
     case 'sync':
-      data = await Service.sync(params);
+      data = Service.sync(params);
       break;
     case 'getLoginStatus':
-      data = await Service.loginStatus(params);
+      data = Service.loginStatus(params);
       break;
     case 'getPlatformInfo':
-      data = await Service.platformInfo(params);
+      data = Service.platformInfo(params);
       break;
     case 'getConfig':
-      data = await Service.config(params);
+      data = Service.config(params);
       break;
     case 'setConfig':
-      data = await Service.setConfig(params);
+      data = Service.setConfig(params);
       break;
     case 'setConfigs':
-      data = await Service.setConfigs(params);
+      data = Service.setConfigs(params);
       break;
     case 'queryInterface':
-      data = await Service.sync(queryInterface);
-      break;
-    case 'test':
-      data = chrome.extension.getURL('options.html');
-      chrome.windows.create({
-        url: data,
-        type: 'popup',
-        focused: true,
-      });
+      data = Service.sync(queryInterface);
       break;
     default:
       data = {};
       break;
   }
-  sendResponse(
-    {
-      command,
-      status,
-      msg,
-      data,
-    });
+  data.then((res) => {
+    sendResponse(
+      {
+        command,
+        status,
+        msg,
+        data: res,
+      });
+  });
+  return true;
 });
 
 chrome.runtime.onInstalled.addListener(async function() {
