@@ -117,7 +117,7 @@
                 体验更佳
               </div>
             </div>
-            <div class="setting-item">
+            <!-- <div class="setting-item">
               <div class="title">同步接口&nbsp;URL</div>
               <div class="action">
                 <a-tooltip
@@ -152,7 +152,7 @@
               <div class="des">
                 通过同步接口传送已有数据
               </div>
-            </div>
+            </div> -->
           </a-collapse-panel>
         </a-collapse>
       </template>
@@ -267,7 +267,7 @@ export default {
       });
     }
   },
-  created() {
+  mounted() {
     this.getConfig();
   },
 };

@@ -1,31 +1,15 @@
 import axios from 'axios';
 
-/**
- * 请求失败后的错误统一处理
- * @param {Number} status 请求失败的状态码
- */
-const errorHandle = (status, other) => {
-  // 状态码判断
-  switch (status) {
-    // 401
-    case 401:
-      break;
-    // 403
-    case 403:
-      break;
-    // 404
-    case 404:
-      break;
-    default:
-      console.log(other);
-  }
-};
-
-// 创建axios实例
-var instance = axios.create({
+const config = {
   withCredentials: true,
   timeout: 1000 * 12,
-});
+
+  // 自定义重试设置
+  retry: 0, // 默认关闭
+  retryDelay: 1000,
+};
+// 创建axios实例
+const instance = axios.create(config);
 // 设置post请求头
 instance.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 instance.defaults.headers.get['Content-Type'] = 'application/x-www-form-urlencoded';
@@ -49,20 +33,37 @@ instance.interceptors.response.use(
   },
   // 请求失败
   (error) => {
-    const { response } = error;
-    if (response) {
-      console.log('axios error:', response.status + '-' + response.data.message);
-      // 请求已发出，但是不在2xx的范围
-      errorHandle(response.status, response.data.message);
-      return Promise.resolve(response);
-    } else {
-      // 处理断网的情况
-      // eg:请求超时或断网时，更新state的network状态
-      // network状态在app.vue中控制着一个全局的断网提示组件的显示隐藏
-      // 关于断网组件中的刷新重新获取数据，会在断网组件中说明
-      console.log('network error');
+    const config = error.config;
+    console.log('error', error);
+    // If config does not exist or the retry option is not set, reject
+    if (!config || !config.retry) {
       return Promise.reject(error);
     }
+
+    // Set the variable for keeping track of the retry count
+    config.__retryCount = config.__retryCount || 0;
+
+    // Check if we've maxed out the total number of retries
+    if (config.__retryCount >= config.retry) {
+      // Reject with the error
+      return Promise.reject(error);
+    }
+
+    // Increase the retry count
+    config.__retryCount += 1;
+
+    // Create new promise to handle exponential backoff
+    const backoff = new Promise(function(resolve) {
+      setTimeout(function() {
+        resolve();
+      }, config.retryDelay || 1);
+    });
+
+    // Return the promise in which recalls axios to retry the request
+    return backoff.then(function() {
+      console.log('retry count:', config.__retryCount);
+      return instance(config);
+    });
   }
 );
 

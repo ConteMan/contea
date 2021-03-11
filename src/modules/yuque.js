@@ -16,20 +16,17 @@ export default class Yuque extends Base {
     };
   }
 
-  // static getInstance() {
-  //   if (!this.instance) {
-  //     this.instance = new Yuque();
-  //   }
-  //   return this.instance;
-  // }
-
   // 个人信息
   userInfo = async() => {
-    const url = this.baseUrl + '/mine?';
-    const res = await request({
-      url,
-    });
-    return res.status !== 200 ? false : res.data;
+    try {
+      const url = this.baseUrl + '/mine?';
+      const res = await request({
+        url,
+      });
+      return res.status !== 200 ? false : res.data;
+    } catch (e) {
+      return false;
+    }
   }
 
   // 登录状态
@@ -49,8 +46,10 @@ export default class Yuque extends Base {
       const res = await this.userInfo();
       data = res.data;
     }
-    data.platform = this.platform;
-    return await platformUserPut(data);
+    if (data) {
+      data.platform = this.platform;
+      return await platformUserPut(data);
+    }
   }
 
   // 同步数据
@@ -79,15 +78,20 @@ export default class Yuque extends Base {
       q = ''
     } = {}
   ) => {
-    const url = this.baseUrl + '/notes';
-    const params = { filter_type, offset, order, q };
+    try {
+      const url = this.baseUrl + '/notes';
+      const params = { filter_type, offset, order, q };
 
-    const res = await request({
-      url,
-      method: 'get',
-      params,
-    });
-    return res.data;
+      const res = await request({
+        url,
+        method: 'get',
+        params,
+        retry: 3,
+      });
+      return res.data ? res.data : {};
+    } catch (e) {
+      return {};
+    }
   }
 
   /**
@@ -96,13 +100,18 @@ export default class Yuque extends Base {
    * @param {Number} id - 小记 ID
    */
   noteDetail = async(id) => {
-    const url = this.baseUrl + '/notes/' + id;
+    try {
+      const url = this.baseUrl + '/notes/' + id;
 
-    const res = await request({
-      url,
-      method: 'get',
-    });
-    return res.data;
+      const res = await request({
+        url,
+        method: 'get',
+        retry: 3,
+      });
+      return res.data ? res.data : {};
+    } catch (e) {
+      return {};
+    }
   }
 
   /**
@@ -123,7 +132,6 @@ export default class Yuque extends Base {
       force = false, // 强制更新
     } = {}
   ) => {
-    console.log('syncNote tabId', this.tabId);
     const returnRes = {
       add: 0,
       update: 0,

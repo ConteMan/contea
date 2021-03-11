@@ -1,11 +1,13 @@
-import { sleep, getRandomIntInclusive } from '@/utils';
 import request from '@/utils/request.js';
+import { randomSleep, sendTabMessage } from '@/utils';
 import { infoPut, existPlatformType } from '@/service/info.js';
 import { put as platformUserPut } from '@/service/platform_user.js';
 import { enablePlatformType } from '@/service/config';
+import Base from './base.js';
 
-export default class Juejin {
+export default class Juejin extends Base {
   constructor() {
+    super();
     this.baseUrl = 'https://api.juejin.cn';
     this.platform = 'juejin';
     this.PLATFORM_TYPE = {
@@ -13,21 +15,18 @@ export default class Juejin {
     };
   }
 
-  static getInstance() {
-    if (!this.instance) {
-      this.instance = new Juejin();
-    }
-    return this.instance;
-  }
-
   // 个人信息
   userInfo = async() => {
-    const url = this.baseUrl + '/user_api/v1/user/get';
-    const res = await request({
-      url,
-      method: 'get',
-    });
-    return res.status !== 200 ? false : res.data;
+    try {
+      const url = this.baseUrl + '/user_api/v1/user/get';
+      const res = await request({
+        url,
+        method: 'get',
+      });
+      return res.status !== 200 ? false : res.data;
+    } catch (e) {
+      return false;
+    }
   }
 
   // 登录状态
@@ -47,8 +46,10 @@ export default class Juejin {
       const res = await this.userInfo();
       data = res.data;
     }
-    data.platform = this.platform;
-    return await platformUserPut(data);
+    if (data) {
+      data.platform = this.platform;
+      return await platformUserPut(data);
+    }
   }
 
   // 同步数据
@@ -75,15 +76,19 @@ export default class Juejin {
       cursor = 0
     } = {}
   ) => {
-    const url = this.baseUrl + '/user_api/v1/user/dynamic';
-    const params = { user_id, cursor };
-
-    const res = await request({
-      url,
-      method: 'get',
-      params,
-    });
-    return res.data;
+    try {
+      const url = this.baseUrl + '/user_api/v1/user/dynamic';
+      const params = { user_id, cursor };
+      const res = await request({
+        url,
+        method: 'get',
+        params,
+        retry: 3,
+      });
+      return res.data;
+    } catch (e) {
+      return {};
+    }
   }
 
   /**
@@ -102,8 +107,9 @@ export default class Juejin {
     } = {}
   ) => {
     const returnRes = {
-      success: 0,
-      fail: 0
+      add: 0,
+      update: 0,
+      fail: 0,
     };
 
     // 无数据时，强制更新
@@ -112,10 +118,10 @@ export default class Juejin {
       exist ? force : force = !force;
     }
     const user = await this.userInfo();
-    if (!user) {
+    if (!user || !user.data) {
       return returnRes;
     }
-    const user_id = user.user_id;
+    const user_id = user.data.user_id;
     let hasMore = true;
     while (hasMore) {
       const res = await this.activity({ user_id, cursor });
@@ -129,24 +135,25 @@ export default class Juejin {
           item.info_updated_at = item.time;
 
           const putRes = await infoPut(item, ['id', 'time']);
-          if (putRes) {
-            returnRes.success++;
-          } else {
+          if (putRes > 0) {
+            returnRes.add++;
+          } else if (putRes === 0) {
             if (!force) {
               flag = false;
-              break;
-            } else {
-              returnRes.fail++;
             }
+            returnRes.fail++;
+          } else {
+            returnRes.update++;
           }
+          sendTabMessage(this.tabId, { type: 'syncRes', res: returnRes });
+          if (!flag) break;
         }
       }
       hasMore = res.data.hasMore && flag;
       if (hasMore) {
         cursor = res.data.cursor;
+        await randomSleep(1000, 3000);
       }
-      const sleepTime = getRandomIntInclusive(1000, 3000);
-      await sleep(sleepTime);
     }
     return returnRes;
   }

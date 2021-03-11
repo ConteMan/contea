@@ -172,6 +172,10 @@ export default {
         update: 0,
         fail: 0,
       };
+      this.platformInfo = {
+        loginStatus: 0,
+        info: {},
+      };
     },
     async list() {
       this.busy = true;
@@ -211,7 +215,9 @@ export default {
       }
       // eslint-disable-next-line no-undef
       chrome.runtime.sendMessage({ command: 'getPlatformInfo', params: { platforms: [this.platform] }}, (response) => {
-        this.platformInfo = response.data[this.platform];
+        if (response.data[this.platform]) {
+          this.platformInfo = response.data[this.platform];
+        }
         return true;
       });
     },

@@ -64,3 +64,15 @@ chrome.runtime.onMessage.addListener(async function(request, sender, sendRespons
 chrome.runtime.onInstalled.addListener(async function() {
   await service.init();
 });
+
+chrome.browserAction.onClicked.addListener(function() {
+  const index = chrome.extension.getURL('options.html');
+  chrome.tabs.query({ url: index }, function(tabs) {
+    if (tabs.length) {
+      chrome.tabs.update(tabs[0].id, { active: true });
+      chrome.windows.update(tabs[0].windowId, { focused: true });
+    } else {
+      chrome.tabs.create({ url: index });
+    }
+  });
+});

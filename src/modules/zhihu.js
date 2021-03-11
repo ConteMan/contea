@@ -1,28 +1,33 @@
 import request from '@/utils/request.js';
-import { randomSleep } from '@/utils/index.js';
+import { randomSleep, sendTabMessage } from '@/utils/index.js';
 import { infoPut, existPlatformType } from '@/service/info.js';
 import { put as platformUserPut } from '@/service/platform_user.js';
 import { enablePlatformType } from '@/service/config';
+import Base from './base';
 
-export default class Zhihu {
+export default class Zhihu extends Base {
   constructor() {
+    super();
     this.baseUrl = 'https://www.zhihu.com/api';
     this.platform = 'zhihu';
     this.url_username = '';
-  }
-
-  static getInstance() {
-    if (!this.instance) {
-      this.instance = new Zhihu();
-    }
-    return this.instance;
+    this.PLATFORM_TYPE = {
+      ACTIVITY: 'yuque_note',
+    };
   }
 
   // 个人信息
   userInfo = async() => {
-    const url = this.baseUrl + '/v4/me';
-    const res = await request.get(url);
-    return res.status !== 200 ? false : res.data;
+    try {
+      const url = this.baseUrl + '/v4/me';
+      const res = await request({
+        url,
+        method: 'get',
+      });
+      return res.status !== 200 ? false : res.data;
+    } catch (e) {
+      return false;
+    }
   }
 
   // 登录状态
@@ -41,8 +46,10 @@ export default class Zhihu {
     if (!data) {
       data = await this.userInfo();
     }
-    data.platform = this.platform;
-    return await platformUserPut(data);
+    if (data) {
+      data.platform = this.platform;
+      return await platformUserPut(data);
+    }
   }
 
   // 同步数据
@@ -72,24 +79,34 @@ export default class Zhihu {
       after_id = '',
     } = {}
   ) => {
-    let res;
-    if (!url) {
-      url = this.baseUrl + '/v3/moments/' + this.url_username + '/activities';
-      const params = { limit, desktop, session_id, after_id };
-      res = await request({
-        url,
-        params,
-      });
-    } else {
-      res = await request.get(url);
+    try {
+      let res;
+      if (!url) {
+        url = this.baseUrl + '/v3/moments/' + this.url_username + '/activities';
+        const params = { limit, desktop, session_id, after_id };
+        res = await request({
+          url,
+          params,
+        });
+      } else {
+        res = await request({
+          url,
+          method: 'get',
+          retry: 3,
+        });
+      }
+      return res.data ? res.data : {};
+    } catch (e) {
+      return {};
     }
-    return res.data ? res.data : {};
   }
 
   // 同步动态
-  syncActivity = async({
-    force = false, // 强制更新
-  }) => {
+  syncActivity = async(
+    {
+      force = false, // 强制更新
+    } = {}
+  ) => {
     const returnRes = {
       add: 0,
       update: 0,
@@ -102,7 +119,7 @@ export default class Zhihu {
 
     // 无数据时，强制更新
     if (!force) {
-      const exist = await existPlatformType(this.PLATFORM_TYPE.NOTE);
+      const exist = await existPlatformType(this.PLATFORM_TYPE.ACTIVITY);
       exist ? force : force = !force;
     }
 
@@ -124,16 +141,18 @@ export default class Zhihu {
           item.info_created_at = item.created_time;
           item.info_updated_at = item.created_time;
           const putRes = await infoPut(item, ['created_time']);
-          if (putRes) {
-            putRes === 1 ? returnRes.add++ : returnRes.update++;
-          } else {
+          if (putRes > 0) {
+            returnRes.add++;
+          } else if (putRes === 0) {
             if (!force) {
               flag = false;
-              break;
-            } else {
-              returnRes.fail++;
             }
+            returnRes.fail++;
+          } else {
+            returnRes.update++;
           }
+          sendTabMessage(this.tabId, { type: 'syncRes', res: returnRes });
+          if (!flag) break;
         }
       }
       hasMore = !res.paging.is_end && flag;
