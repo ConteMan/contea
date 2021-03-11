@@ -7,10 +7,12 @@
   "permissions": [
     "storage",
     "cookies",
-    "activeTab",
     "tabs",
-    "<all_urls>",
-    "*://*/*"
+    "https://flomoapp.com/*",
+    "https://web-api.okjike.com/*",
+    "https://api.juejin.cn/*",
+    "https://www.yuque.com/*",
+    "https://www.zhihu.com/*"
   ],
   "icons": {
     "16": "icons/16.png",
@@ -33,17 +35,5 @@
   "options_ui": {
     "page": "options.html",
     "open_in_tab": true
-  },
-  "content_scripts": [
-    { 
-      "matches": [
-        "http://*/*",
-        "https://*/*"
-      ], 
-      "js": [ 
-        "./script/content.js"
-      ], 
-      "run_at": "document_start"
-    } 
-  ]
+  }
 }
