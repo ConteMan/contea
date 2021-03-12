@@ -2,11 +2,9 @@
   "manifest_version": 2,
   "name": "__MSG_extName__",
   "homepage_url": "https://github.com/ConteMan/Contea",
-  "description": "View all info in one place",
-  "default_locale": "en",
+  "default_locale": "zh_CN",
   "permissions": [
     "storage",
-    "cookies",
     "tabs",
     "https://flomoapp.com/*",
     "https://web-api.okjike.com/*",

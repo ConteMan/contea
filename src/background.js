@@ -37,9 +37,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     case 'setConfigs':
       data = Service.setConfigs(params);
       break;
-    case 'queryInterface':
-      data = Service.sync(queryInterface);
-      break;
     default:
       data = {};
       break;
