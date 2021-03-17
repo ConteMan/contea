@@ -4,7 +4,6 @@
   "homepage_url": "https://github.com/ConteMan/Contea",
   "default_locale": "zh_CN",
   "permissions": [
-    "storage",
     "tabs",
     "https://flomoapp.com/*",
     "https://web-api.okjike.com/*",
