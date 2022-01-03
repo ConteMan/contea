@@ -5,3 +5,9 @@ export type InfoItem = {
 }
 
 export type InfoList = InfoItem []
+
+export type BaseModule = {
+  enable?: boolean
+  alarm?: number
+  [other: string]: any
+}

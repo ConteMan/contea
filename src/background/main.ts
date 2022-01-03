@@ -2,6 +2,7 @@ import { sendMessage, onMessage } from 'webext-bridge'
 import { Tabs } from 'webextension-polyfill'
 import configState from '~/models/keyValue/configState'
 import { defHttp } from '~/utils/http/axios'
+import AlarmService from '~/services/base/alarm'
 
 // only on dev mode
 if (import.meta.hot) {
@@ -86,4 +87,13 @@ browser.runtime.onMessage.addListener(async(message, sender) => {
     command,
     data,
   }
+})
+
+// 定时任务
+browser.alarms.onAlarm.addListener(async(alarm) => {
+  const { name } = alarm
+  // eslint-disable-next-line no-console
+  console.log(name)
+
+  await AlarmService.alarmDeal(name)
 })

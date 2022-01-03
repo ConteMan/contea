@@ -33,7 +33,7 @@ export function deepMerge<T = any>(src: any = {}, target: any = {}): T {
   let key: string
   // eslint-disable-next-line no-restricted-syntax
   for (key in target)
-    src[key] = isObject(src[key]) ? deepMerge(src[key], target[key]) : (src[key] = target[key])
+    src[key] = isObject(src[key]) && !(src[key] instanceof Array) ? deepMerge(src[key], target[key]) : (src[key] = target[key])
 
   return src
 }
@@ -45,4 +45,13 @@ export function deepMerge<T = any>(src: any = {}, target: any = {}): T {
 type targets = '_blank' | '_self' | '_parent' | '_top'
 export function openSite(url: string, target: targets = '_blank'): void {
   window.open(url, target)
+}
+
+/**
+ * 字符串首字母大写
+ * @param str string - 字符串
+ * @returns string
+ */
+export function firstUpper(str: string) {
+  return str.replace(str[0], str[0].toUpperCase())
 }

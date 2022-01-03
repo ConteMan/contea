@@ -6,7 +6,7 @@
       <template v-for="item in list" :key="item.title">
         <div class="p-2 hover:(bg-gray-200)">
           <template v-if="item.ca_module === 'v2ex'">
-            <a :href="item.title_link">
+            <a :href="'https://v2ex.com' + item.title_link">
               {{ item.title }}
             </a>
           </template>
@@ -16,7 +16,7 @@
             </a>
           </template>
           <span class="text-gray-300 ml-2">
-            {{ dayjs(item.ca_sort_at).format('YYYY-MM-DD hh:mm') }}
+            {{ dayjs(item.ca_sort_at).format('YYYY-MM-DD HH:mm') }}
           </span>
           <span class="text-gray-300 ml-2">
             {{ item.ca_module.toUpperCase() }} / {{ item.ca_module_type.toUpperCase() }}

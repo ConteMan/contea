@@ -34,7 +34,7 @@ export default new (class List extends AsyncModels.collection<InfoInterface, Dex
 
   // 生成唯一标识
   slug(item: InfoItem, keys: string[]) {
-    let slug = `${item.ca_module}-${item.ca_module_type}-`
+    let slug = `${item.ca_module}-`
     let keyStr = ''
 
     keys.forEach((key) => {

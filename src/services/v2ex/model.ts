@@ -5,6 +5,8 @@ export type Config = {
   site: string
   url: string
   expried: number
+  enableTypes?: any[]
+  alarm?: number
 }
 
 export type BaseUser = {
@@ -40,3 +42,21 @@ export type InfoItem = {
 }
 
 export type InfoList = InfoItem []
+
+export type DomListItem = {
+  ca_module: string
+  ca_module_type: string
+  ca_sort_at: number
+
+  id?: number
+  title?: string
+  title_link?: string | null
+  node?: string
+  node_link?: string | null
+  author?: string
+  author_link?: string | null
+  last_reply_at?: string | null
+  reply_count?: number
+}
+
+export type DomList = DomListItem []

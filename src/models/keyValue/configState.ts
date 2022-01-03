@@ -3,6 +3,9 @@ import { dexieDriverFactory } from 'kurimudb-driver-dexie'
 import migrations from '../migrations'
 import defaultSetting from '~/setting/defaultSetting'
 import { deepMerge } from '~/utils'
+import Alarm from '~/services/base/alarm'
+
+import type { BaseModule } from '~/services/base/model'
 
 class ConfigState extends AsyncModels.keyValue {
   constructor() {
@@ -19,10 +22,14 @@ class ConfigState extends AsyncModels.keyValue {
   }
 
   // 合并式设置
-  async mergeSet(key: string, data: object) {
-    const res = await this.getItem(key)
+  async mergeSet(module: string, data: BaseModule) {
+    const res = await this.getItem(module)
     const mergeRes = deepMerge(res, data)
-    await this.setItem(key, mergeRes)
+    // eslint-disable-next-line no-console
+    console.log({ mergeRes })
+    await this.setItem(module, mergeRes)
+    if (data.enable || data.alarm)
+      await Alarm.setAlarm(module)
   }
 }
 

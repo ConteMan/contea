@@ -10,7 +10,7 @@ type Paginate = {
 class Base {
   async list(paginate: Paginate) {
     const { currentPage, num } = paginate
-    return await infoList.storage.query().orderBy('ca_sort_at').offset((currentPage - 1) * num).reverse().toArray()
+    return await infoList.storage.query().orderBy('ca_sort_at').limit(40).offset((currentPage - 1) * num).reverse().toArray()
   }
 }
 

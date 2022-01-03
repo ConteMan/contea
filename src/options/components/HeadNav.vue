@@ -11,14 +11,6 @@
     <a-button
       type="text"
       class="text-gray-400 !bg-transparent"
-      :class="[ {'btn-active': routeName === 'List'} ]"
-      @click="$router.push('/list')"
-    >
-      List
-    </a-button>
-    <a-button
-      type="text"
-      class="text-gray-400 !bg-transparent"
       :class="{ 'btn-active': routeName === 'Setting' }"
       @click="$router.push('/setting')"
     >
