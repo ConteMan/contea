@@ -5,6 +5,10 @@ body,
   padding: 0;
 }
 
+* {
+  scroll-behavior: smooth;
+}
+
 .btn {
   @apply px-4 py-1 rounded inline-block
     bg-teal-600 text-white cursor-pointer

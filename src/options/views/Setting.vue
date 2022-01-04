@@ -81,6 +81,7 @@
             </div>
           </div>
         </div>
+
         <div class="flex border-l-2 border-l-gray-300 mt-2 hover:(border-l-red-600)">
           <div class="flex-grow flex flex-col justify-center">
             <div class="ml-4">
@@ -96,6 +97,19 @@
             </a-button>
           </div>
         </div>
+
+        <div class="flex border-l-2 border-l-gray-300 mt-2 hover:(border-l-red-600)">
+          <div class="flex-grow flex flex-col justify-center">
+            <div class="ml-4">
+              WakaTime
+            </div>
+          </div>
+          <div class="flex-grow-1 flex flex-row text-right w-screen-sm space-x-4 divide-x-2">
+            <a-button type="text" class="bg-gray-200" @click="testFunction(WakaTime.daySummary())">
+              每日数据
+            </a-button>
+          </div>
+        </div>
       </a-collapse-panel>
     </a-collapse>
   </div>
@@ -106,6 +120,7 @@ import type { UnwrapRef } from 'vue'
 import ConfigState from '~/models/keyValue/configState'
 import V2EX from '~/services/v2ex'
 import Bookmark from '~/services/bookmark'
+import WakaTime from '~/services/wakatime'
 const customStyle = 'background: #f7f7f7;border-radius: 4px;margin-bottom: 24px;border: 0;overflow: hidden'
 
 interface DataType {
