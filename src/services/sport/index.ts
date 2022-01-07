@@ -1,3 +1,3 @@
-import Football from './football'
+import KBS from './kbs'
 
-export { Football }
+export { KBS }

@@ -1,4 +1,4 @@
-import BookMark from '~/services/browser/bookmark'
+import Bookmark from '~/services/browser/bookmark'
 import Storage from '~/services/browser/storage'
 
-export { BookMark, Storage }
+export { Bookmark, Storage }

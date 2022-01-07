@@ -14,12 +14,12 @@
 </template>
 <script setup lang="ts">
 import dayjs from 'dayjs'
-import { BookMark } from '~/services/browser'
+import { Bookmark } from '~/services/browser'
 
 const recent = ref([] as any[])
 
 const getRecent = async() => {
-  recent.value = await BookMark.recent(20)
+  recent.value = await Bookmark.recent(20)
 
   // eslint-disable-next-line no-console
   console.log(recent.value)
