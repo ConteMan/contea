@@ -123,6 +123,20 @@
             </a-button>
           </div>
         </div>
+
+        <div class="flex border-l-2 border-l-gray-300 mt-2 hover:(border-l-red-600)">
+          <div class="flex-grow flex flex-col justify-center">
+            <div class="ml-4 min-w-24">
+              体育
+            </div>
+          </div>
+          <div class="flex-grow-1 flex flex-row text-right space-x-4 divide-x-2">
+            <input v-model="testKBSColumnId" class="h-full mr-1 ml-4 border-1px pl-2">
+            <a-button type="text" class="bg-gray-200" @click="testFunction(Football.matches(testKBSColumnId))">
+              腾讯体育
+            </a-button>
+          </div>
+        </div>
       </a-collapse-panel>
     </a-collapse>
   </div>
@@ -135,6 +149,8 @@ import V2EX from '~/services/v2ex'
 import Bookmark from '~/services/browser/bookmark'
 import WakaTime from '~/services/wakatime'
 import { Storage } from '~/services/browser/index'
+import { Football } from '~/services/sport'
+
 const customStyle = 'background: #f7f7f7;border-radius: 4px;margin-bottom: 24px;border: 0;overflow: hidden'
 
 interface DataType {
@@ -165,15 +181,15 @@ const v2exTypes = [
 
 const activeKey = ref(['1', '2', '3'])
 const v2exToken = ref('')
-const v2exAlarm = ref(0)
+const v2exAlarm = ref(10)
+const testTabName = ref('hot')
+const testKBSColumnId = ref(8)
 const dataObj: UnwrapRef<DataType> = reactive({
   v2exEnableTypes: [],
   v2ex: {
     enable: true,
   },
 })
-
-const testTabName = ref('')
 
 const getSetting = async() => {
   const settings = await (await ConfigState.bulkGetItem(['v2ex'])).toArray()
