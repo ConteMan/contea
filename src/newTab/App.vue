@@ -8,6 +8,12 @@
         <span class="cursor-pointer hover:(text-red-500)" @click="tabChange('film')">
           Film
         </span>
+        <span class="cursor-pointer hover:(text-red-500)" @click="tabChange('bookmark')">
+          BookMark
+        </span>
+        <span class="cursor-pointer hover:(text-red-500)" @click="tabChange('setting')">
+          Setting
+        </span>
       </div>
       <KeepAlive>
         <TimeLineCard v-if="tabSelected === 'worldline'" class="timeline-card max-h-[calc(100%)] pb-8" />
@@ -15,6 +21,8 @@
       <KeepAlive>
         <DdrkCard v-if="tabSelected === 'film'" class="ddrk-card max-h-[calc(100%)] overflow-y-scroll pb-8" />
       </KeepAlive>
+      <BookMarkList v-if="tabSelected === 'bookmark'" class="ddrk-card max-h-[calc(100%)] overflow-y-scroll pb-8" />
+      <SettingList v-if="tabSelected === 'setting'" class="ddrk-card max-h-[calc(100%)] overflow-y-scroll pb-8" />
     </div>
     <div class="flex-grow flex flex-col space-y-4 p-4">
       <WakaTimeCard class="wakatime-card p-4 h-max rounded-md shadow-md"></WakaTimeCard>
@@ -27,6 +35,8 @@
 <script setup lang="ts">
 import TimeLineCard from '~/newTab/views/timeLine/Card.vue'
 import WakaTimeCard from '~/newTab/views/wakaTime/Card.vue'
+import BookMarkList from '~/newTab/views/bookmark/List.vue'
+import SettingList from '~/newTab/views/setting/Setting.vue'
 import V2EXCard from '~/components/v2ex/Card.vue'
 import SspaiCard from '~/components/sspai/Card.vue'
 import DdrkCard from '~/components/vedio/DdrkCard.vue'
