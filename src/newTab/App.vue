@@ -1,20 +1,20 @@
 <template>
   <div class="w-full max-h-screen overflow-y-hidden p-4 flex flex-row">
     <div class="w-full flex-grow w-screen-sm">
-      <div class="pb-4 space-x-2">
-        <span class="cursor-pointer hover:(text-red-500)" @click="tabChange('worldline')">
-          Worldline
+      <div class="pl-2 pb-4 h-auto space-x-2">
+        <span class="px-2 py-1 inline-block rounded-md cursor-pointer hover:(text-red-500)" :class="{'active-tab': tabSelected === 'worldline'}" @click="tabChange('worldline')">
+          世界线
         </span>
-        <span class="cursor-pointer hover:(text-red-500)" @click="tabChange('film')">
+        <span class="px-2 py-1 inline-block rounded-md cursor-pointer hover:(text-red-500)" :class="{'active-tab': tabSelected === 'film'}" @click="tabChange('film')">
           Film
         </span>
-        <span class="cursor-pointer hover:(text-red-500)" @click="tabChange('bookmark')">
+        <span class="px-2 py-1 inline-block rounded-md cursor-pointer hover:(text-red-500)" :class="{'active-tab': tabSelected === 'bookmark'}" @click="tabChange('bookmark')">
           BookMark
         </span>
-        <span class="cursor-pointer hover:(text-red-500)" @click="tabChange('sport')">
+        <span class="px-2 py-1 inline-block rounded-md cursor-pointer hover:(text-red-500)" :class="{'active-tab': tabSelected === 'sport'}" @click="tabChange('sport')">
           Sport
         </span>
-        <span class="cursor-pointer hover:(text-red-500)" @click="tabChange('setting')">
+        <span class="px-2 py-1 inline-block rounded-md cursor-pointer hover:(text-red-500)" :class="{'active-tab': tabSelected === 'setting'}" @click="tabChange('setting')">
           Setting
         </span>
       </div>
@@ -72,5 +72,10 @@ const tabChange = (tab: string) => {
 }
 :is(.timeline-card:hover, .ddrk-card:hover, .sport-list:hover)::-webkit-scrollbar {
   display: none;
+}
+
+.active-tab {
+  background-color: gray;
+  color: white;
 }
 </style>
