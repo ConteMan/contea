@@ -27,6 +27,9 @@ export default new (class List extends AsyncModels.collection<InfoInterface, Dex
       newList[slug] = { ca_slug: slug, ...item }
     })
 
+    // eslint-disable-next-line no-console
+    console.log(newList)
+
     const res = await this.storage.bulkInsertOrUpdate(newList)
 
     return res
@@ -38,7 +41,7 @@ export default new (class List extends AsyncModels.collection<InfoInterface, Dex
     let keyStr = ''
 
     keys.forEach((key) => {
-      keyStr += item[key]
+      keyStr += String(item[key])
     })
     slug += MD5(keyStr)
 

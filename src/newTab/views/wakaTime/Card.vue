@@ -1,7 +1,6 @@
 <template>
   <div>
-    <div> WakaTime</div>
-    <div>今天已经 Coding {{ info.cummulative_total.text }}</div>
+    <div>今日已编程 {{ info.cummulative_total.text }}</div>
   </div>
 </template>
 

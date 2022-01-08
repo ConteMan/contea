@@ -9,10 +9,7 @@
       <div class="flex">
         <div>
           <div>
-            {{ user.bio }}
-          </div>
-          <div class="mt-2 italic text-gray-500">
-            updated: {{ dayjs(user.updatedAt).format('YYYY-MM-DD HH:mm:ss') }}
+            {{ user.liked_count }} 能量
           </div>
         </div>
       </div>
@@ -33,7 +30,6 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import dayjs from 'dayjs'
 import { openSite } from '~/utils'
 import base from '~/services/sspai'
 import type { Config, User } from '~/services/sspai/model'

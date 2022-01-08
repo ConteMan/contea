@@ -7,15 +7,9 @@
     </div>
     <div v-else>
       <div>
-        {{ info.signature }}
-      </div>
-      <div>
         <div>第 {{ info.id }} 号会员</div>
         <div>今日活跃 {{ info.dau }}</div>
         <div>{{ info.balance?.gold }} 金 {{ info.balance?.silver }} 银 {{ info.balance?.bronze }} 铜</div>
-      </div>
-      <div class="mt-2 italic text-gray-500">
-        updated: {{ dayjs(info.updatedAt).format('YYYY-MM-DD HH:mm:ss') }}
       </div>
     </div>
     <div class="relative flex items-center text-right">
@@ -34,7 +28,6 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import dayjs from 'dayjs'
 import { openSite } from '~/utils'
 import v2ex from '~/services/v2ex'
 import type { Config, User } from '~/services/v2ex/model'

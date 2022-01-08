@@ -5,7 +5,7 @@ export type Config = {
   enableTypes: any[]
   expried: number
   name?: string
-  site?: string
+  site: string
   apiUrl?: string
   cdnUrl?: string
   alarm?: number

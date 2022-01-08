@@ -1,9 +1,10 @@
+import sspai from '../sspai'
 import configState from '~/models/keyValue/configState'
 import v2ex from '~/services/v2ex'
 
 class AlarmSetting {
   async setAlarm(module: string) {
-    const modules = ['v2ex']
+    const modules = ['v2ex', 'sspai']
 
     if (!modules.includes(module))
       return false
@@ -46,8 +47,15 @@ class AlarmSetting {
    */
   async alarmDeal(module: string) {
     const { enableTypes } = await configState.getItem(module)
+    if (!enableTypes || !enableTypes.length)
+      return false
+
     if (module === 'v2ex')
       await v2ex.tabLists(enableTypes)
+    if (module === 'sspai')
+      await sspai.lists(enableTypes)
+
+    return true
   }
 }
 

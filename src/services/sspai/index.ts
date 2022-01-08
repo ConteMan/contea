@@ -102,9 +102,24 @@ class Sspai {
       )
     })
 
+    // eslint-disable-next-line no-console
+    console.log(list)
+
     await infoList.bulkSetItemByModule(list, ['ca_author_id', 'created_at'])
 
     return list
+  }
+
+  /**
+   * 根据类型获取信息列表
+   * @param types [] - 类型数组
+   */
+  async lists(types: any[]) {
+    for (const type of types) {
+      if (type === 'FOLLOWED')
+        await this.followActivity()
+    }
+    return true
   }
 }
 

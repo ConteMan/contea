@@ -12,12 +12,12 @@
             {{ item.data.title }}
           </a>
         </template>
-        <div>
-          <span class="text-gray-300">
+        <div class="text-xs py-1">
+          <span class=" text-gray-300">
             {{ dayjs(item.ca_sort_at).format('YYYY-MM-DD HH:mm') }}
           </span>
-          <span class="text-gray-300 ml-2">
-            {{ item.ca_module.toUpperCase() }} / {{ item.ca_module_type.toUpperCase() }}
+          <span class=" text-gray-300 ml-2">
+            {{ item.ca_module.toUpperCase() }}
           </span>
         </div>
       </div>
@@ -32,7 +32,7 @@ import Base from '~/services/base'
 const list = ref([] as any[])
 
 const getPage = async() => {
-  const res = await Base.list({ currentPage: 1, num: 20 })
+  const res = await Base.list({ currentPage: 1, num: 10 })
   list.value = res
 }
 
