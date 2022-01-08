@@ -28,7 +28,10 @@ class Sspai {
     }
   }
 
-  // 获取 Token
+  /**
+   * 获取 Token
+   * @returns string
+   */
   async getToken() {
     const { url } = await this.getConfig()
 
@@ -36,7 +39,9 @@ class Sspai {
     return res?.value
   }
 
-  // 获取用户信息
+  /**
+   * 获取用户信息
+   */
   async user(): Promise<User> {
     const { apiUrl, key, expried } = await this.getConfig()
     const info = await moduleState.getItem(key)
@@ -64,7 +69,9 @@ class Sspai {
     return newInfo as User
   }
 
-  // 获取关注的人的动态
+  /**
+   * 获取关注的人的动态
+   */
   async followActivity() {
     const moduleType = 'followActivity'
 

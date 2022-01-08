@@ -4,7 +4,9 @@ export default {
     hasInit: true,
     modules: [
       'v2ex',
+      'sspai',
     ],
+    alarm: 10,
   },
   v2ex: {
     key: 'v2ex',
@@ -13,6 +15,7 @@ export default {
     site: 'https://www.v2ex.com',
     url: 'https://www.v2ex.com',
     expried: 300,
+    alarm: 10,
   },
   sspai: {
     key: 'sspai',
@@ -23,5 +26,6 @@ export default {
     apiUrl: 'https://sspai.com/api/v1',
     cdnUrl: 'https://cdn.sspai.com',
     expried: 86400,
+    alarm: 10,
   },
 }

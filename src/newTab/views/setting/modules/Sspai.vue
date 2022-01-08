@@ -13,17 +13,6 @@
   <SettingItem class="mt-2">
     <template #left>
       <div class="ml-4 min-w-24">
-        Token
-      </div>
-    </template>
-    <template #right>
-      <a-input v-model:value="data.base.token" @blur="actionSet('token', data.base.token)" />
-    </template>
-  </SettingItem>
-
-  <SettingItem class="mt-2">
-    <template #left>
-      <div class="ml-4 min-w-24">
         定时
       </div>
     </template>
@@ -39,7 +28,7 @@
       </div>
     </template>
     <template #right>
-      <a-checkbox-group v-model:value="data.base.enableTypes" name="v2exTypeCheckbox" :options="baseTypes" @change="actionSet('enableTypes', data.base.enableTypes)" />
+      <a-checkbox-group v-model:value="data.base.enableTypes" name="baseTypeCheckbox" :options="baseTypes" @change="actionSet('enableTypes', data.base.enableTypes)" />
     </template>
   </SettingItem>
 
@@ -59,28 +48,25 @@
 
 <script setup lang="ts">
 import type { UnwrapRef } from 'vue'
-import type { Config } from '~/services/v2ex/model'
-import { TypeEnum } from '~/enums/v2exEnum'
+import type { Config } from '~/services/sspai/model'
+import { TypeEnum } from '~/enums/sspaiEnum'
 import { enumToObj } from '~/utils'
 
 import SettingItem from '~/components/template/SettingItem.vue'
 import ConfigState from '~/models/keyValue/configState'
 
-const module = 'v2ex'
+const module = 'sspai'
 
-// 获取设置
+// 订阅设置
 interface DataType {
   base: Config
 }
 const data: UnwrapRef<DataType> = reactive({
   base: {
-    key: 'v2ex',
     enable: true,
     enableTypes: [],
-    token: '',
-    site: '',
+    key: '',
     url: '',
-    name: '',
     expried: 0,
   },
 })

@@ -5,6 +5,7 @@ export type Config = {
   site: string
   url: string
   expried: number
+  token?: string
   enableTypes?: any[]
   alarm?: number
 }

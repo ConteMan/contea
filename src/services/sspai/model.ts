@@ -1,12 +1,14 @@
 export type Config = {
   key: string
   enable: boolean
-  name: string
-  site: string
   url: string
-  apiUrl: string
-  cdnUrl: string
+  enableTypes: any[]
   expried: number
+  name?: string
+  site?: string
+  apiUrl?: string
+  cdnUrl?: string
+  alarm?: number
 }
 
 export type User = {

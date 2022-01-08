@@ -55,3 +55,26 @@ export function openSite(url: string, target: targets = '_blank'): void {
 export function firstUpper(str: string) {
   return str.replace(str[0], str[0].toUpperCase())
 }
+
+/**
+ * 枚举转对象
+ * @param data {} - 枚举值
+ * @param mode number - 模式
+ * @param keys [] - 对象键
+ */
+interface dataType {
+  [other: string]: any
+}
+export function enumToObj(data: dataType, keys: any[] = ['key', 'value']) {
+  const res = []
+  const indexs = Object.keys(data)
+  for (const index of indexs) {
+    res.push({
+      [keys[0]]: index,
+      [keys[1]]: data[index],
+    })
+  }
+  // eslint-disable-next-line no-console
+  console.log(res)
+  return res
+}

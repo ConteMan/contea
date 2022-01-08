@@ -40,6 +40,10 @@ class AlarmSetting {
     }
   }
 
+  /**
+   * 定时任务处理
+   * @param module string - 模块名称
+   */
   async alarmDeal(module: string) {
     const { enableTypes } = await configState.getItem(module)
     if (module === 'v2ex')

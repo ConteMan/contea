@@ -67,10 +67,10 @@ const tabChange = (tab: string) => {
 ::-webkit-scrollbar-thumb {
   background-color: rgb(230, 230, 230);
 }
-:is(.worldline-list, .ddrk-list, .sport-list, .setting-list)::-webkit-scrollbar {
+:is(.worldline-list, .ddrk-list, .bookmark-list, .sport-list, .setting-list)::-webkit-scrollbar {
   display: none;
 }
-:is(.worldline-card:list, .ddrk-list:hover, .sport-list:hover, .setting-list:hover)::-webkit-scrollbar {
+:is(.worldline-list:hover, .ddrk-list:hover, .bookmark-list:hover, .sport-list:hover, .setting-list:hover)::-webkit-scrollbar {
   display: none;
 }
 

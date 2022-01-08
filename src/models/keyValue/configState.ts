@@ -17,17 +17,28 @@ class ConfigState extends AsyncModels.keyValue {
   }
 
   // 初始化
-  async init() {
-    await this.bulkSetItem(defaultSetting)
+  async init(module: 'all'| 'default' | 'v2ex' | 'sspai' = 'all') {
+    if (module === 'all') {
+      await this.bulkSetItem(defaultSetting)
+    }
+    else {
+      await this.setItem(module, defaultSetting[module])
+      // eslint-disable-next-line no-console
+      console.log(defaultSetting[module])
+    }
   }
 
-  // 合并式设置
+  /**
+   * 合并式设置
+   * @param module string - 模块名称
+   * @param data {} - 模块内容
+   */
   async mergeSet(module: string, data: BaseModule) {
     const res = await this.getItem(module)
     const mergeRes = deepMerge(res, data)
-    // eslint-disable-next-line no-console
-    console.log({ mergeRes })
     await this.setItem(module, mergeRes)
+
+    // 定时任务
     if (data.enable || data.alarm)
       await Alarm.setAlarm(module)
   }
