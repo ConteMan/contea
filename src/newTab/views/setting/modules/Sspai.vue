@@ -67,6 +67,7 @@ const data: UnwrapRef<DataType> = reactive({
     enableTypes: [],
     key: '',
     url: '',
+    site: '',
     expried: 0,
   },
 })

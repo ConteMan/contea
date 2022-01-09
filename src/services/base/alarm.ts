@@ -47,9 +47,11 @@ class AlarmSetting {
    */
   async alarmDeal(module: string) {
     const { enableTypes } = await configState.getItem(module)
-    if (!enableTypes || !enableTypes.length)
+    if (!enableTypes)
       return false
 
+    // eslint-disable-next-line no-console
+    console.log(enableTypes)
     if (module === 'v2ex')
       await v2ex.tabLists(enableTypes)
     if (module === 'sspai')

@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full">
+  <div class="w-full rounded-md">
     <a-collapse v-model:activeKey="activeKey" :bordered="false" class="max-w-full">
       <template #expandIcon="{ isActive }">
         <caret-right-outlined :rotate="isActive ? 90 : 0" />
@@ -29,7 +29,7 @@ import V2exModule from './modules/V2ex.vue'
 import TestModule from './modules/Test.vue'
 import SspaiModule from './modules/Sspai.vue'
 
-const customStyle = 'background: #f7f7f7;border-radius: 4px;margin-bottom: 16px;border: 0;overflow: hidden'
+const customStyle = 'background: #f7f7f7;margin-bottom: 16px;border: 0;overflow: hidden'
 
 const activeKey = ref(['base', 'v2ex', 'sspai', 'test'])
 </script>

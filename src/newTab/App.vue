@@ -1,7 +1,7 @@
 <template>
   <div class="w-full max-h-screen overflow-y-hidden p-4 flex flex-row">
     <div class="w-full flex-grow w-screen-sm">
-      <div class="pl-2 pb-4 h-auto space-x-2">
+      <div class="px-2 pb-4 h-auto space-x-2">
         <span class="px-2 py-1 inline-block rounded-md cursor-pointer hover:(text-red-500)" :class="{'active-tab': tabSelected === 'worldline'}" @click="tabChange('worldline')">
           世界线
         </span>
@@ -14,21 +14,31 @@
         <span class="px-2 py-1 inline-block rounded-md cursor-pointer hover:(text-red-500)" :class="{'active-tab': tabSelected === 'sport'}" @click="tabChange('sport')">
           体育
         </span>
+        <span class="px-2 py-1 inline-block rounded-md cursor-pointer hover:(text-red-500)" :class="{'active-tab': tabSelected === 'status'}" @click="tabChange('status')">
+          状态
+        </span>
         <span class="px-2 py-1 inline-block rounded-md cursor-pointer hover:(text-red-500)" :class="{'active-tab': tabSelected === 'setting'}" @click="tabChange('setting')">
           设置
         </span>
       </div>
+
       <KeepAlive>
         <WorldLineList v-if="tabSelected === 'worldline'" class="worldline-list max-h-[calc(100%)] pb-8" />
       </KeepAlive>
+
       <KeepAlive>
         <DdrkList v-if="tabSelected === 'film'" class="ddrk-list max-h-[calc(100%)] overflow-y-scroll pb-8" />
       </KeepAlive>
+
       <BookMarkList v-if="tabSelected === 'bookmark'" class="bookmark-list max-h-[calc(100%)] overflow-y-scroll pb-8" />
-      <SettingList v-if="tabSelected === 'setting'" class="setting-list max-h-[calc(100%)] overflow-y-scroll pb-8" />
+
       <KeepAlive>
         <SportList v-if="tabSelected === 'sport'" class="sport-list max-h-[calc(100%)] overflow-y-scroll pb-8" />
       </KeepAlive>
+
+      <StatusList v-if="tabSelected === 'status'" class="status-list max-h-[calc(100%)] overflow-y-auto" />
+
+      <SettingList v-if="tabSelected === 'setting'" class="setting-list max-h-[calc(100%)] overflow-y-auto pb-8" />
     </div>
     <div class="flex-grow flex flex-col space-y-4 p-4">
       <WakaTimeCard class="wakatime-card p-4 h-max rounded-md shadow-md"></WakaTimeCard>
@@ -43,6 +53,7 @@ import WorldLineList from '~/newTab/views/worldLine/Card.vue'
 import DdrkList from '~/components/vedio/DdrkCard.vue'
 import BookMarkList from '~/newTab/views/bookmark/List.vue'
 import SportList from '~/newTab/views/sport/List.vue'
+import StatusList from '~/newTab/views/status/Status.vue'
 import SettingList from '~/newTab/views/setting/Setting.vue'
 
 import WakaTimeCard from '~/newTab/views/wakaTime/Card.vue'
