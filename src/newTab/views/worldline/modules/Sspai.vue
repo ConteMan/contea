@@ -1,7 +1,7 @@
 <template>
-  <div id="page" class="h-full overflow-y-scroll w-full">
+  <div>
     <template v-for="item in list" :key="item.title">
-      <div class="p-2 hover:(bg-gray-200)">
+      <div class="p-2 rounded-sm hover:(bg-gray-200)">
         <template v-if="item.ca_module === 'v2ex'">
           <a :href="'https://v2ex.com' + item.title_link">
             {{ item.title }}
@@ -14,10 +14,7 @@
         </template>
         <div class="text-xs py-1">
           <span class=" text-gray-300">
-            {{ dayjs(item.ca_sort_at).format('YYYY-MM-DD HH:mm') }}
-          </span>
-          <span class=" text-gray-300 ml-2">
-            {{ item.ca_module.toUpperCase() }}
+            {{ dayjs(item.ca_sort_at).format('MM-DD HH:mm') }}
           </span>
         </div>
       </div>
@@ -32,7 +29,7 @@ import Base from '~/services/base'
 const list = ref([] as any[])
 
 const getPage = async() => {
-  const res = await Base.list({ currentPage: 1, num: 10 })
+  const res = await Base.listByModule({ currentPage: 1, num: 10 }, 'sspai')
   list.value = res
 }
 

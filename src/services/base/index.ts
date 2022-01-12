@@ -14,11 +14,17 @@ class Base {
    * @param module 模块名称
    * @returns []
    */
-  async listByModule(paginate: Paginate, module: ('sspai' | 'v2ex') = 'v2ex') {
+  async listByModule(paginate: Paginate, module: ('sspai' | 'v2ex') = 'v2ex', moduleType: string[] = []) {
+    // eslint-disable-next-line no-console
+    console.log(moduleType)
     const { currentPage = 1, num = 10 } = paginate
     const res = await infoList.storage.query()
       .orderBy('ca_sort_at')
       .filter((item) => {
+        if (moduleType.length) {
+          if (!moduleType.includes(item.ca_module_type))
+            return false
+        }
         return item.ca_module === module
       })
       .limit(num).offset((currentPage - 1) * num).reverse()
