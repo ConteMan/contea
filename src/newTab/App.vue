@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full max-h-screen min-h-screen overflow-y-hidden p-4 flex flex-row">
+  <div class="w-full max-h-screen min-h-screen overflow-y-hidden pr-4 pt-2 flex flex-row">
     <a-tabs v-model:activeKey="tabSelected" class="left-list w-full w-screen-sm flex-grow">
       <a-tab-pane key="worldline" tab="世界线">
         <KeepAlive>
@@ -57,6 +57,10 @@ const tabSelected = ref('worldline')
   display: none;
 }
 
+.left-list >>> .ant-tabs-nav {
+  padding-left: 6rem;
+  margin-bottom: 0;
+}
 .left-list >>> .ant-tabs-content {
   position: relative;
   height: 100%;

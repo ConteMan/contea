@@ -7,7 +7,6 @@
     </div>
     <div v-else>
       <div>
-        <div>第 {{ info.id }} 号会员</div>
         <div>今日活跃 {{ info.dau }}</div>
         <div>{{ info.balance?.gold }} 金 {{ info.balance?.silver }} 银 {{ info.balance?.bronze }} 铜</div>
       </div>

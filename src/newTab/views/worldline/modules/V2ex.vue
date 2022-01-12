@@ -1,27 +1,27 @@
 <template>
   <div ref="listContainerRef">
-    <a-affix :target="() => listContainerRef">
-      <div class="tags bg-white pb-2 pl-2">
-        <template v-for="item in baseTypes" :key="item.key">
-          <a-checkable-tag
-            :checked="selectedTags.indexOf(item.value) > -1"
-            @change="checked => handleChange(item.value, checked)"
-          >
-            {{ item.key }}
-          </a-checkable-tag>
-        </template>
-      </div>
-    </a-affix>
-    <template v-for="item in list" :key="item.title">
-      <div class="p-2 rounded-sm hover:(bg-gray-200)">
-        <a :href="'https://v2ex.com' + item.title_link">
-          {{ item.title }}
-        </a>
-        <span class="text-xs text-gray-300 ml-2">
-          {{ dayjs(item.ca_sort_at).format('MM-DD HH:mm') }}
-        </span>
-      </div>
-    </template>
+    <div class="tags absolute w-full bg-white pb-2 pl-2">
+      <template v-for="item in baseTypes" :key="item.key">
+        <a-checkable-tag
+          :checked="selectedTags.indexOf(item.value) > -1"
+          @change="checked => handleChange(item.value, checked)"
+        >
+          {{ item.key }}
+        </a-checkable-tag>
+      </template>
+    </div>
+    <div class="mt-8 mb-4">
+      <template v-for="item in list" :key="item.title">
+        <div class="p-2 rounded-sm hover:(bg-gray-200)">
+          <a :href="'https://v2ex.com' + item.title_link">
+            {{ item.title }}
+          </a>
+          <span class="text-xs text-gray-300 ml-2">
+            {{ dayjs(item.ca_sort_at).format('MM-DD HH:mm') }}
+          </span>
+        </div>
+      </template>
+    </div>
   </div>
 </template>
 
@@ -67,3 +67,6 @@ const handleChange = (tag: string, checked: boolean) => {
 }
 
 </script>
+
+<style>
+</style>

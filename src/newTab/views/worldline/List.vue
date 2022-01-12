@@ -19,6 +19,10 @@ const activeKey = ref('v2ex')
 </script>
 
 <style scoped>
+.worldline-tab >>> .ant-tabs-nav {
+  padding-left: 1rem !important;
+  padding-top: 2rem;
+}
 .worldline-tab >>> .ant-tabs-content {
   position: relative;
   height: 100%;
@@ -31,5 +35,8 @@ const activeKey = ref('v2ex')
 }
 .worldline-tab >>> .ant-tabs-tab-btn {
   font-size: 12px;
+}
+.worldline-tab >>> .ant-tabs-content-holder {
+  padding-top: 1rem;
 }
 </style>
