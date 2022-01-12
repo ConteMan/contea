@@ -19,24 +19,24 @@ const activeKey = ref('v2ex')
 </script>
 
 <style scoped>
-.worldline-tab >>> .ant-tabs-nav {
+.worldline-tab :deep() .ant-tabs-nav {
   padding-left: 1rem !important;
   padding-top: 2rem;
 }
-.worldline-tab >>> .ant-tabs-content {
+.worldline-tab :deep() .ant-tabs-content {
   position: relative;
   height: 100%;
 }
-.worldline-tab >>> .ant-tabs-tabpane {
+.worldline-tab :deep() .ant-tabs-tabpane {
   height: 100%;
 }
-.worldline-tab >>> .ant-tabs-tab {
+.worldline-tab :deep() .ant-tabs-tab {
   padding: 8px 16px 8px 0;
 }
-.worldline-tab >>> .ant-tabs-tab-btn {
+.worldline-tab :deep() .ant-tabs-tab-btn {
   font-size: 12px;
 }
-.worldline-tab >>> .ant-tabs-content-holder {
+.worldline-tab :deep() .ant-tabs-content-holder {
   padding-top: 1rem;
 }
 </style>

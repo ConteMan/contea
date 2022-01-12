@@ -57,15 +57,15 @@ const tabSelected = ref('worldline')
   display: none;
 }
 
-.left-list >>> .ant-tabs-nav {
+.left-list :deep() .ant-tabs-nav {
   padding-left: 6rem;
   margin-bottom: 0;
 }
-.left-list >>> .ant-tabs-content {
+.left-list :deep() .ant-tabs-content {
   position: relative;
   height: 100%;
 }
-.left-list >>> .ant-tabs-tabpane {
+.left-list :deep() .ant-tabs-tabpane {
   height: 100%;
 }
 </style>

@@ -1,17 +1,12 @@
 <template>
-  <div
-    class="p-4 flex justify-between min-w-full shadow-md rounded-md bg-gradient-to-r from-red-500"
-  >
+  <div class="p-4 flex justify-between min-w-full shadow-md rounded-md bg-gradient-to-br from-red-500">
     <div v-if="loading">
       Loading ...
     </div>
     <div v-else>
-      <div class="flex">
-        <div>
-          <div>
-            {{ user.liked_count }} 能量
-          </div>
-        </div>
+      <div class="flex items-center">
+        <mdi-flash />
+        <span class="ml-2">{{ user.liked_count }}</span>
       </div>
     </div>
     <div class="relative flex items-center text-right">
@@ -20,9 +15,6 @@
         @click.stop="openSite(config.site)"
       >
         {{ config.name }}
-        <span v-if="!loading" class="ml-1 text-sm" :class="login ? 'text-green-600' : 'text-red-600'">
-          ●
-        </span>
       </div>
     </div>
   </div>

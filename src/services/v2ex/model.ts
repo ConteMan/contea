@@ -29,6 +29,10 @@ export type User = BaseUser & {
   }
   showName?: string
   signature?: string
+  mission?: {
+    date?: string
+    days?: number
+  }
 }
 
 export type Mession = {

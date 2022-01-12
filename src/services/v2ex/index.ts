@@ -70,6 +70,10 @@ class V2EX {
     if (!info?.username || info?.expried > now)
       return info
 
+    const date = dayjs().format('YYYY-MM-DD') // 签到
+    if (info.mission?.date !== date)
+      await this.mission()
+
     const username = info?.username
     const res = await defHttp.get({
       url: `${url}${username}`,
@@ -110,7 +114,7 @@ class V2EX {
 
     moduleState.setItem(key, newInfo)
 
-    return newInfo as User
+    return await moduleState.getItem(key) as User
   }
 
   /**
@@ -118,7 +122,7 @@ class V2EX {
    * @returns
    */
   async mission(): Promise<object> {
-    const { url } = await this.getConfig()
+    const { url, key } = await this.getConfig()
 
     const mainPage = await defHttp.get({ url })
     const sign = mainPage.data.match(/once=([0-9]+)/)?.[1]
@@ -132,13 +136,24 @@ class V2EX {
     })
 
     const data = res.data
-    const messionRes = !!data.match(/每日登录奖励已领取/)
+    const completed = !!data.match(/每日登录奖励已领取/)
     let days = 0
-    if (messionRes)
-      days = data.match(/已连续登录 ([0-9]+?) 天/)?.[1]
+    const date = dayjs().format('YYYY-MM-DD')
+    if (completed) {
+      days = parseInt(data.match(/已连续登录 ([0-9]+?) 天/)?.[1])
+      const info = await moduleState.getItem(key)
+      const newInfo = deepMerge(info, {
+        mission: {
+          date,
+          days,
+        },
+      })
+      moduleState.setItem(key, newInfo)
+    }
 
     return {
-      completed: messionRes,
+      date,
+      completed,
       days,
     }
   }
