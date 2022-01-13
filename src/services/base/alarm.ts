@@ -1,3 +1,4 @@
+import dayjs from 'dayjs'
 import sspai from '../sspai'
 import configState from '~/models/keyValue/configState'
 import v2ex from '~/services/v2ex'
@@ -51,7 +52,7 @@ class AlarmSetting {
       return false
 
     // eslint-disable-next-line no-console
-    console.log(enableTypes)
+    console.log(`${dayjs().format('DD HH:mm:ss')}: ${enableTypes}`)
     if (module === 'v2ex')
       await v2ex.tabLists(enableTypes)
     if (module === 'sspai')

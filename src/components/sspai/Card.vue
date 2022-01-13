@@ -3,8 +3,8 @@
     <div v-if="loading">
       Loading ...
     </div>
-    <div v-else>
-      <div class="flex items-center">
+    <div v-else class="flex flex-row justify-center">
+      <div class="flex items-center leading-none">
         <mdi-flash />
         <span class="ml-2">{{ user.liked_count }}</span>
       </div>

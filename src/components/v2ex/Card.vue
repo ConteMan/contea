@@ -1,28 +1,26 @@
 <template>
-  <div
-    class="p-4 flex justify-between shadow-md rounded-md bg-gradient-to-br from-red-500"
-  >
+  <div class="p-4 flex justify-between shadow-md rounded-md bg-gradient-to-br from-red-500">
     <div v-if="loading">
       Loading ...
     </div>
     <div v-else>
       <div>
-        <div class="flex items-center">
+        <div class="flex items-center leading-none">
           <mdi-fire />
           <span class="ml-2">{{ info.dau }}</span>
         </div>
-        <div class="flex items-center">
+        <div class="flex items-center leading-none mt-1">
           <mdi-gold />
           <span class="ml-2">{{ info.balance?.gold }} / {{ info.balance?.silver }} / {{ info.balance?.bronze }}</span>
         </div>
-        <div v-if="info.mission?.date === dayjs().format('YYYY-MM-DD')" class="flex items-center">
+        <div class="flex items-center leading-none mt-1">
           <mdi-calendar-text />
-          <span class="ml-2">{{ info.mission?.days }} 天</span>
-        </div>
-        <div v-else>
-          <a-button size="small" @click="mission()">
+          <span v-if="info.mission?.date === dayjs().format('YYYY-MM-DD')" class="ml-2">
+            {{ info.mission?.days }} DAYS
+          </span>
+          <a v-else href="#" @click="mission()">
             签到
-          </a-button>
+          </a>
         </div>
       </div>
     </div>

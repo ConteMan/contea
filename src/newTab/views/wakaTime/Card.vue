@@ -1,8 +1,10 @@
 <template>
   <div class="p-4 flex justify-between min-w-full shadow-md rounded-md bg-gradient-to-br from-red-500">
-    <div class="flex items-center">
-      <mdi-code-braces-box />
-      <span class="ml-2">{{ info.cummulative_total.text }}</span>
+    <div class="flex flex-row">
+      <div class="flex items-center leading-none">
+        <mdi-code-braces-box />
+        <span class="ml-2">{{ info.cummulative_total.text }}</span>
+      </div>
     </div>
     <div class="relative flex items-center text-right">
       <div

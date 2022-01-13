@@ -8,22 +8,22 @@
       </a-tab-pane>
       <a-tab-pane key="movie" tab="影视">
         <KeepAlive>
-          <DdrkList class="ddrk-list h-[calc(100%)] overflow-y-auto" />
+          <DdrkList class="ddrk-list pl-4 mt-4 h-[calc(100%)] overflow-y-auto" />
         </KeepAlive>
       </a-tab-pane>
       <a-tab-pane key="bookmark" tab="书签">
-        <BookMarkList class="bookmark-list h-[calc(100%)] overflow-y-auto" />
+        <BookMarkList class="bookmark-list pl-4 mt-4 h-[calc(100%)] overflow-y-auto" />
       </a-tab-pane>
       <a-tab-pane key="sport" tab="体育">
         <KeepAlive>
-          <SportList class="sport-list h-[calc(100%)] overflow-y-auto" />
+          <SportList class="sport-list pl-4 mt-4 h-[calc(100%)] overflow-y-auto" />
         </KeepAlive>
       </a-tab-pane>
       <a-tab-pane key="status" tab="状态">
-        <StatusList class="status-list h-[calc(100%)] overflow-y-auto" />
+        <StatusList class="status-list pl-4 mt-4 overflow-y-auto" />
       </a-tab-pane>
       <a-tab-pane key="setting" tab="设置">
-        <SettingList class="setting-list h-[calc(100%)] overflow-y-auto" />
+        <SettingList class="setting-list pl-4 mt-4 h-[calc(100%)] overflow-y-auto" />
       </a-tab-pane>
     </a-tabs>
     <div class="flex-grow flex flex-col space-y-4 p-4">

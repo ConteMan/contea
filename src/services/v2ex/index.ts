@@ -142,13 +142,22 @@ class V2EX {
     if (completed) {
       days = parseInt(data.match(/已连续登录 ([0-9]+?) 天/)?.[1])
       const info = await moduleState.getItem(key)
-      const newInfo = deepMerge(info, {
-        mission: {
+      if (!info.mission?.days || days > info.mission?.days) { // 并非过了零点就可以签到
+        const newInfo = deepMerge(info, {
+          mission: {
+            date,
+            days,
+          },
+        })
+        moduleState.setItem(key, newInfo)
+      }
+      else {
+        return {
           date,
+          completed: false,
           days,
-        },
-      })
-      moduleState.setItem(key, newInfo)
+        }
+      }
     }
 
     return {

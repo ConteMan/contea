@@ -12,7 +12,7 @@
     </div>
     <div class="mt-8 mb-4">
       <template v-for="item in list" :key="item.title">
-        <div class="p-2 rounded-sm hover:(bg-gray-200)">
+        <div class="p-2 rounded-sm  hover:(bg-gray-200)">
           <a :href="'https://v2ex.com' + item.title_link">
             {{ item.title }}
           </a>
