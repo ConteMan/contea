@@ -16,7 +16,7 @@
       </a-tab-pane>
       <a-tab-pane key="sport" tab="体育">
         <KeepAlive>
-          <SportList class="sport-list pl-4 mt-4 h-[calc(100%)] overflow-y-auto" />
+          <SportList class="sport-list pl-4 pb-4 h-[calc(100%)] overflow-y-auto" />
         </KeepAlive>
       </a-tab-pane>
       <a-tab-pane key="status" tab="状态">

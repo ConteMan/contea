@@ -56,7 +56,7 @@ getInfo()
 
 const mission = async() => {
   await v2ex.mission()
-  getInfo()
+  await getInfo()
 }
 
 const showDays = (date: string | undefined) => {
