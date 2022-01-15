@@ -1,7 +1,19 @@
+export const defaultSetting = {
+  key: 'v2ex',
+  name: 'V2EX',
+  enable: true,
+  site: 'https://www.v2ex.com',
+  url: 'https://www.v2ex.com',
+  expried: 300,
+  token: '',
+  enableTypes: [],
+  alarm: 10,
+}
+
 export type Config = {
   key: string
-  enable: boolean
   name: string
+  enable: boolean
   site: string
   url: string
   expried: number

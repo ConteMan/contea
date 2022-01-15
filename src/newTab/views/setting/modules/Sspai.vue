@@ -63,9 +63,10 @@ interface DataType {
 }
 const data: UnwrapRef<DataType> = reactive({
   base: {
+    key: '',
+    name: '',
     enable: true,
     enableTypes: [],
-    key: '',
     url: '',
     site: '',
     expried: 0,

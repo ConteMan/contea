@@ -1,3 +1,7 @@
+import { defaultSetting as v2ex } from '~/services/v2ex/model'
+import { defaultSetting as sspai } from '~/services/sspai/model'
+import { defaultSetting as weread } from '~/services/weread/model'
+
 export default {
   default: {
     storageExpried: 300, // 单位: 秒
@@ -8,24 +12,7 @@ export default {
     ],
     alarm: 10,
   },
-  v2ex: {
-    key: 'v2ex',
-    enable: true,
-    name: 'V2EX',
-    site: 'https://www.v2ex.com',
-    url: 'https://www.v2ex.com',
-    expried: 300,
-    alarm: 10,
-  },
-  sspai: {
-    key: 'sspai',
-    enable: true,
-    name: '少数派',
-    site: 'https://sspai.com',
-    url: 'https://sspai.com',
-    apiUrl: 'https://sspai.com/api/v1',
-    cdnUrl: 'https://cdn.sspai.com',
-    expried: 86400,
-    alarm: 10,
-  },
+  v2ex,
+  sspai,
+  weread,
 }

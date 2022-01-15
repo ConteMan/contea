@@ -77,16 +77,37 @@
       </div>
     </template>
   </SettingItem>
+
+  <SettingItem class="mt-2">
+    <template #left>
+      <div class="ml-4 min-w-24">
+        微信读书
+      </div>
+    </template>
+    <template #right>
+      <div class="flex flex-row justify-center">
+        <a-button type="text" class="bg-gray-200" @click="testFunction(ConfigState.init('weread'))">
+          初始化配置
+        </a-button>
+        <span class="border-l-1 mx-2"></span>
+        <a-button type="text" class="bg-gray-200" @click="testFunction(WeRead.getUserId())">
+          获取 UserId
+        </a-button>
+      </div>
+    </template>
+  </SettingItem>
 </template>
 
 <script setup lang="ts">
 import type { UnwrapRef } from 'vue'
 import SettingItem from '~/components/template/SettingItem.vue'
 
+import ConfigState from '~/models/keyValue/configState'
 import V2EX from '~/services/v2ex'
 import WakaTime from '~/services/wakatime'
 import { Bookmark, Storage } from '~/services/browser/index'
 import { KBS } from '~/services/sport'
+import WeRead from '~/services/weread'
 
 interface DataType {
   v2ex: {

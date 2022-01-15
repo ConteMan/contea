@@ -17,7 +17,7 @@ class ConfigState extends AsyncModels.keyValue {
   }
 
   // 初始化
-  async init(module: 'all'| 'default' | 'v2ex' | 'sspai' = 'all') {
+  async init(module: 'all'| 'default' | 'v2ex' | 'sspai' | 'weread' = 'all') {
     if (module === 'all') {
       await this.bulkSetItem(defaultSetting)
     }

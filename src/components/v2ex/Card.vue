@@ -5,21 +5,21 @@
     </div>
     <div v-else>
       <div>
-        <div class="flex items-center leading-none">
+        <div class="flex items-center leading-none my-1">
           <mdi-fire />
           <span class="ml-2">{{ info.dau }}</span>
         </div>
-        <div class="flex items-center leading-none mt-1">
+        <div class="flex items-center leading-none my-1">
           <mdi-gold />
           <span class="ml-2">{{ info.balance?.gold }} / {{ info.balance?.silver }} / {{ info.balance?.bronze }}</span>
         </div>
-        <div class="flex items-center leading-none mt-1">
+        <div class="flex items-center leading-none my-1">
           <mdi-calendar-text />
-          <span v-if="info.mission?.date === dayjs().format('YYYY-MM-DD')" class="ml-2">
+          <span v-if="showDays(info.mission?.date)" class="ml-2">
             {{ info.mission?.days }} DAYS
           </span>
-          <a v-else href="#" @click="mission()">
-            签到
+          <a v-else class="ml-2 text-white font-medium" @click="mission()">
+            [签到]
           </a>
         </div>
       </div>
@@ -57,5 +57,17 @@ getInfo()
 const mission = async() => {
   await v2ex.mission()
   getInfo()
+}
+
+const showDays = (date: string | undefined) => {
+  if (!date)
+    return false
+
+  if (!dayjs().isAfter(dayjs().format('YYYY-MM-DD 06:00:00')))
+    return true
+
+  if (date === dayjs().format('YYYY-MM-DD'))
+    return true
+  return false
 }
 </script>

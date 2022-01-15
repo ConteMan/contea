@@ -17,7 +17,7 @@
         <div class="py-1 flex items-center leading-none">
           <mdi-windsock />
           <span class="ml-2">
-            {{ base.now.windDirection }} {{ base.now.windScale }}
+            <template v-if="base.now.windDirection !== '9999'">{{ base.now.windDirection }}</template> {{ base.now.windScale }}
           </span>
         </div>
       </div>
@@ -59,6 +59,8 @@ getData()
 const dayShow = (date: string) => {
   const format = 'YYYY-MM-DD'
   const dateFormat = dayjs(date).format(format)
+  if (dateFormat === dayjs().subtract(1, 'day').format(format))
+    return '昨日'
   if (dateFormat === dayjs().format(format))
     return '今日'
   if (dateFormat === dayjs().add(1, 'day').format(format))
