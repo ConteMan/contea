@@ -1,6 +1,7 @@
 import { defHttp } from '~/utils/http/axios'
-
+import RequestCache from '~/services/base/requestCache'
 class Weather {
+  private moduleName = 'weather'
   /**
    * 获取天气数据
    */
@@ -17,12 +18,20 @@ class Weather {
    * @returns {}
    */
   async cma(stationId: number | null = null) {
+    const cacheKey = [this.moduleName, stationId]
+    const cacheData = await RequestCache.get(cacheKey)
+    if (cacheData)
+      return cacheData
+
     const res = await defHttp.get({
       url: 'https://weather.cma.cn/api/weather/view',
       params: {
         stationId,
       },
     })
+
+    if (res.data.data)
+      await RequestCache.set(cacheKey, res.data.data)
 
     return res.data.data
   }

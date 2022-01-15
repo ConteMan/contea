@@ -4,6 +4,7 @@ export const defaultSetting = {
   site: 'https://weread.qq.com',
   apiUrl: 'https://weread.qq.com/web',
   apiUrl_2: 'https://i.weread.qq.com',
+  expried: 1800,
 }
 
 export type Config = {
@@ -11,7 +12,8 @@ export type Config = {
   name: string
   site: string
   apiUrl: string
-  apiUrl2: string
+  apiUrl_2: string
+  expried?: number
 }
 
 export type BaseUser = {

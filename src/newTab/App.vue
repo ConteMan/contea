@@ -23,7 +23,7 @@
         <StatusList class="status-list pl-4 mt-4 overflow-y-auto" />
       </a-tab-pane>
       <a-tab-pane key="setting" tab="设置">
-        <SettingList class="setting-list pl-4 mt-4 h-[calc(100%)] overflow-y-auto" />
+        <SettingList class="setting-list pl-4 mt-4 pb-4 h-[calc(100%)] overflow-y-auto" />
       </a-tab-pane>
     </a-tabs>
     <div class="flex-grow flex flex-col space-y-4 p-4">

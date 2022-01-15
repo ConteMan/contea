@@ -2,6 +2,10 @@ import Dexie from 'dexie'
 
 const db = new Dexie('contea')
 
+db.version(2).stores({
+  request_state: '_id',
+})
+
 db.version(1).stores({
   info_list: 'ca_slug,ca_module,ca_module_type,ca_sort_at',
 })

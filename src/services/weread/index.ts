@@ -1,6 +1,7 @@
 import type { User } from './model'
 import configState from '~/models/keyValue/configState'
 import { defHttp } from '~/utils/http/axios'
+import moduleState from '~/models/keyValue/moduleState'
 
 class WeRead {
   private moduleName = 'weread'
@@ -22,7 +23,6 @@ class WeRead {
     const { apiUrl } = await configState.getItem(this.moduleName)
 
     const userVid = await this.getUserId()
-
     if (!userVid)
       return {}
 
@@ -77,6 +77,34 @@ class WeRead {
       },
     })
     return res.data
+  }
+
+  /**
+   * 获取整体信息
+   * @param force boolean - 是否强制更新
+   */
+  async moduleInfo(force = false) {
+    const { key, expried } = await configState.getItem(this.moduleName)
+    const now = new Date().getTime()
+
+    if (!force) {
+      const cacheData = await moduleState.getItem(key)
+      if (cacheData?.expried && cacheData?.expried > now)
+        return cacheData
+    }
+
+    if (!this.getUserId)
+      return {}
+
+    const newData = {} as any
+    newData.user = await this.user()
+    newData.memberCard = await this.memberCard()
+    newData.readDetail = await this.readDetail()
+    newData.expried = now + expried * 1000
+
+    await moduleState.setItem(key, newData)
+
+    return newData
   }
 }
 

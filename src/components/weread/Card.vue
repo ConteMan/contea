@@ -2,7 +2,6 @@
   <Card v-if="!loading" class="flex flex-col justify-between">
     <div class="flex flex-row justify-between">
       <div class="flex flex-col justify-center">
-        <div>{{ user.userVid }}</div>
         <div>无限卡 {{ dayjs(memberCard.expiredTime * 1000).format('MM-DD') }}</div>
       </div>
       <div class="flex flex-col justify-center">
@@ -27,7 +26,7 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
 import Duration from 'dayjs/plugin/duration'
-import type { Config, User } from '~/services/weread/model'
+import type { Config } from '~/services/weread/model'
 import { openSite } from '~/utils'
 import { puzzling } from '~/utils/extend'
 import Card from '~/components/template/Card.vue'
@@ -36,18 +35,19 @@ import ConfigState from '~/models/keyValue/configState'
 
 const data = reactive({
   loading: true,
-  user: {} as User,
+  userVid: '',
   config: {} as Config,
   memberCard: {} as any,
   readDetail: {} as any,
 })
 const getData = async() => {
-  const user = await WeRead.user() as User
-  if (user) {
-    data.user = user
+  const userVid = await WeRead.getUserId()
+  if (userVid) {
+    data.userVid = userVid
     data.config = await ConfigState.getItem('weread')
-    data.memberCard = await WeRead.memberCard()
-    data.readDetail = await WeRead.readDetail()
+    const { memberCard, readDetail } = await WeRead.moduleInfo()
+    data.readDetail = readDetail
+    data.memberCard = memberCard
     data.loading = false
   }
 }
@@ -55,7 +55,7 @@ getData()
 
 dayjs.extend(Duration)
 
-const { loading, user, config, memberCard, readDetail } = toRefs(data)
+const { loading, config, memberCard, readDetail } = toRefs(data)
 </script>
 
 <style>
