@@ -47,4 +47,22 @@ export default new (class List extends AsyncModels.collection<InfoInterface, Dex
 
     return slug
   }
+
+  /**
+   * 根据模块、模块类型删除
+   * @param module string - 模块名称
+   * @param moduleType string[] - 模块类型数组
+   * @returns number - 删除的数量
+   */
+  async deleteByModule(module: string, moduleType: string[]) {
+    return await this.storage.query()
+      .filter((item) => {
+        if (moduleType.length) {
+          if (!moduleType.includes(item.ca_module_type))
+            return false
+        }
+        return item.ca_module === module
+      })
+      .delete()
+  }
 })()

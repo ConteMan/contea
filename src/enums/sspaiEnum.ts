@@ -1,5 +1,5 @@
 export enum TypeEnum {
-  INDEX = '首页',
-  FOLLOWED = '关注的人',
-  MATRIX = 'MATRIX',
+  index = '首页',
+  followActivity = '关注',
+  matrix = 'MATRIX',
 }

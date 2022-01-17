@@ -1,7 +1,10 @@
 <template>
-  <div ref="listContainerRef">
+  <div>
     <div class="tags absolute w-full bg-white pb-2 pl-2">
-      <template v-for="item in baseTypes" :key="item.key">
+      <span class="cursor-pointer leading-none align-middle mr-4" @click="refresh()">
+        <mdi-refresh :class="{'animate-spin': data.loading>0}" />
+      </span>
+      <template v-for="item in moduleTypes" :key="item.key">
         <a-checkable-tag
           :checked="selectedTags.indexOf(item.value) > -1"
           @change="checked => handleChange(item.value, checked)"
@@ -30,42 +33,52 @@ import dayjs from 'dayjs'
 import Base from '~/services/base'
 import { TypeEnum } from '~/enums/v2exEnum'
 import { enumToObj } from '~/utils'
+import Alarm from '~/services/base/alarm'
 
-const state = reactive({
-  baseTypes: {} as any,
-  selectedTags: ['tab-all'] as string[],
+const module = 'v2ex'
+
+const data = reactive({
+  loading: 0,
+  moduleTypes: {} as any,
+  selectedTags: [] as string[],
   list: [] as any[],
 })
-const { selectedTags, list, baseTypes } = toRefs(state)
-const listContainerRef = ref()
+const { selectedTags, list, moduleTypes } = toRefs(data)
 
+// 获取列表数据
 const getPage = async() => {
-  const res = await Base.listByModule({ currentPage: 1, num: 20 }, 'v2ex', toRaw(selectedTags.value))
-  list.value = res
+  data.list = await Base.listByModule({ currentPage: 1, num: 100 }, module, toRaw(selectedTags.value))
 }
 getPage()
 
-// 获取栏目类型
+// 获取类型数据
 const getTypes = () => {
   const res: any = enumToObj(TypeEnum, ['value', 'key'])
   res.map((item: any) => {
     item.value = `tab-${item.value}`
     return item
   })
-  baseTypes.value = res
+  moduleTypes.value = res
 }
 getTypes()
 
 // 选择标签
 const handleChange = (tag: string, checked: boolean) => {
-  const { selectedTags } = state
+  const { selectedTags } = data
   const nextSelectedTags = checked
     ? [...selectedTags, tag]
     : selectedTags.filter(t => t !== tag)
-  state.selectedTags = nextSelectedTags
+  data.selectedTags = nextSelectedTags
   getPage()
 }
 
+// 刷新
+const refresh = async() => {
+  data.loading++
+  await Alarm.alarmDeal(module)
+  await getPage()
+  data.loading--
+}
 </script>
 
 <style>

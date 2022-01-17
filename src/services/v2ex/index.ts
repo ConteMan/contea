@@ -202,6 +202,10 @@ class V2EX {
     })
 
     const list = this.domToList(res.data, moduleType)
+
+    const deleteCount = await infoList.deleteByModule(this.moduleName, [moduleType])
+    // eslint-disable-next-line no-console
+    console.log('%c [ deleteCount ]-207', 'font-size:13px; background:pink; color:#bf2c9f;', deleteCount)
     await infoList.bulkSetItemByModule(list, ['author', 'id'])
 
     return list

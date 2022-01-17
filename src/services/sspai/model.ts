@@ -30,3 +30,8 @@ export type User = {
 
   [propName: string]: any
 }
+
+export type Paginate = {
+  limit: number
+  offset: number
+}
