@@ -1,6 +1,7 @@
 import { defaultSetting as v2ex } from '~/services/v2ex/model'
 import { defaultSetting as sspai } from '~/services/sspai/model'
 import { defaultSetting as weread } from '~/services/weread/model'
+import { defaultSetting as bgm } from '~/services/bgm/model'
 
 export default {
   default: {
@@ -16,4 +17,5 @@ export default {
   v2ex,
   sspai,
   weread,
+  bgm,
 }

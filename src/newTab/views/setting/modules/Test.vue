@@ -2,7 +2,7 @@
   <SettingItem>
     <template #left>
       <div class="ml-4 min-w-24">
-        Token
+        V2EX
       </div>
     </template>
     <template #right>
@@ -14,6 +14,22 @@
         <input v-model="data.v2ex.tabName" class="h-full mr-1 ml-4 border-1px pl-2">
         <a-button type="text" class="bg-gray-200" @click="testFunction(V2EX.tabList(data.v2ex.tabName))">
           Tab 列表
+        </a-button>
+      </div>
+    </template>
+  </SettingItem>
+
+  <SettingItem class="mt-2">
+    <template #left>
+      <div class="ml-4 min-w-24">
+        模块
+      </div>
+    </template>
+    <template #right>
+      <div class="flex flex-row justify-center">
+        <input v-model="data.module.moduleName" class="h-full mr-1 ml-4 border-1px pl-2">
+        <a-button type="text" class="bg-gray-200" @click="testFunction(ConfigState.init(data.module.moduleName as any))">
+          初始化设置
         </a-button>
       </div>
     </template>
@@ -96,6 +112,21 @@
       </div>
     </template>
   </SettingItem>
+
+  <SettingItem class="mt-2">
+    <template #left>
+      <div class="ml-4 min-w-24">
+        番组计划
+      </div>
+    </template>
+    <template #right>
+      <div class="flex flex-row justify-center">
+        <a-button type="text" class="bg-gray-200" @click="testFunction(Bgm.me())">
+          个人信息
+        </a-button>
+      </div>
+    </template>
+  </SettingItem>
 </template>
 
 <script setup lang="ts">
@@ -108,6 +139,7 @@ import WakaTime from '~/services/wakatime'
 import { Bookmark, Storage } from '~/services/browser/index'
 import { KBS } from '~/services/sport'
 import WeRead from '~/services/weread'
+import Bgm from '~/services/bgm'
 
 interface DataType {
   v2ex: {
@@ -115,6 +147,9 @@ interface DataType {
   }
   sport: {
     kbsColumnId: number | string
+  }
+  module: {
+    moduleName: string
   }
 }
 
@@ -124,6 +159,9 @@ const data: UnwrapRef<DataType> = reactive({
   },
   sport: {
     kbsColumnId: 'hot',
+  },
+  module: {
+    moduleName: 'bgm',
   },
 })
 
