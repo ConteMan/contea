@@ -2,8 +2,8 @@
   <Card v-if="!loading" class="flex flex-col justify-between">
     <div class="flex flex-row justify-between">
       <div class="flex flex-col justify-center">
-        <div>Followers <span class="cursor-pointer hover:(text-white) ml-1" @click="openSite(`https://github.com/${user.data.login}?tab=followers`)">{{ user.data.followers }}</span></div>
-        <div>Following <span class="cursor-pointer hover:(text-white) ml-1" @click="openSite(`https://github.com/${user.data.login}?tab=following`)">{{ user.data.following }}</span></div>
+        <div>Followers <span class="cursor-pointer hover:(text-white) ml-1" @click="openSite(`https://github.com/${user.login}?tab=followers`)">{{ user.followers }}</span></div>
+        <div>Following <span class="cursor-pointer hover:(text-white) ml-1" @click="openSite(`https://github.com/${user.login}?tab=following`)">{{ user.following }}</span></div>
       </div>
       <div class="flex flex-col justify-center">
         <div
@@ -15,8 +15,9 @@
       </div>
     </div>
     <div class="pt-2">
-      <div>Repos <span class="cursor-pointer hover:(text-white) ml-1" @click="openSite(`https://github.com/${user.data.login}?tab=repositories`)">{{ user.data.owned_private_repos }} / {{ user.data.public_repos }}</span></div>
-      <div>Gists <span class="cursor-pointer hover:(text-white) ml-1" @click="openSite(`https://gist.github.com/${user.data.login}`)">{{ user.data.private_gists }} / {{ user.data.public_gists }}</span></div>
+      <div>Repos <span class="cursor-pointer hover:(text-white) ml-1" @click="openSite(`https://github.com/${user.login}?tab=repositories`)">{{ user.owned_private_repos }} / {{ user.public_repos }}</span></div>
+      <div>Gists <span class="cursor-pointer hover:(text-white) ml-1" @click="openSite(`https://gist.github.com/${user.login}`)">{{ user.private_gists }} / {{ user.public_gists }}</span></div>
+      <div>Stars <span class="cursor-pointer hover:(text-white) ml-1" @click="openSite(`https://github.com/${user.login}?tab=stars`)">{{ user.starred }}</span></div>
     </div>
   </Card>
 </template>
@@ -37,7 +38,7 @@ const data = reactive({
 const getData = async() => {
   data.loading++
   data.config = await ConfigState.getItem(module)
-  data.user = await Github.me()
+  data.user = await Github.user()
   data.loading--
 }
 getData()

@@ -8,7 +8,6 @@ import ModuleState from '~/models/keyValue/moduleState'
 class Github {
   private module = 'github'
   private octokit!: OctokitType
-  // private username!: string
 
   constructor() {
     this.init()
@@ -27,17 +26,6 @@ class Github {
       baseUrl: apiUrl,
     })
     this.octokit = client
-    // eslint-disable-next-line no-console
-    console.log('%c [ client ]-18', 'font-size:13px; background:pink; color:#bf2c9f;', client)
-
-    // const moduleState = await ModuleState.getItem(this.module)
-    // if (moduleState?.login) {
-    //   this.username = moduleState?.login
-    // }
-    // else {
-    //   const user = await this.me()
-    //   this.username = user.data.login
-    // }
   }
 
   /**
@@ -50,8 +38,6 @@ class Github {
       return cacheData
 
     const res = await this.octokit.request('GET /user')
-
-    ModuleState.setItem(this.module, res.data)
 
     if (res)
       await RequestCache.set(cacheKey, res)
@@ -87,16 +73,46 @@ class Github {
     return await this.cacheQuery(['starred', ...Object.values(params)], 'GET /user/starred', params)
   }
 
-  async getStarredCount() {
+  /**
+   * 获取星标项目总数量
+   */
+  async starredCount() {
     const data = await this.starred()
     const link = data.headers.link
 
-    const pageMeta = [...String(link).matchAll(/\s*page\=([\d]+)\&per_page\=([\d]+)\s*/g)]
-    // eslint-disable-next-line no-console
-    console.log('%c [ pageMeta ]-93', 'font-size:13px; background:pink; color:#bf2c9f;', pageMeta)
-    const params = { page: parseInt(pageMeta[1][1]), per_page: parseInt(pageMeta[1][2]), sort: '', direction: '' }
+    const pageMeta: any = String(link).match(/page\=(?<page>[\d]+)\&per_page\=(?<per_page>[\d]+)(?=>;\srel\=\"last\")/)
+
+    const page = parseInt(pageMeta?.groups.page)
+    const per_page = parseInt(pageMeta?.groups.per_page)
+
+    const params = { page, per_page, sort: '', direction: '' }
     const lastPage = await this.starred(params)
-    return lastPage.data.length + parseInt(pageMeta[1][2]) * (parseInt(pageMeta[1][1]) - 1)
+
+    return lastPage.data.length + per_page * (page - 1)
+  }
+
+  /**
+   * 获取用户信息
+   */
+  async user() {
+    const cache = await ModuleState.getValidItem(this.module)
+    if (cache)
+      return cache
+
+    const meRes = await this.me()
+    const starredCount = await this.starredCount()
+
+    const now = new Date().getTime()
+    const { expried } = await ConfigState.getItem(this.module)
+    const moduleData = {
+      ...meRes.data,
+      starred: starredCount,
+      expried: now + expried * 1000,
+    }
+
+    await ModuleState.mergeSet(this.module, moduleData)
+
+    return moduleData
   }
 }
 

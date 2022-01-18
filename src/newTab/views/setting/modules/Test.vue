@@ -136,11 +136,11 @@
     </template>
     <template #right>
       <div class="flex flex-row justify-center">
-        <a-button type="text" class="bg-gray-200" @click="testFunction(Github.me())">
+        <a-button type="text" class="bg-gray-200" @click="testFunction(Github.user())">
           个人信息
         </a-button>
         <span class="border-l-1 mx-2"></span>
-        <a-button type="text" class="bg-gray-200" @click="testFunction(Github.getStarredCount())">
+        <a-button type="text" class="bg-gray-200" @click="testFunction(Github.starredCount())">
           获取标星
         </a-button>
       </div>
