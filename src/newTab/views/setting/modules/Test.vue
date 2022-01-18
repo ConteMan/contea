@@ -127,6 +127,25 @@
       </div>
     </template>
   </SettingItem>
+
+  <SettingItem class="mt-2">
+    <template #left>
+      <div class="ml-4 min-w-24">
+        Github
+      </div>
+    </template>
+    <template #right>
+      <div class="flex flex-row justify-center">
+        <a-button type="text" class="bg-gray-200" @click="testFunction(Github.me())">
+          个人信息
+        </a-button>
+        <span class="border-l-1 mx-2"></span>
+        <a-button type="text" class="bg-gray-200" @click="testFunction(Github.getStarredCount())">
+          获取标星
+        </a-button>
+      </div>
+    </template>
+  </SettingItem>
 </template>
 
 <script setup lang="ts">
@@ -140,6 +159,7 @@ import { Bookmark, Storage } from '~/services/browser/index'
 import { KBS } from '~/services/sport'
 import WeRead from '~/services/weread'
 import Bgm from '~/services/bgm'
+import Github from '~/services/github'
 
 interface DataType {
   v2ex: {

@@ -16,6 +16,10 @@
         <SspaiModule />
       </a-collapse-panel>
 
+      <a-collapse-panel key="github" header="Github" :style="customStyle">
+        <GithubModule />
+      </a-collapse-panel>
+
       <a-collapse-panel key="bgm" header="番组计划" :style="customStyle">
         <BgmModule />
       </a-collapse-panel>
@@ -33,8 +37,9 @@ import V2exModule from './modules/V2ex.vue'
 import TestModule from './modules/Test.vue'
 import SspaiModule from './modules/Sspai.vue'
 import BgmModule from './modules/Bgm.vue'
+import GithubModule from './modules/Github.vue'
 
 const customStyle = 'background: #f7f7f7;margin-bottom: 16px;border: 0;overflow: hidden'
 
-const activeKey = ref(['base', 'v2ex', 'sspai', 'bgm', 'test'])
+const activeKey = ref(['base', 'v2ex', 'sspai', 'bgm', 'test', 'github'])
 </script>

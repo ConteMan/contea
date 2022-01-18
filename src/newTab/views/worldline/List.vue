@@ -1,7 +1,7 @@
 <template>
   <div id="page" class="h-full overflow-y-scroll w-full min-h-full">
     <a-tabs v-model:activeKey="activeKey" tab-position="left" size="small" class="worldline-tab h-full">
-      <a-tab-pane key="now">
+      <!-- <a-tab-pane key="now">
         <template #tab>
           <div class="flex items-center leading-none">
             <span class="ml-1">此刻</span>
@@ -10,7 +10,7 @@
       </a-tab-pane>
       <a-tab-pane key="all" tab="时间轴">
         时间轴
-      </a-tab-pane>
+      </a-tab-pane> -->
       <a-tab-pane key="v2ex" tab="V2EX">
         <V2ex class="h-full overflow-y-auto" />
       </a-tab-pane>

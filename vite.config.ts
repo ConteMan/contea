@@ -18,6 +18,7 @@ export const sharedConfig: UserConfig = {
       '~/': `${r('src')}/`,
       '#/': `${r('types')}/`,
       '~o/': `${r('src/options')}`,
+      'node-fetch': 'isomorphic-fetch',
     },
   },
   define: {

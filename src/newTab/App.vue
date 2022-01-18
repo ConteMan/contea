@@ -32,6 +32,7 @@
       <SspaiCard class="h-max"></SspaiCard>
       <WeatherCard class="h-max"></WeatherCard>
       <WeReadCard class="h-max"></WeReadCard>
+      <GithubCard class="h-max"></GithubCard>
     </div>
   </div>
 </template>
@@ -49,6 +50,7 @@ import V2EXCard from '~/components/v2ex/Card.vue'
 import SspaiCard from '~/components/sspai/Card.vue'
 import WeatherCard from '~/components/weather/Card.vue'
 import WeReadCard from '~/components/weread/Card.vue'
+import GithubCard from '~/components/github/GithubCard.vue'
 
 const tabSelected = ref('worldline')
 </script>
