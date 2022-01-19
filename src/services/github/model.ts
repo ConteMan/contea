@@ -3,7 +3,7 @@ export const defaultSetting = {
   name: 'Github',
   enable: true,
   site: 'https://github.com',
-  url: 'https://api.github.com',
+  apiUrl: 'https://api.github.com',
   expried: 300,
   token: '',
   enableTypes: [],

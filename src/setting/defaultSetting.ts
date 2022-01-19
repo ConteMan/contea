@@ -3,6 +3,7 @@ import { defaultSetting as sspai } from '~/services/sspai/model'
 import { defaultSetting as weread } from '~/services/weread/model'
 import { defaultSetting as bgm } from '~/services/bgm/model'
 import { defaultSetting as github } from '~/services/github/model'
+import { defaultSetting as jike } from '~/services/jike/model'
 
 export default {
   default: {
@@ -20,4 +21,5 @@ export default {
   weread,
   bgm,
   github,
+  jike,
 }

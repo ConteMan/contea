@@ -146,6 +146,21 @@
       </div>
     </template>
   </SettingItem>
+
+  <SettingItem class="mt-2">
+    <template #left>
+      <div class="ml-4 min-w-24">
+        即刻
+      </div>
+    </template>
+    <template #right>
+      <div class="flex flex-row justify-center">
+        <a-button type="text" class="bg-gray-200" @click="testFunction(Jike.me())">
+          个人信息
+        </a-button>
+      </div>
+    </template>
+  </SettingItem>
 </template>
 
 <script setup lang="ts">
@@ -160,6 +175,7 @@ import { KBS } from '~/services/sport'
 import WeRead from '~/services/weread'
 import Bgm from '~/services/bgm'
 import Github from '~/services/github'
+import Jike from '~/services/jike'
 
 interface DataType {
   v2ex: {

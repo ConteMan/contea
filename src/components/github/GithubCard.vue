@@ -45,9 +45,3 @@ getData()
 
 const { loading, config, user } = toRefs(data)
 </script>
-
-<style>
-li::marker {
-  margin-right: 0 !important;
-}
-</style>

@@ -26,13 +26,14 @@
         <SettingList class="setting-list pl-4 mt-4 pb-4 h-[calc(100%)] overflow-y-auto" />
       </a-tab-pane>
     </a-tabs>
-    <div class="flex-grow flex flex-col space-y-4 p-4">
+    <div class="max-h-screen overflow-y-auto flex-grow flex flex-col space-y-4 p-4">
       <WakaTimeCard class="wakatime-card p-4 h-max rounded-md shadow-md"></WakaTimeCard>
       <V2EXCard class="h-max"></V2EXCard>
       <SspaiCard class="h-max"></SspaiCard>
       <WeatherCard class="h-max"></WeatherCard>
       <WeReadCard class="h-max"></WeReadCard>
       <GithubCard class="h-max"></GithubCard>
+      <JikeCard class="h-max"></JikeCard>
     </div>
   </div>
 </template>
@@ -51,6 +52,7 @@ import SspaiCard from '~/components/sspai/Card.vue'
 import WeatherCard from '~/components/weather/Card.vue'
 import WeReadCard from '~/components/weread/Card.vue'
 import GithubCard from '~/components/github/GithubCard.vue'
+import JikeCard from '~/components/jike/JikeCard.vue'
 
 import { useNewTabState } from '~/store/newTab'
 
