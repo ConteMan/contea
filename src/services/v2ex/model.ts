@@ -7,7 +7,7 @@ export const defaultSetting = {
   expried: 300,
   token: '',
   enableTypes: [],
-  alarm: 10,
+  alarm: 30,
 }
 
 export type Config = {

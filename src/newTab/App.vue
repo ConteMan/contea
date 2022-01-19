@@ -1,6 +1,6 @@
 <template>
   <div class="w-full max-h-screen min-h-screen overflow-y-hidden pr-4 pt-2 flex flex-row">
-    <a-tabs v-model:activeKey="tabSelected" class="left-list w-full w-screen-sm flex-grow">
+    <a-tabs v-model:activeKey="tabSelected" class="left-list w-full w-screen-sm flex-grow" @change="tabChange">
       <a-tab-pane key="worldline" tab="世界线">
         <KeepAlive>
           <WorldlineList class="worldline-list" />
@@ -52,7 +52,13 @@ import WeatherCard from '~/components/weather/Card.vue'
 import WeReadCard from '~/components/weread/Card.vue'
 import GithubCard from '~/components/github/GithubCard.vue'
 
-const tabSelected = ref('worldline')
+import { useNewTabState } from '~/store/newTab'
+
+const newTabState = useNewTabState()
+const tabSelected = newTabState.tabSelected || 'worldline'
+const tabChange = (activeKey: string) => {
+  newTabState.changeTab(activeKey)
+}
 </script>
 
 <style scoped>

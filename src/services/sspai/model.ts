@@ -8,7 +8,7 @@ export const defaultSetting = {
   cdnUrl: 'https://cdn.sspai.com',
   enableTypes: [],
   expried: 86400,
-  alarm: 10,
+  alarm: 30,
 }
 
 export type Config = {

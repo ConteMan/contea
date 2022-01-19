@@ -41,5 +41,5 @@ import GithubModule from './modules/Github.vue'
 
 const customStyle = 'background: #f7f7f7;margin-bottom: 16px;border: 0;overflow: hidden'
 
-const activeKey = ref(['base', 'v2ex', 'sspai', 'bgm', 'test', 'github'])
+const activeKey = ref([])
 </script>
