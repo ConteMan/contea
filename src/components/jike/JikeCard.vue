@@ -2,8 +2,8 @@
   <Card v-if="!loading" class="flex flex-col justify-between bg-center bg-cover" :style="data.cardStyle">
     <div class="flex flex-row justify-between">
       <div class="flex flex-col justify-center">
-        <div>Followers <span class="cursor-pointer hover:(text-white) ml-1">{{ user.profile.statsCount.followedCount }}</span></div>
-        <div>Following <span class="cursor-pointer hover:(text-white) ml-1">{{ user.profile.statsCount.followingCount }}</span></div>
+        <div><span class="cursor-pointer hover:(text-white) ml-1">{{ user.profile.statsCount.followingCount }}</span> 关注</div>
+        <div><span class="cursor-pointer hover:(text-white) ml-1">{{ user.profile.statsCount.followedCount }}</span> 被关注</div>
       </div>
       <div class="flex flex-col justify-center">
         <div
@@ -26,17 +26,16 @@ import ConfigState from '~/models/keyValue/configState'
 const module = 'jike'
 
 const data = reactive({
-  loading: 0,
+  loading: 1,
   config: {} as Config,
   user: {} as any,
   cardStyle: {} as any,
 })
 const getData = async() => {
-  data.loading++
   data.config = await ConfigState.getItem(module)
   data.user = await Jike.me()
   data.cardStyle = {
-    'background-image': `url("${data.user.profile.backgroundImage.picUrl}")`,
+    'background-image': data.user.profile.backgroundImage.picUrl ? `url("${data.user.profile.backgroundImage.picUrl}")` : '',
   }
   data.loading--
 }
