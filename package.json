@@ -58,6 +58,7 @@
     "unplugin-vue-components": "^0.15.5",
     "vite": "^2.6.2",
     "vite-plugin-style-import": "^1.4.0",
+    "vite-plugin-vue-setup-extend": "^0.3.0",
     "vite-plugin-windicss": "^1.4.8",
     "vue": "^3.2.19",
     "vue-demi": "^0.11.4",

@@ -44,7 +44,7 @@
 
 <script setup lang="ts">
 import dayjs from 'dayjs'
-import Card from '~/components/template/Card.vue'
+import Card from '~/components/template/TemplateCard.vue'
 import Weather from '~/services/weather'
 
 const data = reactive({

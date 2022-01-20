@@ -29,7 +29,7 @@ import Duration from 'dayjs/plugin/duration'
 import type { Config } from '~/services/weread/model'
 import { openSite } from '~/utils'
 import { puzzling } from '~/utils/extend'
-import Card from '~/components/template/Card.vue'
+import Card from '~/components/template/TemplateCard.vue'
 import WeRead from '~/services/weread'
 import ConfigState from '~/models/keyValue/configState'
 

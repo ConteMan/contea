@@ -24,7 +24,7 @@
 <script setup lang="ts">
 import type { Config } from '~/services/github/model'
 import { openSite } from '~/utils'
-import Card from '~/components/template/Card.vue'
+import Card from '~/components/template/TemplateCard.vue'
 import Github from '~/services/github'
 import ConfigState from '~/models/keyValue/configState'
 

@@ -17,6 +17,9 @@
       <a-tab-pane key="sspai" tab="少数派">
         <Sspai class="h-full overflow-y-auto" />
       </a-tab-pane>
+      <a-tab-pane key="jike" tab="即刻">
+        <Jike class="h-full overflow-y-auto" />
+      </a-tab-pane>
     </a-tabs>
   </div>
 </template>
@@ -24,6 +27,7 @@
 <script setup lang="ts">
 import V2ex from './modules/V2ex.vue'
 import Sspai from './modules/Sspai.vue'
+import Jike from './modules/Jike.vue'
 
 const activeKey = ref('v2ex')
 </script>

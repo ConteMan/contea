@@ -1,6 +1,7 @@
 import { dirname, relative } from 'path'
 import { defineConfig, UserConfig } from 'vite'
 import Vue from '@vitejs/plugin-vue'
+import VueSetupExtend from 'vite-plugin-vue-setup-extend'
 import Icons from 'unplugin-icons/vite'
 import IconsResolver from 'unplugin-icons/resolver'
 import Components from 'unplugin-vue-components/vite'
@@ -26,6 +27,7 @@ export const sharedConfig: UserConfig = {
   },
   plugins: [
     Vue(),
+    VueSetupExtend(),
 
     AutoImport({
       imports: [

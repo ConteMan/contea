@@ -1,5 +1,10 @@
 <template>
-  <div>
+  <div class="sspai-scroll-container">
+    <a-back-top :target="getTarget" :visibility-height="500">
+      <span class="text-size-2xl opacity-70 hover:(opacity-100)">
+        <ic-outline-keyboard-arrow-up />
+      </span>
+    </a-back-top>
     <div class="tags absolute w-full bg-white pb-2 pl-2">
       <a class="cursor-pointer leading-none align-middle mr-4" @click="refresh()">
         <mdi-refresh :class="{'animate-spin': data.loading>0}" />
@@ -104,3 +109,20 @@ const transformAction = (action: string) => {
 }
 
 </script>
+
+<script lang="ts">
+export default {
+  methods: {
+    getTarget() {
+      return document.querySelector('.sspai-scroll-container') as HTMLElement
+    },
+  },
+}
+</script>
+
+<style>
+.ant-back-top {
+  left: 1rem;
+  bottom: 1rem;
+}
+</style>
