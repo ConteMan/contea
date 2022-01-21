@@ -13,6 +13,8 @@ class Jike {
     if (cache)
       return cache
 
+    await this.mainPage()
+
     const { apiUrl } = await ConfigState.getItem(this.module)
     const res = await defHttp.post({
       url: apiUrl,
@@ -47,6 +49,8 @@ class Jike {
    * 关注动态流
    */
   async selfFeed(loadMoreKey: {} | undefined = undefined) {
+    await this.mainPage()
+
     const { apiUrl } = await ConfigState.getItem(this.module)
     const res = await defHttp.post({
       url: apiUrl,
