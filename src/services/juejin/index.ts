@@ -1,3 +1,4 @@
+import dayjs from 'dayjs'
 import { defHttp } from '~/utils/http/axios'
 import RequestCache from '~/services/base/requestCache'
 import ConfigState from '~/models/keyValue/configState'
@@ -81,6 +82,35 @@ class Juejin {
     await ModuleState.mergeSet(this.module, moduleData)
 
     return moduleData
+  }
+
+  /**
+   * 签到
+   */
+  async checkIn() {
+    const today = dayjs().format('YYYY-MM-DD')
+    const moduleInfo = await ModuleState.getItem(this.module)
+    if (moduleInfo?.mission && moduleInfo.mission.date === today)
+      return moduleInfo?.mission
+
+    const { apiUrl } = await ConfigState.getItem(this.module)
+    try {
+      const res = await defHttp.post({
+        url: `${apiUrl}/growth_api/v1/check_in`,
+      })
+
+      if (res.data.err_no)
+        return false
+
+      const missionInfo = res.data.data
+      missionInfo.date = today
+      await ModuleState.mergeSet(this.module, { mission: missionInfo })
+
+      return missionInfo
+    }
+    catch (e) {
+      return false
+    }
   }
 }
 
