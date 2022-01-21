@@ -34,6 +34,7 @@
       <WeReadCard class="h-max"></WeReadCard>
       <GithubCard class="h-max"></GithubCard>
       <JikeCard class="h-max"></JikeCard>
+      <JuejinCard class="h-max"></JuejinCard>
     </div>
   </div>
 </template>
@@ -53,6 +54,7 @@ import WeatherCard from '~/components/weather/WeatherCard.vue'
 import WeReadCard from '~/components/weread/WereadCard.vue'
 import GithubCard from '~/components/github/GithubCard.vue'
 import JikeCard from '~/components/jike/JikeCard.vue'
+import JuejinCard from '~/components/juejin/JuejinCard.vue'
 
 import { useNewTabState } from '~/store/newTab'
 
