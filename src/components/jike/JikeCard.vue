@@ -35,7 +35,7 @@ const getData = async() => {
   data.config = await ConfigState.getItem(module)
   data.user = await Jike.me()
   data.cardStyle = {
-    'background-image': data.user.profile.backgroundImage.picUrl ? `url("${data.user.profile.backgroundImage.picUrl}")` : '',
+    'background-image': data.user.profile.backgroundImage.picUrl ? `url(${data.user.profile.backgroundImage.picUrl})` : '',
   }
   data.loading--
 }

@@ -102,8 +102,8 @@
     </template>
     <template #right>
       <div class="flex flex-row justify-center">
-        <a-button type="text" class="bg-gray-200" @click="testFunction(ConfigState.init('weread'))">
-          初始化配置
+        <a-button type="text" class="bg-gray-200" @click="testFunction(WeRead.user(true))">
+          强制更新
         </a-button>
         <span class="border-l-1 mx-2"></span>
         <a-button type="text" class="bg-gray-200" @click="testFunction(WeRead.getUserId())">

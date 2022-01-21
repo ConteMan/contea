@@ -14,52 +14,59 @@
       </div>
     </div>
     <div class="pt-2">
-      <div>本周阅读 {{ dayjs.duration(readDetail.datas[0].timeMeta.totalReadTime, 's').hours() }} hrs {{ dayjs.duration(readDetail.datas[0].timeMeta.totalReadTime, 's').minutes() }} mins</div>
-      <div>
+      <div class="pb-2">
+        本周阅读 {{ dayjs.duration(readDetail.datas[0].timeMeta.totalReadTime, 's').hours() }} hrs {{ dayjs.duration(readDetail.datas[0].timeMeta.totalReadTime, 's').minutes() }} mins
+      </div>
+      <div class="py-2">
         <div v-for="book in readDetail.datas[0].readMeta.books" :key="book.bookId">
-          《<span class="cursor-pointer hover:(text-white)" @click="openSite(`https://weread.qq.com/web/reader/${puzzling(book.bookId)}`)">{{ book.title }}</span>》- {{ book.author }}
+          <div class="flex items-center">
+            <img class="inline-block rounded-sm" :src="book.detail.cover" />
+            <div class="ml-2">
+              <div>
+                <span class="cursor-pointer hover:(text-white)" @click="openSite(`https://weread.qq.com/web/reader/${puzzling(book.bookId)}`)">{{ book.title }}</span>
+              </div>
+              <div class="text-size-[12px] text-warm-gray-100 pt-1">
+                {{ book.author }}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </Card>
 </template>
-<script setup lang="ts">
+<script setup lang="ts" name="WereadCard">
 import dayjs from 'dayjs'
 import Duration from 'dayjs/plugin/duration'
-import type { Config } from '~/services/weread/model'
+
 import { openSite } from '~/utils'
 import { puzzling } from '~/utils/extend'
+
 import Card from '~/components/template/TemplateCard.vue'
-import WeRead from '~/services/weread'
 import ConfigState from '~/models/keyValue/configState'
+
+import type { Config } from '~/services/weread/model'
+import WeRead from '~/services/weread'
+
+const module = 'weread'
+
+dayjs.extend(Duration)
 
 const data = reactive({
   loading: true,
-  userVid: '',
   config: {} as Config,
   memberCard: {} as any,
   readDetail: {} as any,
 })
+
 const getData = async() => {
-  const userVid = await WeRead.getUserId()
-  if (userVid) {
-    data.userVid = userVid
-    data.config = await ConfigState.getItem('weread')
-    const { memberCard, readDetail } = await WeRead.moduleInfo()
-    data.readDetail = readDetail
-    data.memberCard = memberCard
-    data.loading = false
-  }
+  data.config = await ConfigState.getItem(module)
+  const { memberCard, readDetail } = await WeRead.user()
+  data.readDetail = readDetail
+  data.memberCard = memberCard
+  data.loading = false
 }
 getData()
 
-dayjs.extend(Duration)
-
 const { loading, config, memberCard, readDetail } = toRefs(data)
 </script>
-
-<style>
-li::marker {
-  margin-right: 0 !important;
-}
-</style>

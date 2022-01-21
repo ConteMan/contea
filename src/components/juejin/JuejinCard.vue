@@ -29,7 +29,6 @@ const data = reactive({
   loading: 1,
   config: {} as Config,
   user: {} as any,
-  cardStyle: {} as any,
 })
 const getData = async() => {
   data.config = await ConfigState.getItem(module)
