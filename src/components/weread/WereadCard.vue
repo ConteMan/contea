@@ -17,17 +17,17 @@
       <div class="pb-2">
         本周阅读 {{ dayjs.duration(readDetail.datas[0].timeMeta.totalReadTime, 's').hours() }} hrs {{ dayjs.duration(readDetail.datas[0].timeMeta.totalReadTime, 's').minutes() }} mins
       </div>
-      <div class="py-2">
-        <div v-for="book in readDetail.datas[0].readMeta.books" :key="book.bookId">
-          <div class="flex items-center">
-            <img class="inline-block rounded-sm" :src="book.detail.cover" />
-            <div class="ml-2">
-              <div>
-                <span class="cursor-pointer hover:(text-white)" @click="openSite(`https://weread.qq.com/web/reader/${puzzling(book.bookId)}`)">{{ book.title }}</span>
-              </div>
-              <div class="text-size-[12px] text-warm-gray-100 pt-1">
-                {{ book.author }}
-              </div>
+      <div class="py-2 flex flex-row flex-wrap w-[400px]">
+        <div v-for="book in readDetail.datas[0].readMeta.books" :key="book.bookId" class="flex items-center">
+          <div class="w-[70px] h-[100px] mb-2">
+            <img class="w-full h-full" :src="book.detail.cover">
+          </div>
+          <div class="ml-2 w-[100px] break-words">
+            <div class="">
+              <span class="cursor-pointer hover:(text-white)" @click="openSite(`https://weread.qq.com/web/reader/${puzzling(book.bookId)}`)">{{ book.title }}</span>
+            </div>
+            <div class="text-size-[12px] text-warm-gray-100 pt-1">
+              {{ book.author }}
             </div>
           </div>
         </div>

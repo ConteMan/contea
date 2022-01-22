@@ -26,7 +26,7 @@
         <SettingList class="setting-list pl-4 mt-4 pb-4 h-[calc(100%)] overflow-y-auto" />
       </a-tab-pane>
     </a-tabs>
-    <div class="max-h-screen overflow-y-auto flex-grow flex flex-col space-y-4 p-4">
+    <div class="max-w-[500px] max-h-screen overflow-y-auto flex-grow flex flex-col space-y-4 p-4">
       <WakaTimeCard class="wakatime-card p-4 h-max rounded-md shadow-md"></WakaTimeCard>
       <V2EXCard class="h-max"></V2EXCard>
       <SspaiCard class="h-max"></SspaiCard>
