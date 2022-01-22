@@ -2,7 +2,7 @@
   <Card v-if="!loading" class="flex flex-col justify-between">
     <div class="flex flex-row justify-between">
       <div class="flex flex-col justify-center">
-        <div>无限卡 {{ dayjs(memberCard.expiredTime * 1000).format('MM-DD') }}</div>
+        <div>Unlimit {{ dayjs(memberCard.expiredTime * 1000).format('MM-DD') }}</div>
       </div>
       <div class="flex flex-col justify-center">
         <div
@@ -15,7 +15,7 @@
     </div>
     <div class="pt-2">
       <div class="pb-2">
-        本周阅读 {{ dayjs.duration(readDetail.datas[0].timeMeta.totalReadTime, 's').hours() }} hrs {{ dayjs.duration(readDetail.datas[0].timeMeta.totalReadTime, 's').minutes() }} mins
+        Week {{ dayjs.duration(readDetail.datas[0].timeMeta.totalReadTime, 's').hours() }} hrs {{ dayjs.duration(readDetail.datas[0].timeMeta.totalReadTime, 's').minutes() }} mins
       </div>
       <div class="py-2 flex flex-row flex-wrap w-[400px]">
         <div v-for="book in readDetail.datas[0].readMeta.books" :key="book.bookId" class="flex items-center">

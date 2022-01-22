@@ -78,3 +78,15 @@ export function enumToObj(data: dataType, keys: any[] = ['key', 'value']) {
   console.log(res)
   return res
 }
+
+/**
+ * 获取两数之间的整数，包含两数
+ * @param min number - 最小
+ * @param max number - 最大
+ * @returns {number}
+ */
+export function getRandomIntInclusive(min: number, max: number): number {
+  min = Math.ceil(min)
+  max = Math.floor(max)
+  return Math.floor(Math.random() * (max - min + 1)) + min // 含最大值，含最小值
+}

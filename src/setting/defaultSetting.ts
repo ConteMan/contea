@@ -5,6 +5,7 @@ import { defaultSetting as bgm } from '~/services/bgm/model'
 import { defaultSetting as github } from '~/services/github/model'
 import { defaultSetting as jike } from '~/services/jike/model'
 import { defaultSetting as juejin } from '~/services/juejin/model'
+import { defaultSetting as one } from '~/services/one/model'
 
 export default {
   default: {
@@ -24,4 +25,5 @@ export default {
   github,
   jike,
   juejin,
+  one,
 }

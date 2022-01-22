@@ -1,9 +1,9 @@
 import { Octokit } from '@octokit/core'
 import type { Octokit as OctokitType } from '@octokit/core'
-import RequestCache from '../base/requestCache'
 import type { StarredParams } from './model'
 import ConfigState from '~/models/keyValue/configState'
 import ModuleState from '~/models/keyValue/moduleState'
+import RequestCache from '~/services/base/requestCache'
 
 class Github {
   private module = 'github'

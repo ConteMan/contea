@@ -4,7 +4,7 @@ export const defaultSetting = {
   enable: true,
   site: 'https://github.com',
   apiUrl: 'https://api.github.com',
-  expried: 300,
+  expried: 3600,
   token: '',
   enableTypes: [],
   alarm: 60,

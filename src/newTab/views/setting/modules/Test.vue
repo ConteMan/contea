@@ -180,6 +180,21 @@
       </div>
     </template>
   </SettingItem>
+
+  <SettingItem class="mt-2">
+    <template #left>
+      <div class="ml-4 min-w-24">
+        一个
+      </div>
+    </template>
+    <template #right>
+      <div class="flex flex-row justify-center">
+        <a-button type="text" class="bg-gray-200" @click="testFunction(One.list())">
+          列表
+        </a-button>
+      </div>
+    </template>
+  </SettingItem>
 </template>
 
 <script setup lang="ts">
@@ -196,6 +211,7 @@ import Bgm from '~/services/bgm'
 import Github from '~/services/github'
 import Jike from '~/services/jike'
 import Juejin from '~/services/juejin'
+import One from '~/services/one'
 
 interface DataType {
   v2ex: {

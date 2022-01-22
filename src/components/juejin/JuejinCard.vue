@@ -20,8 +20,8 @@
 import type { Config } from '~/services/juejin/model'
 import { openSite } from '~/utils'
 import Card from '~/components/template/TemplateCard.vue'
-import Juejin from '~/services/juejin'
 import ConfigState from '~/models/keyValue/configState'
+import Juejin from '~/services/juejin'
 
 const module = 'juejin'
 

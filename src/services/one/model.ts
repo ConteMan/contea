@@ -1,10 +1,11 @@
 export const defaultSetting = {
-  key: 'jike',
-  name: '即刻',
+  key: 'one',
+  name: '一个',
   enable: true,
-  site: 'https://web.okjike.com',
-  apiUrl: 'https://web-api.okjike.com/api/graphql',
-  expried: 3600,
+  site: 'http://wufazhuce.com/',
+  apiUrl: '',
+  expried: 86400,
+  token: '',
   enableTypes: [],
   alarm: 60,
 }
@@ -16,6 +17,7 @@ export type Config = {
   site: string
   apiUrl: string
   expried?: number
+  token?: string // AccessToken
   enableTypes: string[]
   alarm?: number
 }

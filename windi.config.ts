@@ -17,5 +17,8 @@ export default defineConfig({
   },
   shortcuts: {
     'btn-active': '!text-red-600',
+    'word-keep-all': {
+      'word-break': 'keep-all',
+    },
   },
 })

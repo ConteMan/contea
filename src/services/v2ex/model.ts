@@ -4,7 +4,7 @@ export const defaultSetting = {
   enable: true,
   site: 'https://www.v2ex.com',
   url: 'https://www.v2ex.com',
-  expried: 300,
+  expried: 3600,
   token: '',
   enableTypes: [],
   alarm: 30,

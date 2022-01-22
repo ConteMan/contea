@@ -5,13 +5,18 @@ class RequestCache {
   /**
    * 获取缓存
    * @param key any[] - 键数组
+   * @param withExpried boolean - 是否携带过期时间信息，默认不带
    */
-  async get(key: any[]) {
+  async get(key: any[], withExpried?: false) {
     const now = new Date().getTime()
     const keyString = key.join('_')
     const res = await requestState.getItem(keyString)
     if (!res || res?.expried < now)
       return false
+
+    if (!withExpried)
+      delete res.expried
+
     return res
   }
 

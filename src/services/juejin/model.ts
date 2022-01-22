@@ -4,7 +4,7 @@ export const defaultSetting = {
   enable: true,
   site: 'https://juejin.cn',
   apiUrl: 'https://api.juejin.cn',
-  expried: 300,
+  expried: 3600,
   enableTypes: [],
   alarm: 60,
 }

@@ -4,7 +4,7 @@ export const defaultSetting = {
   enable: true,
   site: 'https://bgm.tv',
   apiUrl: 'https://api.bgm.tv/v0',
-  expried: 300,
+  expried: 3600,
   token: '',
   alarm: 10,
 }
