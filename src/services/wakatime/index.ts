@@ -10,11 +10,14 @@ class WakaTime {
    * @param startDate string - 开始日期
    * @param endDate string - 结束日期
    */
-  async daySummary(startDate = this.today, endDate = this.today) {
+  async daySummary(startDate = this.today, endDate = this.today, refresh = false) {
     const cacheKey = [this.module, 'daySummary', startDate, endDate]
-    const cacheData = await RequestCache.get(cacheKey)
-    if (cacheData)
-      return cacheData
+
+    if (!refresh) {
+      const cacheData = await RequestCache.get(cacheKey)
+      if (cacheData)
+        return cacheData
+    }
 
     const { apiUrl } = await ConfigState.getItem(this.module)
 
@@ -29,8 +32,8 @@ class WakaTime {
     })
 
     if (res.data) {
-      const expried = startDate !== endDate ? 43200 : 0 // 如果不是查询当日的数据，增加缓存时间
-      await RequestCache.set(cacheKey, res.data, this.module, expried)
+      const expried = startDate !== endDate ? 43200 : 0 // 如果不是查询当日的数据，设置缓存时间为半天
+      return await RequestCache.set(cacheKey, res.data, this.module, expried)
     }
 
     return res.data
