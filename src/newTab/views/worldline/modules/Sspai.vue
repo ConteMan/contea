@@ -22,7 +22,7 @@
       <template v-for="item in list" :key="item.title">
         <div class="p-2 rounded-sm hover:(bg-gray-200)">
           <template v-if="item.ca_module_type === 'followActivity'">
-            <template v-if="item.key === 'like_article'">
+            <template v-if="['like_article', 'release_article'].includes(item.key)">
               <a :href="'https://sspai.com/post/' + item.data.id">
                 {{ item.data.title }}
               </a>
@@ -105,7 +105,9 @@ const refresh = async() => {
 // 动作描述转换
 const transformAction = (action: string) => {
   if (action === 'like_article')
-    return 'LIKE'
+    return '喜欢'
+  if (action === 'release_article')
+    return '发布'
 }
 
 </script>
