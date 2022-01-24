@@ -21,9 +21,7 @@ class One {
       const res = await defHttp.get({ url: site })
       const dealRes = this.domDeal(res.data)
 
-      await RequestCache.set(cacheKey, dealRes, this.module)
-
-      return dealRes
+      return await RequestCache.set(cacheKey, { data: dealRes }, this.module)
     }
     catch (error) {
       return false
