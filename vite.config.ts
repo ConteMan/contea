@@ -34,6 +34,7 @@ export const sharedConfig: UserConfig = {
         'vue',
         {
           'webextension-polyfill': [['default', 'browser']],
+          'dayjs': [['default', 'dayjs']],
         },
       ],
       dts: r('src/auto-imports.d.ts'),

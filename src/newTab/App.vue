@@ -26,7 +26,7 @@
         <SettingList class="setting-list pl-4 mt-4 pb-4 h-[calc(100%)] overflow-y-auto" />
       </a-tab-pane>
     </a-tabs>
-    <div class="max-w-[420px] max-h-screen overflow-y-auto flex-grow flex flex-col space-y-4 p-4">
+    <div class="max-w-[400px] min-w-[400px] max-h-screen overflow-y-auto flex-grow flex flex-col space-y-4 p-4">
       <WakaTimeCard class="wakatime-card p-4 h-max rounded-md shadow-md"></WakaTimeCard>
       <WeatherCard class="h-max"></WeatherCard>
       <OneCard class="h-max"></OneCard>
@@ -48,7 +48,7 @@ import SportList from '~/newTab/views/sport/List.vue'
 import StatusList from '~/newTab/views/status/Status.vue'
 import SettingList from '~/newTab/views/setting/Setting.vue'
 
-import WakaTimeCard from '~/newTab/views/wakaTime/Card.vue'
+import WakaTimeCard from '~/components/wakatime/WakaTimeCard.vue'
 import V2EXCard from '~/components/v2ex/V2exCard.vue'
 import SspaiCard from '~/components/sspai/SspaiCard.vue'
 import WeatherCard from '~/components/weather/WeatherCard.vue'

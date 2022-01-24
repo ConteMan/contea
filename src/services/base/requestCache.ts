@@ -25,9 +25,13 @@ class RequestCache {
    * @param key any[] - 键数组
    * @param data any - 缓存内容
    * @param module string - 取用过期时间模块，可选，默认 default
+   * @param expried number - 过期时间，单位：秒
    */
-  async set(key: any[], data: any, module = 'default') {
-    const { expried } = await configState.getItem(module)
+  async set(key: any[], data: any, module = 'default', expried = 0) {
+    if (!expried) {
+      const { expried: moduleExpried } = await configState.getItem(module)
+      expried = parseInt(moduleExpried) ?? 0
+    }
     const now = new Date().getTime()
     const keyString = key.join('_')
 

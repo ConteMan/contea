@@ -6,6 +6,7 @@ import { defaultSetting as github } from '~/services/github/model'
 import { defaultSetting as jike } from '~/services/jike/model'
 import { defaultSetting as juejin } from '~/services/juejin/model'
 import { defaultSetting as one } from '~/services/one/model'
+import { defaultSetting as wakatime } from '~/services/wakatime/model'
 
 export default {
   default: {
@@ -26,4 +27,5 @@ export default {
   jike,
   juejin,
   one,
+  wakatime,
 }

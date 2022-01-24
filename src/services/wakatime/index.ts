@@ -1,38 +1,37 @@
-import dayjs from 'dayjs'
 import { defHttp } from '~/utils/http/axios'
+import ConfigState from '~/models/keyValue/configState'
 import RequestCache from '~/services/base/requestCache'
-
 class WakaTime {
   private module = 'wakatime'
-  private apiUrl
-
-  public constructor() {
-    this.apiUrl = 'https://wakatime.com/api/v1'
-  }
+  private today = dayjs().format('YYYY-MM-DD')
 
   /**
-   * 获取每日汇总数据
+   * 获取按日统计汇总数据
+   * @param startDate string - 开始日期
+   * @param endDate string - 结束日期
    */
-  async daySummary() {
-    const cacheKey = [this.module, 'daySummary']
+  async daySummary(startDate = this.today, endDate = this.today) {
+    const cacheKey = [this.module, 'daySummary', startDate, endDate]
     const cacheData = await RequestCache.get(cacheKey)
     if (cacheData)
       return cacheData
 
-    const day = dayjs().format('YYYY-MM-DD')
+    const { apiUrl } = await ConfigState.getItem(this.module)
 
     const res = await defHttp.get({
-      url: `${this.apiUrl}/users/current/summaries`,
+      url: `${apiUrl}/users/current/summaries`,
       params: {
-        start: day,
-        end: day,
+        start: startDate,
+        end: endDate,
         cache: false,
         paywalled: true,
       },
     })
 
-    if (res.data)
-      await RequestCache.set(cacheKey, res.data)
+    if (res.data) {
+      const expried = startDate !== endDate ? 43200 : 0 // 如果不是查询当日的数据，增加缓存时间
+      await RequestCache.set(cacheKey, res.data, this.module, expried)
+    }
 
     return res.data
   }

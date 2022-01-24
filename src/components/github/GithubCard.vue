@@ -22,11 +22,11 @@
   </Card>
 </template>
 <script setup lang="ts">
-import type { Config } from '~/services/github/model'
 import { openSite } from '~/utils'
+import ConfigState from '~/models/keyValue/configState'
+import type { Config } from '~/services/github/model'
 import Card from '~/components/template/TemplateCard.vue'
 import Github from '~/services/github'
-import ConfigState from '~/models/keyValue/configState'
 
 const module = 'github'
 
