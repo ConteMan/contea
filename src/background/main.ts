@@ -1,7 +1,7 @@
 import { sendMessage, onMessage } from 'webext-bridge'
 import { Tabs } from 'webextension-polyfill'
-import configState from '~/models/keyValue/configState'
 import { defHttp } from '~/utils/http/axios'
+import configState from '~/models/keyValue/configState'
 import AlarmService from '~/services/base/alarm'
 
 // only on dev mode
@@ -12,6 +12,7 @@ if (import.meta.hot) {
   // import('./contentScriptHMR')
 }
 
+// 安装后执行
 browser.runtime.onInstalled.addListener((): void => {
   // eslint-disable-next-line no-console
   console.log('Extension installed')

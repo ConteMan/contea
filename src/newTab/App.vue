@@ -62,7 +62,7 @@ import { useNewTabState } from '~/store/newTab'
 
 const newTabState = useNewTabState()
 const tabSelected = newTabState.tabSelected || 'worldline'
-const tabChange = (activeKey: string) => {
+const tabChange = (activeKey: any) => {
   newTabState.changeTab(activeKey)
 }
 </script>
