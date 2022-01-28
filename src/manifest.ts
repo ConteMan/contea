@@ -3,12 +3,18 @@ import type { Manifest } from 'webextension-polyfill'
 import type PkgType from '../package.json'
 import { isDev, port, r } from '../scripts/utils'
 
+interface newManifest extends Omit<Manifest.WebExtensionManifest, 'commands'> {
+  commands?: {
+    [other: string]: Manifest.WebExtensionManifest['commands'] & { global?: boolean }
+  }
+}
+
 export async function getManifest() {
   const pkg = await fs.readJSON(r('package.json')) as typeof PkgType
 
   // update this file to update this manifest.json
   // can also be conditional based on your need
-  const manifest: Manifest.WebExtensionManifest = {
+  const manifest: newManifest = {
     manifest_version: 2,
     name: pkg.displayName || pkg.name,
     version: pkg.version,
@@ -39,6 +45,7 @@ export async function getManifest() {
       'alarms',
       'bookmarks',
       'history',
+      'commands',
       'http://*/',
       'https://*/',
     ],
@@ -47,6 +54,23 @@ export async function getManifest() {
     {
       // 覆盖浏览器默认的新标签页
       newtab: './dist/newTab/index.html',
+    },
+    commands: {
+      '_execute_browser_action': {
+        suggested_key: {
+          default: 'Alt+Q',
+          mac: 'Alt+Q',
+        },
+        description: '激活新标签页',
+        global: true,
+      },
+      'change-mode': {
+        suggested_key: {
+          default: 'Alt+W',
+          mac: 'Alt+W',
+        },
+        description: 'Change Mode',
+      },
     },
     // content_scripts: [{
     //   matches: ['http://*/*', 'https://*/*'],

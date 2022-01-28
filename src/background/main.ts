@@ -1,4 +1,4 @@
-import { sendMessage, onMessage } from 'webext-bridge'
+// import { sendMessage, onMessage } from 'webext-bridge'
 import { Tabs } from 'webextension-polyfill'
 import { defHttp } from '~/utils/http/axios'
 import configState from '~/models/keyValue/configState'
@@ -41,7 +41,7 @@ browser.tabs.onActivated.addListener(async({ tabId }) => {
 
   // eslint-disable-next-line no-console
   console.log('previous tab', tab)
-  sendMessage('tab-prev', { title: tab.title }, { context: 'content-script', tabId })
+  // sendMessage('tab-prev', { title: tab.title }, { context: 'content-script', tabId })
 
   // const page = await defHttp.get({
   //   url: 'https://mp.weixin.qq.com/s/UhFBygOQom0giomxAtTY7Q',
@@ -50,26 +50,26 @@ browser.tabs.onActivated.addListener(async({ tabId }) => {
   // console.log('page', page)
 })
 
-onMessage('get-current-tab', async() => {
-  try {
-    const tab = await browser.tabs.get(previousTabId)
-    return {
-      title: tab?.id,
-    }
-  }
-  catch {
-    return {
-      title: undefined,
-    }
-  }
-})
+// onMessage('get-current-tab', async() => {
+//   try {
+//     const tab = await browser.tabs.get(previousTabId)
+//     return {
+//       title: tab?.id,
+//     }
+//   }
+//   catch {
+//     return {
+//       title: undefined,
+//     }
+//   }
+// })
 
-onMessage('get-page', async({ data }) => {
-  const { url } = data as any
-  return await defHttp.get({
-    url,
-  })
-})
+// onMessage('get-page', async({ data }) => {
+//   const { url } = data as any
+//   return await defHttp.get({
+//     url,
+//   })
+// })
 
 browser.runtime.onMessage.addListener(async(message, sender) => {
   // eslint-disable-next-line no-console
@@ -97,4 +97,19 @@ browser.alarms.onAlarm.addListener(async(alarm) => {
   console.log(name)
 
   await AlarmService.alarmDeal(name)
+})
+
+// 按键监听
+browser.commands.onCommand.addListener(async(command) => {
+  // eslint-disable-next-line no-console
+  console.log(`Command "${command}" called`)
+  const tab = await browser.tabs.query({ active: true, currentWindow: true })
+  // eslint-disable-next-line no-console
+  console.log('command tab', tab)
+  if (tab[0]?.url === 'chrome://newtab/') {
+    // browser.runtime.sendMessage({ data: 'change-mode' })
+    const response = await browser.tabs.sendMessage(tab[0].id as number, { data: 'change-mode' })
+    // eslint-disable-next-line no-console
+    console.log('command tab response', response)
+  }
 })

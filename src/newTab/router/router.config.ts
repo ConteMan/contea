@@ -17,6 +17,11 @@ export const routes: Array<RouteRecordRaw> = [
         component: () => import('~/newTab/views/Module.vue'),
         meta: { title: '首页', keepAlive: false, showTab: true },
       },
+      {
+        path: '/simple',
+        name: 'Simple',
+        component: () => import('~/newTab/views/Index.vue'),
+      },
     ],
   },
 ]
