@@ -15,12 +15,24 @@ import { r, port, isDev } from './scripts/utils'
 export const sharedConfig: UserConfig = {
   root: r('src'),
   resolve: {
-    alias: {
-      '~/': `${r('src')}/`,
-      '#/': `${r('types')}/`,
-      '~o/': `${r('src/options')}`,
-      'node-fetch': 'isomorphic-fetch',
-    },
+    alias: [
+      {
+        find: '~/',
+        replacement: `${r('src')}/`,
+      },
+      {
+        find: '#/',
+        replacement: `${r('types')}/`,
+      },
+      {
+        find: '~o/',
+        replacement: `${r('src/options')}/`,
+      },
+      {
+        find: 'node-fetch',
+        replacement: 'isomorphic-fetch',
+      },
+    ],
   },
   define: {
     __DEV__: isDev,
@@ -32,6 +44,7 @@ export const sharedConfig: UserConfig = {
     AutoImport({
       imports: [
         'vue',
+        'vue-router',
         {
           'webextension-polyfill': [['default', 'browser']],
           'dayjs': [['default', 'dayjs']],
@@ -52,6 +65,7 @@ export const sharedConfig: UserConfig = {
         }),
         AntDesignVueResolver({
           resolveIcons: true,
+          importLess: true,
         }),
       ],
     }),
@@ -95,6 +109,9 @@ export const sharedConfig: UserConfig = {
   css: {
     preprocessorOptions: {
       less: {
+        modifyVars: {
+          hack: `true; @import (reference) "${r('src/styles/contea.less')}";`, // src/css/common.less 是你需要全局变量 （你定义的定义的方法 和 变量等）
+        },
         javascriptEnabled: true,
       },
     },

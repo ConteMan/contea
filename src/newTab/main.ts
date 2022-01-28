@@ -1,8 +1,12 @@
+import 'virtual:windi.css'
+import '~/styles/index.less'
+
 import { createApp } from 'vue'
 import App from './App.vue'
 import store from '~/store'
-import '../styles'
+import router from '~/newTab/router'
 
 const app = createApp(App)
 app.use(store)
+app.use(router)
 app.mount('#app')
