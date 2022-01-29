@@ -5,10 +5,10 @@
         <div class="cursor-default" v-html="current.text">
         </div>
         <div class="pt-3">
-          <a :href="current.articleLink">{{ current.articleTitle }} <span v-if="current.articleAuthor">- {{ current.articleAuthor }}</span></a>
+          <a class="text-white hover:(text-white underline underline-offset-2 duration-200 animate-pulse)" :href="current.articleLink">{{ current.articleTitle }} <span v-if="current.articleAuthor">- {{ current.articleAuthor }}</span></a>
         </div>
         <div class="pt-3">
-          <a :href="current.questionLink">{{ current.questionTitle }}</a>
+          <a class="text-white hover:(text-white underline underline-offset-2 duration-200 animate-pulse)" :href="current.questionLink">{{ current.questionTitle }}</a>
         </div>
         <div class="pt-3 flex justify-between items-end">
           <span class="cursor-pointer hover:(.animate-pulse)" @click="refresh(false)">
