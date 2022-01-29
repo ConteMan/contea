@@ -6,6 +6,7 @@ import { deepMerge } from '~/utils'
 import Alarm from '~/services/base/alarm'
 
 import type { BaseModule } from '~/services/base/model'
+import { useConfigState } from '~/store/config'
 
 class ConfigState extends AsyncModels.keyValue {
   constructor() {
@@ -26,6 +27,9 @@ class ConfigState extends AsyncModels.keyValue {
       // eslint-disable-next-line no-console
       console.log(defaultSetting[module])
     }
+
+    const configState = useConfigState()
+    configState.setAll()
   }
 
   /**
@@ -41,6 +45,9 @@ class ConfigState extends AsyncModels.keyValue {
     // 定时任务
     if (data.enable || data.alarm)
       await Alarm.setAlarm(module)
+
+    const configState = useConfigState()
+    configState.setAll()
   }
 }
 

@@ -6,7 +6,11 @@ import App from './App.vue'
 import store from '~/store'
 import router from '~/newTab/router'
 
+import { init } from '~/newTab/core'
+
 const app = createApp(App)
 app.use(store)
 app.use(router)
 app.mount('#app')
+
+init()

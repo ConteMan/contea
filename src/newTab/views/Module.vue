@@ -48,10 +48,8 @@ import SportList from '~/newTab/views/sport/List.vue'
 import StatusList from '~/newTab/views/status/Status.vue'
 import SettingList from '~/newTab/views/setting/Setting.vue'
 
-import configState from '~/models/keyValue/configState'
-import { modules } from '~/setting/defaultSetting'
-
 import { useNewTabState } from '~/store/newTab'
+import { useConfigState } from '~/store/config'
 
 const newTabState = useNewTabState()
 const tabSelected = newTabState.tabSelected || 'worldline'
@@ -60,16 +58,11 @@ const tabChange = (activeKey: any) => {
 }
 
 const data = reactive({
-  config: {
-    v2ex: {
-      enable: false,
-    },
-  } as any,
+  config: {} as any,
 })
-const getConfig = async() => {
-  data.config = await configState.storage.bulkSelect(modules)
-}
-getConfig()
+const configState = useConfigState()
+const { all } = storeToRefs(configState)
+data.config = all
 
 const { config } = toRefs(data)
 </script>

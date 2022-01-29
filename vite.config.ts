@@ -49,6 +49,7 @@ export const sharedConfig: UserConfig = {
           'webextension-polyfill': [['default', 'browser']],
           'dayjs': [['default', 'dayjs']],
           'naive-ui': ['useNotification'],
+          'pinia': ['storeToRefs'],
         },
       ],
       dts: r('src/auto-imports.d.ts'),
