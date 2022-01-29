@@ -103,13 +103,30 @@ browser.alarms.onAlarm.addListener(async(alarm) => {
 browser.commands.onCommand.addListener(async(command) => {
   // eslint-disable-next-line no-console
   console.log(`Command "${command}" called`)
-  const tab = await browser.tabs.query({ active: true, currentWindow: true })
-  // eslint-disable-next-line no-console
-  console.log('command tab', tab)
-  if (tab[0]?.url === 'chrome://newtab/') {
-    // browser.runtime.sendMessage({ data: 'change-mode' })
-    const response = await browser.tabs.sendMessage(tab[0].id as number, { data: 'change-mode' })
-    // eslint-disable-next-line no-console
-    console.log('command tab response', response)
-  }
+
+  changeMode()
 })
+
+// 快捷键切换标签页模式
+async function changeMode() {
+  const tabs = await browser.tabs.query({ currentWindow: true })
+
+  // 查询新标签页
+  let targetTab = {} as any
+  tabs.forEach((item) => {
+    if (item.url === 'chrome://newtab/')
+      targetTab = item
+  })
+
+  // 当前窗口存在新标签页
+  if (Object.keys(targetTab).length) {
+    // 激活标签页
+    if (!targetTab.active)
+      await browser.tabs.update(targetTab.id, { active: true })
+
+    await browser.tabs.sendMessage(targetTab.id as number, { data: 'change-mode' })
+  }
+  else {
+    await browser.tabs.create({ active: true })
+  }
+}
