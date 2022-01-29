@@ -104,8 +104,19 @@ browser.commands.onCommand.addListener(async(command) => {
   // eslint-disable-next-line no-console
   console.log(`Command "${command}" called`)
 
-  changeMode()
+  if (command === 'change-mode')
+    changeMode()
 })
+
+/** ******** 按键监听 ******** **/
+const extensionId = 'eincieaedhdbmhnpcckndljjkbknbnlo'
+const extensionPageUrl = 'chrome-extension://eincieaedhdbmhnpcckndljjkbknbnlo/dist/newTab/index.html#/home'
+
+// 判断新标签页
+function isExtensionPage(url: string) {
+  const regex = new RegExp(extensionId)
+  return regex.test(url)
+}
 
 // 快捷键切换标签页模式
 async function changeMode() {
@@ -116,17 +127,30 @@ async function changeMode() {
   tabs.forEach((item) => {
     if (item.url === 'chrome://newtab/')
       targetTab = item
+    if (item.url && isExtensionPage(item.url))
+      targetTab = item
   })
 
   // 当前窗口存在新标签页
   if (Object.keys(targetTab).length) {
-    // 激活标签页
-    if (!targetTab.active)
-      await browser.tabs.update(targetTab.id, { active: true })
-
-    await browser.tabs.sendMessage(targetTab.id as number, { data: 'change-mode' })
+    // eslint-disable-next-line no-console
+    console.log({ targetTab })
+    if (!isExtensionPage(targetTab.url)) {
+      // eslint-disable-next-line no-console
+      console.log('not new extension page', targetTab.url)
+      // 删除旧标签页
+      browser.tabs.remove(targetTab.id)
+      browser.tabs.create({ active: true, url: extensionPageUrl })
+    }
+    else {
+      // 激活标签页
+      if (!targetTab.active)
+        await browser.tabs.update(targetTab.id, { active: true })
+      else
+        await browser.tabs.sendMessage(targetTab.id as number, { data: 'change-mode' })
+    }
   }
   else {
-    await browser.tabs.create({ active: true })
+    await browser.tabs.create({ active: true, url: extensionPageUrl })
   }
 }

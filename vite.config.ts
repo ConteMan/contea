@@ -5,7 +5,7 @@ import VueSetupExtend from 'vite-plugin-vue-setup-extend'
 import Icons from 'unplugin-icons/vite'
 import IconsResolver from 'unplugin-icons/resolver'
 import Components from 'unplugin-vue-components/vite'
-import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
+import { AntDesignVueResolver, NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 import styleImport, { AndDesignVueResolve } from 'vite-plugin-style-import'
 import AutoImport from 'unplugin-auto-import/vite'
 import WindiCSS from 'vite-plugin-windicss'
@@ -48,6 +48,7 @@ export const sharedConfig: UserConfig = {
         {
           'webextension-polyfill': [['default', 'browser']],
           'dayjs': [['default', 'dayjs']],
+          'naive-ui': ['useNotification'],
         },
       ],
       dts: r('src/auto-imports.d.ts'),
@@ -67,6 +68,7 @@ export const sharedConfig: UserConfig = {
           resolveIcons: true,
           importLess: true,
         }),
+        NaiveUiResolver(),
       ],
     }),
 

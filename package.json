@@ -79,6 +79,7 @@
     "kurimudb-driver-dexie": "^5.0.0",
     "kurimudb-driver-localstorage": "^5.1.0",
     "lodash-es": "^4.17.21",
+    "naive-ui": "^2.24.7",
     "octokit": "^1.7.1",
     "pinia": "^2.0.9",
     "pinia-plugin-persistedstate": "^1.0.3",

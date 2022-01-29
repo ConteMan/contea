@@ -1,3 +1,6 @@
 <template>
-  <router-view></router-view>
+  <Base></Base>
 </template>
+<script setup lang="ts">
+import Base from './Base.vue'
+</script>

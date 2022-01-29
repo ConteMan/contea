@@ -1,5 +1,5 @@
 import { RouteRecordRaw } from 'vue-router'
-import Layout from '../layout/Index.vue'
+import LayoutBase from '../layout/Base.vue'
 export const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
@@ -9,7 +9,7 @@ export const routes: Array<RouteRecordRaw> = [
       title: '首页',
       keepAlive: false,
     },
-    component: Layout,
+    component: LayoutBase,
     children: [
       {
         path: '/home',
