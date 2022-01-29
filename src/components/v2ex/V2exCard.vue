@@ -24,9 +24,9 @@
         </div>
       </div>
     </div>
-    <div class="relative flex items-center text-right">
+    <div class="relative flex items-end text-right">
       <div
-        class="cursor-pointer text-2xl text-white hover:(text-gray-400)"
+        class="cursor-pointer font-bold text-xl text-white select-none hover:(underline underline-offset-2 duration-200 animate-pulse)"
         @click.stop="openSite(config.site)"
       >
         {{ config.name }}
@@ -36,23 +36,29 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
 import dayjs from 'dayjs'
 import type { Config, User } from '~/services/v2ex/model'
 import { openSite } from '~/utils'
 import v2ex from '~/services/v2ex'
+import configState from '~/models/keyValue/configState'
 
-const config = ref({} as Config)
-const info = ref({} as User)
-const loading = ref(true)
+const module = 'v2ex'
+
+const data = reactive({
+  loading: true,
+  info: {} as User,
+  config: {} as Config,
+})
 
 const getInfo = async() => {
-  loading.value = true
-  config.value = await v2ex.getConfig()
-  info.value = await v2ex.user()
-  loading.value = false
+  data.loading = true
+  data.config = await configState.getItem(module)
+  data.info = await v2ex.user()
+  data.loading = false
 }
 getInfo()
+
+const { loading, config, info } = toRefs(data)
 
 const mission = async() => {
   await v2ex.mission()

@@ -8,15 +8,14 @@ import { defaultSetting as juejin } from '~/services/juejin/model'
 import { defaultSetting as one } from '~/services/one/model'
 import { defaultSetting as wakatime } from '~/services/wakatime/model'
 
+export const modules = ['v2ex', 'sspai', 'weread', 'github', 'juejin', 'one', 'wakatime', 'jike', 'bgm']
+
 export default {
   default: {
     storageExpried: 300, // 单位: 秒
     expried: 600,
     hasInit: true,
-    modules: [
-      'v2ex',
-      'sspai',
-    ],
+    modules,
     alarm: 10,
   },
   v2ex,

@@ -1,6 +1,6 @@
 /* eslint-disable prefer-regex-literals */
 import dayjs from 'dayjs'
-import type { Config, BaseUser, User, DomList } from './model'
+import type { Config, User, DomList } from './model'
 import { defHttp } from '~/utils/http/axios'
 import { deepMerge } from '~/utils'
 import configState from '~/models/keyValue/configState'
@@ -8,20 +8,13 @@ import moduleState from '~/models/keyValue/moduleState'
 import infoList from '~/models/list/infoList'
 
 class V2EX {
-  private moduleName = 'v2ex'
-
-  /**
-   * 获取配置信息
-   */
-  async getConfig(): Promise<Config> {
-    return await configState.getItem(this.moduleName)
-  }
+  private module = 'v2ex'
 
   /**
    * 登录校验
    */
   async loginCheck(): Promise<boolean> {
-    const { url } = await this.getConfig()
+    const { url } = await configState.getItem(this.module) as Config
 
     const settingUrl = `${url}/settings`
     try {
@@ -38,8 +31,8 @@ class V2EX {
   /**
    * 获取用户名
    */
-  async getUserName(): Promise<BaseUser> {
-    const { url, key } = await this.getConfig()
+  async getUserName(): Promise<{}> {
+    const { url } = await configState.getItem(this.module) as Config
 
     const res = await defHttp.get({ url })
 
@@ -49,28 +42,30 @@ class V2EX {
     const aDoms = dom.querySelectorAll('#Top .tools a')
     const username = aDoms?.[1].getAttribute('href') ?? ''
 
-    const info = await moduleState.getItem(key)
-    const current: BaseUser = deepMerge(info ?? {}, { username, expried: 0, login: !!username }) // 获取用户名后，设置过期时间为 0，立即更新用户信息
-    await moduleState.setItem(key, current)
+    await moduleState.mergeSet(this.module, { username }, 0)
 
-    return current
+    return { username }
   }
 
   /**
    * 获取用户信息
    */
-  async user(): Promise<User> {
-    const { url, key, expried } = await this.getConfig()
-    let info = await moduleState.getItem(key)
+  async user(cache = true): Promise<User> {
+    const cacheRes = await moduleState.getItem(this.module)
+    if (cache && cacheRes)
+      return cacheRes
+
+    const { url } = await configState.getItem(this.module) as Config
+    let info = await moduleState.getItem(this.module)
 
     if (!info?.username)
       info = await this.getUserName()
 
-    const now = new Date().getTime()
-    if (!info?.username || info?.expried > now)
+    if (!info?.username)
       return info
 
-    const date = dayjs().format('YYYY-MM-DD') // 签到
+    const date = dayjs().format('YYYY-MM-DD')
+    // 签到
     if (info.mission?.date !== date)
       await this.mission()
 
@@ -99,9 +94,7 @@ class V2EX {
     const showName = username.split('/')?.[2]
     const signature = mainDom?.querySelector('.bigger')?.innerHTML
 
-    const newInfo = deepMerge(info, {
-      updatedAt: now,
-      expried: now + expried * 1000,
+    const newInfo: User = {
       login: true,
       id,
       created,
@@ -110,11 +103,9 @@ class V2EX {
       balance,
       showName,
       signature,
-    })
+    }
 
-    moduleState.setItem(key, newInfo)
-
-    return await moduleState.getItem(key) as User
+    return await moduleState.mergeSet(this.module, newInfo)
   }
 
   /**
@@ -122,7 +113,7 @@ class V2EX {
    * @returns
    */
   async mission(): Promise<object> {
-    const { url, key } = await this.getConfig()
+    const { url, key } = await await configState.getItem(this.module) as Config
 
     const mainPage = await defHttp.get({ url })
     const sign = mainPage.data.match(/once=([0-9]+)/)?.[1]
@@ -172,7 +163,7 @@ class V2EX {
    */
   async followActivity() {
     const moduleType = 'followActivity'
-    const { url } = await this.getConfig()
+    const { url } = await await configState.getItem(this.module) as Config
 
     const res = await defHttp.get({
       url: `${url}/my/following`,
@@ -194,8 +185,9 @@ class V2EX {
     const tabs = ['hot', 'all', 'tech', 'creative', 'play', 'apple', 'r2', 'members', 'qna', 'city', 'deals', 'jobs']
     if (!tabs.includes(tabName))
       return []
+
     const moduleType = `tab-${tabName}`
-    const { url } = await this.getConfig()
+    const { url } = await await configState.getItem(this.module) as Config
 
     const res = await defHttp.get({
       url: `${url}/?tab=${tabName}`,
@@ -203,9 +195,8 @@ class V2EX {
 
     const list = this.domToList(res.data, moduleType)
 
-    const deleteCount = await infoList.deleteByModule(this.moduleName, [moduleType])
-    // eslint-disable-next-line no-console
-    console.log('%c [ deleteCount ]-207', 'font-size:13px; background:pink; color:#bf2c9f;', deleteCount)
+    // 清理
+    await infoList.deleteByModule(this.module, [moduleType])
     await infoList.bulkSetItemByModule(list, ['author', 'id'])
 
     return list
@@ -245,7 +236,7 @@ class V2EX {
       const reply_count = Number(item.querySelector('td[align=right] a')?.innerHTML)
       list.push(
         {
-          ca_module: this.moduleName,
+          ca_module: this.module,
           ca_module_type: moduleType,
           ca_sort_at: dayjs(last_reply_at).valueOf(),
 

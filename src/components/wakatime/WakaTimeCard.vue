@@ -24,7 +24,7 @@
           <mdi-refresh class="text-white cursor-pointer mr-2" :class="{'animate-spin': data.refreshLoading}" @click="getInfo(true)" />
         </div>
         <div
-          class="cursor-pointer font-bold text-xl text-white select-none hover:(underline underline-offset-2 duration-200 animate-pulse)"
+          class="leading-none cursor-pointer font-bold text-xl text-white select-none hover:(underline underline-offset-2 duration-200 animate-pulse)"
           @click.stop="openSite(config.site)"
         >
           {{ config.name }}

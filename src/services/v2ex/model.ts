@@ -1,14 +1,4 @@
-export const defaultSetting = {
-  key: 'v2ex',
-  name: 'V2EX',
-  enable: true,
-  site: 'https://www.v2ex.com',
-  url: 'https://www.v2ex.com',
-  expried: 3600,
-  token: '',
-  enableTypes: [],
-  alarm: 30,
-}
+import type { types } from '~/enums/v2exEnum'
 
 export type Config = {
   key: string
@@ -18,8 +8,25 @@ export type Config = {
   url: string
   expried: number
   token?: string
-  enableTypes?: any[]
+  enableTypes?: types[]
   alarm?: number
+}
+
+export const defaultSetting: Config = {
+  key: 'v2ex',
+  name: 'V2EX',
+  enable: true,
+  site: 'https://www.v2ex.com',
+  url: 'https://www.v2ex.com',
+  expried: 3600,
+  token: '',
+  enableTypes: [
+    'all',
+    'members',
+    'hot',
+    'tech',
+  ],
+  alarm: 30,
 }
 
 export type BaseUser = {

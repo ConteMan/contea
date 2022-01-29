@@ -30,9 +30,9 @@
       <WakaTimeCard class="wakatime-card p-4 h-max rounded-md shadow-md"></WakaTimeCard>
       <WeatherCard class="h-max"></WeatherCard>
       <OneCard class="h-max"></OneCard>
-      <V2EXCard class="h-max"></V2EXCard>
+      <V2exCard v-if="config.v2ex.enable" class="h-max"></V2exCard>
       <SspaiCard class="h-max"></SspaiCard>
-      <WeReadCard class="h-max"></WeReadCard>
+      <WereadCard class="h-max"></WereadCard>
       <GithubCard class="h-max"></GithubCard>
       <JikeCard class="h-max"></JikeCard>
       <JuejinCard class="h-max"></JuejinCard>
@@ -41,22 +41,15 @@
 </template>
 
 <script setup lang="ts">
-import WorldlineList from '~/newTab/views/worldline/List.vue'
 import DdrkList from '~/components/vedio/DdrkCard.vue'
+import WorldlineList from '~/newTab/views/worldline/List.vue'
 import BookMarkList from '~/newTab/views/bookmark/List.vue'
 import SportList from '~/newTab/views/sport/List.vue'
 import StatusList from '~/newTab/views/status/Status.vue'
 import SettingList from '~/newTab/views/setting/Setting.vue'
 
-import WakaTimeCard from '~/components/wakatime/WakaTimeCard.vue'
-import V2EXCard from '~/components/v2ex/V2exCard.vue'
-import SspaiCard from '~/components/sspai/SspaiCard.vue'
-import WeatherCard from '~/components/weather/WeatherCard.vue'
-import WeReadCard from '~/components/weread/WereadCard.vue'
-import GithubCard from '~/components/github/GithubCard.vue'
-import JikeCard from '~/components/jike/JikeCard.vue'
-import JuejinCard from '~/components/juejin/JuejinCard.vue'
-import OneCard from '~/components/one/OneCard.vue'
+import configState from '~/models/keyValue/configState'
+import { modules } from '~/setting/defaultSetting'
 
 import { useNewTabState } from '~/store/newTab'
 
@@ -65,6 +58,20 @@ const tabSelected = newTabState.tabSelected || 'worldline'
 const tabChange = (activeKey: any) => {
   newTabState.changeTab(activeKey)
 }
+
+const data = reactive({
+  config: {
+    v2ex: {
+      enable: false,
+    },
+  } as any,
+})
+const getConfig = async() => {
+  data.config = await configState.storage.bulkSelect(modules)
+}
+getConfig()
+
+const { config } = toRefs(data)
 </script>
 
 <style scoped>

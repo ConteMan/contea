@@ -2,6 +2,7 @@ import { AsyncModels } from 'kurimudb'
 import { dexieDriverFactory } from 'kurimudb-driver-dexie'
 import migrations from '../migrations'
 import { deepMerge } from '~/utils'
+import configState from '~/models/keyValue/configState'
 
 class ModuleState extends AsyncModels.keyValue {
   constructor() {
@@ -17,10 +18,24 @@ class ModuleState extends AsyncModels.keyValue {
    * @param module string - 模块名称
    * @param data {} - 模块内容
    */
-  async mergeSet(module: string, data: {}) {
+  async mergeSet(module: string, data: any, expried = 0) {
+    if (!expried) {
+      const { expried: moduleExpried } = await configState.getItem(module)
+      expried = parseInt(moduleExpried) ?? 0
+
+      const now = new Date().getTime()
+
+      data.ca_updated_at = now
+      data.ca_expried = now + expried * 1000
+    }
+
+    // eslint-disable-next-line no-console
+    console.log({ moduleState: 'mergeSet', module, expried, data })
+
     const res = await this.getItem(module)
     const mergeRes = deepMerge(res, data)
-    return await this.setItem(module, mergeRes)
+    await this.setItem(module, mergeRes)
+    return mergeRes
   }
 
   /**
@@ -33,7 +48,7 @@ class ModuleState extends AsyncModels.keyValue {
       return false
 
     const now = new Date().getTime()
-    if (res?.expried && res?.expried < now)
+    if (res?.ca_expried && res?.ca_expried < now)
       return false
 
     return res

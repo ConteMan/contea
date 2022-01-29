@@ -47,14 +47,18 @@ class AlarmSetting {
    * @param module string - 模块名称
    */
   async alarmDeal(module: string) {
-    const { enableTypes } = await configState.getItem(module)
-    if (!enableTypes)
+    const { enable, enableTypes } = await configState.getItem(module)
+    if (!enable)
       return false
 
     // eslint-disable-next-line no-console
     console.log(`${dayjs().format('DD HH:mm:ss')}: ${enableTypes}`)
-    if (module === 'v2ex')
+
+    if (module === 'v2ex') {
       await v2ex.tabLists(enableTypes)
+      await v2ex.user(false)
+    }
+
     if (module === 'sspai')
       await sspai.lists(enableTypes)
 
