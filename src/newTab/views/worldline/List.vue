@@ -1,23 +1,13 @@
 <template>
   <div id="page" class="h-full overflow-y-scroll w-full min-h-full">
     <a-tabs v-model:activeKey="activeKey" tab-position="left" size="small" class="worldline-tab h-full">
-      <!-- <a-tab-pane key="now">
-        <template #tab>
-          <div class="flex items-center leading-none">
-            <span class="ml-1">此刻</span>
-          </div>
-        </template>
-      </a-tab-pane>
-      <a-tab-pane key="all" tab="时间轴">
-        时间轴
-      </a-tab-pane> -->
-      <a-tab-pane key="v2ex" tab="V2EX">
+      <a-tab-pane v-if="config.v2ex.enable" key="v2ex" tab="V2EX">
         <V2ex class="h-full overflow-y-auto" />
       </a-tab-pane>
-      <a-tab-pane key="sspai" tab="少数派">
+      <a-tab-pane v-if="config.sspai.enable" key="sspai" tab="少数派">
         <Sspai class="h-full overflow-y-auto" />
       </a-tab-pane>
-      <a-tab-pane key="jike" tab="即刻">
+      <a-tab-pane v-if="config.jike.enable" key="jike" tab="即刻">
         <Jike class="h-full overflow-y-auto" />
       </a-tab-pane>
     </a-tabs>
@@ -29,7 +19,17 @@ import V2ex from './modules/V2ex.vue'
 import Sspai from './modules/Sspai.vue'
 import Jike from './modules/Jike.vue'
 
+import { useConfigState } from '~/store/config'
+
 const activeKey = ref('v2ex')
+const data = reactive({
+  config: {} as any,
+})
+const configState = useConfigState()
+const { all } = storeToRefs(configState)
+data.config = all
+
+const { config } = toRefs(data)
 </script>
 
 <style scoped>
