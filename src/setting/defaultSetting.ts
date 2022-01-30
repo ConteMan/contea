@@ -7,8 +7,9 @@ import { defaultSetting as jike } from '~/services/jike/model'
 import { defaultSetting as juejin } from '~/services/juejin/model'
 import { defaultSetting as one } from '~/services/one/model'
 import { defaultSetting as wakatime } from '~/services/wakatime/model'
+import { defaultSetting as weather } from '~/services/weather/model'
 
-export const modules = ['v2ex', 'sspai', 'weread', 'github', 'juejin', 'one', 'wakatime', 'jike', 'bgm']
+export const modules = ['v2ex', 'sspai', 'weread', 'github', 'juejin', 'one', 'wakatime', 'jike', 'bgm', 'weather']
 
 export default {
   default: {
@@ -27,4 +28,5 @@ export default {
   juejin,
   one,
   wakatime,
+  weather,
 }

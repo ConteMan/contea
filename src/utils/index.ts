@@ -80,6 +80,28 @@ export function enumToObj(data: dataType, keys: any[] = ['key', 'value']) {
 }
 
 /**
+ * 对象转数组
+ * @param data - 对象
+ * @param key - 对象键别名
+ */
+export function objToArray(data: any, key: (string | false) = false) {
+  const keys = Object.keys(data)
+  if (!keys.length)
+    return []
+
+  const array = []
+  for (let i = 0; i < keys.length; i++) {
+    const item = { ...data?.[keys[i]] }
+    if (key)
+      item[key] = keys[i]
+
+    array.push(item)
+  }
+
+  return array
+}
+
+/**
  * 获取两数之间的整数，包含两数
  * @param min number - 最小
  * @param max number - 最大

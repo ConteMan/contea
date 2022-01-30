@@ -82,8 +82,9 @@
     "naive-ui": "^2.24.7",
     "octokit": "^1.7.1",
     "pinia": "^2.0.9",
-    "pinia-plugin-persistedstate": "^1.0.3",
+    "pinia-plugin-persistedstate": "^1.1.0",
     "qs": "^6.10.1",
-    "vue-router": "^4.0.0"
+    "vue-router": "^4.0.0",
+    "vuedraggable": "^4.1.0"
   }
 }

@@ -26,21 +26,62 @@
         <SettingList class="setting-list pl-4 mt-4 pb-4 h-[calc(100%)] overflow-y-auto" />
       </a-tab-pane>
     </a-tabs>
-    <div class="max-w-[400px] min-w-[400px] max-h-screen overflow-y-auto flex-grow flex flex-col space-y-4 p-4">
-      <WakaTimeCard class="wakatime-card p-4 h-max rounded-md shadow-md"></WakaTimeCard>
-      <WeatherCard class="h-max"></WeatherCard>
-      <OneCard class="h-max"></OneCard>
-      <V2exCard v-if="config.v2ex.enable" class="h-max"></V2exCard>
-      <SspaiCard class="h-max"></SspaiCard>
-      <WereadCard class="h-max"></WereadCard>
-      <GithubCard class="h-max"></GithubCard>
-      <JikeCard class="h-max"></JikeCard>
-      <JuejinCard class="h-max"></JuejinCard>
+    <div>
+      <draggable
+        v-if="data.cardList.length"
+        tag="div"
+        :list="data.cardList"
+        item-key="key"
+        class="max-w-[400px] min-w-[400px] max-h-screen overflow-y-auto flex-grow flex flex-col space-y-4 p-4"
+      >
+        <template #item="{ element }">
+          <div>
+            <WakaTimeCard
+              v-if="element.key === 'wakatime'"
+              class="wakatime-card p-4 h-max rounded-md shadow-md"
+            />
+            <V2exCard
+              v-if="element.key === 'v2ex'"
+              class="h-max"
+            />
+            <WeatherCard
+              v-if="element.key === 'weather'"
+              class="h-max"
+            />
+            <OneCard
+              v-if="element.key === 'one'"
+              class="h-max"
+            />
+            <SspaiCard
+              v-if="element.key === 'sspai'"
+              class="h-max"
+            />
+            <WereadCard
+              v-if="element.key === 'weread'"
+              class="h-max"
+            />
+            <GithubCard
+              v-if="element.key === 'github'"
+              class="h-max"
+            />
+            <JikeCard
+              v-if="element.key === 'jike'"
+              class="h-max"
+            />
+            <JuejinCard
+              v-if="element.key === 'juejin'"
+              class="h-max"
+            />
+          </div>
+        </template>
+      </draggable>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import draggable from 'vuedraggable'
+
 import DdrkList from '~/components/vedio/DdrkCard.vue'
 import WorldlineList from '~/newTab/views/worldline/List.vue'
 import BookMarkList from '~/newTab/views/bookmark/List.vue'
@@ -59,12 +100,19 @@ const tabChange = (activeKey: any) => {
 
 const data = reactive({
   config: {} as any,
+  cardList: [] as any,
 })
 const configState = useConfigState()
-const { all } = storeToRefs(configState)
+const { all, sortList } = storeToRefs(configState)
 data.config = all
+data.cardList = sortList
 
-const { config } = toRefs(data)
+const setSortList = () => {
+  configState.dealSortList(toRaw(data.cardList))
+}
+watch(data.cardList, setSortList)
+
+// const { config } = toRefs(data)
 </script>
 
 <style scoped>
