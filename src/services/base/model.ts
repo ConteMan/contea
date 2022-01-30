@@ -6,8 +6,14 @@ export type InfoItem = {
 
 export type InfoList = InfoItem []
 
-export type BaseModule = {
+export type BaseConfig = {
   enable?: boolean
   alarm?: number
   [other: string]: any
+}
+
+export type BaseModule = {
+  ca_login?: boolean
+  ca_expried?: number
+  ca_updated_at?: number
 }

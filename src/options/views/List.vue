@@ -43,7 +43,7 @@ const getData = async() => {
   data.value = await Base.list({ currentPage: 1, num: 20 })
 }
 const refresh = async() => {
-  await v2ex.followActivity()
+  await v2ex.tabList('members')
   await sspai.followActivity()
   await getData()
 }

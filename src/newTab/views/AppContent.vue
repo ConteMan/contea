@@ -28,6 +28,7 @@ useEventListener(window, 'keydown', (e: any) => {
   // eslint-disable-next-line no-console
   console.log(e.key)
 
-  notice(e.key)
+  if (e.key === 'Tab')
+    notice(e.key)
 })
 </script>

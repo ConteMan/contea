@@ -1,8 +1,7 @@
 /* eslint-disable prefer-regex-literals */
 import dayjs from 'dayjs'
-import type { Config, User, DomList } from './model'
+import type { Config, Module, User, DomList, Mession } from './model'
 import { defHttp } from '~/utils/http/axios'
-import { deepMerge } from '~/utils'
 import configState from '~/models/keyValue/configState'
 import moduleState from '~/models/keyValue/moduleState'
 import infoList from '~/models/list/infoList'
@@ -31,7 +30,7 @@ class V2EX {
   /**
    * 获取用户名
    */
-  async getUserName(): Promise<{}> {
+  async getUserName(): Promise<string> {
     const { url } = await configState.getItem(this.module) as Config
 
     const res = await defHttp.get({ url })
@@ -42,34 +41,32 @@ class V2EX {
     const aDoms = dom.querySelectorAll('#Top .tools a')
     const username = aDoms?.[1].getAttribute('href') ?? ''
 
-    await moduleState.mergeSet(this.module, { username }, 0)
+    await moduleState.mergeSet(this.module, { data: { username }, ca_login: true }, 0)
 
-    return { username }
+    return username
   }
 
   /**
    * 获取用户信息
    */
-  async user(cache = true): Promise<User> {
+  async user(cache = true): Promise<Module> {
     const cacheRes = await moduleState.getItem(this.module)
     if (cache && cacheRes)
       return cacheRes
 
+    if (!await this.loginCheck())
+      return { ca_login: false }
+
+    let username = ''
+    const info = await moduleState.getItem(this.module) as Module
+
+    if (!info?.data?.username)
+      username = await this.getUserName()
+
+    if (!username)
+      return { ca_login: false }
+
     const { url } = await configState.getItem(this.module) as Config
-    let info = await moduleState.getItem(this.module)
-
-    if (!info?.username)
-      info = await this.getUserName()
-
-    if (!info?.username)
-      return info
-
-    const date = dayjs().format('YYYY-MM-DD')
-    // 签到
-    if (info.mission?.date !== date)
-      await this.mission()
-
-    const username = info?.username
     const res = await defHttp.get({
       url: `${url}${username}`,
     })
@@ -95,7 +92,6 @@ class V2EX {
     const signature = mainDom?.querySelector('.bigger')?.innerHTML
 
     const newInfo: User = {
-      login: true,
       id,
       created,
       dau,
@@ -105,14 +101,14 @@ class V2EX {
       signature,
     }
 
-    return await moduleState.mergeSet(this.module, newInfo)
+    return await moduleState.mergeSet(this.module, { ca_login: true, data: newInfo }) as Module
   }
 
   /**
    * 签到
    * @returns
    */
-  async mission(): Promise<object> {
+  async mission(): Promise<Mession> {
     const { url, key } = await await configState.getItem(this.module) as Config
 
     const mainPage = await defHttp.get({ url })
@@ -128,19 +124,20 @@ class V2EX {
 
     const data = res.data
     const completed = !!data.match(/每日登录奖励已领取/)
+
     let days = 0
     const date = dayjs().format('YYYY-MM-DD')
     if (completed) {
       days = parseInt(data.match(/已连续登录 ([0-9]+?) 天/)?.[1])
       const info = await moduleState.getItem(key)
       if (!info.mission?.days || days > info.mission?.days) { // 并非过了零点就可以签到
-        const newInfo = deepMerge(info, {
+        const newInfo = {
           mission: {
             date,
             days,
           },
-        })
-        moduleState.setItem(key, newInfo)
+        }
+        moduleState.mergeSet(this.module, { data: newInfo })
       }
       else {
         return {
@@ -156,23 +153,6 @@ class V2EX {
       completed,
       days,
     }
-  }
-
-  /**
-   * 获取关注的人的动态列表
-   */
-  async followActivity() {
-    const moduleType = 'followActivity'
-    const { url } = await await configState.getItem(this.module) as Config
-
-    const res = await defHttp.get({
-      url: `${url}/my/following`,
-    })
-
-    const list = this.domToList(res.data, moduleType)
-    await infoList.bulkSetItemByModule(list, ['author', 'id'])
-
-    return list
   }
 
   /**

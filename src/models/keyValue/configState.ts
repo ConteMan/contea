@@ -5,7 +5,7 @@ import defaultSetting from '~/setting/defaultSetting'
 import { deepMerge } from '~/utils'
 import Alarm from '~/services/base/alarm'
 
-import type { BaseModule } from '~/services/base/model'
+import type { BaseConfig } from '~/services/base/model'
 import { useConfigState } from '~/store/config'
 
 class ConfigState extends AsyncModels.keyValue {
@@ -37,7 +37,7 @@ class ConfigState extends AsyncModels.keyValue {
    * @param module string - 模块名称
    * @param data {} - 模块内容
    */
-  async mergeSet(module: string, data: BaseModule) {
+  async mergeSet(module: string, data: BaseConfig) {
     const res = await this.getItem(module)
     const mergeRes = deepMerge(res, data)
     await this.setItem(module, mergeRes)

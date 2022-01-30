@@ -6,10 +6,6 @@
       </div>
     </template>
     <template #right>
-      <a-button type="text" class="bg-gray-200" @click="testFunction(V2EX.followActivity())">
-        DOM 解析列表
-      </a-button>
-      <span class="border-l-1 mx-2"></span>
       <div class="flex flex-row justify-center">
         <input v-model="data.v2ex.tabName" class="h-full mr-1 ml-4 border-1px pl-2">
         <a-button type="text" class="bg-gray-200" @click="testFunction(V2EX.tabList(data.v2ex.tabName))">

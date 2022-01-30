@@ -70,9 +70,6 @@
             </div>
           </div>
           <div class="flex-grow-1 flex flex-row-revers text-right space-x-4 divide-x-2">
-            <a-button type="text" class="bg-gray-200" @click="testFunction(V2EX.followActivity())">
-              DOM 解析列表
-            </a-button>
             <div class="flex flex-row justify-center">
               <input v-model="testTabName" class="h-full mr-1 ml-4 border-1px pl-2">
               <a-button type="text" class="bg-gray-200" @click="testFunction(V2EX.tabList(testTabName))">

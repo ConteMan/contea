@@ -11,11 +11,7 @@ import configState from '~/models/keyValue/configState'
 import { modules } from '~/setting/defaultSetting'
 
 const data = reactive({
-  config: {
-    v2ex: {
-      enable: false,
-    },
-  } as any,
+  config: {} as any,
 })
 const getConfig = async() => {
   data.config = await configState.storage.bulkSelect(modules)

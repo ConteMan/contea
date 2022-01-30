@@ -1,4 +1,5 @@
 import type { types } from '~/enums/v2exEnum'
+import type { BaseModule } from '~/services/base/model'
 
 export type Config = {
   key: string
@@ -30,13 +31,10 @@ export const defaultSetting: Config = {
 }
 
 export type BaseUser = {
-  expried?: number
   username?: string
-  login?: boolean
 }
 
 export type User = BaseUser & {
-  updatedAt?: number
   id?: string
   created?: string
   dau?: string
@@ -54,7 +52,12 @@ export type User = BaseUser & {
   }
 }
 
+export type Module = BaseModule & {
+  data?: User
+}
+
 export type Mession = {
+  date?: string
   completed?: boolean
   days?: number
 }
