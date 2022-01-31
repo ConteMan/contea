@@ -5,6 +5,8 @@
         <ic-outline-keyboard-arrow-up />
       </span>
     </a-back-top>
+
+    <!-- 顶部操作栏 -->
     <div class="tags absolute w-full bg-white pb-2 pl-2">
       <a class="cursor-pointer leading-none align-middle mr-4" @click="refresh()">
         <mdi-refresh :class="{'animate-spin': data.loading>0}" />
@@ -18,13 +20,16 @@
         </a-checkable-tag>
       </template>
     </div>
-    <div class="mt-8 mb-4 space-y-4">
-      <template v-for="item in list" :key="item.id">
-        <div class="p-2 rounded-sm shadow-md hover:(bg-gray-200)">
+
+    <!-- 内容列表 -->
+    <div class="max-w-[800px] mt-8 mb-4 space-y-4">
+      <template v-for="item in dealList" :key="item.id">
+        <div class="p-2 rounded-md shadow-sm cursor-default hover:(shadow-md bg-light-500 bg-opacity-40)">
           <template v-if="item.type === 'PERSONAL_UPDATE'">
-            <div class="space-x-1">
-              <span v-for="userItem in item.users" :key="userItem.username">
-                {{ userItem.screenName }}
+            <div class="space-x-1 font-medium">
+              <span v-for="(userItem, index) in item.users" :key="userItem.username">
+                <template v-if="index">、</template>
+                <a class="hover:(duration-200 animate-pulse)" :href="`${config.site}/u/${userItem.username}`">{{ userItem.screenName }}</a>
               </span>
             </div>
 
@@ -42,21 +47,28 @@
 
           <template v-if="item.type === 'REPOST'">
             <div class="pb-2">
-              <span>
-                {{ item.user.screenName }}
-              </span>
+              <div class="font-medium">
+                <a class="hover:(duration-200 animate-pulse)" :href="`${config.site}/u/${item.user.username}`">{{ item.user.screenName }}</a>
+              </div>
+              <n-ellipsis line-clamp="1" :tooltip="false" class="mt-1 text-gray-300 text-xs">
+                {{ item.user.briefIntro }}
+              </n-ellipsis>
             </div>
-            <div v-if="item.content" class="pb-2">
-              {{ item.content }}
+            <div v-if="item.content" class="pb-2" v-html="(item.content).replace(/\n/gi, '<br>')">
             </div>
             <div class="ml-2 p-2 border-l border-l-light-600">
-              <OriginalPost :data="item.target"></OriginalPost>
+              <OriginalPost :data="{...item.target, isRepost: true }"></OriginalPost>
             </div>
           </template>
 
+          <!-- 圈子 -->
           <div v-if="item.topic" class="text-xs py-1 pt-2 text-gray-300">
-            <span class="bg-gray-100 text-gray-400 py-1 px-2 rounded-sm">{{ item.topic.content }}</span>
+            <a class="hover:(duration-200 animate-pulse)" :href="`${config.site}/topic/${item.topic.id}`">
+              <span class="bg-gray-100 text-gray-400 py-1 px-2 rounded-sm">{{ item.topic.content }}</span>
+            </a>
           </div>
+
+          <!-- 时间 -->
           <div class="text-xs pt-2 text-gray-300">
             <template v-if="item.type === 'PERSONAL_UPDATE'">
               {{ dayjs(item.actionTime).fromNow() }}
@@ -67,6 +79,7 @@
           </div>
         </div>
       </template>
+
       <a-button type="text" @click="getPage()">
         LoadMore
       </a-button>
@@ -78,25 +91,35 @@
 import 'dayjs/locale/zh-cn'
 import dayjs from 'dayjs'
 import RelativeTime from 'dayjs/plugin/relativeTime'
+
+import type { Config } from '~/services/jike/model'
 import { TypeEnum } from '~/enums/jikeEnum'
 import { enumToObj } from '~/utils'
 import Base from '~/services/jike'
 import OriginalPost from '~/components/jike/components/OriginalPost.vue'
+import configState from '~/models/keyValue/configState'
 
 dayjs.locale('zh-cn')
 dayjs.extend(RelativeTime)
 
+const module = 'jike'
 const defaultTag = 'selfFeed'
 
 const data = reactive({
   loading: 0,
+  loadMore: false,
+  config: {} as Config,
   moduleTypes: {} as any,
   selectedTag: defaultTag,
   list: [] as any[],
   pageInfo: {} as any,
-  loadMore: false,
 })
-const { list } = toRefs(data)
+const { config } = toRefs(data)
+
+const init = async() => {
+  data.config = await configState.getItem(module)
+}
+init()
 
 // 列表数据
 const getPage = async() => {
@@ -108,6 +131,11 @@ const getPage = async() => {
   }
 }
 getPage()
+
+// 处理后的列表
+const dealList = computed(() => data.list.filter((item) => {
+  return item.__typename !== 'BannerMessage'
+}))
 
 // 获取栏目类型
 const getTypes = () => {
