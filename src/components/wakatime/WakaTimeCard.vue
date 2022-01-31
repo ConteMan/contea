@@ -1,6 +1,7 @@
 <template>
   <Card v-if="!loading" class="flex flex-col justify-between cursor-default">
     <div class="flex flex-row justify-between">
+      <!-- 数据展示 -->
       <div class="space-y-1">
         <div class="flex items-center leading-none">
           <mdi-code-braces-box />
@@ -18,8 +19,10 @@
           <span class="ml-2">{{ today.cummulative_total.text }}</span>
         </div>
       </div>
-      <div class="flex flex-col justify-between">
-        <div class="flex flex-row-reverse w-full opacity-0 hover:(opacity-100 transition-opacity duration-200)" :class="{'!opacity-100': showExtend}">
+
+      <!-- 操作 -->
+      <div class="flex flex-col justify-between opacity-0 hover:(opacity-100 transition-opacity duration-200)">
+        <div class="flex flex-row-reverse w-full" :class="{'!opacity-100': showExtend}">
           <mdi-information-outline class="text-white cursor-pointer" @click="showExtend = !showExtend" />
           <mdi-refresh class="text-white cursor-pointer mr-2" :class="{'animate-spin': data.refreshLoading}" @click="getInfo(true)" />
         </div>
@@ -31,6 +34,8 @@
         </div>
       </div>
     </div>
+
+    <!-- 扩展信息 -->
     <div v-if="showExtend" class="pt-4 space-y-1 text-size-[12px] text-gray-400 italic text-right">
       <div>DateType / Updated / Expried</div>
       <div>Today / {{ dayjs(today.ca_updated_at).format('DD HH:mm:ss') }} / {{ dayjs(today.ca_expried).format('DD HH:mm:ss') }}</div>

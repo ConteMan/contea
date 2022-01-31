@@ -1,43 +1,37 @@
 <template>
-  <Card v-if="Object.keys(base).length > 0" class="flex flex-col justify-center cursor-default">
+  <Card v-if="Object.keys(base).length > 0" class="flex flex-col justify-center cursor-default bg-gradient-to-bl from-red-500">
     <div class="now flex flex-row justify-between">
       <div class="flex-col">
-        <div class="py-1 flex items-center leading-none">
+        <div class="flex items-center">
           <mdi-map-marker />
-          <span class="ml-2">
-            {{ base.location.longitude }}, {{ base.location.latitude }}
-          </span>
+          <a class="ml-2 cursor-pointer hover:(underline underline-offset-2 duration-200 animate-pulse)" :href="config.site">
+            {{ base.location.name }} ({{ base.location.longitude }}, {{ base.location.latitude }})
+          </a>
         </div>
-        <div class="py-1 flex items-center leading-none">
+        <div class="flex items-center">
           <mdi-temperature-celsius />
           <span class="ml-2">
             {{ base.now.temperature }}
           </span>
         </div>
-        <div class="py-1 flex items-center leading-none">
+        <div class="flex items-center">
           <mdi-windsock />
           <span class="ml-2">
             <template v-if="base.now.windDirection !== '9999'">{{ base.now.windDirection }}</template> {{ base.now.windScale }}
           </span>
         </div>
       </div>
-      <div class="flex flex-col justify-center">
-        <div class="text-2xl text-white">
-          {{ base.location.name }}
-        </div>
-      </div>
-    </div>
-
-    <div class="daily pt-4">
-      <template v-for="(day, index) in base.daily" :key="day.date">
-        <template v-if="index < 3">
-          <div class="space-x-2">
-            <span> {{ dayShow(day.date) }} </span>
-            <span> {{ day.low }} / {{ day.high }} </span>
-            <span> {{ day.dayText }} / {{ day.nightText }} </span>
-          </div>
+      <div>
+        <template v-for="(day, index) in base.daily" :key="day.date">
+          <template v-if="index < 3">
+            <div class="space-x-2">
+              <span> {{ dayShow(day.date) }} </span>
+              <span> {{ day.low }} / {{ day.high }} </span>
+              <span> {{ day.dayText }} / {{ day.nightText }} </span>
+            </div>
+          </template>
         </template>
-      </template>
+      </div>
     </div>
   </Card>
 </template>
@@ -45,14 +39,21 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
 import Card from '~/components/template/TemplateCard.vue'
+import type { Config } from '~/services/weather/model'
+import configState from '~/models/keyValue/configState'
 import Weather from '~/services/weather'
+
+const module = 'weather'
 
 const data = reactive({
   base: {} as any,
+  config: {} as Config,
 })
+const { base, config } = toRefs(data)
+
 const getData = async() => {
-  const res = await Weather.data()
-  data.base = res
+  data.base = await Weather.data()
+  data.config = await configState.getItem(module)
 }
 getData()
 
@@ -70,6 +71,4 @@ const dayShow = (date: string) => {
 
   return date
 }
-
-const { base } = toRefs(data)
 </script>
