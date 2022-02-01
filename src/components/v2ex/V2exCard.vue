@@ -54,9 +54,9 @@ const module = 'v2ex'
 const data = reactive({
   loading: true,
   config: {} as Config,
+  login: false,
   moduleData: {} as Module,
   user: {} as User | undefined,
-  login: false,
   missionLoading: false,
 })
 
