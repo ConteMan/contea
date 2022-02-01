@@ -27,61 +27,12 @@
       </a-tab-pane>
     </a-tabs>
     <div>
-      <draggable
-        v-if="data.cardList.length"
-        tag="div"
-        :list="data.cardList"
-        item-key="key"
-        class="max-w-[400px] min-w-[400px] max-h-screen overflow-y-auto flex-grow flex flex-col space-y-4 p-4"
-      >
-        <template #item="{ element }">
-          <div>
-            <WakaTimeCard
-              v-if="element.key === 'wakatime'"
-              class="wakatime-card p-4 h-max rounded-md shadow-md"
-            />
-            <V2exCard
-              v-if="element.key === 'v2ex'"
-              class="h-max"
-            />
-            <WeatherCard
-              v-if="element.key === 'weather'"
-              class="h-max"
-            />
-            <OneCard
-              v-if="element.key === 'one'"
-              class="h-max"
-            />
-            <SspaiCard
-              v-if="element.key === 'sspai'"
-              class="h-max"
-            />
-            <WereadCard
-              v-if="element.key === 'weread'"
-              class="h-max"
-            />
-            <GithubCard
-              v-if="element.key === 'github'"
-              class="h-max"
-            />
-            <JikeCard
-              v-if="element.key === 'jike'"
-              class="h-max"
-            />
-            <JuejinCard
-              v-if="element.key === 'juejin'"
-              class="h-max"
-            />
-          </div>
-        </template>
-      </draggable>
+      <CardList class="max-w-[400px] min-w-[400px] max-h-screen" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import draggable from 'vuedraggable'
-
 import DdrkList from '~/components/vedio/DdrkCard.vue'
 import WorldlineList from '~/newTab/views/worldline/List.vue'
 import BookMarkList from '~/newTab/views/bookmark/List.vue'
@@ -100,19 +51,10 @@ const tabChange = (activeKey: any) => {
 
 const data = reactive({
   config: {} as any,
-  cardList: [] as any,
 })
 const configState = useConfigState()
-const { all, sortList } = storeToRefs(configState)
+const { all } = storeToRefs(configState)
 data.config = all
-data.cardList = sortList
-
-const setSortList = () => {
-  configState.dealSortList(toRaw(data.cardList))
-}
-watch(data.cardList, setSortList)
-
-// const { config } = toRefs(data)
 </script>
 
 <style scoped>
