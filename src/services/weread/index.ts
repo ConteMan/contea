@@ -9,20 +9,26 @@ class WeRead {
   /**
    * 获取用户ID
    */
-  async getUserId() {
+  async getUserId(times = 2): Promise<boolean | string> {
     const { site: url } = await configState.getItem(this.module)
+
     const res = await browser.cookies.get({ url, name: 'wr_vid' })
-    return res?.value
+
+    if (!res.value && times > 1) {
+      await defHttp.get({ url })
+      return await this.getUserId(times--)
+    }
+    else {
+      return res.value
+    }
   }
 
   /**
    * 登录检测
    * @returns boolean
    */
-  async loginCheck() {
-    const { site: url } = await configState.getItem(this.module)
-    await defHttp.get({ url })
-    return Boolean(await this.getUserId())
+  async loginCheck(): Promise<boolean> {
+    return !!(await this.getUserId())
   }
 
   /**
@@ -98,9 +104,6 @@ class WeRead {
     if (!this.loginCheck())
       return false
 
-    const { expried } = await configState.getItem(this.module)
-    const now = new Date().getTime()
-
     const newData = {} as any
     newData.user = await this.me()
     newData.memberCard = await this.memberCard()
@@ -112,7 +115,6 @@ class WeRead {
 
       newData.readDetail.datas[0].readMeta.books = showBooks
     }
-    newData.expried = now + expried * 1000
 
     await ModuleState.mergeSet(this.module, newData)
 
