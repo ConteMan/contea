@@ -1,9 +1,13 @@
 <template>
   <Layout></Layout>
+  <SearchModal />
 </template>
 <script setup lang="ts">
 import { useEventListener } from '@vueuse/core'
 import Layout from '../layout/Index.vue'
+import SearchModal from '~/components/search/Search.vue'
+
+import { useModalState } from '~/store/modal'
 
 const router = useRouter()
 const route = useRoute()
@@ -24,11 +28,24 @@ const notice = (msg: any) => {
     duration: 10000,
   })
 }
-useEventListener(window, 'keydown', (e: any) => {
+
+const modalState = useModalState()
+const { show: showModal } = storeToRefs(modalState)
+const showSearch = async() => {
+  modalState.change(true)
+}
+
+useEventListener(window, 'keyup', (e: any) => {
   // eslint-disable-next-line no-console
-  console.log(e.key)
+  console.log(e)
 
   if (e.key === 'Tab')
     notice(e.key)
+  if (e.key === 'q') {
+    if (!showModal.value) {
+      console.log(showModal.value)
+      showSearch()
+    }
+  }
 })
 </script>

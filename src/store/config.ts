@@ -13,12 +13,14 @@ export const useConfigState = defineStore('config', {
     }
   },
   actions: {
+    // 初始化
     async setAll() {
       this.all = await configState.storage.bulkSelect(modules)
       // eslint-disable-next-line no-console
       console.log('in setAll')
       await this.dealSortList()
     },
+    // 排序，优先按照传入排序，没有的放在最后
     async dealSortList(data: any[] = []) {
       // eslint-disable-next-line no-console
       console.log('in dealSortList')
@@ -65,7 +67,7 @@ export const useConfigState = defineStore('config', {
   persist: {
     key: 'config',
     storage: storeState,
-    paths: ['sortList'],
+    paths: ['sortList'], // 只存储排序列表
     overwrite: true,
   },
 })
