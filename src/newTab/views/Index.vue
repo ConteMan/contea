@@ -22,9 +22,6 @@ onMounted(() => {
     })
   }
   const focus = () => {
-    // eslint-disable-next-line no-console
-    console.log('focus', inputRef)
-
     inputRef?.focus()
     notice('focus exec！')
   }

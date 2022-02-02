@@ -33,9 +33,6 @@ class RequestCache {
       expried = parseInt(moduleExpried) ?? 0
     }
 
-    // eslint-disable-next-line no-console
-    console.log({ module, expried })
-
     const now = new Date().getTime()
     const keyString = key.join('_')
 

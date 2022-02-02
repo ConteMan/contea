@@ -32,9 +32,6 @@ class ModuleState extends AsyncModels.keyValue {
       data.ca_expried = now + expried * 1000
     }
 
-    // eslint-disable-next-line no-console
-    console.log({ moduleState: 'mergeSet', module, expried, data })
-
     const res = await this.getItem(module)
     const mergeRes = deepMerge(res, data)
     await this.setItem(module, mergeRes)

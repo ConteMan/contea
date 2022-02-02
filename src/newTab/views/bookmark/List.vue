@@ -20,9 +20,6 @@ const recent = ref([] as any[])
 
 const getRecent = async() => {
   recent.value = await Bookmark.recent(20)
-
-  // eslint-disable-next-line no-console
-  console.log(recent.value)
 }
 
 getRecent()

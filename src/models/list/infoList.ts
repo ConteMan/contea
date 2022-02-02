@@ -27,12 +27,7 @@ export default new (class List extends AsyncModels.collection<InfoInterface, Dex
       newList[slug] = { ca_slug: slug, ...item }
     })
 
-    // eslint-disable-next-line no-console
-    console.log(newList)
-
-    const res = await this.storage.bulkInsertOrUpdate(newList)
-
-    return res
+    return await this.storage.bulkInsertOrUpdate(newList)
   }
 
   // 生成唯一标识

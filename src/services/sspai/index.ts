@@ -105,12 +105,7 @@ class Sspai {
       )
     })
 
-    // eslint-disable-next-line no-console
-    console.log(list)
-
-    const deleteCount = await infoList.deleteByModule(this.moduleName, [moduleType])
-    // eslint-disable-next-line no-console
-    console.log('%c [ deleteCount ]-160', 'font-size:13px; background:pink; color:#bf2c9f;', deleteCount)
+    await infoList.deleteByModule(this.moduleName, [moduleType])
     await infoList.bulkSetItemByModule(list, ['ca_data_id', 'ca_author_slug'])
 
     return list
@@ -151,12 +146,7 @@ class Sspai {
       )
     })
 
-    // eslint-disable-next-line no-console
-    console.log(list)
-
-    const deleteCount = await infoList.deleteByModule(this.moduleName, [moduleType])
-    // eslint-disable-next-line no-console
-    console.log('%c [ deleteCount ]-160', 'font-size:13px; background:pink; color:#bf2c9f;', deleteCount)
+    await infoList.deleteByModule(this.moduleName, [moduleType])
     await infoList.bulkSetItemByModule(list, ['ca_data_id', 'ca_author_slug'])
 
     return list

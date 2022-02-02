@@ -190,18 +190,8 @@ const actionSet = async(module: string, keyName: string, data?: any) => {
 }
 
 const testFunction = async(functionIns: any) => {
-  const res = await functionIns
-
-  // eslint-disable-next-line no-console
-  console.log(res)
+  await functionIns
 }
-
-const { v2exEnableTypes } = toRefs(dataObj)
-
-watch(v2exEnableTypes, (newValue, oldValue) => {
-  // eslint-disable-next-line no-console
-  console.log('watch:', newValue, oldValue)
-})
 
 getSetting()
 </script>

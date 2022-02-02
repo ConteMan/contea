@@ -15,8 +15,6 @@ class Base {
    * @returns []
    */
   async listByModule(paginate: Paginate, module: ('sspai' | 'v2ex') = 'v2ex', moduleType: string[] = []) {
-    // eslint-disable-next-line no-console
-    console.log(moduleType)
     const { currentPage = 1, num = 10 } = paginate
     const res = await infoList.storage.query()
       .orderBy('ca_sort_at')

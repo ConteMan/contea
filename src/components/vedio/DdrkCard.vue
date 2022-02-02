@@ -17,8 +17,6 @@ const items = ref([] as List)
 
 const getList = async() => {
   const res = await vedio.ddrk()
-  // eslint-disable-next-line no-console
-  console.log(res)
   items.value = res
 }
 

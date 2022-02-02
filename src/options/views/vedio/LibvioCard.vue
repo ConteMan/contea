@@ -16,8 +16,6 @@ const items = ref([] as List)
 
 const getList = async() => {
   const res = await vedio.libvio()
-  // eslint-disable-next-line no-console
-  console.log(res)
   items.value = res
 }
 

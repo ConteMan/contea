@@ -74,8 +74,6 @@ export function enumToObj(data: dataType, keys: any[] = ['key', 'value']) {
       [keys[1]]: data[index],
     })
   }
-  // eslint-disable-next-line no-console
-  console.log(res)
   return res
 }
 

@@ -24,10 +24,6 @@ class AlarmSetting {
         periodInMinutes: alarm,
       })
 
-    const alarms = await browser.alarms.getAll()
-    // eslint-disable-next-line no-console
-    console.log(alarms)
-
     return true
   }
 
@@ -50,9 +46,6 @@ class AlarmSetting {
     const { enable, enableTypes } = await configState.getItem(module)
     if (!enable)
       return false
-
-    // eslint-disable-next-line no-console
-    console.log(`${dayjs().format('DD HH:mm:ss')}: ${enableTypes}`)
 
     if (module === 'v2ex') {
       await v2ex.tabLists(enableTypes)

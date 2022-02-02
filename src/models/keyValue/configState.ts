@@ -19,14 +19,10 @@ class ConfigState extends AsyncModels.keyValue {
 
   // 初始化
   async init(module: 'all'| 'default' | 'v2ex' | 'sspai' | 'weread' | 'bgm' | 'github' = 'all') {
-    if (module === 'all') {
+    if (module === 'all')
       await this.bulkSetItem(defaultSetting)
-    }
-    else {
+    else
       await this.setItem(module, defaultSetting[module])
-      // eslint-disable-next-line no-console
-      console.log(defaultSetting[module])
-    }
 
     const configState = useConfigState()
     configState.setAll()

@@ -14,8 +14,6 @@ if (import.meta.hot) {
 
 // 安装后执行
 browser.runtime.onInstalled.addListener((): void => {
-  // eslint-disable-next-line no-console
-  console.log('Extension installed')
   configState.init()
 })
 
@@ -71,10 +69,7 @@ browser.tabs.onActivated.addListener(async({ tabId }) => {
 //   })
 // })
 
-browser.runtime.onMessage.addListener(async(message, sender) => {
-  // eslint-disable-next-line no-console
-  console.log({ message, sender })
-
+browser.runtime.onMessage.addListener(async(message) => {
   const { command, param } = message
 
   let data = {}
@@ -93,17 +88,11 @@ browser.runtime.onMessage.addListener(async(message, sender) => {
 // 定时任务
 browser.alarms.onAlarm.addListener(async(alarm) => {
   const { name } = alarm
-  // eslint-disable-next-line no-console
-  console.log(name)
-
   await AlarmService.alarmDeal(name)
 })
 
 // 按键监听
 browser.commands.onCommand.addListener(async(command) => {
-  // eslint-disable-next-line no-console
-  console.log(`Command "${command}" called`)
-
   if (command === 'change-mode')
     changeMode()
 })
@@ -133,11 +122,7 @@ async function changeMode() {
 
   // 当前窗口存在新标签页
   if (Object.keys(targetTab).length) {
-    // eslint-disable-next-line no-console
-    console.log({ targetTab })
     if (!isExtensionPage(targetTab.url)) {
-      // eslint-disable-next-line no-console
-      console.log('not new extension page', targetTab.url)
       // 删除旧标签页
       browser.tabs.remove(targetTab.id)
       browser.tabs.create({ active: true, url: extensionPageUrl })
