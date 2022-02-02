@@ -53,7 +53,7 @@
       <div v-else class="flex flex-row justify-between items-center">
         <div>请登录</div>
         <div
-          class="cursor-pointer font-bold text-xl text-white select-none hover:(underline underline-offset-2 duration-200 animate-pulse)"
+          class="cursor-pointer font-bold text-xl text-white hover:(underline underline-offset-2 duration-200 animate-pulse)"
           @click.stop="openSite(config.site)"
         >
           {{ config.name }}

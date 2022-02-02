@@ -2,7 +2,7 @@
   <Card v-if="!loading" class="text-gray-700 flex flex-col justify-between bg-center bg-cover transition-opacity" :style="data.cardStyle">
     <div>
       <div class="flex flex-col justify-center">
-        <div class="cursor-default first-letter:(text-lg font-bold mr-1)" v-html="current.text"></div>
+        <div class="cursor-default first-letter:(text-lg font-bold mr-[2px])" v-html="current.text"></div>
         <div class="pt-1">
           《
           <a class="text-gray-700 hover:(underline underline-offset-2 duration-200 animate-pulse)" :href="current.articleLink">

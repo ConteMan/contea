@@ -11,7 +11,7 @@
     </div>
     <div class="relative flex items-center text-right">
       <div
-        class="cursor-pointer text-2xl text-white hover:(text-gray-400)"
+        class="cursor-pointer font-bold text-xl text-white hover:(underline underline-offset-2 duration-200 animate-pulse)"
         @click.stop="openSite(config.site)"
       >
         {{ config.name }}
