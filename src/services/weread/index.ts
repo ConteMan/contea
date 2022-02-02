@@ -104,6 +104,9 @@ class WeRead {
     if (!this.loginCheck())
       return false
 
+    const { site: url } = await configState.getItem(this.module)
+    await defHttp.get({ url })
+
     const newData = {} as any
     newData.user = await this.me()
     newData.memberCard = await this.memberCard()

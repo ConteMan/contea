@@ -35,7 +35,7 @@ const getData = async() => {
   data.config = await ConfigState.getItem(module)
   data.user = await Jike.me()
   data.cardStyle = {
-    'background-image': data.user.profile.backgroundImage.picUrl ? `url(${data.user.profile.backgroundImage.picUrl})` : '',
+    'background-image': data.user.profile.backgroundImage.picUrl ? `linear-gradient(45deg, rgba(255, 224, 18, 0.7), rgba(255, 224, 18, 0.7)), url(${data.user.profile.backgroundImage.picUrl})` : '',
   }
   data.loading--
 }
