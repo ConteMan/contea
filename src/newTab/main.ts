@@ -1,3 +1,4 @@
+import 'animate.css'
 import 'virtual:windi.css'
 import '~/styles/index.less'
 

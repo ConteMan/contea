@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 <template>
   <n-modal
     v-model:show="showModal"
@@ -9,16 +8,27 @@
       <n-input
         ref="searchInputRef"
         v-model:value="searchContent"
-        placeholder="搜索"
+        placeholder="Search"
         size="large"
       >
         <template #prefix>
-          <icon-park-outline-search class="mr-1" />
+          <transition
+            mode="out-in"
+            enter-active-class="animate__animated animate__faster animate__flipInX"
+            leave-active-class="animate__animated animate__faster animate__flipOutX"
+          >
+            <mdi-history v-if="data.searchMode === 1" class="mr-1" />
+            <mdi-book-outline v-else class="mr-1" />
+          </transition>
         </template>
       </n-input>
-      <div ref="resultRef" class="mt-2 rounded-sm bg-white overflow-y-auto" :class="`h-[${resultContainerHeight}px]`">
+      <div
+        ref="resultRef"
+        :class="`h-[${resultContainerHeight}px]`"
+        class="mt-2 rounded-sm bg-white overflow-y-auto"
+      >
         <div
-          v-for="(hItem, hIndex) in historyResult"
+          v-for="(hItem, hIndex) in result"
           :key="hItem.lastVisitTime"
           :ref="el => { if (el) divs[hIndex] = el }"
           class="py-2 px-4 cursor-pointer"
@@ -29,8 +39,10 @@
           <div class="truncate" :title="hItem.title">
             {{ hItem.title }}
           </div>
-          <div class="text-gray-400 text-xs truncate" :title="hItem.url">
-            {{ hItem.url }}
+          <div class="text-gray-400 text-xs italic truncate" :title="hItem.url">
+            <span v-if="hItem?.lastVisitTime">{{ dayjs(hItem.lastVisitTime).format('MM-DD HH:mm') }}</span>
+            <span v-if="hItem?.dateAdded">{{ dayjs(hItem.dateAdded).format('YYYY-MM-DD HH:mm') }}</span>
+            / {{ hItem.url }}
           </div>
         </div>
       </div>
@@ -39,21 +51,26 @@
 </template>
 
 <script setup lang="ts">
-import { debouncedWatch, onStartTyping, onKeyStroke, useMouse } from '@vueuse/core'
+import dayjs from 'dayjs'
+import { debouncedWatch, onStartTyping, useMouse, onKeyStroke } from '@vueuse/core'
 import { useModalState } from '~/store/modal'
 import { openSite } from '~/utils'
 
-const resultContainerHeight = 400
+const resultContainerHeight = 400 // 结果框的高度
+const historyStart = 30 // 历史记录搜索开始，距离目前的天数
 
 const data = reactive({
   showModal: false as any,
   searchContent: '',
+  result: [] as any,
   historyResult: [] as any,
-  index: 0,
+  bookmarkResult: [] as any,
+  index: 0, // 选中结果索引
   divs: {} as any, // 搜索结果引用
   mode: 1, // 1 鼠标，2 键盘
+  searchMode: 1, // 1 历史记录， 2 书签
 })
-const { showModal, searchContent, historyResult, divs } = toRefs(data)
+const { showModal, searchContent, result, divs } = toRefs(data)
 
 // 状态管理搜索状态
 const modalState = useModalState()
@@ -67,24 +84,44 @@ const clearSearch = () => {
 
 // 搜索历史记录
 const searchHistory = async() => {
-  data.historyResult = await browser.history.search({
+  data.searchMode = 1
+  data.result = await browser.history.search({
     text: searchContent.value,
+    startTime: dayjs().subtract(historyStart, 'day').valueOf(),
   })
   data.index = 0
 }
 
+// 搜索书签
+const searchBookmark = async(content = '') => {
+  data.searchMode = 2
+  if (!content) {
+    data.result = await browser.bookmarks.getRecent(20)
+  }
+  else {
+    data.result = await browser.bookmarks.search({
+      query: content,
+    })
+  }
+}
+
 // 初始化
-watch(show, (newValue, oldValue) => {
+watch(show, (newValue) => {
   if (newValue) {
     clearSearch()
     searchHistory()
   }
 })
 
-// 带防抖的搜索
-debouncedWatch(searchContent, () => {
-  searchHistory()
-}, { debounce: 500 })
+// 带防抖的搜索请求处理
+debouncedWatch(searchContent, (newValue) => {
+  if (/^b\s(.)*/.test(newValue))
+    searchBookmark(newValue.replace('b ', ''))
+  else
+    searchHistory()
+
+  data.index = 0
+}, { debounce: 300 })
 
 // 输入框始终获取焦点
 const searchInputRef: any = ref(null)
@@ -96,11 +133,14 @@ onStartTyping(() => {
 // 结果容器引用
 const resultRef: any = ref(null)
 
-// 向上按键
-onKeyStroke('ArrowUp', (e) => {
+// 向上按键操作
+const upAction = () => {
   data.mode = 2
   if (data.index > 0)
     data.index--
+
+  if (!data.divs[data.index] || !resultRef.value)
+    return
 
   // 当前元素顶部距父元素顶部距离 < 父元素滚动距离
   if (data.divs[data.index].offsetTop - resultRef.value.offsetTop < resultRef.value.scrollTop) {
@@ -109,14 +149,16 @@ onKeyStroke('ArrowUp', (e) => {
       block: 'start', // 上边框与视窗顶部平齐。默认值
     })
   }
-  e.preventDefault()
-})
+}
 
-// 向下按键
-onKeyStroke('ArrowDown', (e) => {
+// 向下按键操作
+const downAction = () => {
   data.mode = 2
-  if (data.index < (data.historyResult.length - 1))
+  if (data.index < (data.result.length - 1))
     data.index++
+
+  if (!data.divs[data.index] || !resultRef.value)
+    return
 
   // 当前元素顶部距父元素顶部距离 + 元素高度 > 父元素滚动距离 + 父元素可视高度
   if (data.divs[data.index].offsetTop - resultRef.value.offsetTop + data.divs[data.index].clientHeight > resultRef.value.scrollTop + resultContainerHeight) {
@@ -125,14 +167,29 @@ onKeyStroke('ArrowDown', (e) => {
       block: 'end', // 下边框与视窗顶部平齐
     })
   }
+}
 
+onKeyStroke('ArrowUp', (e) => {
+  upAction()
   e.preventDefault()
 })
 
-// 回车执行
+onKeyStroke('ArrowDown', (e) => {
+  downAction()
+  e.preventDefault()
+})
+
 onKeyStroke('Enter', (e) => {
-  if (data.historyResult?.[data.index])
-    openSite(data.historyResult[data.index].url)
+  if (data.result?.[data.index])
+    openSite(data.result[data.index].url)
+})
+
+onKeyStroke('Tab', (e) => {
+  if (e.shiftKey && e.key === 'Tab' && e.type === 'keydown')
+    upAction()
+  else
+    downAction()
+  e.preventDefault()
 })
 
 // 判断激活

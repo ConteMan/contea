@@ -16,7 +16,8 @@ specifiers:
   '@typescript-eslint/parser': ^4.0.0
   '@vitejs/plugin-vue': ^1.9.2
   '@vue/compiler-sfc': ^3.2.19
-  '@vueuse/core': ^6.5.3
+  '@vueuse/core': ^7.5.5
+  animate.css: ^4.1.1
   ant-design-vue: ^3.0.0-beta.5
   axios: ^0.24.0
   body-parser: 1.19.0
@@ -99,7 +100,8 @@ devDependencies:
   '@typescript-eslint/parser': registry.npmmirror.com/@typescript-eslint/parser/4.31.0_eslint@7.32.0+typescript@4.5.4
   '@vitejs/plugin-vue': 1.9.2_vite@2.6.2
   '@vue/compiler-sfc': 3.2.19
-  '@vueuse/core': 6.5.3_vue@3.2.19
+  '@vueuse/core': registry.npmmirror.com/@vueuse/core/7.5.5_vue@3.2.19
+  animate.css: registry.npmmirror.com/animate.css/4.1.1
   body-parser: registry.npmmirror.com/body-parser/1.19.0
   chokidar: 3.5.2
   cross-env: 7.0.3
@@ -115,7 +117,7 @@ devDependencies:
   rimraf: 3.0.2
   safe-compare: registry.npmmirror.com/safe-compare/1.1.4
   typescript: registry.npmmirror.com/typescript/4.5.4
-  unplugin-auto-import: 0.4.8_@vueuse+core@6.5.3+vite@2.6.2
+  unplugin-auto-import: 0.4.8_@vueuse+core@7.5.5+vite@2.6.2
   unplugin-icons: 0.11.4_d7afbeb2654c3780066bb7395b84518f
   unplugin-vue-components: 0.15.5_vite@2.6.2+vue@3.2.19
   vite: 2.6.2_less@4.1.2
@@ -761,37 +763,6 @@ packages:
 
   /@vue/shared/3.2.19:
     resolution: {integrity: sha512-Knqhx7WieLdVgwCAZgTVrDCXZ50uItuecLh9JdLC8O+a5ayaSyIQYveUK3hCRNC7ws5zalHmZwfdLMGaS8r4Ew==}
-    dev: true
-
-  /@vueuse/core/6.5.3_vue@3.2.19:
-    resolution: {integrity: sha512-o3CTu4nEqs371sDY5qLBX0r4QOm6GVpm3ApQc2Y+p8OMI2rRGartQo8xRykpUfsyq602A+SVtm/wxIWBkD/KCQ==}
-    peerDependencies:
-      '@vue/composition-api': ^1.1.0
-      vue: ^2.6.0 || ^3.2.0
-    peerDependenciesMeta:
-      '@vue/composition-api':
-        optional: true
-      vue:
-        optional: true
-    dependencies:
-      '@vueuse/shared': 6.5.3_vue@3.2.19
-      vue: 3.2.19
-      vue-demi: 0.11.4_vue@3.2.19
-    dev: true
-
-  /@vueuse/shared/6.5.3_vue@3.2.19:
-    resolution: {integrity: sha512-ChOKu3mECyZeqGJ/gHVm0CaHoZK5/TwNZr1ZM/aqH+RaRNQvC1qkLf1/8PBugzN3yRgC3BtZ/M1kLpGe/BFylw==}
-    peerDependencies:
-      '@vue/composition-api': ^1.1.0
-      vue: ^2.6.0 || ^3.2.0
-    peerDependenciesMeta:
-      '@vue/composition-api':
-        optional: true
-      vue:
-        optional: true
-    dependencies:
-      vue: 3.2.19
-      vue-demi: 0.11.4_vue@3.2.19
     dev: true
 
   /@windicss/config/1.4.8_typescript@4.5.4:
@@ -4527,7 +4498,7 @@ packages:
     engines: {node: '>= 10.0.0'}
     dev: true
 
-  /unplugin-auto-import/0.4.8_@vueuse+core@6.5.3+vite@2.6.2:
+  /unplugin-auto-import/0.4.8_@vueuse+core@7.5.5+vite@2.6.2:
     resolution: {integrity: sha512-qK7loR5lz1ctkw9cXBpNxelkYVGqQnyBdtDX7vX12MCEJpddNnKzxgKq/vAK+7VDoojQ2RU14++V7DeV/+SoDw==}
     engines: {node: '>=14'}
     peerDependencies:
@@ -4538,7 +4509,7 @@ packages:
     dependencies:
       '@antfu/utils': 0.3.0
       '@rollup/pluginutils': 4.1.1
-      '@vueuse/core': 6.5.3_vue@3.2.19
+      '@vueuse/core': registry.npmmirror.com/@vueuse/core/7.5.5_vue@3.2.19
       has-pkg: 0.0.1
       magic-string: 0.25.7
       resolve: 1.20.0
@@ -7534,6 +7505,49 @@ packages:
     version: 3.2.27
     dev: true
 
+  registry.npmmirror.com/@vueuse/core/7.5.5_vue@3.2.19:
+    resolution: {integrity: sha512-RBDqmIoGfak4h3xdXa/Av+ibkb8NY044wEy6+PG2FAWNaID8/FkqmSFjbxogrbmpSX1yZ1PBHrM8DUp/FrIpbg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@vueuse/core/-/core-7.5.5.tgz}
+    id: registry.npmmirror.com/@vueuse/core/7.5.5
+    name: '@vueuse/core'
+    version: 7.5.5
+    peerDependencies:
+      '@vue/composition-api': ^1.1.0
+      vue: ^2.6.0 || ^3.2.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
+      vue:
+        optional: true
+    dependencies:
+      '@vueuse/shared': registry.npmmirror.com/@vueuse/shared/7.5.5_vue@3.2.19
+      vue: 3.2.19
+      vue-demi: registry.npmmirror.com/vue-demi/0.11.4_vue@3.2.19
+    dev: true
+
+  registry.npmmirror.com/@vueuse/shared/7.5.5_vue@3.2.19:
+    resolution: {integrity: sha512-mzzTsotHQRPnPAChy8iCv6ek/90CKYhAFyMRgNsMxpT0afZJkbMO/X0OaOu/1NuGbgb8UVjlsWKmCUgKTOF5hA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@vueuse/shared/-/shared-7.5.5.tgz}
+    id: registry.npmmirror.com/@vueuse/shared/7.5.5
+    name: '@vueuse/shared'
+    version: 7.5.5
+    peerDependencies:
+      '@vue/composition-api': ^1.1.0
+      vue: ^2.6.0 || ^3.2.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
+      vue:
+        optional: true
+    dependencies:
+      vue: 3.2.19
+      vue-demi: registry.npmmirror.com/vue-demi/0.11.4_vue@3.2.19
+    dev: true
+
+  registry.npmmirror.com/animate.css/4.1.1:
+    resolution: {integrity: sha512-+mRmCTv6SbCmtYJCN4faJMNFVNN5EuCTTprDTAo7YzIGji2KADmakjVA3+8mVDkZ2Bf09vayB35lSQIex2+QaQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/animate.css/-/animate.css-4.1.1.tgz}
+    name: animate.css
+    version: 4.1.1
+    dev: true
+
   registry.npmmirror.com/ansi-styles/3.2.1:
     resolution: {integrity: sha512-VT0ZI6kZRdTh8YyJw3SMbYm/u+NqfsAxEpWO0Pf9sq8/e94WxxOpPKx9FR1FlyCtOVDNOQ+8ntlqFxiRc+r5qA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/ansi-styles/download/ansi-styles-3.2.1.tgz}
     name: ansi-styles
@@ -9077,7 +9091,7 @@ packages:
     dev: false
 
   registry.npmmirror.com/vue-demi/0.11.4_vue@3.2.19:
-    resolution: {integrity: sha1-YQGZL+RyTPVjQBihbpU/MFLpTio=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vue-demi/download/vue-demi-0.11.4.tgz}
+    resolution: {integrity: sha512-/3xFwzSykLW2HiiLie43a+FFgNOcokbBJ+fzvFXd0r2T8MYohqvphUyDQ8lbAwzQ3Dlcrb1c9ykifGkhSIAk6A==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vue-demi/-/vue-demi-0.11.4.tgz}
     id: registry.npmmirror.com/vue-demi/0.11.4
     name: vue-demi
     version: 0.11.4
@@ -9092,7 +9106,6 @@ packages:
         optional: true
     dependencies:
       vue: 3.2.19
-    dev: false
 
   registry.npmmirror.com/vue-router/4.0.12_vue@3.2.19:
     resolution: {integrity: sha1-jceSzd9bsavMOQj5BkE23n4TxGA=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vue-router/download/vue-router-4.0.12.tgz}
