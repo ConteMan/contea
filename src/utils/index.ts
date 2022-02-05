@@ -100,7 +100,7 @@ export function objToArray(data: any, key: (string | false) = false) {
 }
 
 /**
- * 获取两数之间的整数，包含两数
+ * 获取两数之间的随机整数，包含两数
  * @param min number - 最小
  * @param max number - 最大
  * @returns {number}

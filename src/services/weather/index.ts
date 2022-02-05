@@ -1,7 +1,7 @@
 import { defHttp } from '~/utils/http/axios'
 import RequestCache from '~/services/base/requestCache'
 class Weather {
-  private moduleName = 'weather'
+  private module = 'weather'
   /**
    * 获取天气数据
    */
@@ -18,7 +18,7 @@ class Weather {
    * @returns {}
    */
   async cma(stationId: number | null = null) {
-    const cacheKey = [this.moduleName, stationId]
+    const cacheKey = [this.module, stationId]
     const cacheData = await RequestCache.get(cacheKey)
     if (cacheData)
       return cacheData
