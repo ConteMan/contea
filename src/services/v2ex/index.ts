@@ -50,7 +50,7 @@ class V2EX {
    * 获取用户信息
    */
   async user(cache = true): Promise<Module> {
-    const cacheRes = await moduleState.getItem(this.module)
+    const cacheRes = await moduleState.getValidItem(this.module)
     if (cache && cacheRes)
       return cacheRes
 
@@ -62,6 +62,8 @@ class V2EX {
 
     if (!info?.data?.username)
       username = await this.getUserName()
+    else
+      username = info?.data?.username
 
     if (!username)
       return { ca_login: false }
