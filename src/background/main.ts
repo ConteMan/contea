@@ -98,8 +98,9 @@ browser.commands.onCommand.addListener(async(command) => {
 })
 
 /** ******** 按键监听 ******** **/
+const defaultPath = '/zen'
 const extensionId = 'eincieaedhdbmhnpcckndljjkbknbnlo'
-const extensionPageUrl = 'chrome-extension://eincieaedhdbmhnpcckndljjkbknbnlo/dist/newTab/index.html#/home'
+const extensionPageUrl = `chrome-extension://eincieaedhdbmhnpcckndljjkbknbnlo/dist/newTab/index.html#${defaultPath}`
 
 // 判断新标签页
 function isExtensionPage(url: string) {

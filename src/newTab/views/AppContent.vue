@@ -3,17 +3,28 @@
   <SearchModal />
 </template>
 <script setup lang="ts">
-import { useEventListener } from '@vueuse/core'
+import { useEventListener, useActiveElement } from '@vueuse/core'
 import Layout from '../layout/Index.vue'
 import SearchModal from '~/components/search/Search.vue'
 
 import { useModalState } from '~/store/modal'
 
+const defaultPath = '/zen'
+const modulePath = '/module'
+const searchKey = 'q'
+const zenKey = 'z'
+
 const router = useRouter()
+const route = useRoute()
+
+const changeMode = () => {
+  const path = route.path === defaultPath ? modulePath : defaultPath
+  router.push({ path })
+}
 
 browser.runtime.onMessage.addListener(async(message, sender) => {
   if (message.data === 'change-mode')
-    router.push({ path: '/home' })
+    changeMode()
 
   return 'success'
 })
@@ -24,10 +35,21 @@ const showSearch = async() => {
   modalState.change(true)
 }
 
+const activeElement = useActiveElement()
+const notUsingInput = computed(() =>
+  activeElement.value?.tagName !== 'INPUT'
+  && activeElement.value?.tagName !== 'TEXTAREA',
+)
+
 useEventListener(window, 'keyup', (e: any) => {
-  if (e.key === 'q') {
+  // 搜索
+  if (e.key === searchKey) {
     if (!showModal.value)
       showSearch()
   }
+
+  // 禅模式
+  if (e.key === zenKey && notUsingInput.value) // 非输入模式
+    changeMode()
 })
 </script>

@@ -1,26 +1,28 @@
 import { RouteRecordRaw } from 'vue-router'
 import LayoutBase from '../layout/Base.vue'
+
 export const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    name: 'Home',
-    redirect: '/home',
+    name: 'Root',
+    redirect: '/zen',
     meta: {
-      title: '首页',
+      title: '',
       keepAlive: false,
     },
     component: LayoutBase,
     children: [
       {
-        path: '/home',
-        name: 'Home',
+        path: '/module',
+        name: 'Module',
         component: () => import('~/newTab/views/Module.vue'),
-        meta: { title: '首页', keepAlive: false, showTab: true },
+        meta: { title: '', keepAlive: false },
       },
       {
-        path: '/simple',
-        name: 'Simple',
-        component: () => import('~/newTab/views/Index.vue'),
+        path: '/zen',
+        name: 'Zen',
+        component: () => import('~/newTab/views/Zen.vue'),
+        meta: { title: '', keepAlive: false },
       },
     ],
   },
