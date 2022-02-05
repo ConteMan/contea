@@ -42,9 +42,11 @@ class Wallpaper {
     picDoms.forEach((item) => {
       const imgUrl = item.querySelector('.img-responsive')?.getAttribute('src')
       const oriImgUrl = imgUrl?.replace('thumbbig-', '')
+      const commonImgUrl = imgUrl?.replace('thumbbig-', 'thumb-1920-')
       pics.push({
         imgUrl,
         oriImgUrl,
+        commonImgUrl,
       })
     })
 

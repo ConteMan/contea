@@ -48,7 +48,7 @@ useEventListener(window, 'keyup', (e: any) => {
       showSearch()
   }
 
-  // 禅模式
+  // 模块、禅模式切换
   if (e.key === zenKey && notUsingInput.value) // 非输入模式
     changeMode()
 })
