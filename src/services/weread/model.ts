@@ -1,4 +1,10 @@
-export const defaultSetting = {
+import type { BaseConfig } from '~/services/base/model'
+
+export type Config = BaseConfig & {
+  apiUrl_2: string
+}
+
+export const setting: Config = {
   key: 'weread',
   name: '微信读书',
   enable: true,
@@ -6,16 +12,7 @@ export const defaultSetting = {
   apiUrl: 'https://weread.qq.com/web',
   apiUrl_2: 'https://i.weread.qq.com',
   expried: 3600,
-}
-
-export type Config = {
-  key: string
-  name: string
-  enable: boolean
-  site: string
-  apiUrl: string
-  apiUrl_2: string
-  expried?: number
+  showCard: true,
 }
 
 export type BaseUser = {

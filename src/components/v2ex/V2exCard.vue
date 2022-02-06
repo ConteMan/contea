@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4 flex justify-between shadow-md rounded-md bg-gradient-to-br from-red-500">
+  <Card class="p-4 flex justify-between">
     <div v-if="loading" class="duration-200 animate-pulse">
       ...
     </div>
@@ -40,24 +40,25 @@
         {{ config.name }}
       </div>
     </div>
-  </div>
+  </Card>
 </template>
 
 <script lang="ts" setup>
-import type { Config, Module, User } from '~/services/v2ex/model'
 import { openSite } from '~/utils'
+import Card from '~/components/template/TemplateCard.vue'
 import configState from '~/models/keyValue/configState'
+import type { Config, Module, User } from '~/services/v2ex/model'
 import v2ex from '~/services/v2ex'
 
 const module = 'v2ex'
 
 const data = reactive({
   loading: true,
+  missionLoading: false,
   config: {} as Config,
   login: false,
   moduleData: {} as Module,
   user: {} as User | undefined,
-  missionLoading: false,
 })
 
 const getInfo = async() => {

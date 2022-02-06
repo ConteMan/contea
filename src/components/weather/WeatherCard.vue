@@ -1,6 +1,9 @@
 <template>
-  <Card v-if="Object.keys(base).length > 0" class="flex flex-col justify-center cursor-default bg-gradient-to-bl from-red-500">
-    <div class="now flex flex-row justify-between">
+  <Card class="flex flex-col justify-center cursor-default">
+    <div v-if="!Object.keys(base).length" class="duration-200 animate-pulse">
+      ...
+    </div>
+    <div v-else class="flex flex-row justify-between">
       <div class="flex-col">
         <div class="flex items-center">
           <mdi-map-marker />
@@ -39,8 +42,8 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
 import Card from '~/components/template/TemplateCard.vue'
-import type { Config } from '~/services/weather/model'
 import configState from '~/models/keyValue/configState'
+import type { Config } from '~/services/weather/model'
 import Weather from '~/services/weather'
 
 const module = 'weather'
@@ -52,8 +55,8 @@ const data = reactive({
 const { base, config } = toRefs(data)
 
 const getData = async() => {
-  data.base = await Weather.data()
   data.config = await configState.getItem(module)
+  data.base = await Weather.data()
 }
 getData()
 

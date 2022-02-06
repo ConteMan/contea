@@ -22,34 +22,37 @@ export const useConfigState = defineStore('config', {
     async dealSortList(data: any[] = []) {
       if (data.length) {
         this.sortList = data
+        return
       }
-      else {
-        let allList = Object.values(this.all)
-        if (!this.sortList) {
-          this.sortList = allList
-        }
-        else {
-          const currentList = this.sortList
-          let newList: any = []
-          currentList.forEach((item: any) => {
-            const index = _.findIndex(allList, (i: any) => {
-              return i.key === item.key && i.enable
-            })
-            if (index >= 0) {
-              newList.push(allList[index])
-              allList.splice(index, 1)
-            }
-          })
-          if (allList.length) {
-            allList = allList.filter((i: any) => {
-              return i.enable
-            })
-            newList = [...newList, ...allList]
-          }
 
-          this.sortList = newList
-        }
+      let allList = Object.values(this.all)
+      allList = allList.filter((i: any) => {
+        return i?.showCard
+      })
+      if (!this.sortList) {
+        this.sortList = allList
+        return
       }
+
+      const currentList = this.sortList
+      let newList: any = []
+      currentList.forEach((item: any) => {
+        const index = _.findIndex(allList, (i: any) => {
+          return i.key === item.key && i.enable
+        })
+        if (index >= 0) {
+          newList.push(allList[index])
+          allList.splice(index, 1)
+        }
+      })
+      if (allList.length) {
+        allList = allList.filter((i: any) => {
+          return i.enable
+        })
+        newList = [...newList, ...allList]
+      }
+
+      this.sortList = newList
     },
   },
   persist: {

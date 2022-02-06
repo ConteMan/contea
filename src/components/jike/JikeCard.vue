@@ -1,9 +1,17 @@
 <template>
-  <Card v-if="!loading" class="flex flex-col justify-between bg-center bg-cover" :style="data.cardStyle">
-    <div class="flex flex-row justify-between">
-      <div class="flex flex-col justify-center">
-        <div><span class="cursor-pointer hover:(text-white) ml-1">{{ user.profile.statsCount.followingCount }}</span> 关注</div>
-        <div><span class="cursor-pointer hover:(text-white) ml-1">{{ user.profile.statsCount.followedCount }}</span> 被关注</div>
+  <Card class="flex flex-col justify-between bg-center bg-cover" :style="data.cardStyle">
+    <div v-if="loading" class="duration-200 animate-pulse">
+      ...
+    </div>
+    <div v-else class="flex flex-row justify-between">
+      <div v-if="data.user">
+        <div class="flex flex-col justify-center">
+          <div><span class="cursor-pointer hover:(text-white) ml-1">{{ user.profile.statsCount.followingCount }}</span> 关注</div>
+          <div><span class="cursor-pointer hover:(text-white) ml-1">{{ user.profile.statsCount.followedCount }}</span> 被关注</div>
+        </div>
+      </div>
+      <div v-else>
+        请登录
       </div>
       <div class="flex flex-col justify-center">
         <div
@@ -31,11 +39,12 @@ const data = reactive({
   user: {} as any,
   cardStyle: {} as any,
 })
+
 const getData = async() => {
   data.config = await ConfigState.getItem(module)
   data.user = await Jike.me()
   data.cardStyle = {
-    'background-image': data.user.profile.backgroundImage.picUrl ? `linear-gradient(45deg, rgba(255, 224, 18, 0.7), rgba(255, 224, 18, 0.7)), url(${data.user.profile.backgroundImage.picUrl})` : '',
+    'background-image': data.user.profile.backgroundImage.picUrl ? `linear-gradient(0deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)), url(${data.user.profile.backgroundImage.picUrl})` : '',
   }
   data.loading--
 }

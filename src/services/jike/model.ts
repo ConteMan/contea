@@ -1,4 +1,10 @@
-export const defaultSetting = {
+import type { BaseConfig } from '~/services/base/model'
+
+export type Config = BaseConfig & {
+  enableTypes: string[]
+}
+
+export const setting: Config = {
   key: 'jike',
   name: '即刻',
   enable: true,
@@ -7,15 +13,5 @@ export const defaultSetting = {
   expried: 3600,
   enableTypes: [],
   alarm: 60,
-}
-
-export type Config = {
-  key: string
-  name: string
-  enable: boolean
-  site: string
-  apiUrl: string
-  expried?: number
-  enableTypes: string[]
-  alarm?: number
+  showCard: true,
 }

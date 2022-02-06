@@ -6,6 +6,14 @@ class Jike {
   private module = 'jike'
 
   /**
+   * 请求主页，保持登录或刷新登录
+   */
+  async mainPage() {
+    const { site } = await ConfigState.getItem(this.module)
+    await defHttp.get({ url: site })
+  }
+
+  /**
    * 个人信息
    */
   async me() {
@@ -16,33 +24,21 @@ class Jike {
     await this.mainPage()
 
     const { apiUrl } = await ConfigState.getItem(this.module)
-    const res = await defHttp.post({
-      url: apiUrl,
-      data: {
-        operationName: 'BasicProfile',
-        variables: {},
-        query: 'query BasicProfile {\n  profile {\n    distinctId: id\n    ...UserCardFragment\n    __typename\n  }\n}\n\nfragment UserCardFragment on UserInfo {\n  ...TinyUserFragment\n  statsCount {\n    followedCount\n    followingCount\n    __typename\n  }\n  backgroundImage {\n    picUrl\n    __typename\n  }\n  following\n  __typename\n}\n\nfragment TinyUserFragment on UserInfo {\n  avatarImage {\n    thumbnailUrl\n    smallPicUrl\n    picUrl\n    __typename\n  }\n  username\n  screenName\n  briefIntro\n  __typename\n}\n',
-      },
-    })
 
-    const now = new Date().getTime()
-    const { expried } = await ConfigState.getItem(this.module)
-    const moduleData = {
-      ...res.data.data,
-      expried: now + expried * 1000,
+    try {
+      const res = await defHttp.post({
+        url: apiUrl,
+        data: {
+          operationName: 'BasicProfile',
+          variables: {},
+          query: 'query BasicProfile {\n  profile {\n    distinctId: id\n    ...UserCardFragment\n    __typename\n  }\n}\n\nfragment UserCardFragment on UserInfo {\n  ...TinyUserFragment\n  statsCount {\n    followedCount\n    followingCount\n    __typename\n  }\n  backgroundImage {\n    picUrl\n    __typename\n  }\n  following\n  __typename\n}\n\nfragment TinyUserFragment on UserInfo {\n  avatarImage {\n    thumbnailUrl\n    smallPicUrl\n    picUrl\n    __typename\n  }\n  username\n  screenName\n  briefIntro\n  __typename\n}\n',
+        },
+      })
+      return await ModuleState.mergeSet(this.module, res.data.data)
     }
-
-    await ModuleState.mergeSet(this.module, moduleData)
-
-    return res.data.data
-  }
-
-  /**
-   * 请求主页，保持登录或刷新登录
-   */
-  async mainPage() {
-    const { site } = await ConfigState.getItem(this.module)
-    await defHttp.get({ url: site })
+    catch (e) {
+      return false
+    }
   }
 
   /**

@@ -1,4 +1,12 @@
-export const defaultSetting = {
+import type { BaseConfig } from '~/services/base/model'
+
+export type Config = BaseConfig & {
+  url: string
+  cdnUrl?: string
+  enableTypes: any[]
+}
+
+export const setting = {
   key: 'sspai',
   name: '少数派',
   enable: true,
@@ -6,22 +14,13 @@ export const defaultSetting = {
   url: 'https://sspai.com',
   apiUrl: 'https://sspai.com/api/v1',
   cdnUrl: 'https://cdn.sspai.com',
-  enableTypes: [],
+  enableTypes: [
+    'index',
+    'followActivity',
+    'matrix',
+  ],
   expried: 86400,
   alarm: 30,
-}
-
-export type Config = {
-  key: string
-  name: string
-  enable: boolean
-  site: string
-  url: string
-  apiUrl?: string
-  cdnUrl?: string
-  enableTypes: any[]
-  expried: number
-  alarm?: number
 }
 
 export type User = {

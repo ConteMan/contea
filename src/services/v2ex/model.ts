@@ -1,24 +1,19 @@
 import type { types } from '~/enums/v2exEnum'
-import type { BaseModule } from '~/services/base/model'
+import type { BaseModule, BaseConfig } from '~/services/base/model'
 
-export type Config = {
-  key: string
-  name: string
-  enable: boolean
-  site: string
+export type Config = BaseConfig & {
   url: string
-  expried: number
   token?: string
   enableTypes?: types[]
-  alarm?: number
 }
 
-export const defaultSetting: Config = {
+export const setting: Config = {
   key: 'v2ex',
   name: 'V2EX',
   enable: true,
   site: 'https://www.v2ex.com',
   url: 'https://www.v2ex.com',
+  apiUrl: '',
   expried: 3600,
   token: '',
   enableTypes: [
@@ -28,6 +23,7 @@ export const defaultSetting: Config = {
     'tech',
   ],
   alarm: 30,
+  showCard: true,
 }
 
 export type BaseUser = {

@@ -33,9 +33,9 @@
         <!-- 操作 -->
         <div
           class="flex flex-col justify-between opacity-0 hover:(opacity-100 transition-opacity duration-200)"
-          :class="{ 'opacity-100': !login }"
+          :class="{ 'opacity-100': !login, '!opacity-100': showExtend }"
         >
-          <div class="flex flex-row-reverse w-full" :class="{'!opacity-100': showExtend}">
+          <div class="flex flex-row-reverse w-full">
             <mdi-information-outline v-if="login" class="text-white cursor-pointer" @click="showExtend = !showExtend" />
             <mdi-refresh v-if="login" class="text-white cursor-pointer mr-2" :class="{'animate-spin': data.refreshLoading}" @click="getInfo(true)" />
           </div>

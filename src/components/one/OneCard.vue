@@ -1,18 +1,21 @@
 <template>
-  <Card v-if="!loading" class="text-gray-700 flex flex-col justify-between bg-center bg-cover transition-opacity" :style="data.cardStyle">
-    <div>
+  <Card class="flex flex-col justify-between bg-center bg-cover transition-opacity" :style="data.cardStyle">
+    <div v-if="loading" class="duration-200 animate-pulse">
+      ...
+    </div>
+    <div v-else>
       <div class="flex flex-col justify-center">
-        <div class="cursor-default first-letter:(text-lg font-bold mr-[2px])" v-html="current.text"></div>
+        <div class="cursor-default" v-html="current.text"></div>
         <div class="pt-1">
           《
-          <a class="text-gray-700 hover:(underline underline-offset-2 duration-200 animate-pulse)" :href="current.articleLink">
+          <a class="hover:(underline underline-offset-2 duration-200 animate-pulse)" :href="current.articleLink">
             {{ current.articleTitle }}
           </a>
           》
           <span v-if="current.articleAuthor"> {{ current.articleAuthor }}</span>
         </div>
         <div class="pt-1">
-          <a class="text-gray-700 hover:(underline underline-offset-2 duration-200 animate-pulse)" :href="current.questionLink">
+          <a class="hover:(underline underline-offset-2 duration-200 animate-pulse)" :href="current.questionLink">
             {{ current.questionTitle }}
           </a>
         </div>
@@ -29,16 +32,16 @@
   </Card>
 </template>
 <script setup lang="ts" name="OneCard">
-import type { Config } from '~/services/one/model'
 import { getRandomIntInclusive } from '~/utils'
 import Card from '~/components/template/TemplateCard.vue'
 import ConfigState from '~/models/keyValue/configState'
+import type { Config } from '~/services/one/model'
 import One from '~/services/one'
 
 const module = 'one'
 
 const data = reactive({
-  loading: 1,
+  loading: true,
   config: {} as Config,
   data: {} as any,
   list: {} as any,
@@ -66,7 +69,7 @@ const getData = async() => {
   data.data = await One.list()
   data.list = data.data.data
   refresh()
-  data.loading--
+  data.loading = false
 }
 getData()
 

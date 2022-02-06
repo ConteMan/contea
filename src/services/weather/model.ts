@@ -1,23 +1,15 @@
-export const defaultSetting = {
+import type { BaseConfig } from '~/services/base/model'
+
+export type Config = BaseConfig & {
+}
+
+export const setting: Config = {
   key: 'weather',
   name: 'Weather',
   enable: true,
   site: 'https://weather.cma.cn',
   apiUrl: 'https://weather.cma.cn/api',
   expried: 3600,
-  token: '',
-  enableTypes: [],
   alarm: 60,
-}
-
-export type Config = {
-  key: string
-  name: string
-  enable: boolean
-  site: string
-  apiUrl: string
-  expried?: number
-  token?: string // AccessToken
-  enableTypes: string[]
-  alarm?: number
+  showCard: true,
 }

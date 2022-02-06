@@ -1,5 +1,5 @@
 <template>
-  <Card class="flex flex-col justify-between">
+  <Card class="flex flex-col justify-between cursor-default">
     <div v-if="loading" class="duration-200 animate-pulse">
       ...
     </div>
@@ -29,13 +29,13 @@
           <div class="pt-2 flex flex-row flex-wrap justify-between w-full">
             <div v-for="book in readDetail.datas[0].readMeta.books" :key="book.bookId" class="flex items-center">
               <div class="h-[100px] mb-2">
-                <img class="w-full h-full shadow-md rounded-sm" :src="book.detail.cover">
+                <img class="book-img w-full h-full rounded-sm" :src="book.detail.cover">
               </div>
               <div class="ml-2 w-[80px] break-words">
                 <n-ellipsis line-clamp="2">
-                  <span class="cursor-pointer hover:(text-white)" @click="openSite(`https://weread.qq.com/web/reader/${puzzling(book.bookId)}`)">{{ book.title }}</span>
+                  <span class="cursor-pointer hover:(underline underline-offset-2 duration-200 animate-pulse)" @click="openSite(`https://weread.qq.com/web/reader/${puzzling(book.bookId)}`)">{{ book.title }}</span>
                 </n-ellipsis>
-                <div class="text-size-[12px] text-warm-gray-100 pt-1">
+                <div class="text-size-[12px] text-gray-400 pt-1 cursor-default">
                   {{ book.author }}
                 </div>
               </div>
@@ -117,7 +117,7 @@ const getData = async(refresh = false) => {
 getData()
 </script>
 
-<style>
+<style lang="less">
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.5s ease;
@@ -126,5 +126,11 @@ getData()
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+
+.book-img {
+  &:hover {
+    box-shadow: 2px 3px 2px rgba(156, 154, 154, 0.4);
+  }
 }
 </style>

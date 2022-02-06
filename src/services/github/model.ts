@@ -1,28 +1,24 @@
-export const defaultSetting = {
+import type { BaseConfig } from '~/services/base/model'
+
+export type Config = BaseConfig & {
+  token: string // AccessToken
+  gistUrl: string
+}
+
+export const setting: Config = {
   key: 'github',
   name: 'Github',
   enable: true,
   site: 'https://github.com',
   apiUrl: 'https://api.github.com',
+  gistUrl: 'https://gist.github.com',
   expried: 3600,
   token: '',
-  enableTypes: [],
   alarm: 60,
+  showCard: true,
 }
 
-export type Config = {
-  key: string
-  name: string
-  enable: boolean
-  site: string
-  apiUrl: string
-  expried?: number
-  token?: string // AccessToken
-  enableTypes: string[]
-  alarm?: number
-}
-
-export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'token' | 'alarm'>
+export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'token' | 'alarm' | 'showCard'>
 
 export type StarredParams = {
   sort: string

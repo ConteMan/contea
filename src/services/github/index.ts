@@ -94,25 +94,22 @@ class Github {
   /**
    * 获取用户信息
    */
-  async user() {
-    const cache = await ModuleState.getValidItem(this.module)
-    if (cache)
-      return cache
+  async user(force = false) {
+    if (!force) {
+      const cache = await ModuleState.getValidItem(this.module)
+      if (cache)
+        return cache
+    }
 
     const meRes = await this.me()
     const starredCount = await this.starredCount()
 
-    const now = new Date().getTime()
-    const { expried } = await ConfigState.getItem(this.module)
     const moduleData = {
       ...meRes.data,
       starred: starredCount,
-      expried: now + expried * 1000,
     }
 
-    await ModuleState.mergeSet(this.module, moduleData)
-
-    return moduleData
+    return await ModuleState.mergeSet(this.module, { data: moduleData })
   }
 }
 

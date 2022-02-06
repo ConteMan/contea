@@ -1,10 +1,13 @@
 <template>
-  <div class="p-4 flex justify-between min-w-full shadow-md rounded-md bg-gradient-to-br from-red-500">
-    <div v-if="loading">
-      Loading ...
+  <Card class="p-4 flex justify-between">
+    <div v-if="loading" class="duration-200 animate-pulse">
+      ...
     </div>
     <div v-else class="flex flex-row justify-center">
-      <div class="flex items-center leading-none">
+      <div v-if="!login">
+        请登录
+      </div>
+      <div v-else class="flex items-center leading-none">
         <mdi-flash />
         <span class="ml-2">{{ user.liked_count }}</span>
       </div>
@@ -17,27 +20,29 @@
         {{ config.name }}
       </div>
     </div>
-  </div>
+  </Card>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
 import { openSite } from '~/utils'
-import base from '~/services/sspai'
+import Card from '~/components/template/TemplateCard.vue'
 import type { Config, User } from '~/services/sspai/model'
+import base from '~/services/sspai'
 
-const config = ref({} as Config)
-const login = ref(false)
-const user = ref({} as User)
-const loading = ref(true)
+const data = reactive({
+  loading: true,
+  config: {} as Config,
+  login: false,
+  user: {} as User,
+})
+const { loading, config, login, user } = toRefs(data)
 
 const getInfo = async() => {
-  loading.value = true
-  config.value = await base.getConfig()
-  login.value = await base.loginCheck()
-  user.value = await base.user()
-  loading.value = false
+  data.config = await base.getConfig()
+  data.login = await base.loginCheck()
+  if (data.login)
+    data.user = await base.user()
+  data.loading = false
 }
-
 getInfo()
 </script>
