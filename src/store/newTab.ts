@@ -29,6 +29,7 @@ export const useNewTabState = defineStore('newTab', {
     },
     changeWallpaperOpcity(opcity: number) {
       this.wallpaper.opacity = opcity
+      this.wallpaper = { ...this.wallpaper }
     },
   },
   persist: {

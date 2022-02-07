@@ -1,6 +1,6 @@
 <template>
   <div class="w-full h-screen bg-center bg-cover" :style="data.wallpaperStyle">
-    <div class="zen-setting-container fixed bottom-1 right-2 space-x-2 rounded-md pt-2 px-2 hover:(bg-light-400)" :class="{ 'bg-light-400': settingBg }">
+    <div class="zen-setting-container fixed bottom-1 right-2 space-x-2 rounded-md pt-2 px-2 hover:(bg-light-400)" :class="{ '!bg-light-400': settingBg }">
       <la-random v-if="wallpaperInfo.mode === 'random'" class="opacity-30 cursor-pointer hover:(opacity-100)" @click="random()" />
       <n-popover
         trigger="hover"
@@ -10,6 +10,7 @@
         :to="false"
         :show-arrow="false"
         :overlap="false"
+        :duration="300"
       >
         <template #trigger>
           <mdi-opacity
@@ -19,7 +20,7 @@
         </template>
         <div
           ref="popover"
-          class="h-[200px]"
+          class="h-[200px] mb-[10px]"
           @mouseover="showSettingBg()"
           @mouseout="showSettingBg(false)"
         >
@@ -43,8 +44,8 @@ const data = reactive({
   wallpaperInfo: {} as any,
   wallpaperStyle: {} as any,
   backgroundOpacity: 0,
-  settingBg: false,
-  showOpacity: false,
+  settingBg: false, // 设置栏背景显隐
+  showOpacity: false, // Opacity 按钮显隐
 })
 const { wallpaperInfo, backgroundOpacity, settingBg, showOpacity } = toRefs(data)
 const popover = ref(null)
@@ -52,16 +53,19 @@ const popover = ref(null)
 const newTabState = useNewTabState()
 const { wallpaper } = storeToRefs(newTabState)
 data.wallpaperInfo = wallpaper
-if (wallpaper.value.url) {
-  data.backgroundOpacity = wallpaper.value.opacity
-  data.wallpaperStyle = {
-    'background-image': `-webkit-cross-fade(url(data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==), url(${wallpaper.value.url}), ${data.backgroundOpacity}%)`,
-  }
-}
 
 const init = async() => {
-  if (data.wallpaperInfo.mode === 'random')
+  if (data.wallpaperInfo.mode === 'random') {
     await newTabState.changeWallpaper()
+  }
+  else {
+    if (data.wallpaperInfo.url) {
+      data.backgroundOpacity = data.wallpaperInfo.opacity
+      data.wallpaperStyle = {
+        'background-image': `-webkit-cross-fade(url(data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==), url(${data.wallpaperInfo.url}), ${data.wallpaperInfo.opacity}%)`,
+      }
+    }
+  }
 }
 init()
 
@@ -73,9 +77,9 @@ const changeMode = async() => {
   newTabState.changeWallpaperMode()
 }
 
-watch([data.wallpaperInfo, backgroundOpacity], () => {
+watch([wallpaperInfo], ([newWallpaperInfo]) => {
   data.wallpaperStyle = {
-    'background-image': `-webkit-cross-fade(url(data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==), url(${wallpaper.value.url}), ${data.backgroundOpacity}%)`,
+    'background-image': `-webkit-cross-fade(url(data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==), url(${newWallpaperInfo.url}), ${newWallpaperInfo.opacity}%)`,
   }
 })
 
@@ -84,15 +88,22 @@ watch(backgroundOpacity, (newValue) => {
 })
 
 const showSettingBg = (show = true) => {
-  data.settingBg = show
+  if (show) {
+    data.settingBg = true
+  }
+  else {
+    if (!data.showOpacity)
+      data.settingBg = false
+  }
 }
 
 watch(popover, (newValue) => {
   data.showOpacity = !!newValue
+  data.settingBg = !!newValue
 })
 </script>
 <style lang="less">
 .zen-opacity-slider {
-  border-radius: 1.5rem 1.5rem 0 0;
+  border-radius: 1.5rem;
 }
 </style>
