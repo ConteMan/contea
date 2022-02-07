@@ -12,8 +12,8 @@
               本周 {{ dayjs.duration(readDetail.datas[0].timeMeta.totalReadTime, 's').hours() }} hrs {{ dayjs.duration(readDetail.datas[0].timeMeta.totalReadTime, 's').minutes() }} mins
             </div>
           </div>
-          <div class="flex flex-col justify-between opacity-0 hover:(opacity-100 transition-opacity duration-200)" :class="{'!opacity-100': showExtend}">
-            <div class="flex flex-row-reverse w-full">
+          <div class="flex flex-col justify-between">
+            <div class="flex flex-row-reverse w-full opacity-0 hover:(opacity-100 transition-opacity duration-200)" :class="{'!opacity-100': showExtend}">
               <mdi-information-outline class="text-white cursor-pointer" @click="showExtend = !showExtend" />
               <mdi-refresh class="text-white cursor-pointer mr-2" :class="{'animate-spin': refreshLoading }" @click="getData(true)" />
             </div>
