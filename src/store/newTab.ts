@@ -9,6 +9,7 @@ export const useNewTabState = defineStore('newTab', {
       wallpaper: {
         url: '',
         mode: 'random', // fixed, random
+        opacity: 10,
       },
     }
   },
@@ -25,6 +26,9 @@ export const useNewTabState = defineStore('newTab', {
     },
     changeWallpaperMode() {
       this.wallpaper.mode = this.wallpaper.mode === 'fixed' ? 'random' : 'fixed'
+    },
+    changeWallpaperOpcity(opcity: number) {
+      this.wallpaper.opacity = opcity
     },
   },
   persist: {
