@@ -6,7 +6,7 @@ export type Config = BaseConfig & {
   enableTypes: any[]
 }
 
-export const setting = {
+export const setting: Config = {
   key: 'sspai',
   name: '少数派',
   enable: true,
@@ -21,6 +21,7 @@ export const setting = {
   ],
   expried: 86400,
   alarm: 30,
+  showCard: true,
 }
 
 export type User = {
