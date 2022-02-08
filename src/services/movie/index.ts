@@ -7,7 +7,7 @@ class Movie {
   /**
    * Libvio 视频列表
    * @param refresh - 是否刷新
-   * @param type - 类型，latest 最新
+   * @param type - 类型，latest 最新, film 电影
    */
   async libvio(refresh = false, type = 'latest') {
     const site = 'libvio'
@@ -19,17 +19,45 @@ class Movie {
         return cacheData
     }
 
+    const typeAllSelector = '.stui-pannel .stui-vodlist li .stui-vodlist__box'
+    const typeRules: any = {
+      latest: {
+        url: '',
+        allSelector: '.stui-pannel__bd > .stui-vodlist:first-child li .stui-vodlist__box',
+      },
+      film: {
+        url: '/type/1.html',
+        allSelector: typeAllSelector,
+      },
+      tv: {
+        url: '/type/2.html',
+        allSelector: typeAllSelector,
+      },
+      anime: {
+        url: '/type/4.html',
+        allSelector: typeAllSelector,
+      },
+      kj: {
+        url: '/type/15.html',
+        allSelector: typeAllSelector,
+      },
+      om: {
+        url: '/type/16.html',
+        allSelector: typeAllSelector,
+      },
+    }
+
     const url = 'https://www.libvio.com'
 
     const res = await defHttp.get({
-      url,
+      url: `${url}${typeRules[type].url}`,
     })
 
     const domParser = new DOMParser()
     const dom = domParser.parseFromString(res.data, 'text/html')
 
     const list: any = []
-    const items = dom.querySelectorAll('.stui-pannel__bd > .stui-vodlist:first-child li .stui-vodlist__box')
+    const items = dom.querySelectorAll(typeRules[type].allSelector)
     items.forEach((item) => {
       const title = item.querySelector('a')?.getAttribute('title')
       const url = item.querySelector('a')?.getAttribute('href')
