@@ -5,6 +5,7 @@
         <ic-outline-keyboard-arrow-up />
       </span>
     </a-back-top>
+
     <div class="tags absolute w-full bg-white pb-2 pl-2">
       <a class="cursor-pointer leading-none align-middle mr-4" @click="refresh()">
         <mdi-refresh :class="{'animate-spin': data.loading>0}" />
@@ -18,6 +19,7 @@
         </a-checkable-tag>
       </template>
     </div>
+
     <div class="mt-8 mb-4">
       <template v-for="item in list" :key="item.title">
         <div class="p-2 rounded-sm hover:(bg-gray-200)">

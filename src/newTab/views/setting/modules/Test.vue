@@ -191,6 +191,21 @@
       </div>
     </template>
   </SettingItem>
+
+  <SettingItem class="mt-2">
+    <template #left>
+      <div class="ml-4 min-w-24">
+        知乎
+      </div>
+    </template>
+    <template #right>
+      <div class="flex flex-row justify-center">
+        <a-button type="text" class="bg-gray-200" @click="testFunction(Zhihu.hot({ limit: 50 }, false))">
+          热榜
+        </a-button>
+      </div>
+    </template>
+  </SettingItem>
 </template>
 
 <script setup lang="ts">
@@ -208,6 +223,7 @@ import Github from '~/services/github'
 import Jike from '~/services/jike'
 import Juejin from '~/services/juejin'
 import One from '~/services/one'
+import Zhihu from '~/services/zhihu'
 
 interface DataType {
   v2ex: {

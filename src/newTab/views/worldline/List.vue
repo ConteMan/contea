@@ -10,6 +10,9 @@
       <a-tab-pane v-if="config.jike.enable" key="jike" tab="即刻">
         <Jike class="h-full overflow-y-auto" />
       </a-tab-pane>
+      <a-tab-pane v-if="config.zhihu.enable" key="zhihu" tab="知乎">
+        <Zhihu class="h-full overflow-y-auto" />
+      </a-tab-pane>
     </a-tabs>
   </div>
 </template>
@@ -18,6 +21,7 @@
 import V2ex from './modules/V2ex.vue'
 import Sspai from './modules/Sspai.vue'
 import Jike from './modules/Jike.vue'
+import Zhihu from './modules/Zhihu.vue'
 
 import { useConfigState } from '~/store/config'
 

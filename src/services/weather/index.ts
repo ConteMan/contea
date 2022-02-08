@@ -32,9 +32,9 @@ class Weather {
       })
 
       if (res.data.data)
-        await RequestCache.set(cacheKey, res.data.data)
+        return await RequestCache.set(cacheKey, res.data.data)
 
-      return res.data.data
+      return {}
     }
     catch (e) {
       return false
