@@ -5,7 +5,6 @@ import defaultSetting from '~/setting/defaultSetting'
 import { deepMerge } from '~/utils'
 import Alarm from '~/services/base/alarm'
 
-import type { BaseConfig } from '~/services/base/model'
 import { useConfigState } from '~/store/config'
 
 class ConfigState extends AsyncModels.keyValue {
@@ -18,7 +17,7 @@ class ConfigState extends AsyncModels.keyValue {
   }
 
   // 初始化
-  async init(module: 'all'| 'default' | 'v2ex' | 'sspai' | 'weread' | 'bgm' | 'github' = 'all') {
+  async init(module: 'all'| 'default' | 'v2ex' | 'sspai' | 'weread' | 'bgm' | 'github' | 'weather' = 'all') {
     if (module === 'all')
       await this.bulkSetItem(defaultSetting)
     else
@@ -33,7 +32,7 @@ class ConfigState extends AsyncModels.keyValue {
    * @param module string - 模块名称
    * @param data {} - 模块内容
    */
-  async mergeSet(module: string, data: BaseConfig) {
+  async mergeSet(module: string, data: any) {
     const res = await this.getItem(module)
     const mergeRes = deepMerge(res, data)
     await this.setItem(module, mergeRes)

@@ -24,17 +24,6 @@
   <SettingItem class="mt-2">
     <template #left>
       <div class="ml-4 min-w-24">
-        Token
-      </div>
-    </template>
-    <template #right>
-      <a-input v-model:value="data.base.token" @blur="actionSet('token', data.base.token)" />
-    </template>
-  </SettingItem>
-
-  <SettingItem class="mt-2">
-    <template #left>
-      <div class="ml-4 min-w-24">
         重置
       </div>
     </template>
@@ -48,12 +37,12 @@
 
 <script setup lang="ts">
 import type { UnwrapRef } from 'vue'
-import type { ShowConfig } from '~/services/github/model'
+import type { ShowConfig } from '~/services/weather/model'
 
 import SettingItem from '~/components/template/SettingItem.vue'
 import ConfigState from '~/models/keyValue/configState'
 
-const module = 'github'
+const module = 'weather'
 
 // 订阅设置
 interface DataType {
@@ -66,7 +55,7 @@ const data: UnwrapRef<DataType> = reactive({
     enable: true,
     site: '',
     apiUrl: '',
-    token: '',
+    expried: 0,
     alarm: 0,
     showCard: true,
   },

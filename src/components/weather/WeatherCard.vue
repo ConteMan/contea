@@ -1,7 +1,8 @@
 <template>
   <Card class="flex flex-col justify-center cursor-default">
     <div v-if="!Object.keys(base).length" class="duration-200 animate-pulse">
-      ...
+      <span v-if="data.error">Weather Request Error</span>
+      <span v-else>...</span>
     </div>
     <div v-else class="flex flex-row justify-between">
       <div class="flex-col">
@@ -51,12 +52,17 @@ const module = 'weather'
 const data = reactive({
   base: {} as any,
   config: {} as Config,
+  error: false,
 })
 const { base, config } = toRefs(data)
 
 const getData = async() => {
   data.config = await configState.getItem(module)
-  data.base = await Weather.data()
+  const res = await Weather.data()
+  if (!res)
+    data.error = true
+  else
+    data.base = res
 }
 getData()
 

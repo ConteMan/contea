@@ -24,6 +24,10 @@
         <BgmModule />
       </a-collapse-panel>
 
+      <a-collapse-panel key="weather" header="天气" :style="customStyle">
+        <WeatherModule />
+      </a-collapse-panel>
+
       <a-collapse-panel key="test" header="测试" :style="customStyle">
         <TestModule />
       </a-collapse-panel>
@@ -38,6 +42,7 @@ import TestModule from './modules/Test.vue'
 import SspaiModule from './modules/Sspai.vue'
 import BgmModule from './modules/Bgm.vue'
 import GithubModule from './modules/Github.vue'
+import WeatherModule from './modules/Weather.vue'
 
 const customStyle = 'background: #f7f7f7;margin-bottom: 16px;border: 0;overflow: hidden'
 

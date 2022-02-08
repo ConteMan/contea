@@ -23,17 +23,22 @@ class Weather {
     if (cacheData)
       return cacheData
 
-    const res = await defHttp.get({
-      url: 'https://weather.cma.cn/api/weather/view',
-      params: {
-        stationId,
-      },
-    })
+    try {
+      const res = await defHttp.get({
+        url: 'https://weather.cma.cn/api/weather/view',
+        params: {
+          stationId,
+        },
+      })
 
-    if (res.data.data)
-      await RequestCache.set(cacheKey, res.data.data)
+      if (res.data.data)
+        await RequestCache.set(cacheKey, res.data.data)
 
-    return res.data.data
+      return res.data.data
+    }
+    catch (e) {
+      return false
+    }
   }
 }
 
