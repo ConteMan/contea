@@ -1,12 +1,25 @@
 import { defHttp } from '~/utils/http/axios'
+import requestCache from '~/services/base/requestCache'
 
-class Vedio {
+class Movie {
+  private module = 'movie'
+
   /**
-   * libvio 最新视频
-   * @returns array
+   * Libvio 视频列表
+   * @param refresh - 是否刷新
+   * @param type - 类型，latest 最新
    */
-  async libvio() {
-    const url = 'https://www.libvio.com/'
+  async libvio(refresh = false, type = 'latest') {
+    const site = 'libvio'
+    const cacheKey = [this.module, site, type]
+
+    if (!refresh) {
+      const cacheData = await requestCache.get(cacheKey)
+      if (cacheData)
+        return cacheData
+    }
+
+    const url = 'https://www.libvio.com'
 
     const res = await defHttp.get({
       url,
@@ -32,7 +45,10 @@ class Vedio {
       })
     })
 
-    return list
+    if (list.length)
+      return await requestCache.set(cacheKey, { data: list })
+
+    return {}
   }
 
   /**
@@ -77,4 +93,4 @@ class Vedio {
   }
 }
 
-export default new Vedio()
+export default new Movie()

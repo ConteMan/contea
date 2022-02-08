@@ -9,8 +9,9 @@ import { setting as wakatime } from '~/services/wakatime/model'
 import { setting as weather } from '~/services/weather/model'
 import { setting as weread } from '~/services/weread/model'
 import { setting as zhihu } from '~/services/zhihu/model'
+import { setting as movie } from '~/services/movie/model'
 
-export const modules = ['v2ex', 'sspai', 'weread', 'github', 'juejin', 'one', 'wakatime', 'jike', 'bgm', 'weather', 'zhihu']
+export const modules = ['v2ex', 'sspai', 'weread', 'github', 'juejin', 'one', 'wakatime', 'jike', 'bgm', 'weather', 'zhihu', 'movie']
 
 export default {
   default: {
@@ -31,4 +32,5 @@ export default {
   wakatime,
   weather,
   zhihu,
+  movie,
 }

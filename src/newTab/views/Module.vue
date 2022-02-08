@@ -8,11 +8,8 @@
       </a-tab-pane>
       <a-tab-pane key="movie" tab="影视">
         <KeepAlive>
-          <DdrkList class="ddrk-list pl-4 mt-4 h-[calc(100%)] overflow-y-auto" />
+          <MovieList class="ddrk-list" />
         </KeepAlive>
-      </a-tab-pane>
-      <a-tab-pane key="bookmark" tab="书签">
-        <BookMarkList class="bookmark-list pl-4 mt-4 h-[calc(100%)] overflow-y-auto" />
       </a-tab-pane>
       <a-tab-pane key="sport" tab="体育">
         <KeepAlive>
@@ -33,12 +30,11 @@
 </template>
 
 <script setup lang="ts">
-import DdrkList from '~/components/vedio/DdrkCard.vue'
 import WorldlineList from '~/newTab/views/worldline/List.vue'
-import BookMarkList from '~/newTab/views/bookmark/List.vue'
 import SportList from '~/newTab/views/sport/List.vue'
 import StatusList from '~/newTab/views/status/Status.vue'
 import SettingList from '~/newTab/views/setting/Setting.vue'
+import MovieList from '~/newTab/views/movie/MovieList.vue'
 
 import { useNewTabState } from '~/store/newTab'
 import { useConfigState } from '~/store/config'

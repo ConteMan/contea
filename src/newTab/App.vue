@@ -1,5 +1,5 @@
 <template>
-  <n-config-provider :theme-overrides="themeOverrides" :namespace="namespace">
+  <n-config-provider :theme-overrides="themeOverrides" :namespace="namespace" :locale="zhCN" :date-locale="dateZhCN">
     <n-notification-provider>
       <n-message-provider>
         <AppContent />
@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import { NConfigProvider, GlobalThemeOverrides } from 'naive-ui'
+import { NConfigProvider, GlobalThemeOverrides, zhCN, dateZhCN } from 'naive-ui'
 import AppContent from './views/AppContent.vue'
 
 const data = reactive({
