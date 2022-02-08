@@ -119,9 +119,7 @@ class WeRead {
       newData.readDetail.datas[0].readMeta.books = showBooks
     }
 
-    await ModuleState.mergeSet(this.module, newData)
-
-    return newData
+    return await ModuleState.mergeSet(this.module, newData)
   }
 
   /**

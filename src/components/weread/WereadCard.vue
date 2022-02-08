@@ -118,16 +118,6 @@ getData()
 </script>
 
 <style lang="less">
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
 .book-img {
   &:hover {
     box-shadow: 2px 3px 2px rgba(156, 154, 154, 0.4);

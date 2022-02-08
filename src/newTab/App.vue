@@ -1,8 +1,11 @@
 <template>
   <n-config-provider :theme-overrides="themeOverrides" :namespace="namespace">
     <n-notification-provider>
-      <AppContent />
+      <n-message-provider>
+        <AppContent />
+      </n-message-provider>
     </n-notification-provider>
+    <n-global-style />
   </n-config-provider>
 </template>
 
@@ -17,8 +20,13 @@ const { namespace } = toRefs(data)
 
 const themeOverrides: GlobalThemeOverrides = {
   common: {
-    primaryColor: '#DDDDDE',
-    primaryColorHover: '#DDDDDE',
+    primaryColor: '#ff4f49',
+    primaryColorHover: '#fd2720',
+  },
+  Input: {
+    borderHover: '#fff',
+    borderFocus: '#fff',
+    boxShadowFocus: '#fff',
   },
 }
 </script>

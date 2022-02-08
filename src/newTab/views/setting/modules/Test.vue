@@ -200,7 +200,7 @@
     </template>
     <template #right>
       <div class="flex flex-row justify-center">
-        <a-button type="text" class="bg-gray-200" @click="testFunction(Zhihu.hot({ limit: 50 }, false))">
+        <a-button type="text" class="bg-gray-200" @click="testFunction(Zhihu.moduleInfo())">
           热榜
         </a-button>
       </div>

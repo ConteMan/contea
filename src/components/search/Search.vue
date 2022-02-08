@@ -10,6 +10,7 @@
         v-model:value="searchContent"
         placeholder="Search"
         size="large"
+        class="search-input"
       >
         <template #prefix>
           <transition
@@ -304,4 +305,7 @@ watch(y, () => {
 </script>
 
 <style lang="less">
+.search-input {
+  border: none !important;
+}
 </style>

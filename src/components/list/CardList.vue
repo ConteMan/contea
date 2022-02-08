@@ -44,6 +44,10 @@
           v-if="element.key === 'juejin'"
           class="h-max"
         />
+        <ZhihuCard
+          v-if="element.key === 'zhihu'"
+          class="h-max"
+        />
       </div>
     </template>
   </draggable>

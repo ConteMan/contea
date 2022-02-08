@@ -1,7 +1,9 @@
 import type { Config, HotParams } from './model'
 
 import { defHttp } from '~/utils/http/axios'
+
 import configState from '~/models/keyValue/configState'
+import moduleState from '~/models/keyValue/moduleState'
 import RequestCache from '~/services/base/requestCache'
 
 class Zhihu {
@@ -24,6 +26,41 @@ class Zhihu {
     catch (e) {
       return false
     }
+  }
+
+  /**
+   * 获取个人信息
+   */
+  async me() {
+    const { apiUrl } = await configState.getItem(this.module) as Config
+    try {
+      const hotUrl = `${apiUrl}/api/v4/me?include=ad_type,available_message_types,default_notifications_count,follow_notifications_count,vote_thank_notifications_count,messages_count,email,account_status,is_bind_phone,url_token`
+      const res = await defHttp.get({
+        url: hotUrl,
+      })
+      return res.data
+    }
+    catch (e) {
+      return {}
+    }
+  }
+
+  /**
+   * 通过缓存获取模块信息
+   */
+  async moduleInfo(refresh = false) {
+    if (!refresh) {
+      const cache = await moduleState.getValidItem(this.module)
+      if (cache)
+        return cache
+    }
+
+    const res = await this.me()
+
+    if (Object.keys(res).length)
+      return await moduleState.mergeSet(this.module, { data: res })
+    else
+      return {}
   }
 
   /**

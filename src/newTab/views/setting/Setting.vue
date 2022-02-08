@@ -28,13 +28,16 @@
         <WeatherModule />
       </a-collapse-panel>
 
+      <a-collapse-panel key="zhihu" header="知乎" :style="customStyle">
+        <ZhihuModule />
+      </a-collapse-panel>
+
       <a-collapse-panel key="test" header="测试" :style="customStyle">
         <TestModule />
       </a-collapse-panel>
     </a-collapse>
   </div>
 </template>
-
 <script lang="ts" setup>
 import BaseModule from './modules/Base.vue'
 import V2exModule from './modules/V2ex.vue'
@@ -43,8 +46,14 @@ import SspaiModule from './modules/Sspai.vue'
 import BgmModule from './modules/Bgm.vue'
 import GithubModule from './modules/Github.vue'
 import WeatherModule from './modules/Weather.vue'
+import ZhihuModule from './modules/Zhihu.vue'
 
-const customStyle = 'background: #f7f7f7;margin-bottom: 16px;border: 0;overflow: hidden'
+const customStyle = 'background: #fafafa; margin-bottom: 16px; border: 0; overflow: hidden;'
 
-const activeKey = ref([])
+const activeKey = ref(['test'])
 </script>
+<style lang="less">
+.ant-collapse-borderless {
+  background-color: #fff;
+}
+</style>
