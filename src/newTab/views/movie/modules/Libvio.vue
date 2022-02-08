@@ -20,7 +20,7 @@
         Error
       </div>
       <template v-else>
-        <div v-for="item in list" :key="item.url" class="item-container p-2 pl-4 mb-2 rounded-sm bg-center bg-cover cursor-default hover:(bg-gray-300)" :style="itemStyle(item)">
+        <div v-for="item in list" :key="item.url" class="item-container p-2 pl-4 mb-2 rounded-sm bg-origin-padding bg-center bg-cover cursor-default hover:(bg-blend-lighten)" :style="itemStyle(item)">
           <div class="item-content duration-500">
             <div>
               <a class="hover:(underline underline-offset-2 duration-200 animate-pulse)" :href="`${config.module.libvio.site}/${item.url}`">{{ item.title }}</a>
@@ -98,7 +98,7 @@ const refresh = async() => {
 
 const itemStyle = (data: any) => {
   return {
-    'background-image': data.pic_url ? `-webkit-cross-fade(url(data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==), url(${data.pic_url}), 20%)` : '',
+    'background-image': data.pic_url ? `linear-gradient(45deg, rgb(229, 231, 231, 0.9), rgb(116, 115, 115, 70%)), url(${data.pic_url}` : '',
   }
 }
 </script>
@@ -106,7 +106,7 @@ const itemStyle = (data: any) => {
 <style lang="less" scoped>
 .item-container:hover {
   .item-content {
-    transform: translateX(1rem);
+    transform: translateX(0.8rem);
   }
 }
 </style>
