@@ -5,7 +5,6 @@
         <AppContent />
       </n-message-provider>
     </n-notification-provider>
-    <n-global-style />
   </n-config-provider>
 </template>
 
@@ -27,6 +26,7 @@ const themeOverrides: GlobalThemeOverrides = {
     borderHover: '#fff',
     borderFocus: '#fff',
     boxShadowFocus: '#fff',
+    caretColor: '#e5e5e5',
   },
 }
 </script>

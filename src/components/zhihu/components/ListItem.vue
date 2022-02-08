@@ -1,5 +1,5 @@
 <template>
-  <div class="p-2 cursor-default hover:(bg-light-400)">
+  <div class="p-2 cursor-default hover:(bg-gray-200)">
     <a :href="`${config.site}/question/${data.target.id}`">
       {{ data.target.title }}
     </a>
