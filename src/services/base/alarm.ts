@@ -3,8 +3,10 @@ import dayjs from 'dayjs'
 import configState from '~/models/keyValue/configState'
 import moduleState from '~/models/keyValue/moduleState'
 import requestState from '~/models/keyValue/requestState'
+
 import sspai from '~/services/sspai'
 import v2ex from '~/services/v2ex'
+import bilibili from '~/services/bilibili'
 
 class AlarmSetting {
   /**
@@ -34,9 +36,13 @@ class AlarmSetting {
    * @param module string - 模块名称
    */
   async alarmDeal(module: string) {
-    const res = await configState.getItem(module)
+    const configInfo = await configState.getItem(module)
 
-    const { enable } = res
+    let moduleInfo: any
+    if (['v2ex', 'bilibili'].includes(module))
+      moduleInfo = await moduleState.getItem(module)
+
+    const { enable } = configInfo
     if (!enable)
       return false
 
@@ -47,18 +53,23 @@ class AlarmSetting {
     }
 
     if (module === 'v2ex') {
-      const { enableTypes } = res
+      const { enableTypes } = configInfo
       await v2ex.tabLists(enableTypes)
-      await v2ex.user(false)
 
-      const { data } = await moduleState.getItem(module)
+      const { data } = moduleInfo
       if (!data.mission || !data.mission?.date || dayjs().isAfter(dayjs(data.mission.date), 'day'))
         await v2ex.mission()
     }
 
     if (module === 'sspai') {
-      const { enableTypes } = res
+      const { enableTypes } = configInfo
       await sspai.lists(enableTypes)
+    }
+
+    if (module === 'bilibili') {
+      const { data } = moduleInfo
+      if (!data.sign || !data.sign.date || dayjs().isAfter(dayjs(data.sign.date), 'day'))
+        await bilibili.sign()
     }
 
     return true

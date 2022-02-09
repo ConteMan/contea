@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full rounded-md">
+  <div class="w-full max-w-[700px] rounded-md">
     <a-collapse v-model:activeKey="activeKey" :bordered="false" class="max-w-full">
       <template #expandIcon="{ isActive }">
         <caret-right-outlined :rotate="isActive ? 90 : 0" />
@@ -32,6 +32,10 @@
         <ZhihuModule />
       </a-collapse-panel>
 
+      <a-collapse-panel key="bilibili" header="Bilibili" :style="customStyle">
+        <BilibiliModule />
+      </a-collapse-panel>
+
       <a-collapse-panel key="test" header="测试" :style="customStyle">
         <TestModule />
       </a-collapse-panel>
@@ -47,10 +51,11 @@ import BgmModule from './modules/Bgm.vue'
 import GithubModule from './modules/Github.vue'
 import WeatherModule from './modules/Weather.vue'
 import ZhihuModule from './modules/Zhihu.vue'
+import BilibiliModule from './modules/Bilibili.vue'
 
 const customStyle = 'background: #fafafa; margin-bottom: 16px; border: 0; overflow: hidden;'
 
-const activeKey = ref(['test'])
+const activeKey = ref([])
 </script>
 <style lang="less">
 .ant-collapse-borderless {

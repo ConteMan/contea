@@ -34,11 +34,16 @@ const getAlarms = async(refresh = false) => {
   if (refresh)
     loading.value = true
 
-  useTimeoutFn(async() => {
-    alarms.value = await Alarm.all()
-    if (refresh)
+  if (refresh) {
+    useTimeoutFn(async() => {
+      alarms.value = await Alarm.all()
       loading.value = false
-  }, 2000)
+    }, 2000)
+  }
+  else {
+    alarms.value = await Alarm.all()
+    loading.value = false
+  }
 }
 getAlarms()
 </script>

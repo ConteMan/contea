@@ -226,6 +226,21 @@
       </div>
     </template>
   </SettingItem>
+
+  <SettingItem class="mt-2">
+    <template #left>
+      <div class="ml-4 min-w-24">
+        Bilibili
+      </div>
+    </template>
+    <template #right>
+      <div class="flex flex-row justify-center">
+        <a-button type="text" class="bg-gray-200" @click="testFunction(Bilibili.moduleInfo(true))">
+          个人信息
+        </a-button>
+      </div>
+    </template>
+  </SettingItem>
 </template>
 
 <script setup lang="ts">
@@ -233,6 +248,8 @@ import type { UnwrapRef } from 'vue'
 import SettingItem from '~/components/template/SettingItem.vue'
 
 import ConfigState from '~/models/keyValue/configState'
+import requestState from '~/models/keyValue/requestState'
+
 import V2EX from '~/services/v2ex'
 import WakaTime from '~/services/wakatime'
 import { Bookmark, Storage } from '~/services/browser/index'
@@ -245,7 +262,7 @@ import Juejin from '~/services/juejin'
 import One from '~/services/one'
 import Zhihu from '~/services/zhihu'
 import Alarm from '~/services/base/alarm'
-import requestState from '~/models/keyValue/requestState'
+import Bilibili from '~/services/bilibili'
 
 interface DataType {
   v2ex: {

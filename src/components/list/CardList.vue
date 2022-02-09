@@ -48,6 +48,10 @@
           v-if="element.key === 'zhihu'"
           class="h-max"
         />
+        <BilibiliCard
+          v-if="element.key === 'bilibili'"
+          class="h-max"
+        />
       </div>
     </template>
   </draggable>
