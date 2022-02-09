@@ -1,8 +1,9 @@
 <template>
   <div>
     <div class="rounded-md bg-[#f7f7f7] p-4 w-full">
-      <div class="py-1 mb-2 font-semibold">
-        定时任务 / Alarms
+      <div class="pb-4 flex items-center">
+        <span class="">定时任务 / Alarms</span>
+        <mdi-refresh class="ml-4 opacity-40 cursor-pointer hover:(opacity-100)" :class="{ 'animate-spin': loading }" @click="getAlarms(true)" />
       </div>
       <SettingItem v-for="item in alarms" :key="item.name" class="py-1 mb-2">
         <template #left>
@@ -22,12 +23,22 @@
 
 <script setup lang="ts">
 import dayjs from 'dayjs'
+import { useTimeoutFn } from '@vueuse/core'
 import SettingItem from '~/components/template/SettingItem.vue'
 import { Alarm } from '~/services/browser'
 
 const alarms = ref({} as any)
-const getAlarms = async() => {
-  alarms.value = await Alarm.all()
+const loading = ref(false)
+
+const getAlarms = async(refresh = false) => {
+  if (refresh)
+    loading.value = true
+
+  useTimeoutFn(async() => {
+    alarms.value = await Alarm.all()
+    if (refresh)
+      loading.value = false
+  }, 2000)
 }
 getAlarms()
 </script>

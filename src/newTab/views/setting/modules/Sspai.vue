@@ -47,7 +47,6 @@
 </template>
 
 <script setup lang="ts">
-import type { UnwrapRef } from 'vue'
 import type { Config } from '~/services/sspai/model'
 import { TypeEnum } from '~/enums/sspaiEnum'
 import { enumToObj } from '~/utils'
@@ -57,20 +56,8 @@ import ConfigState from '~/models/keyValue/configState'
 
 const module = 'sspai'
 
-// 订阅设置
-interface DataType {
-  base: Config
-}
-const data: UnwrapRef<DataType> = reactive({
-  base: {
-    key: '',
-    name: '',
-    enable: true,
-    enableTypes: [],
-    url: '',
-    site: '',
-    expried: 0,
-  },
+const data = reactive({
+  base: {} as Config,
 })
 ConfigState.data[`${module}$`](
   (value: any) => {

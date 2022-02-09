@@ -15,10 +15,9 @@ export const modules = ['v2ex', 'sspai', 'weread', 'github', 'juejin', 'one', 'w
 
 export default {
   default: {
-    storageExpried: 300, // 单位: 秒
-    expried: 600,
-    hasInit: true,
+    enable: true,
     modules,
+    expried: 600,
     alarm: 10,
   },
   v2ex,

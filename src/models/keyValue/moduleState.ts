@@ -29,7 +29,7 @@ class ModuleState extends AsyncModels.keyValue {
         const { expried: moduleExpried } = await configState.getItem(module)
         expried = parseInt(moduleExpried) ?? 0
       }
-      data.ca_expried = now + expried * 1000
+      data.ca_expried_at = now + expried * 1000
     }
 
     const res = await this.getItem(module)
@@ -48,7 +48,7 @@ class ModuleState extends AsyncModels.keyValue {
       return false
 
     const now = new Date().getTime()
-    if (res?.ca_expried && res?.ca_expried < now)
+    if (res?.ca_expried_at && res?.ca_expried_at < now)
       return false
 
     return res

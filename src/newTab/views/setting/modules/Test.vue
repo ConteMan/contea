@@ -206,6 +206,26 @@
       </div>
     </template>
   </SettingItem>
+
+  <SettingItem class="mt-2">
+    <template #left>
+      <div class="ml-4 min-w-24">
+        定时任务
+      </div>
+    </template>
+    <template #right>
+      <div class="flex flex-row justify-center">
+        <input v-model="data.alarm.module" class="h-full mr-1 ml-4 border-1px pl-2">
+        <a-button type="text" class="bg-gray-200" @click="testFunction(Alarm.alarmDeal(data.alarm.module))">
+          执行
+        </a-button>
+        <span class="border-l-1 mx-2"></span>
+        <a-button type="text" class="bg-gray-200" @click="testFunction(requestState.clean())">
+          清理请求缓存
+        </a-button>
+      </div>
+    </template>
+  </SettingItem>
 </template>
 
 <script setup lang="ts">
@@ -224,6 +244,8 @@ import Jike from '~/services/jike'
 import Juejin from '~/services/juejin'
 import One from '~/services/one'
 import Zhihu from '~/services/zhihu'
+import Alarm from '~/services/base/alarm'
+import requestState from '~/models/keyValue/requestState'
 
 interface DataType {
   v2ex: {
@@ -234,6 +256,9 @@ interface DataType {
   }
   module: {
     moduleName: string
+  }
+  alarm: {
+    module: string
   }
 }
 
@@ -246,6 +271,9 @@ const data: UnwrapRef<DataType> = reactive({
   },
   module: {
     moduleName: 'bgm',
+  },
+  alarm: {
+    module: 'v2ex',
   },
 })
 

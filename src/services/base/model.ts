@@ -20,7 +20,7 @@ export type BaseConfig = {
 
 export type BaseModule = {
   ca_login?: boolean
-  ca_expried?: number
+  ca_expried_at?: number
   ca_updated_at?: number
 }
 

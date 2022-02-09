@@ -11,11 +11,11 @@ class RequestCache {
     const now = new Date().getTime()
     const keyString = key.join('_')
     const res = await requestState.getItem(keyString)
-    if (!res || !res?.ca_expried || res?.ca_expried < now)
+    if (!res || !res?.ca_expried_at || res?.ca_expried_at < now)
       return false
 
     if (!withExpried)
-      delete res.ca_expried
+      delete res.ca_expried_at
 
     return res
   }
@@ -37,7 +37,7 @@ class RequestCache {
     const keyString = key.join('_')
 
     data.ca_updated_at = now
-    data.ca_expried = now + expried * 1000
+    data.ca_expried_at = now + expried * 1000
     await requestState.setItem(keyString, data)
 
     return data

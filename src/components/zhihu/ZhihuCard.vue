@@ -55,7 +55,7 @@
         <div v-if="showExtend" class="pt-4 flex flex-col">
           <div class="space-y-1 text-size-[12px] text-gray-400 italic text-right">
             <div>Updated / Expried</div>
-            <div>{{ dayjs(extendInfo.ca_updated_at).format('DD HH:mm:ss') }} / {{ dayjs(extendInfo.ca_expried).format('DD HH:mm:ss') }}</div>
+            <div>{{ dayjs(extendInfo.ca_updated_at).format('DD HH:mm:ss') }} / {{ dayjs(extendInfo.ca_expried_at).format('DD HH:mm:ss') }}</div>
           </div>
         </div>
       </transition>
@@ -90,9 +90,9 @@ const getData = async(refresh = false) => {
     data.refreshLoading = true
 
   try {
-    const { ca_updated_at, ca_expried, data: userData } = await Zhihu.moduleInfo(refresh)
+    const { ca_updated_at, ca_expried_at, data: userData } = await Zhihu.moduleInfo(refresh)
     data.moduleInfo = userData
-    data.extendInfo = { ca_updated_at, ca_expried }
+    data.extendInfo = { ca_updated_at, ca_expried_at }
   }
   catch (e) {
     data.error = true

@@ -58,7 +58,6 @@
 </template>
 
 <script setup lang="ts">
-import type { UnwrapRef } from 'vue'
 import type { Config } from '~/services/v2ex/model'
 import { TypeEnum } from '~/enums/v2exEnum'
 import { enumToObj } from '~/utils'
@@ -68,21 +67,8 @@ import ConfigState from '~/models/keyValue/configState'
 
 const module = 'v2ex'
 
-// 获取设置
-interface DataType {
-  base: Config
-}
-const data: UnwrapRef<DataType> = reactive({
-  base: {
-    key: 'v2ex',
-    enable: true,
-    enableTypes: [],
-    token: '',
-    site: '',
-    url: '',
-    name: '',
-    expried: 0,
-  },
+const data = reactive({
+  base: {} as Config,
 })
 ConfigState.data[`${module}$`](
   (value: any) => {

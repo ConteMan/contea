@@ -19,7 +19,7 @@
       </div>
     </template>
     <template #right>
-      <a-input v-model:value="data.base.alarm" addon-after="分钟" @blur="actionSet('token', data.base.alarm)" />
+      <a-input v-model:value="data.base.alarm" addon-after="分钟" @blur="actionSet('alarm', Number(base.alarm))" />
     </template>
   </SettingItem>
 
@@ -38,23 +38,18 @@
 </template>
 
 <script setup lang="ts">
-import type { UnwrapRef } from 'vue'
 import SettingItem from '~/components/template/SettingItem.vue'
 import ConfigState from '~/models/keyValue/configState'
 
 const module = 'default'
 
-// 获取设置
-interface DataType {
-  base: {
-    alarm: number
-  }
-}
-const data: UnwrapRef<DataType> = reactive({
+const data = reactive({
   base: {
     alarm: 0,
   },
 })
+const { base } = toRefs(data)
+
 ConfigState.data[`${module}$`](
   (value: any, key: any) => {
     data.base = value
@@ -64,7 +59,7 @@ ConfigState.data[`${module}$`](
 
 // 进行设置
 const actionSet = async(keyName: string, data?: any) => {
-  await ConfigState.mergeSet(module, { [keyName]: toRaw(data) })
+  await ConfigState.mergeSet(module, { [keyName]: data })
 }
 
 const reset = async() => {

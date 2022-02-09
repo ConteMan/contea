@@ -24,7 +24,7 @@ class ConfigState extends AsyncModels.keyValue {
       await this.setItem(module, defaultSetting[module])
 
     const configState = useConfigState()
-    configState.setAll()
+    await configState.setAll()
   }
 
   /**
@@ -42,7 +42,7 @@ class ConfigState extends AsyncModels.keyValue {
       await Alarm.setAlarm(module)
 
     const configState = useConfigState()
-    configState.setAll()
+    await configState.setAll()
   }
 }
 

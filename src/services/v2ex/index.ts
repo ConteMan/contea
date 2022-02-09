@@ -108,10 +108,9 @@ class V2EX {
 
   /**
    * 签到
-   * @returns
    */
   async mission(): Promise<Mession> {
-    const { url, key } = await await configState.getItem(this.module) as Config
+    const { url } = await await configState.getItem(this.module) as Config
 
     const mainPage = await defHttp.get({ url })
     const sign = mainPage.data.match(/once=([0-9]+)/)?.[1]
@@ -131,7 +130,7 @@ class V2EX {
     const date = dayjs().format('YYYY-MM-DD')
     if (completed) {
       days = parseInt(data.match(/已连续登录 ([0-9]+?) 天/)?.[1])
-      const info = await moduleState.getItem(key)
+      const info = await moduleState.getItem(this.module)
       if (!info.mission?.days || days > info.mission?.days) { // 并非过了零点就可以签到
         const newInfo = {
           mission: {
@@ -139,7 +138,7 @@ class V2EX {
             days,
           },
         }
-        moduleState.mergeSet(this.module, { data: newInfo })
+        await moduleState.mergeSet(this.module, { data: newInfo })
       }
       else {
         return {
@@ -160,7 +159,6 @@ class V2EX {
   /**
    * 获取 Tab 列表
    * @param tabName string - TAB 名称
-   * @returns array
    */
 
   async tabList(tabName: string) {
@@ -195,10 +193,8 @@ class V2EX {
 
   /**
    * DOM 转换为 List
-   *
    * @param domStr string - DOM 字符串
    * @param moduleType string - 列表类型
-   * @returns array
    */
   domToList(domStr: string, moduleType: string) {
     const domParser = new DOMParser()

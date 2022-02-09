@@ -51,8 +51,8 @@
       <!-- 扩展信息 -->
       <div v-if="showExtend" class="pt-4 space-y-1 text-size-[12px] text-gray-400 italic text-right">
         <div>DateType / Updated / Expried</div>
-        <div>Today / {{ dayjs(today.ca_updated_at).format('DD HH:mm:ss') }} / {{ dayjs(today.ca_expried).format('DD HH:mm:ss') }}</div>
-        <div>PastWeek / {{ dayjs(pastWeek.ca_updated_at).format('DD HH:mm:ss') }} / {{ dayjs(pastWeek.ca_expried).format('DD HH:mm:ss') }}</div>
+        <div>Today / {{ dayjs(today.ca_updated_at).format('DD HH:mm:ss') }} / {{ dayjs(today.ca_expried_at).format('DD HH:mm:ss') }}</div>
+        <div>PastWeek / {{ dayjs(pastWeek.ca_updated_at).format('DD HH:mm:ss') }} / {{ dayjs(pastWeek.ca_expried_at).format('DD HH:mm:ss') }}</div>
       </div>
     </div>
   </Card>

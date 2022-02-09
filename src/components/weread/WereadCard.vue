@@ -46,7 +46,7 @@
         <transition name="fade">
           <div v-if="showExtend" class="pt-4 space-y-1 text-size-[12px] text-gray-400 italic text-right">
             <div>Updated / Expried</div>
-            <div>{{ dayjs(extendInfo.ca_updated_at).format('DD HH:mm:ss') }} / {{ dayjs(extendInfo.ca_expried).format('DD HH:mm:ss') }}</div>
+            <div>{{ dayjs(extendInfo.ca_updated_at).format('DD HH:mm:ss') }} / {{ dayjs(extendInfo.ca_expried_at).format('DD HH:mm:ss') }}</div>
           </div>
         </transition>
       </div>
@@ -103,10 +103,10 @@ const getData = async(refresh = false) => {
 
   data.login = await weread.loginCheck()
   if (data.login) {
-    const { memberCard, readDetail, ca_updated_at, ca_expried } = await weread.user(refresh)
+    const { memberCard, readDetail, ca_updated_at, ca_expried_at } = await weread.user(refresh)
     data.readDetail = readDetail
     data.memberCard = memberCard
-    data.extendInfo = { ca_updated_at, ca_expried }
+    data.extendInfo = { ca_updated_at, ca_expried_at }
   }
 
   if (refresh)
