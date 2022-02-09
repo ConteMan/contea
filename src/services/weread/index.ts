@@ -13,14 +13,15 @@ class WeRead {
     const { site: url } = await configState.getItem(this.module)
 
     const res = await browser.cookies.get({ url, name: 'wr_vid' })
-
-    if (!res.value && times > 1) {
-      await defHttp.get({ url })
-      return await this.getUserId(times--)
-    }
-    else {
+    if (res)
       return res.value
+
+    if (times > 1) {
+      await defHttp.get({ url })
+      return this.getUserId(--times)
     }
+
+    return false
   }
 
   /**
