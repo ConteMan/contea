@@ -5,7 +5,7 @@
     </div>
     <template v-else>
       <div class="flex flex-row justify-between min-h-[48px]">
-        <div v-if="!Object.keys(moduleInfo).length || error" class="flex items-center text-red-600 font-medium duration-200 animate-pulse">
+        <div v-if="!moduleInfo?.profile || error" class="flex items-center text-red-600 font-medium duration-200 animate-pulse">
           Error
         </div>
         <template v-else>

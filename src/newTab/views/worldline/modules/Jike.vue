@@ -24,7 +24,8 @@
     <!-- 内容列表 -->
     <div class="max-w-[800px] mt-8 mb-4 space-y-4">
       <template v-for="item in dealList" :key="item.id">
-        <div class="p-2 rounded-md shadow-sm cursor-default hover:(shadow-md bg-light-500 bg-opacity-40)">
+        <div class="p-4 rounded-md shadow-sm hover:(shadow-md bg-[#FFE012] bg-opacity-40)">
+          <!-- 个人动态更新 -->
           <template v-if="item.type === 'PERSONAL_UPDATE'">
             <div class="space-x-1 font-medium">
               <span v-for="(userItem, index) in item.users" :key="userItem.username">
@@ -37,14 +38,16 @@
               <template v-if="item.action === 'USER_FOLLOW'">
                 <span class="mr-2">关注了</span>
                 <span v-for="targetUserItem in item.allTargetUsers" :key="targetUserItem.username">
-                  {{ targetUserItem.screenName }}
+                  <a class="font-medium hover:(duration-200 animate-pulse)" :href="`${config.site}/u/${targetUserItem.username}`">{{ targetUserItem.screenName }}</a>
                 </span>
               </template>
             </div>
           </template>
 
+          <!-- 原创 -->
           <OriginalPost v-if="item.type === 'ORIGINAL_POST'" :data="item"></OriginalPost>
 
+          <!-- 转发 -->
           <template v-if="item.type === 'REPOST'">
             <div class="pb-2">
               <div class="font-medium">
@@ -54,7 +57,7 @@
                 {{ item.user.briefIntro }}
               </n-ellipsis>
             </div>
-            <div v-if="item.content" class="pb-2" v-html="(item.content).replace(/\n/gi, '<br>')">
+            <div v-if="item.content" class="pb-2" v-html="contentDeal(item)">
             </div>
             <div class="ml-2 p-2 border-l border-l-light-600">
               <OriginalPost :data="{...item.target, isRepost: true }"></OriginalPost>
@@ -68,14 +71,19 @@
             </a>
           </div>
 
-          <!-- 时间 -->
-          <div class="text-xs pt-2 text-gray-300">
-            <template v-if="item.type === 'PERSONAL_UPDATE'">
-              {{ dayjs(item.actionTime).fromNow() }}
-            </template>
-            <template v-else>
-              {{ dayjs(item.createdAt).fromNow() }}
-            </template>
+          <!-- 原链接、时间 -->
+          <div class="text-xs pt-2 text-gray-400 flex justify-end">
+            <div v-if="['ORIGINAL_POST', 'REPOST'].includes(item.type)" class="inline-block mr-2 cursor-pointer hover:(text-yellow-500)">
+              <mdi-open-in-new @click="openSite(`${config.site}/${typeUrl(item.type)}/${item.id}`)" />
+            </div>
+            <span>
+              <template v-if="item.type === 'PERSONAL_UPDATE'">
+                {{ dayjs(item.actionTime).fromNow() }}
+              </template>
+              <template v-else>
+                {{ dayjs(item.createdAt).fromNow() }}
+              </template>
+            </span>
           </div>
         </div>
       </template>
@@ -91,10 +99,10 @@
 import 'dayjs/locale/zh-cn'
 import dayjs from 'dayjs'
 import RelativeTime from 'dayjs/plugin/relativeTime'
+import { openSite, enumToObj } from '~/utils'
 
 import type { Config } from '~/services/jike/model'
 import { TypeEnum } from '~/enums/jikeEnum'
-import { enumToObj } from '~/utils'
 import Base from '~/services/jike'
 import OriginalPost from '~/components/jike/components/OriginalPost.vue'
 import configState from '~/models/keyValue/configState'
@@ -157,6 +165,31 @@ const refresh = async() => {
   data.loading++
   await getPage()
   data.loading--
+}
+
+const typeUrl = (type: string) => {
+  const typeUrls: any = {
+    ORIGINAL_POST: 'originalPost',
+    REPOST: 'repost',
+  }
+  return typeUrls[type]
+}
+
+const contentDeal = (data: any) => {
+  let content = data.content.replace(/\n/gi, '<br>')
+  if (data?.urlsInText && data?.urlsInText.length) {
+    data.urlsInText.forEach((urlItem: any) => {
+      // 站内链接
+      if (/^jike:\/\/(.){1,}/.test(urlItem.url)) {
+        const userId = (urlItem.url).replace('jike://page.jk/user/', '')
+        content = content.replace(urlItem.originalUrl, `<a class="px-1 cursor-pointer underline underline-offset-2 hover:(duration-200 animate-pulse)" href="${data.config.site}/u/${userId}">${urlItem.title}</a>`)
+      }
+      else {
+        content = content.replace(urlItem.originalUrl, `<a class="px-1 cursor-pointer underline underline-offset-2 hover:(duration-200 animate-pulse)" href="${urlItem.originalUrl}">${urlItem.title}</a>`)
+      }
+    })
+  }
+  return content
 }
 </script>
 
