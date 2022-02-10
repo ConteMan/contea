@@ -2,15 +2,15 @@
   <draggable
     v-if="data.cardList.length"
     tag="div"
-    :list="data.cardList"
     item-key="key"
-    class="overflow-y-auto flex-grow flex flex-col space-y-4 p-4"
+    handle=".handle"
+    :list="data.cardList"
+    class="overflow-y-auto flex flex-col space-y-4 pl-4 pt-4 pb-8"
   >
     <template #item="{ element }">
       <div>
         <WakaTimeCard
           v-if="element.key === 'wakatime'"
-          class="wakatime-card p-4 h-max rounded-md shadow-md"
         />
         <V2exCard
           v-if="element.key === 'v2ex'"

@@ -1,54 +1,109 @@
 <template>
-  <Card class="flex flex-col justify-between bg-center bg-cover" :style="data.cardStyle">
+  <Card class="text-light-400 cursor-default flex flex-col justify-between bg-cover bg-center" :style="cardStyle">
     <div v-if="loading" class="duration-200 animate-pulse">
       ...
     </div>
-    <div v-else class="flex flex-row justify-between">
-      <div v-if="data.user">
-        <div class="flex flex-col justify-center">
-          <div><span class="cursor-pointer hover:(text-white) ml-1">{{ user.profile.statsCount.followingCount }}</span> 关注</div>
-          <div><span class="cursor-pointer hover:(text-white) ml-1">{{ user.profile.statsCount.followedCount }}</span> 被关注</div>
+    <template v-else>
+      <div class="flex flex-row justify-between min-h-[48px]">
+        <div v-if="!Object.keys(moduleInfo).length || error" class="flex items-center text-red-600 font-medium duration-200 animate-pulse">
+          Error
+        </div>
+        <template v-else>
+          <div class="flex flex-row justify-center items-end space-x-2">
+            <div class="pr-1">
+              <div title="Repos">
+                <span class="text-xs">关注</span>
+              </div>
+              <div class="cursor-pointer hover:(duration-200 animate-pulse)" @click="openSite(`${config.site}/me`)">
+                {{ moduleInfo.profile.statsCount.followingCount }}
+              </div>
+            </div>
+            <div class="pr-1">
+              <div title="Gists">
+                <span class="text-xs">粉丝</span>
+              </div>
+              <div class="cursor-pointer hover:(duration-200 animate-pulse)" @click="openSite(`${config.site}/me`)">
+                {{ moduleInfo.profile.statsCount.followedCount }}
+              </div>
+            </div>
+          </div>
+        </template>
+        <div class="flex flex-col justify-between">
+          <div class="flex flex-row-reverse w-full opacity-0 hover:(opacity-100 transition-opacity duration-200)" :class="{'!opacity-100': showExtend}">
+            <mdi-information-outline class="text-white cursor-pointer" @click="showExtend = !showExtend" />
+            <mdi-refresh class="text-white cursor-pointer mr-2" :class="{'animate-spin': refreshLoading }" @click="getData(true)" />
+          </div>
+          <div
+            class="cursor-pointer font-bold text-xl text-white select-none hover:(underline underline-offset-2 duration-200 animate-pulse)"
+            @click.stop="openSite(config.site)"
+          >
+            {{ config.name }}
+          </div>
         </div>
       </div>
-      <div v-else>
-        请登录
-      </div>
-      <div class="flex flex-col justify-center">
-        <div
-          class="cursor-pointer font-bold text-xl text-white hover:(underline underline-offset-2 duration-200 animate-pulse)"
-          @click.stop="openSite(config.site)"
-        >
-          {{ config.name }}
+
+      <!-- 扩展信息 -->
+      <transition name="fade">
+        <div v-if="showExtend" class="pt-4 flex flex-col text-xs">
+          <div class="space-y-1 text-size-[12px] text-light-400 italic text-right">
+            <div>Updated / Expried</div>
+            <div>{{ dayjs(extendInfo.ca_updated_at).format('DD HH:mm:ss') }} / {{ dayjs(extendInfo.ca_expried_at).format('DD HH:mm:ss') }}</div>
+          </div>
         </div>
-      </div>
-    </div>
+      </transition>
+    </template>
   </Card>
 </template>
-<script setup lang="ts">
-import type { Config } from '~/services/jike/model'
+<script setup lang="ts" name="BilibiliCard">
+import dayjs from 'dayjs'
 import { openSite } from '~/utils'
+
 import Card from '~/components/template/TemplateCard.vue'
-import Jike from '~/services/jike'
+
 import ConfigState from '~/models/keyValue/configState'
+import type { Config } from '~/services/bilibili/model'
+import jike from '~/services/jike'
 
 const module = 'jike'
 
 const data = reactive({
-  loading: 1,
+  loading: true,
+  refreshLoading: false,
+  error: false,
   config: {} as Config,
-  user: {} as any,
+  moduleInfo: {} as any,
+  showExtend: false,
+  extendInfo: {} as any,
   cardStyle: {} as any,
 })
+const { loading, refreshLoading, error, config, moduleInfo, showExtend, extendInfo, cardStyle } = toRefs(data)
 
-const getData = async() => {
-  data.config = await ConfigState.getItem(module)
-  data.user = await Jike.me()
-  data.cardStyle = {
-    'background-image': data.user.profile.backgroundImage.picUrl ? `linear-gradient(0deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)), url(${data.user.profile.backgroundImage.picUrl})` : '',
+const getData = async(refresh = false) => {
+  if (refresh)
+    data.refreshLoading = true
+
+  try {
+    const { ca_updated_at, ca_expried_at, data: moduleData } = await jike.moduleInfo(refresh)
+    data.moduleInfo = moduleData
+    data.extendInfo = { ca_updated_at, ca_expried_at }
+    data.cardStyle = {
+      'background-image': moduleData.profile.backgroundImage.picUrl ? `linear-gradient(-45deg, rgb(229, 231, 231, 0.6), rgb(116, 115, 115, 70%)), url(${moduleData.profile.backgroundImage.picUrl})` : '',
+    }
   }
-  data.loading--
+  catch (e) {
+    data.error = true
+  }
+
+  if (refresh)
+    data.refreshLoading = false
+  else
+    data.loading = false
 }
 getData()
 
-const { loading, config, user } = toRefs(data)
+const init = async() => {
+  data.config = await ConfigState.getItem(module)
+  getData()
+}
+init()
 </script>

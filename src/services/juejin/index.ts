@@ -65,23 +65,20 @@ class Juejin {
   /**
    * 通过缓存获取个人信息
    */
-  async user() {
-    const cache = await ModuleState.getValidItem(this.module)
-    if (cache)
-      return cache
-
-    const meRes = await this.me()
-
-    const now = new Date().getTime()
-    const { expried } = await ConfigState.getItem(this.module)
-    const moduleData = {
-      ...meRes,
-      expried: now + expried * 1000,
+  async moduleInfo(refresh = false) {
+    if (!refresh) {
+      const cache = await ModuleState.getValidItem(this.module)
+      if (cache)
+        return cache
     }
 
-    await ModuleState.mergeSet(this.module, moduleData)
+    const meRes = await this.me()
+    await this.getCheckStatus()
 
-    return moduleData
+    if (meRes)
+      return await ModuleState.mergeSet(this.module, { data: meRes })
+    else
+      return false
   }
 
   /**
@@ -104,9 +101,37 @@ class Juejin {
 
       const missionInfo = res.data.data
       missionInfo.date = today
-      await ModuleState.mergeSet(this.module, { mission: missionInfo })
+      await ModuleState.mergeSet(this.module, { data: { mission: missionInfo } })
 
       return missionInfo
+    }
+    catch (e) {
+      return false
+    }
+  }
+
+  /**
+   * 获取签到状态
+   */
+  async getCheckStatus() {
+    const today = dayjs().format('YYYY-MM-DD')
+    const moduleInfo = await ModuleState.getItem(this.module)
+    if (moduleInfo?.mission && moduleInfo.mission.date === today && moduleInfo.mission.status)
+      return moduleInfo?.mission
+
+    const { apiUrl } = await ConfigState.getItem(this.module)
+    try {
+      const res = await defHttp.get({
+        url: `${apiUrl}/growth_api/v1/get_today_status`,
+      })
+
+      const status = res.data.err_no ? false : res.data.data
+      const missionInfo = {
+        date: today,
+        status,
+      }
+      await ModuleState.mergeSet(this.module, { data: { mission: missionInfo } })
+      return status
     }
     catch (e) {
       return false

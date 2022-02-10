@@ -1,5 +1,5 @@
 <template>
-  <Card class="flex flex-col justify-between cursor-default">
+  <Card class="flex flex-col">
     <!-- 加载 -->
     <div v-if="loading" class="duration-200 animate-pulse">
       ...

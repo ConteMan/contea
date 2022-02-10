@@ -19,7 +19,7 @@ export const setting: Config = {
     'followActivity',
     'matrix',
   ],
-  expried: 86400,
+  expried: 3600,
   alarm: 30,
   showCard: true,
 }

@@ -1,5 +1,5 @@
 import { defHttp } from '~/utils/http/axios'
-import ConfigState from '~/models/keyValue/configState'
+import configState from '~/models/keyValue/configState'
 import ModuleState from '~/models/keyValue/moduleState'
 
 class Jike {
@@ -9,21 +9,23 @@ class Jike {
    * 请求主页，保持登录或刷新登录
    */
   async mainPage() {
-    const { site } = await ConfigState.getItem(this.module)
+    const { site } = await configState.getItem(this.module)
     await defHttp.get({ url: site })
   }
 
   /**
    * 个人信息
    */
-  async me() {
-    const cache = await ModuleState.getValidItem(this.module)
-    if (cache)
-      return cache
+  async moduleInfo(refresh = false) {
+    if (!refresh) {
+      const cache = await ModuleState.getValidItem(this.module)
+      if (cache)
+        return cache
+    }
 
     await this.mainPage()
 
-    const { apiUrl } = await ConfigState.getItem(this.module)
+    const { apiUrl } = await configState.getItem(this.module)
 
     try {
       const res = await defHttp.post({
@@ -34,7 +36,10 @@ class Jike {
           query: 'query BasicProfile {\n  profile {\n    distinctId: id\n    ...UserCardFragment\n    __typename\n  }\n}\n\nfragment UserCardFragment on UserInfo {\n  ...TinyUserFragment\n  statsCount {\n    followedCount\n    followingCount\n    __typename\n  }\n  backgroundImage {\n    picUrl\n    __typename\n  }\n  following\n  __typename\n}\n\nfragment TinyUserFragment on UserInfo {\n  avatarImage {\n    thumbnailUrl\n    smallPicUrl\n    picUrl\n    __typename\n  }\n  username\n  screenName\n  briefIntro\n  __typename\n}\n',
         },
       })
-      return await ModuleState.mergeSet(this.module, res.data.data)
+      if (res.data.data)
+        return await ModuleState.mergeSet(this.module, { data: res.data.data })
+      else
+        return false
     }
     catch (e) {
       return false
@@ -47,7 +52,7 @@ class Jike {
   async selfFeed(loadMoreKey: {} | undefined = undefined) {
     await this.mainPage()
 
-    const { apiUrl } = await ConfigState.getItem(this.module)
+    const { apiUrl } = await configState.getItem(this.module)
     const res = await defHttp.post({
       url: apiUrl,
       data: {

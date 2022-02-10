@@ -81,12 +81,12 @@ const module = 'weread'
 
 const data = reactive({
   loading: true,
+  refreshLoading: false,
   config: {} as Config,
   login: false,
   memberCard: {} as any,
   readDetail: {} as any,
   showExtend: false,
-  refreshLoading: false,
   extendInfo: {} as any,
 })
 

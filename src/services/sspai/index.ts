@@ -1,23 +1,18 @@
 import dayjs from 'dayjs'
-import type { Config, User, Paginate } from './model'
+import type { User, Paginate } from './model'
 import { defHttp } from '~/utils/http/axios'
-import { deepMerge } from '~/utils'
 import configState from '~/models/keyValue/configState'
 import moduleState from '~/models/keyValue/moduleState'
 import infoList from '~/models/list/infoList'
 class Sspai {
-  private moduleName = 'sspai'
-
-  async getConfig(): Promise<Config> {
-    return await configState.getItem(this.moduleName)
-  }
+  private module = 'sspai'
 
   /**
    * 登录检测
    * @returns boolean
    */
   async loginCheck() {
-    const { url } = await this.getConfig()
+    const { url } = await configState.getItem(this.module)
 
     try {
       const res = await browser.cookies.get({ url, name: 'sspai_jwt_token' })
@@ -33,7 +28,7 @@ class Sspai {
    * @returns string
    */
   async getToken() {
-    const { url } = await this.getConfig()
+    const { url } = await configState.getItem(this.module)
 
     const res = await browser.cookies.get({ url, name: 'sspai_jwt_token' })
     return res?.value
@@ -42,13 +37,13 @@ class Sspai {
   /**
    * 获取用户信息
    */
-  async user(): Promise<User> {
-    const { apiUrl, key, expried } = await this.getConfig()
-    const info = await moduleState.getItem(key)
-
-    const now = new Date().getTime()
-    if (info && info?.expried > now)
-      return info
+  async moduleInfo(refresh = false): Promise<User> {
+    const { apiUrl } = await configState.getItem(this.module)
+    if (!refresh) {
+      const cache = await moduleState.getValidItem(this.module)
+      if (cache)
+        return cache
+    }
 
     const jwtToken = await this.getToken()
     const res = await defHttp.get({
@@ -57,16 +52,11 @@ class Sspai {
         Authorization: `Bearer ${jwtToken}`,
       },
     })
-    const newInfo = deepMerge(info, {
-      updatedAt: now,
-      expried: now + expried * 1000,
 
-      ...res.data.data,
-    })
-
-    await moduleState.setItem(key, newInfo)
-
-    return newInfo as User
+    if (res.data.data)
+      return await moduleState.mergeSet(this.module, { data: res.data.data })
+    else
+      return {}
   }
 
   /**
@@ -75,7 +65,7 @@ class Sspai {
   async followActivity(paginate: Paginate = { limit: 10, offset: 0 }) {
     const moduleType = 'followActivity'
 
-    const { apiUrl } = await this.getConfig()
+    const { apiUrl } = await configState.getItem(this.module)
     const jwtToken = await this.getToken()
 
     const now = dayjs().unix()
@@ -93,7 +83,7 @@ class Sspai {
     data.forEach((item: any) => {
       list.push(
         {
-          ca_module: this.moduleName,
+          ca_module: this.module,
           ca_module_type: moduleType,
           ca_sort_at: item.data.created_time * 1000,
 
@@ -105,7 +95,7 @@ class Sspai {
       )
     })
 
-    await infoList.deleteByModule(this.moduleName, [moduleType])
+    await infoList.deleteByModule(this.module, [moduleType])
     await infoList.bulkSetItemByModule(list, ['ca_data_id', 'ca_author_slug'])
 
     return list
@@ -116,7 +106,7 @@ class Sspai {
    * @param paginate Paginate - 分页数据
    */
   async commonList(moduleType = 'index', paginate: Paginate = { limit: 10, offset: 0 }) {
-    const { apiUrl } = await this.getConfig()
+    const { apiUrl } = await configState.getItem(this.module)
     const jwtToken = await this.getToken()
 
     const now = dayjs().unix()
@@ -134,7 +124,7 @@ class Sspai {
     data.forEach((item: any) => {
       list.push(
         {
-          ca_module: this.moduleName,
+          ca_module: this.module,
           ca_module_type: moduleType,
           ca_sort_at: item.created_time * 1000,
 
@@ -146,7 +136,7 @@ class Sspai {
       )
     })
 
-    await infoList.deleteByModule(this.moduleName, [moduleType])
+    await infoList.deleteByModule(this.module, [moduleType])
     await infoList.bulkSetItemByModule(list, ['ca_data_id', 'ca_author_slug'])
 
     return list

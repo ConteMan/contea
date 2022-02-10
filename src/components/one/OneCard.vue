@@ -23,8 +23,11 @@
           <div class="flex-grow-0 cursor-pointer inline-block hover:(animate-pulse)" @click="refresh(false)">
             {{ current.vol }}
           </div>
-          <div class="flex-grow text-right inline-block w-full font-bold opacity-0 hover:(underline underline-offset-2 animate-pulse opacity-100 transition-opacity duration-200)">
-            <a :href="config.site">{{ config.name }}</a>
+          <div
+            class="flex-grow text-right text-white cursor-pointer inline-block w-full font-bold opacity-0 hover:(underline underline-offset-2 animate-pulse opacity-100 duration-200)"
+            @click.stop="openSite(config.site)"
+          >
+            {{ config.name }}
           </div>
         </div>
       </div>
@@ -32,7 +35,7 @@
   </Card>
 </template>
 <script setup lang="ts" name="OneCard">
-import { getRandomIntInclusive } from '~/utils'
+import { getRandomIntInclusive, openSite } from '~/utils'
 import Card from '~/components/template/TemplateCard.vue'
 import ConfigState from '~/models/keyValue/configState'
 import type { Config } from '~/services/one/model'

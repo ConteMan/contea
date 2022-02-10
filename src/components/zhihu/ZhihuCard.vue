@@ -5,13 +5,15 @@
     </div>
     <template v-else>
       <div class="flex flex-row justify-between items-end">
+        <!-- 异常 -->
         <div v-if="!Object.keys(moduleInfo).length || error" class="text-red-600 font-medium duration-200 animate-pulse">
           Error
         </div>
+
         <template v-else>
           <div class="flex flex-row justify-center items-center space-x-2">
             <div class="pr-1">
-              <div title="Repos">
+              <div>
                 <span class="text-xs">回答</span>
               </div>
               <div class="cursor-pointer hover:(duration-200 animate-pulse)" @click="openSite(`${config.site}/people/${moduleInfo.name}/answers`)">
@@ -19,7 +21,7 @@
               </div>
             </div>
             <div class="pr-1">
-              <div title="Gists">
+              <div>
                 <span class="text-xs">想法</span>
               </div>
               <div class="cursor-pointer hover:(duration-200 animate-pulse)" @click="openSite(`${config.site}/people/${moduleInfo.name}/pins`)">
@@ -27,7 +29,7 @@
               </div>
             </div>
             <div class="pr-1">
-              <div title="Gists">
+              <div>
                 <span class="text-xs">收藏</span>
               </div>
               <div class="cursor-pointer hover:(duration-200 animate-pulse)" @click="openSite(`${config.site}/people/${moduleInfo.name}/collections`)">

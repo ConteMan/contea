@@ -151,7 +151,7 @@
     </template>
     <template #right>
       <div class="flex flex-row justify-center">
-        <a-button type="text" class="bg-gray-200" @click="testFunction(Jike.me())">
+        <a-button type="text" class="bg-gray-200" @click="testFunction(Jike.moduleInfo())">
           个人信息
         </a-button>
       </div>
@@ -170,8 +170,8 @@
           获取 SessionId
         </a-button>
         <span class="border-l-1 mx-2"></span>
-        <a-button type="text" class="bg-gray-200" @click="testFunction(Juejin.me())">
-          个人信息
+        <a-button type="text" class="bg-gray-200" @click="testFunction(Juejin.checkIn())">
+          签到
         </a-button>
       </div>
     </template>
