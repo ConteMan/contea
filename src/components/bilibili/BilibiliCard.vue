@@ -4,7 +4,7 @@
       ...
     </div>
     <template v-else>
-      <div class="flex flex-row justify-between min-h-[48px]">
+      <div class="flex flex-row justify-between items-end min-h-[48px]">
         <div v-if="!Object.keys(moduleInfo).length || error" class="text-red-600 font-medium duration-200 animate-pulse">
           Error
         </div>

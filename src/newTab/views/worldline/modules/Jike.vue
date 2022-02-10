@@ -1,5 +1,5 @@
 <template>
-  <div class="jike-scroll-container">
+  <div class="jike-scroll-container relative">
     <a-back-top :target="getTarget" :visibility-height="500">
       <span class="text-size-2xl opacity-70 hover:(opacity-100)">
         <ic-outline-keyboard-arrow-up />
@@ -7,9 +7,9 @@
     </a-back-top>
 
     <!-- 顶部操作栏 -->
-    <div class="tags absolute w-full bg-white pb-2 pl-2">
+    <div class="tags sticky top-0 w-full z-10 bg-white pb-2 pl-2">
       <a class="cursor-pointer leading-none align-middle mr-4" @click="refresh()">
-        <mdi-refresh :class="{'animate-spin': data.loading>0}" />
+        <mdi-refresh :class="{'animate-spin': loading}" />
       </a>
       <template v-for="item in data.moduleTypes" :key="item.key">
         <a-checkable-tag
@@ -22,7 +22,7 @@
     </div>
 
     <!-- 内容列表 -->
-    <div class="max-w-[800px] mt-8 mb-4 space-y-4">
+    <div class="max-w-[800px] mb-4 space-y-4">
       <template v-for="item in dealList" :key="item.id">
         <div class="p-4 rounded-md shadow-sm hover:(shadow-md bg-[#FFE012] bg-opacity-40)">
           <!-- 个人动态更新 -->
@@ -37,7 +37,8 @@
             <div>
               <template v-if="item.action === 'USER_FOLLOW'">
                 <span class="mr-2">关注了</span>
-                <span v-for="targetUserItem in item.allTargetUsers" :key="targetUserItem.username">
+                <span v-for="(targetUserItem, index) in item.allTargetUsers" :key="targetUserItem.username" class="mr-2">
+                  <span v-if="index">，</span>
                   <a class="font-medium hover:(duration-200 animate-pulse)" :href="`${config.site}/u/${targetUserItem.username}`">{{ targetUserItem.screenName }}</a>
                 </span>
               </template>
@@ -59,8 +60,8 @@
             </div>
             <div v-if="item.content" class="pb-2" v-html="contentDeal(item)">
             </div>
-            <div class="ml-2 p-2 border-l border-l-light-600">
-              <OriginalPost :data="{...item.target, isRepost: true }"></OriginalPost>
+            <div class="ml-2 p-2 border-l border-l-light-600 relative">
+              <OriginalPost :data="{...item.target, isRepost: true }" />
             </div>
           </template>
 
@@ -88,9 +89,14 @@
         </div>
       </template>
 
-      <a-button type="text" @click="getPage()">
-        LoadMore
-      </a-button>
+      <div class="flex justify-center">
+        <span v-if="loading" class="duration-200 animate-pulse">
+          ...
+        </span>
+        <a-button v-if="loadmore && !loading" type="text" @click="getPage()">
+          更多
+        </a-button>
+      </div>
     </div>
   </div>
 </template>
@@ -114,20 +120,15 @@ const module = 'jike'
 const defaultTag = 'selfFeed'
 
 const data = reactive({
-  loading: 0,
-  loadMore: false,
+  loading: true,
+  loadmore: false,
   config: {} as Config,
   moduleTypes: {} as any,
   selectedTag: defaultTag,
   list: [] as any[],
   pageInfo: {} as any,
 })
-const { config } = toRefs(data)
-
-const init = async() => {
-  data.config = await configState.getItem(module)
-}
-init()
+const { loading, loadmore, config } = toRefs(data)
 
 // 列表数据
 const getPage = async() => {
@@ -135,10 +136,10 @@ const getPage = async() => {
     const res = await Base.selfFeed(data.pageInfo?.loadMoreKey ?? undefined)
     data.list = [...data.list, ...res.viewer.followingUpdates.nodes]
     data.pageInfo = res.viewer.followingUpdates.pageInfo
-    data.loadMore = res.viewer.followingUpdates.pageInfo.hasNextPage
+    data.loadmore = res.viewer.followingUpdates.pageInfo.hasNextPage
   }
+  data.loading = false
 }
-getPage()
 
 // 处理后的列表
 const dealList = computed(() => data.list.filter((item) => {
@@ -149,22 +150,27 @@ const dealList = computed(() => data.list.filter((item) => {
 const getTypes = () => {
   data.moduleTypes = enumToObj(TypeEnum, ['value', 'key'])
 }
-getTypes()
+
+const init = async() => {
+  getTypes()
+  data.config = await configState.getItem(module)
+  await getPage()
+}
+init()
 
 // 选择标签
 const handleChange = (tag: string, checked: boolean) => {
   data.selectedTag = checked ? tag : defaultTag
   data.pageInfo = {}
   data.list = []
-  data.loadMore = false
+  data.loadmore = false
   getPage()
 }
 
 // 刷新数据
 const refresh = async() => {
-  data.loading++
+  data.loading = true
   await getPage()
-  data.loading--
 }
 
 const typeUrl = (type: string) => {
@@ -182,7 +188,7 @@ const contentDeal = (data: any) => {
       // 站内链接
       if (/^jike:\/\/(.){1,}/.test(urlItem.url)) {
         const userId = (urlItem.url).replace('jike://page.jk/user/', '')
-        content = content.replace(urlItem.originalUrl, `<a class="px-1 cursor-pointer underline underline-offset-2 hover:(duration-200 animate-pulse)" href="${data.config.site}/u/${userId}">${urlItem.title}</a>`)
+        content = content.replace(urlItem.originalUrl, `<a class="px-1 cursor-pointer underline underline-offset-2 hover:(duration-200 animate-pulse)" href="${config.value.site}/u/${userId}">${urlItem.title}</a>`)
       }
       else {
         content = content.replace(urlItem.originalUrl, `<a class="px-1 cursor-pointer underline underline-offset-2 hover:(duration-200 animate-pulse)" href="${urlItem.originalUrl}">${urlItem.title}</a>`)

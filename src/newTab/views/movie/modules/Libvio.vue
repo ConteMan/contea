@@ -1,6 +1,6 @@
 <template>
   <div class="max-w-[600px] relative">
-    <div class="tags sticky top-0 w-full max-w-[600px] bg-white pb-2 pl-2 pr-2">
+    <div class="tags sticky top-0 w-full max-w-[600px] bg-white pb-2 pl-2 pr-2 flex items-center">
       <a class="cursor-pointer leading-none align-middle mr-4" @click="refresh()">
         <mdi-refresh :class="{'animate-spin': loading }" />
       </a>
@@ -12,7 +12,7 @@
           {{ item.key }}
         </a-checkable-tag>
       </template>
-      <n-time v-if="extendInfo.ca_updated_at" class="text-light-800 italic text-xs float-right cursor-default hover:(text-gray-400)" :time="0" :to="new Date().getTime() - extendInfo.ca_updated_at" type="relative" />
+      <n-time v-if="extendInfo.ca_updated_at" class="flex-grow text-right text-light-800 italic text-xs cursor-default hover:(text-gray-400)" :time="0" :to="new Date().getTime() - extendInfo.ca_updated_at" type="relative" />
     </div>
 
     <div class="mt-2 mb-4">

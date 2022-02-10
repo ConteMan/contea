@@ -9,7 +9,17 @@
       </n-ellipsis>
     </div>
   </div>
-  <div v-if="data.content" class="py-1 pb-2" v-html="contentDeal(data)">
+  <template v-if="data.content">
+    <div v-if="!data.isRepost" class="py-1 pb-2" v-html="contentDeal(data)">
+    </div>
+    <div v-else class="pr-2 truncate">
+      {{ data.content }}
+    </div>
+  </template>
+  <div v-if="data.linkInfo?.audio" class="pb-2">
+    <div class="text-gray-400 flex items-center">
+      <mdi-music class="mr-2" />{{ data.linkInfo.audio.title }} / {{ data.linkInfo.audio.author }}
+    </div>
   </div>
   <div v-if="data.pictures.length" class="pic-container w-full flex flex-wrap justify-start gap-2 mb-2 p-2">
     <n-image
