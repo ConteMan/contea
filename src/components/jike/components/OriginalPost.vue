@@ -18,7 +18,15 @@
   </template>
   <div v-if="data.linkInfo?.audio" class="pb-2">
     <div class="text-gray-400 flex items-center">
-      <mdi-music class="mr-2" />{{ data.linkInfo.audio.title }} / {{ data.linkInfo.audio.author }}
+      <mdi-music class="mr-2 hover:(cursor-pointer text-red-400)" @click="getMediaMeta(data.id, 'ORIGINAL_POST')" />
+      <a :href="data.linkInfo.linkUrl" class="text-gray-400 hover:(cursor-pointer text-red-400)">{{ data.linkInfo.audio.title }} / {{ data.linkInfo.audio.author }}</a>
+    </div>
+    <div v-if="Object.keys(mediaMeta).length" class="mt-2">
+      <audio
+        controls
+        :src="mediaMeta.mediaMetaPlay.url"
+      >
+      </audio>
     </div>
   </div>
   <div v-if="data.pictures.length" class="pic-container w-full flex flex-wrap justify-start gap-2 mb-2 p-2">
@@ -35,6 +43,7 @@
 <script setup lang="ts" name="OriginalPost">
 import type { Config } from '~/services/jike/model'
 import configState from '~/models/keyValue/configState'
+import jike from '~/services/jike'
 
 const module = 'jike'
 
@@ -45,8 +54,9 @@ const { data } = toRefs(props)
 
 const moduleData = reactive({
   config: {} as Config,
+  mediaMeta: {} as any,
 })
-const { config } = toRefs(moduleData)
+const { config, mediaMeta } = toRefs(moduleData)
 const init = async() => {
   moduleData.config = await configState.getItem(module)
 }
@@ -67,6 +77,11 @@ const contentDeal = (data: any) => {
     })
   }
   return content
+}
+
+const getMediaMeta = async(messageId: string, messageType: 'ORIGINAL_POST' | 'REPOST') => {
+  const res = await jike.mediaMeta(messageId, messageType)
+  moduleData.mediaMeta = res
 }
 </script>
 

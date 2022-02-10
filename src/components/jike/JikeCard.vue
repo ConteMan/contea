@@ -89,6 +89,7 @@ const getData = async(refresh = false) => {
     data.cardStyle = {
       'background-image': moduleData.profile.backgroundImage.picUrl ? `linear-gradient(-45deg, rgb(229, 231, 231, 0.6), rgb(116, 115, 115, 70%)), url(${moduleData.profile.backgroundImage.picUrl})` : '',
     }
+    data.error = false
   }
   catch (e) {
     data.error = true
