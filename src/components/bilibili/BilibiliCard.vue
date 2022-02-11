@@ -66,7 +66,7 @@
               <ri-vip-line class="mr-2" />
               <span>{{ dayjs(moduleInfo.vip.due_date).format('YYYY-MM-DD') }} </span>
             </div>
-            <div class="flex items-center pb-1">
+            <div class="flex items-center pb-1 w-1/2">
               <mdi-wallet class="mr-2" />
               <span>{{ moduleInfo.money }}</span>
             </div>

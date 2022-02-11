@@ -5,7 +5,7 @@
     item-key="key"
     handle=".handle"
     :list="data.cardList"
-    class="overflow-y-auto flex flex-col space-y-4 pl-4 pt-4 pb-8"
+    class="overflow-y-auto flex flex-col space-y-4 px-2 pt-4 pb-8"
   >
     <template #item="{ element }">
       <div>
