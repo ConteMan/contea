@@ -25,11 +25,12 @@
             </div>
           </div>
         </div>
+        <!-- 书籍展示 -->
         <div class="pt-2">
           <div class="pt-2 flex flex-row flex-wrap justify-between w-full">
             <div v-for="book in readDetail.datas[0].readMeta.books" :key="book.bookId" class="flex items-center">
-              <div class="h-[100px] mb-2">
-                <img class="book-img w-full h-full rounded-sm" :src="book.detail.cover">
+              <div class="book-img-container h-[100px] mb-2">
+                <img class="book-img w-full h-full rounded-sm duration-300" :src="book.detail.cover">
               </div>
               <div class="ml-2 w-[80px] break-words">
                 <n-ellipsis line-clamp="2">
@@ -118,9 +119,12 @@ getData()
 </script>
 
 <style lang="less">
-.book-img {
+.book-img-container {
   &:hover {
     box-shadow: 2px 3px 2px rgba(156, 154, 154, 0.4);
+    img {
+      transform: translateX(2px);
+    }
   }
 }
 </style>

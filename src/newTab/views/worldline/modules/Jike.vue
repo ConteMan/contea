@@ -102,8 +102,8 @@
 </template>
 
 <script setup lang="ts">
-import 'dayjs/locale/zh-cn'
 import dayjs from 'dayjs'
+import 'dayjs/locale/zh-cn'
 import RelativeTime from 'dayjs/plugin/relativeTime'
 import { openSite, enumToObj } from '~/utils'
 

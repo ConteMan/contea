@@ -28,8 +28,8 @@
           </template>
         </div>
       </div>
-      <div v-else>
-        未登录
+      <div v-else class="flex flex-row justify-start items-end">
+        请登录
       </div>
       <div class="flex flex-col justify-between">
         <div class="flex-grow flex flex-row-reverse items-center w-full opacity-0 hover:(opacity-100 transition-opacity duration-200)" :class="{'!opacity-100': showExtend}">

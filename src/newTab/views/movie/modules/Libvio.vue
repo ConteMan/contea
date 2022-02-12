@@ -16,7 +16,7 @@
     </div>
 
     <div class="mt-2 mb-4">
-      <div v-if="error">
+      <div v-if="error" class="text-red-600 font-medium hover:(duration-200 animate-pulse)">
         Error
       </div>
       <template v-else>

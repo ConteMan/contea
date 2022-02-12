@@ -1,6 +1,6 @@
 import { AsyncModels } from 'kurimudb'
-import { dexieDriverFactory, DexieDriver } from 'kurimudb-driver-dexie'
 import migrations from '../migrations'
+import { dexieDriverFactory, DexieDriver } from '~/utils/kurimudb-driver-dexie'
 
 interface InfoInterface {
   ca_expried_at: number

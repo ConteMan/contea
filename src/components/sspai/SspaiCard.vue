@@ -14,7 +14,7 @@
           </div>
         </div>
       </div>
-      <div v-else class="flex flex-row justify-center items-end duration-200 animate-pulse text-red-500">
+      <div v-else class="flex flex-row justify-center items-end text-red-500">
         请登录
       </div>
       <div class="flex flex-col justify-between">

@@ -1,6 +1,6 @@
 import { AsyncModels } from 'kurimudb'
-import { dexieDriverFactory } from 'kurimudb-driver-dexie'
 import migrations from '../migrations'
+import { dexieDriverFactory } from '~/utils/kurimudb-driver-dexie'
 import { deepMerge } from '~/utils'
 import configState from '~/models/keyValue/configState'
 import { isBoolean } from '~/utils/is'

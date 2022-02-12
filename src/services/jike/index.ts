@@ -63,7 +63,10 @@ class Jike {
         },
       })
 
-      return res.data.data
+      if (res.data.errors)
+        throw new Error('Jike Error')
+      else
+        return res.data.data
     }
     catch (e) {
       if (times > 1) {

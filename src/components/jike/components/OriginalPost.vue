@@ -16,6 +16,9 @@
       {{ data.content }}
     </div>
   </template>
+  <div v-if="data?.video?.type" class="pb-1 text-gray-400">
+    Video
+  </div>
   <div v-if="data.linkInfo?.audio" class="pb-2">
     <div class="text-gray-400 flex items-center">
       <mdi-music class="mr-2 hover:(cursor-pointer text-red-400)" @click="getMediaMeta(data.id, 'ORIGINAL_POST')" />

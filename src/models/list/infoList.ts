@@ -1,7 +1,7 @@
 import { AsyncModels } from 'kurimudb'
-import { dexieDriverFactory, DexieDriver } from 'kurimudb-driver-dexie'
 import MD5 from 'crypto-js/md5'
 import migrations from '../migrations'
+import { dexieDriverFactory, DexieDriver } from '~/utils/kurimudb-driver-dexie'
 import type { InfoItem, InfoList } from '~/services/v2ex/model'
 
 interface InfoInterface {

@@ -6,7 +6,7 @@
     <template v-else>
       <div class="flex flex-row justify-between items-end">
         <!-- 异常 -->
-        <div v-if="!Object.keys(moduleInfo).length || error" class="text-red-600 font-medium duration-200 animate-pulse">
+        <div v-if="!moduleInfo?.name || error" class="text-red-600 font-medium duration-200 animate-pulse">
           Error
         </div>
 

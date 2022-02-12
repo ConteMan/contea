@@ -5,8 +5,8 @@
     </div>
     <template v-else>
       <div class="flex flex-row justify-between items-end">
-        <div v-if="!Object.keys(data.user).length || data.error" class="text-red-600 font-medium">
-          请检查 Token
+        <div v-if="!Object.keys(data.user).length || data.error">
+          Error
         </div>
         <template v-else>
           <div class="flex flex-row justify-center items-center space-x-2">
@@ -110,6 +110,9 @@ init()
 const getData = async(refresh = false) => {
   if (refresh)
     data.refreshLoading = true
+
+  if (data.error)
+    await init()
 
   try {
     const { ca_updated_at, ca_expried_at, data: userData } = await Github.user(refresh)

@@ -17,7 +17,7 @@ export default defineConfig({
         ],
       }
       : undefined,
-    outDir: r('extension/dist/contentScripts'),
+    outDir: isDev ? r('extension/dist/contentScripts') : r('extension_build/dist/contentScripts'),
     cssCodeSplit: false,
     emptyOutDir: false,
     sourcemap: isDev ? 'inline' : false,

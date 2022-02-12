@@ -1,6 +1,6 @@
 import { AsyncModels } from 'kurimudb'
-import { dexieDriverFactory } from 'kurimudb-driver-dexie'
 import migrations from '../migrations'
+import { dexieDriverFactory } from '~/utils/kurimudb-driver-dexie'
 import defaultSetting from '~/setting/defaultSetting'
 import { deepMerge } from '~/utils'
 import Alarm from '~/services/base/alarm'
@@ -23,8 +23,8 @@ class ConfigState extends AsyncModels.keyValue {
     else
       await this.setItem(module, defaultSetting[module])
 
-    const configState = useConfigState()
-    await configState.setAll()
+    // const configState = useConfigState()
+    // await configState.setAll()
   }
 
   /**
