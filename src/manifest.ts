@@ -46,6 +46,7 @@ export async function getManifest() {
       'bookmarks',
       'history',
       'commands',
+      'webNavigation',
       'http://*/',
       'https://*/',
     ],

@@ -16,14 +16,14 @@ else {
   console.log('[contea] > build mode')
 }
 
-// 加载内容脚本
-import('./contentScriptHMR')
-
 /**
  * 安装后初始化
  */
 browser.runtime.onInstalled.addListener((): void => {
   configState.init()
+
+  // 加载内容脚本
+  import('./contentScriptHMR')
 })
 
 /**
