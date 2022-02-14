@@ -1,13 +1,20 @@
 import { AsyncModels } from 'kurimudb'
 import migrations from '../migrations'
-import { dexieDriverFactory } from '~/utils/kurimudb-driver-dexie'
+import { dexieDriverFactory, DexieDriver } from '~/utils/kurimudb-driver-dexie'
+
+import type { SettingKeys } from '~/setting/defaultSetting'
 import defaultSetting from '~/setting/defaultSetting'
+
 import { deepMerge } from '~/utils'
 import Alarm from '~/services/base/alarm'
 
 import { useConfigState } from '~/store/config'
 
-class ConfigState extends AsyncModels.keyValue {
+interface InfoItem {
+  [other: string]: any
+}
+
+class ConfigState extends AsyncModels.keyValue<InfoItem, DexieDriver> {
   constructor() {
     super({
       name: 'config_state',
@@ -17,14 +24,11 @@ class ConfigState extends AsyncModels.keyValue {
   }
 
   // 初始化
-  async init(module: 'all'| 'default' | 'v2ex' | 'sspai' | 'weread' | 'bgm' | 'github' | 'weather' | 'zhihu' | 'bilibili' = 'all') {
+  async init(module: SettingKeys | 'all' = 'all') {
     if (module === 'all')
       await this.bulkSetItem(defaultSetting)
     else
       await this.setItem(module, defaultSetting[module])
-
-    // const configState = useConfigState()
-    // await configState.setAll()
   }
 
   /**
@@ -32,7 +36,7 @@ class ConfigState extends AsyncModels.keyValue {
    * @param module string - 模块名称
    * @param data {} - 模块内容
    */
-  async mergeSet(module: string, data: any) {
+  async mergeSet(module: SettingKeys, data: any) {
     const res = await this.getItem(module)
     const mergeRes = deepMerge(res, data)
     await this.setItem(module, mergeRes)

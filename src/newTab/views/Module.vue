@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full max-h-screen min-h-screen overflow-y-hidden pr-4 pt-2 flex flex-row">
+  <div class="w-full max-h-screen min-h-screen overflow-y-hidden flex flex-row">
     <a-tabs v-model:activeKey="tabSelected" class="left-list w-full w-screen-sm flex-grow" @change="tabChange">
       <a-tab-pane key="worldline" tab="世界线">
         <KeepAlive>

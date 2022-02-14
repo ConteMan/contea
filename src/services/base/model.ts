@@ -12,8 +12,8 @@ export type BaseConfig = {
   enable: boolean // 是否启用
   site: string // 站点 URL
   apiUrl: string // API URL
-  showCard: boolean // 是否显示卡片
   expried: number // 缓存时间，单位：秒
+  showCard?: boolean // 是否显示卡片
   alarm?: number // 定时任务时间，单位：分钟
   [other: string]: any
 }
@@ -27,4 +27,21 @@ export type BaseModule = {
 // 模块 model 基础
 export type BaseModel = {
   showCard: boolean
+}
+
+// 基础配置
+export type Config = BaseConfig & {
+  showCards: string[]
+  defaultPath: string
+}
+export const setting: Config = {
+  key: 'default',
+  name: '基础',
+  enable: true,
+  site: '',
+  apiUrl: '',
+  alarm: 10,
+  expried: 3600,
+  showCards: [],
+  defaultPath: '/zen',
 }

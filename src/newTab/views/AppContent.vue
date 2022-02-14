@@ -1,10 +1,9 @@
 <template>
-  <Layout></Layout>
+  <router-view />
   <SearchModal />
 </template>
 <script setup lang="ts">
 import { useEventListener, useActiveElement } from '@vueuse/core'
-import Layout from '../layout/Index.vue'
 import SearchModal from '~/components/search/Search.vue'
 
 import { useModalState } from '~/store/modal'

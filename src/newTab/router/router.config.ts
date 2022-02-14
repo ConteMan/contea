@@ -5,12 +5,8 @@ export const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'Root',
-    redirect: '/zen',
-    meta: {
-      title: '',
-      keepAlive: false,
-    },
     component: LayoutBase,
+    redirect: '/zen',
     children: [
       {
         path: '/module',

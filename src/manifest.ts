@@ -76,9 +76,9 @@ export async function getManifest() {
     //   matches: ['http://*/*', 'https://*/*'],
     //   js: ['./dist/contentScripts/index.global.js'],
     // }],
-    // web_accessible_resources: [
-    //   'dist/contentScripts/style.css',
-    // ],
+    web_accessible_resources: [
+      'dist/contentScripts/style.css',
+    ],
     // eslint-disable-next-line quotes
     content_security_policy: "script-src 'self' 'unsafe-eval'; object-src 'self'",
   }

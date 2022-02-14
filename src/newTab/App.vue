@@ -1,5 +1,11 @@
 <template>
-  <n-config-provider :theme-overrides="themeOverrides" :namespace="namespace" :locale="zhCN" :date-locale="dateZhCN">
+  <n-config-provider
+    class="config-container"
+    :theme-overrides="themeOverrides"
+    :namespace="namespace"
+    :locale="zhCN"
+    :date-locale="dateZhCN"
+  >
     <n-notification-provider>
       <n-message-provider>
         <AppContent />

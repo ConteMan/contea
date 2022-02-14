@@ -3,8 +3,6 @@ import _ from 'lodash-es'
 import configState from '~/models/keyValue/configState'
 import storeState from '~/models/keyValue/storeState'
 
-import { modules } from '~/setting/defaultSetting'
-
 export const useConfigState = defineStore('config', {
   state: () => {
     return {
@@ -15,7 +13,7 @@ export const useConfigState = defineStore('config', {
   actions: {
     // 初始化
     async setAll() {
-      this.all = await configState.storage.bulkSelect(modules)
+      this.all = await configState.storage.all()
       await this.dealSortList()
     },
     // 排序，优先按照传入排序，没有的放在最后

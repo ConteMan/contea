@@ -41,7 +41,7 @@
 import SettingItem from '~/components/template/SettingItem.vue'
 import ConfigState from '~/models/keyValue/configState'
 
-const module = 'default'
+const module = 'base'
 
 const data = reactive({
   base: {
