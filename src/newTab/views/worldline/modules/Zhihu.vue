@@ -1,22 +1,27 @@
 <template>
-  <div class="sspai-scroll-container">
-    <div class="tags absolute w-full bg-white pb-2 pl-2">
+  <div class="flex flex-col">
+    <div class="w-full bg-white pb-2 pl-2">
       <a class="cursor-pointer leading-none align-middle mr-4" @click="refresh()">
         <mdi-refresh :class="{'animate-spin': loading }" />
       </a>
       <template v-for="item in moduleTypes" :key="item.key">
-        <a-checkable-tag
+        <n-tag
+          class="mr-2 text-xs h-auto py-0.8"
+          checkable
           :checked="selectedTag === item.value"
-          @change="checked => handleChange(item.value, checked)"
+          @update:checked="checked => handleChange(item.value, checked)"
         >
           {{ item.key }}
-        </a-checkable-tag>
+        </n-tag>
       </template>
     </div>
 
-    <div class="mt-8 mb-4">
+    <n-scrollbar class="jike-content-container">
+      <n-back-top :right="10000" :bottom="8" to=".jike-content-container" class="left-1 text-xl text-gray-400 shadow-none hover:(shadow-none text-[#fd2720])">
+        <bx-bx-arrow-to-top />
+      </n-back-top>
       <ListItem v-for="item in list" :key="item.id" :data="item" />
-    </div>
+    </n-scrollbar>
   </div>
 </template>
 
@@ -27,8 +32,8 @@ import ListItem from '~/components/zhihu/components/ListItem.vue'
 
 import type { Config } from '~/services/zhihu/model'
 import { TypeEnum } from '~/enums/zhihuEnum'
-import Base from '~/services/zhihu'
 import configState from '~/models/keyValue/configState'
+import Base from '~/services/zhihu'
 
 const module = 'zhihu'
 const defaultType = 'hot'

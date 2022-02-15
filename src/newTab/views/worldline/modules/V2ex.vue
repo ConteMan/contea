@@ -1,27 +1,28 @@
 <template>
-  <div class="v2ex-scroll-container">
-    <a-back-top :target="getTarget" :visibility-height="500">
-      <span class="text-size-2xl opacity-70 hover:(opacity-100)">
-        <ic-outline-keyboard-arrow-up />
-      </span>
-    </a-back-top>
-    <div class="tags absolute w-full bg-white pb-2 pl-2">
+  <div class="w-full flex flex-col">
+    <div class="w-full bg-white pb-3 pl-2">
       <span class="cursor-pointer leading-none align-middle mr-4" @click="refresh()">
-        <mdi-refresh :class="{'animate-spin': data.loading>0}" />
+        <mdi-refresh :class="{'animate-spin': loading}" />
       </span>
       <template v-for="item in moduleTypes" :key="item.key">
-        <a-checkable-tag
+        <n-tag
+          class="mr-2 text-xs h-auto py-0.8"
+          checkable
           :checked="selectedTags.indexOf(item.value) > -1"
-          @change="checked => handleChange(item.value, checked)"
+          @update:checked="checked => handleChange(item.value, checked)"
         >
           {{ item.key }}
-        </a-checkable-tag>
+        </n-tag>
       </template>
     </div>
-    <div class="mt-8 mb-4">
+
+    <n-scrollbar class="v2ex-content-container">
+      <n-back-top :right="10000" :bottom="8" to=".v2ex-content-container" class="left-1 text-xl text-gray-400 shadow-none hover:(shadow-none text-[#fd2720])">
+        <bx-bx-arrow-to-top />
+      </n-back-top>
       <template v-for="item in list" :key="item.title">
-        <div class="p-2 rounded-sm  hover:(bg-gray-200)">
-          <a :href="'https://v2ex.com' + item.title_link">
+        <div class="p-2 rounded-sm">
+          <a :href="config.site + item.title_link">
             {{ item.title }}
           </a>
           <span class="text-xs text-gray-300 ml-2">
@@ -29,32 +30,35 @@
           </span>
         </div>
       </template>
-    </div>
+    </n-scrollbar>
   </div>
 </template>
 
 <script setup lang="ts">
 import dayjs from 'dayjs'
-import Base from '~/services/base'
-import { TypeEnum } from '~/enums/v2exEnum'
 import { enumToObj } from '~/utils'
+import configState from '~/models/keyValue/configState'
+import type { Config } from '~/services/v2ex/model'
+import { TypeEnum } from '~/enums/v2exEnum'
 import Alarm from '~/services/base/alarm'
+import Base from '~/services/base'
 
 const module = 'v2ex'
 
 const data = reactive({
-  loading: 0,
+  loading: false,
+  config: {} as Config,
   moduleTypes: {} as any,
   selectedTags: [] as string[],
   list: [] as any[],
 })
-const { selectedTags, list, moduleTypes } = toRefs(data)
+const { loading, config, selectedTags, list, moduleTypes } = toRefs(data)
 
 // 获取列表数据
-const getPage = async() => {
+const getData = async() => {
   data.list = await Base.listByModule({ currentPage: 1, num: 100 }, module, toRaw(selectedTags.value))
 }
-getPage()
+getData()
 
 // 获取类型数据
 const getTypes = () => {
@@ -65,7 +69,14 @@ const getTypes = () => {
   })
   moduleTypes.value = res
 }
-getTypes()
+
+// 初始化
+const init = async() => {
+  data.config = await configState.getItem(module)
+  getTypes()
+  await getData()
+}
+init()
 
 // 选择标签
 const handleChange = (tag: string, checked: boolean) => {
@@ -74,31 +85,14 @@ const handleChange = (tag: string, checked: boolean) => {
     ? [...selectedTags, tag]
     : selectedTags.filter(t => t !== tag)
   data.selectedTags = nextSelectedTags
-  getPage()
+  getData()
 }
 
 // 刷新
 const refresh = async() => {
-  data.loading++
+  data.loading = true
   await Alarm.alarmDeal(module)
-  await getPage()
-  data.loading--
+  await getData()
+  data.loading = false
 }
 </script>
-
-<script lang="ts">
-export default {
-  methods: {
-    getTarget() {
-      return document.querySelector('.v2ex-scroll-container') as HTMLElement
-    },
-  },
-}
-</script>
-
-<style>
-.ant-back-top {
-  left: 1rem;
-  bottom: 1rem;
-}
-</style>

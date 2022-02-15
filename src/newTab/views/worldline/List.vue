@@ -1,23 +1,25 @@
 <template>
-  <div id="page" class="h-full overflow-y-scroll w-full min-h-full">
-    <a-tabs v-model:activeKey="activeKey" tab-position="left" size="small" class="worldline-tab h-full">
-      <a-tab-pane v-if="config.v2ex.enable" key="v2ex" tab="V2EX">
-        <V2ex class="h-full overflow-y-auto" />
-      </a-tab-pane>
-      <a-tab-pane v-if="config.sspai.enable" key="sspai" tab="少数派">
-        <Sspai class="h-full overflow-y-auto" />
-      </a-tab-pane>
-      <a-tab-pane v-if="config.jike.enable" key="jike" tab="即刻">
-        <Jike class="h-full overflow-y-auto" />
-      </a-tab-pane>
-      <a-tab-pane v-if="config.zhihu.enable" key="zhihu" tab="知乎">
-        <Zhihu class="h-full overflow-y-auto" />
-      </a-tab-pane>
-    </a-tabs>
+  <div ref="worldlineContainerRef" class="h-full flex">
+    <div class="worldline-menu pt-8">
+      <n-menu
+        v-model:value="activeKey"
+        :options="menuOptions"
+        :indent="18"
+        @update:value="changeActiveKey"
+      ></n-menu>
+    </div>
+    <div class="worldline-tab-pane-container flex-1 w-0">
+      <V2ex v-if="activeKey === 'v2ex'" class="h-full" />
+      <Sspai v-if="activeKey === 'sspai'" class="h-full" />
+      <Jike v-if="activeKey === 'jike'" class="h-full" />
+      <Zhihu v-if="activeKey === 'zhihu'" class="h-full" />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { useElementBounding } from '@vueuse/core'
+
 import V2ex from './modules/V2ex.vue'
 import Sspai from './modules/Sspai.vue'
 import Jike from './modules/Jike.vue'
@@ -26,39 +28,53 @@ import Zhihu from './modules/Zhihu.vue'
 import { useConfigState } from '~/store/config'
 
 const activeKey = ref('v2ex')
+const changeActiveKey = (key: string) => {
+  activeKey.value = key
+}
+
 const data = reactive({
   config: {} as any,
+  worldlineContainerRef: null,
+  worldlineTabRef: null,
 })
 const configState = useConfigState()
 const { all } = storeToRefs(configState)
 data.config = all
 
-const { config } = toRefs(data)
+const { worldlineContainerRef, worldlineTabRef } = toRefs(data)
+
+const { height: containerHeight } = useElementBounding(worldlineContainerRef)
+const { height: tabHeight } = useElementBounding(worldlineTabRef)
+const dealTabHeight = computed(() => {
+  return `${containerHeight.value - tabHeight.value}px`
+})
+
+const menuOptions = [
+  {
+    label: 'V2EX',
+    key: 'v2ex',
+  },
+  {
+    label: '少数派',
+    key: 'sspai',
+  },
+  {
+    label: '即刻',
+    key: 'jike',
+  },
+  {
+    label: '知乎',
+    key: 'zhihu',
+  },
+]
 </script>
 
 <style scoped>
-.worldline-tab :deep() .ant-tabs-nav {
-  padding-left: 1rem !important;
-  padding-top: 2rem;
+.worldline-menu {
+  min-width: fit-content;
+  max-width: fit-content;
 }
-.worldline-tab :deep() .ant-tabs-content {
-  position: relative;
-  height: 100%;
-}
-.worldline-tab :deep() .ant-tabs-tabpane {
-  height: 100%;
-}
-.worldline-tab :deep() .ant-tabs-tab {
-  padding: 8px 1rem 8px 0;
-  width: 100%;
-  text-align: right;
-  flex-flow: row-reverse nowrap;
-}
-.worldline-tab :deep() .ant-tabs-tab-btn {
-  font-size: 12px;
-  text-align: right;
-}
-.worldline-tab :deep() .ant-tabs-content-holder {
-  padding-top: 1rem;
+.worldline-tab-pane-container {
+  height: v-bind(dealTabHeight);
 }
 </style>

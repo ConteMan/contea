@@ -1,30 +1,29 @@
 <template>
-  <div class="jike-scroll-container relative">
-    <a-back-top :target="getTarget" :visibility-height="500">
-      <span class="text-size-2xl opacity-70 hover:(opacity-100)">
-        <ic-outline-keyboard-arrow-up />
-      </span>
-    </a-back-top>
-
+  <div class="flex flex-col">
     <!-- 顶部操作栏 -->
-    <div class="tags sticky top-0 w-full z-10 bg-white pb-2 pl-2">
+    <div class="w-full bg-white pb-3 pl-2">
       <a class="cursor-pointer leading-none align-middle mr-4" @click="refresh()">
         <mdi-refresh :class="{'animate-spin': loading}" />
       </a>
       <template v-for="item in data.moduleTypes" :key="item.key">
-        <a-checkable-tag
-          :checked="data.selectedTag === item.value"
-          @change="(checked: boolean) => handleChange(item.value, checked)"
+        <n-tag
+          class="mr-2 text-xs h-auto py-0.8"
+          checkable
+          :checked="selectedTag === item.value"
+          @update:checked="checked => handleChange(item.value, checked)"
         >
           {{ item.key }}
-        </a-checkable-tag>
+        </n-tag>
       </template>
     </div>
 
     <!-- 内容列表 -->
-    <div class="max-w-[800px] mb-4 space-y-4">
+    <n-scrollbar class="jike-content-container">
+      <n-back-top :right="10000" :bottom="8" to=".jike-content-container" class="left-1 text-xl text-gray-400 shadow-none hover:(shadow-none text-[#fd2720])">
+        <bx-bx-arrow-to-top />
+      </n-back-top>
       <template v-for="item in dealList" :key="item.id">
-        <div class="p-4 rounded-md shadow-sm hover:(shadow-md bg-[#FFE012] bg-opacity-40)">
+        <div class="flex flex-col p-4 rounded-md shadow-sm hover:(shadow-md bg-[#FFE012] bg-opacity-40)">
           <!-- 个人动态更新 -->
           <template v-if="item.type === 'PERSONAL_UPDATE'">
             <div class="space-x-1 font-medium">
@@ -97,7 +96,7 @@
           更多
         </a-button>
       </div>
-    </div>
+    </n-scrollbar>
   </div>
 </template>
 
@@ -128,7 +127,7 @@ const data = reactive({
   list: [] as any[],
   pageInfo: {} as any,
 })
-const { loading, loadmore, config } = toRefs(data)
+const { loading, loadmore, config, selectedTag } = toRefs(data)
 
 // 列表数据
 const getPage = async() => {
@@ -198,20 +197,3 @@ const contentDeal = (data: any) => {
   return content
 }
 </script>
-
-<script lang="ts">
-export default {
-  methods: {
-    getTarget() {
-      return document.querySelector('.jike-scroll-container') as HTMLElement
-    },
-  },
-}
-</script>
-
-<style>
-.ant-back-top {
-  left: 1rem;
-  bottom: 1rem;
-}
-</style>

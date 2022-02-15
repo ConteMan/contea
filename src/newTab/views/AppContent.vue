@@ -1,5 +1,7 @@
 <template>
-  <router-view />
+  <div class="app-content-container max-h-screen min-h-screen overflow-y-auto">
+    <router-view />
+  </div>
   <SearchModal />
 </template>
 <script setup lang="ts">
