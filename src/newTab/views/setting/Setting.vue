@@ -1,45 +1,46 @@
 <template>
   <div class="w-full max-w-[700px] rounded-md">
-    <a-collapse v-model:activeKey="activeKey" :bordered="false" class="max-w-full">
-      <template #expandIcon="{ isActive }">
-        <caret-right-outlined :rotate="isActive ? 90 : 0" />
-      </template>
-      <a-collapse-panel key="base" header="基础" :style="customStyle">
+    <n-collapse v-model:expanded-names="expandedNames" class="max-w-full">
+      <n-collapse-item name="base" title="基础">
         <BaseModule />
-      </a-collapse-panel>
+      </n-collapse-item>
 
-      <a-collapse-panel key="v2ex" header="V2EX" :style="customStyle">
+      <n-collapse-item name="wakatime" title="WakaTime">
+        <WakaTime />
+      </n-collapse-item>
+
+      <n-collapse-item name="v2ex" title="V2EX">
         <V2exModule />
-      </a-collapse-panel>
+      </n-collapse-item>
 
-      <a-collapse-panel key="sspai" header="少数派" :style="customStyle">
+      <n-collapse-item name="sspai" title="少数派">
         <SspaiModule />
-      </a-collapse-panel>
+      </n-collapse-item>
 
-      <a-collapse-panel key="github" header="Github" :style="customStyle">
+      <n-collapse-item name="github" title="Github">
         <GithubModule />
-      </a-collapse-panel>
+      </n-collapse-item>
 
-      <a-collapse-panel key="bgm" header="番组计划" :style="customStyle">
+      <n-collapse-item name="bgm" title="番组计划">
         <BgmModule />
-      </a-collapse-panel>
+      </n-collapse-item>
 
-      <a-collapse-panel key="weather" header="天气" :style="customStyle">
+      <n-collapse-item name="weather" title="天气">
         <WeatherModule />
-      </a-collapse-panel>
+      </n-collapse-item>
 
-      <a-collapse-panel key="zhihu" header="知乎" :style="customStyle">
+      <n-collapse-item name="zhihu" title="知乎">
         <ZhihuModule />
-      </a-collapse-panel>
+      </n-collapse-item>
 
-      <a-collapse-panel key="bilibili" header="Bilibili" :style="customStyle">
+      <n-collapse-item name="bilibili" title="Bilibili">
         <BilibiliModule />
-      </a-collapse-panel>
+      </n-collapse-item>
 
-      <a-collapse-panel key="test" header="测试" :style="customStyle">
+      <n-collapse-item name="test" title="测试">
         <TestModule />
-      </a-collapse-panel>
-    </a-collapse>
+      </n-collapse-item>
+    </n-collapse>
   </div>
 </template>
 <script lang="ts" setup>
@@ -52,13 +53,21 @@ import GithubModule from './modules/Github.vue'
 import WeatherModule from './modules/Weather.vue'
 import ZhihuModule from './modules/Zhihu.vue'
 import BilibiliModule from './modules/Bilibili.vue'
+import WakaTime from './modules/WakaTime.vue'
 
-const customStyle = 'background: #fafafa; margin-bottom: 16px; border: 0; overflow: hidden;'
-
-const activeKey = ref([])
+const expandedNames = ref([])
 </script>
-<style lang="less">
-.ant-collapse-borderless {
-  background-color: #fff;
+
+<style scoped lang="less">
+.n-collapse .n-collapse-item {
+  margin: 0.5rem 0 0 0;
+  background-color: rgba(209, 213, 219, 0.178);
+  border-radius: 0.25rem;
+  :deep(.n-collapse-item__header) {
+    padding: 1rem;
+  }
+  :deep(.n-collapse-item__content-wrapper) {
+    padding: 0 2rem 1rem 2rem;
+  }
 }
 </style>

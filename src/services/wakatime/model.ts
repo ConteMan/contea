@@ -13,3 +13,5 @@ export const setting: Config = {
   alarm: 60,
   showCard: true,
 }
+
+export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'expried' | 'alarm' | 'showCard'>

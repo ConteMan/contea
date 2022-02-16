@@ -100,7 +100,6 @@ const getData = async(refresh = false) => {
   else
     data.loading = false
 }
-getData()
 
 const init = async() => {
   data.config = await ConfigState.getItem(module)

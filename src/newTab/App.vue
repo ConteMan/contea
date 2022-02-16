@@ -34,5 +34,8 @@ const themeOverrides: GlobalThemeOverrides = {
     boxShadowFocus: '#fff',
     caretColor: '#e5e5e5',
   },
+  Switch: {
+    boxShadowFocus: '#fff',
+  },
 }
 </script>
