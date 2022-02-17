@@ -12,6 +12,7 @@ import { setting as weather } from '~/services/weather/model'
 import { setting as zhihu } from '~/services/zhihu/model'
 import { setting as movie } from '~/services/movie/model'
 import { setting as bilibili } from '~/services/bilibili/model'
+import { setting as wallpaper } from '~/services/wallpaper/model'
 
 export const modules = ['v2ex', 'sspai', 'weread', 'github', 'juejin', 'one', 'wakatime', 'jike', 'bgm', 'weather', 'zhihu', 'movie', 'bilibili']
 
@@ -30,6 +31,7 @@ export type Setting = {
   zhihu: typeof zhihu
   movie: typeof movie
   bilibili: typeof bilibili
+  wallpaper: typeof wallpaper
 }
 
 export type SettingKeys = keyof Setting
@@ -49,4 +51,5 @@ export default {
   zhihu,
   movie,
   bilibili,
+  wallpaper,
 }

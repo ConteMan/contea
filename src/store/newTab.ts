@@ -10,7 +10,9 @@ export const useNewTabState = defineStore('newTab', {
         url: '',
         mode: 'random', // fixed, random
         opacity: 10,
+        source: [],
       },
+      settingDrawer: false,
     }
   },
   actions: {
@@ -18,7 +20,7 @@ export const useNewTabState = defineStore('newTab', {
       this.tabSelected = name
     },
     async changeWallpaper() {
-      const info = await wallpaperService.random()
+      const info = await wallpaperService.random(this.wallpaper.source)
       if (info.commonImgUrl) {
         this.wallpaper.url = info.commonImgUrl
         this.wallpaper = { ...this.wallpaper }

@@ -34,11 +34,41 @@
       </n-popover>
       <mdi-pin-off-outline v-if="wallpaperInfo.mode === 'random'" class="opacity-30 cursor-pointer hover:(opacity-100)" @click="changeMode()" />
       <mdi-pin v-else class="opacity-30 cursor-pointer hover:(opacity-100)" @click="changeMode()" />
+      <mdi-information-outline class="opacity-30 cursor-pointer hover:(opacity-100)" @click="data.showDrawer = !data.showDrawer" />
     </div>
+    <n-drawer
+      v-model:show="showDrawer"
+      class="py-4 px-4"
+      placement="bottom"
+      :auto-focus="false"
+    >
+      <div class="pb-2">
+        <span>当前</span>
+        <div>
+          <a :href="wallpaperInfo.url">{{ wallpaperInfo.url }}</a>
+        </div>
+      </div>
+      <n-grid cols="24">
+        <n-grid-item :span="24">
+          <span>来源</span>
+          <n-cascader
+            v-model:value="wallpaperInfo.source"
+            multiple
+            check-strategy="child"
+            :options="wallpaperSourceOptions"
+            label-field="name"
+            value-field="key"
+            children-field="category"
+          >
+          </n-cascader>
+        </n-grid-item>
+      </n-grid>
+    </n-drawer>
   </div>
 </template>
 <script setup lang="ts">
 import { useNewTabState } from '~/store/newTab'
+import { types } from '~/services/wallpaper/model'
 
 const data = reactive({
   wallpaperInfo: {} as any,
@@ -46,8 +76,10 @@ const data = reactive({
   backgroundOpacity: 0,
   settingBg: false, // 设置栏背景显隐
   showOpacity: false, // Opacity 按钮显隐
+  showDrawer: false, // 抽屉显隐
+  wallpaperSourceOptions: [] as any,
 })
-const { wallpaperInfo, backgroundOpacity, settingBg, showOpacity } = toRefs(data)
+const { wallpaperInfo, backgroundOpacity, settingBg, showOpacity, showDrawer, wallpaperSourceOptions } = toRefs(data)
 const popover = ref(null)
 
 const newTabState = useNewTabState()
@@ -66,6 +98,7 @@ const init = async() => {
       }
     }
   }
+  data.wallpaperSourceOptions = types
 }
 init()
 
@@ -77,11 +110,11 @@ const changeMode = async() => {
   newTabState.changeWallpaperMode()
 }
 
-watch([wallpaperInfo], ([newWallpaperInfo]) => {
+watch(() => data.wallpaperInfo, (newWallpaperInfo) => {
   data.wallpaperStyle = {
     'background-image': `-webkit-cross-fade(url(data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==), url(${newWallpaperInfo.url}), ${newWallpaperInfo.opacity}%)`,
   }
-})
+}, { deep: true })
 
 watch(backgroundOpacity, (newValue) => {
   newTabState.changeWallpaperOpcity(newValue)
@@ -102,7 +135,7 @@ watch(popover, (newValue) => {
   data.settingBg = !!newValue
 })
 </script>
-<style lang="less">
+<style lang="less" scoped>
 .zen-opacity-slider {
   border-radius: 1.5rem;
 }
