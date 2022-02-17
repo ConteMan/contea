@@ -44,16 +44,16 @@
   </div>
 </template>
 <script lang="ts" setup>
-import BaseModule from './modules/Base.vue'
-import V2exModule from './modules/V2ex.vue'
-import TestModule from './modules/Test.vue'
-import SspaiModule from './modules/Sspai.vue'
-import BgmModule from './modules/Bgm.vue'
-import GithubModule from './modules/Github.vue'
-import WeatherModule from './modules/Weather.vue'
-import ZhihuModule from './modules/Zhihu.vue'
-import BilibiliModule from './modules/Bilibili.vue'
-import WakaTime from './modules/WakaTime.vue'
+import BaseModule from '~/components/setting/modules/Base.vue'
+import V2exModule from '~/components/setting/modules/V2ex.vue'
+import TestModule from '~/components/setting/modules/Test.vue'
+import SspaiModule from '~/components/setting/modules/Sspai.vue'
+import BgmModule from '~/components/setting/modules/Bgm.vue'
+import GithubModule from '~/components/setting/modules/Github.vue'
+import WeatherModule from '~/components/setting/modules/Weather.vue'
+import ZhihuModule from '~/components/setting/modules/Zhihu.vue'
+import BilibiliModule from '~/components/setting/modules/Bilibili.vue'
+import WakaTime from '~/components/setting/modules/WakaTime.vue'
 
 const expandedNames = ref([])
 </script>

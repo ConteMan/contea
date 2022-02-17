@@ -1,6 +1,6 @@
 <template>
   <n-modal
-    v-model:show="showModal"
+    v-model:show="show"
     transform-origin="center"
     :auto-focus="true"
   >
@@ -117,7 +117,6 @@ const webSearch = [ // 搜索引擎列表
 const defaultSearchIndex = 0
 
 const data = reactive({
-  showModal: false as any,
   searchContent: '',
   result: [] as any,
   historyResult: [] as any,
@@ -127,12 +126,11 @@ const data = reactive({
   mode: 1, // 1 鼠标，2 键盘
   searchMode: 1, // 1 历史记录， 2 书签, 3 搜索引擎
 })
-const { showModal, searchContent, result, divs } = toRefs(data)
+const { searchContent, result, divs } = toRefs(data)
 
 // 状态管理搜索状态
 const modalState = useModalState()
 const { show } = storeToRefs(modalState)
-data.showModal = show
 
 // 清空搜索内容
 const clearSearch = () => {

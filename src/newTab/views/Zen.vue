@@ -68,7 +68,7 @@
 </template>
 <script setup lang="ts">
 import { useNewTabState } from '~/store/newTab'
-import { types } from '~/services/wallpaper/model'
+import { SourceTypes } from '~/services/wallpaper/model'
 
 const data = reactive({
   wallpaperInfo: {} as any,
@@ -98,7 +98,7 @@ const init = async() => {
       }
     }
   }
-  data.wallpaperSourceOptions = types
+  data.wallpaperSourceOptions = SourceTypes
 }
 init()
 

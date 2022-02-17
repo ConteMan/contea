@@ -3,17 +3,21 @@
     <router-view />
   </div>
   <SearchModal />
+  <SettingDrawer />
 </template>
 <script setup lang="ts">
 import { useEventListener, useActiveElement } from '@vueuse/core'
 import SearchModal from '~/components/search/Search.vue'
+import SettingDrawer from '~/components/setting/SettingDrawer.vue'
 
 import { useModalState } from '~/store/modal'
+import { useNewTabState } from '~/store/newTab'
 
 const defaultPath = '/zen'
 const modulePath = '/module'
 const searchKey = 'q'
 const zenKey = 'z'
+const settingKey = 's'
 
 const router = useRouter()
 const route = useRoute()
@@ -31,10 +35,6 @@ browser.runtime.onMessage.addListener(async(message, sender) => {
 })
 
 const modalState = useModalState()
-const { show: showModal } = storeToRefs(modalState)
-const showSearch = async() => {
-  modalState.change(true)
-}
 
 const activeElement = useActiveElement()
 const notUsingInput = computed(() =>
@@ -44,13 +44,16 @@ const notUsingInput = computed(() =>
 
 useEventListener(window, 'keyup', (e: any) => {
   // 搜索
-  if (e.key === searchKey) {
-    if (!showModal.value)
-      showSearch()
-  }
+  if (e.key === searchKey && notUsingInput.value)
+    modalState.change(true)
 
   // 模块、禅模式切换
   if (e.key === zenKey && notUsingInput.value) // 非输入模式
     changeMode()
+
+  if (e.key === settingKey && notUsingInput.value) {
+    const newTabState = useNewTabState()
+    newTabState.changeSettingDrawer()
+  }
 })
 </script>

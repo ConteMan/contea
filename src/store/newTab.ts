@@ -33,6 +33,9 @@ export const useNewTabState = defineStore('newTab', {
       this.wallpaper.opacity = opcity
       this.wallpaper = { ...this.wallpaper }
     },
+    changeSettingDrawer() {
+      this.settingDrawer = !this.settingDrawer
+    },
   },
   persist: {
     key: 'newTab',

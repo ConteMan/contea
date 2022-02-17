@@ -6,7 +6,6 @@
         <n-tab name="movie" tab="影视" />
         <n-tab name="sport" tab="体育" />
         <n-tab name="status" tab="状态" />
-        <n-tab name="setting" tab="设置" />
       </n-tabs>
       <div class="module-tab-pane-container w-full">
         <KeepAlive>
@@ -17,7 +16,6 @@
         </KeepAlive>
         <SportList v-if="tabSelected === 'sport'" class="sport-list pl-4 pb-4 h-[calc(100%)] overflow-y-auto" />
         <StatusList v-if="tabSelected === 'status'" class="status-list pl-4 mt-4 overflow-y-auto" />
-        <SettingList v-if="tabSelected === 'setting'" class="setting-list pl-4 mt-4 pb-4 h-[calc(100%)] overflow-y-auto" />
       </div>
     </div>
     <div>
@@ -32,7 +30,6 @@ import { useElementBounding } from '@vueuse/core'
 import WorldlineList from '~/newTab/views/worldline/List.vue'
 import SportList from '~/newTab/views/sport/List.vue'
 import StatusList from '~/newTab/views/status/Status.vue'
-import SettingList from '~/newTab/views/setting/Setting.vue'
 import MovieList from '~/newTab/views/movie/MovieList.vue'
 
 import { useNewTabState } from '~/store/newTab'

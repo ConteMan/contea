@@ -32,6 +32,6 @@ export const alphacodersInfo = {
   ],
 }
 
-export const types = [
+export const SourceTypes = [
   alphacodersInfo,
 ]
