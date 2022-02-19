@@ -4,10 +4,12 @@ export type Config = BaseConfig & {
   enableTypes: string[]
 }
 
+export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'expried' | 'alarm' | 'showCard'>
+
 export const setting: Config = {
   key: 'jike',
   name: '即刻',
-  enable: true,
+  enable: false,
   site: 'https://web.okjike.com',
   apiUrl: 'https://web-api.okjike.com/api/graphql',
   expried: 3600,

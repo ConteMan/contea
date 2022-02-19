@@ -4,14 +4,17 @@ export type Config = BaseConfig & {
   apiUrl_2: string
 }
 
+export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'expried' | 'alarm' | 'showCard'>
+
 export const setting: Config = {
   key: 'weread',
   name: '微信读书',
-  enable: true,
+  enable: false,
   site: 'https://weread.qq.com',
   apiUrl: 'https://weread.qq.com/web',
   apiUrl_2: 'https://i.weread.qq.com',
   expried: 3600,
+  alarm: 60,
   showCard: true,
 }
 

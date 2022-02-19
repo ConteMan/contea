@@ -3,6 +3,8 @@ import type { BaseConfig } from '~/services/base/model'
 export type Config = BaseConfig & {
 }
 
+export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'expried' | 'alarm' | 'showCard'>
+
 export const setting: Config = {
   key: 'weather',
   name: 'Weather',
@@ -13,5 +15,3 @@ export const setting: Config = {
   alarm: 60,
   showCard: true,
 }
-
-export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'expried' | 'alarm' | 'showCard'>

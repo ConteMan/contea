@@ -7,10 +7,12 @@ export type Config = BaseConfig & {
   enableTypes?: types[]
 }
 
+export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'token' | 'expried' | 'alarm' | 'showCard' | 'enableTypes'>
+
 export const setting: Config = {
   key: 'v2ex',
   name: 'V2EX',
-  enable: true,
+  enable: false,
   site: 'https://www.v2ex.com',
   url: 'https://www.v2ex.com',
   apiUrl: '',

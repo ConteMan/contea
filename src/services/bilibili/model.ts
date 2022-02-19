@@ -6,10 +6,12 @@ export type Config = BaseConfig & {
   liveApiUrl: string
 }
 
+export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'expried' | 'alarm' | 'showCard'>
+
 export const setting: Config = {
   key: 'bilibili',
   name: '哔哩哔哩',
-  enable: true,
+  enable: false,
   site: 'https://www.bilibili.com', // 主站
   tSite: 'https://t.bilibili.com/', // 动态
   spaceSite: 'https://space.bilibili.com', // 空间
@@ -19,5 +21,3 @@ export const setting: Config = {
   expried: 3600,
   showCard: true,
 }
-
-export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'expried' | 'alarm' | 'showCard'>

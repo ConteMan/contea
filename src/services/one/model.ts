@@ -5,6 +5,8 @@ export type Config = BaseConfig & {
   enableTypes: string[]
 }
 
+export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'expried' | 'alarm' | 'showCard'>
+
 export const setting: Config = {
   key: 'one',
   name: '一个',

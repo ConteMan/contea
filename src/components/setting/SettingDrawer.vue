@@ -1,7 +1,7 @@
 <template>
   <n-drawer
     v-model:show="settingDrawer"
-    class="py-4 px-4"
+    class="pt-4 px-4"
     placement="right"
     width="500px"
     :auto-focus="false"

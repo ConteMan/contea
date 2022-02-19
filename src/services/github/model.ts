@@ -5,10 +5,12 @@ export type Config = BaseConfig & {
   gistUrl: string
 }
 
+export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'token'| 'expried' | 'alarm' | 'showCard'>
+
 export const setting: Config = {
   key: 'github',
   name: 'Github',
-  enable: true,
+  enable: false,
   site: 'https://github.com',
   apiUrl: 'https://api.github.com',
   gistUrl: 'https://gist.github.com',
@@ -17,8 +19,6 @@ export const setting: Config = {
   alarm: 60,
   showCard: true,
 }
-
-export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'token' | 'alarm' | 'showCard'>
 
 export type StarredParams = {
   sort: string

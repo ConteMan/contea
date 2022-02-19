@@ -4,10 +4,12 @@ export type Config = BaseConfig & {
   enableTypes: string[]
 }
 
+export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'expried' | 'alarm' | 'showCard'>
+
 export const setting = {
   key: 'juejin',
   name: '掘金',
-  enable: true,
+  enable: false,
   site: 'https://juejin.cn',
   apiUrl: 'https://api.juejin.cn',
   expried: 3600,

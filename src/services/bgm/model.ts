@@ -11,16 +11,16 @@ export type Config = BaseConfig & {
   alarm?: number
 }
 
+export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl'| 'expried' | 'alarm'>
+
 export const setting: Config = {
   key: 'bgm',
   name: 'Bangumi',
-  enable: true,
+  enable: false,
   site: 'https://bgm.tv',
   apiUrl: 'https://api.bgm.tv/v0',
   expried: 3600,
   token: '',
-  alarm: 10,
+  alarm: 60,
   showCard: false,
 }
-
-export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'token' | 'alarm' | 'showCard'>

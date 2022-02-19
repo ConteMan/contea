@@ -11,38 +11,49 @@
     <n-form-item label="开启" path="enable">
       <n-switch v-model:value="model.enable" size="small" :round="false" />
     </n-form-item>
+
     <n-form-item label="卡片" path="showCard">
       <n-switch v-model:value="model.showCard" size="small" :round="false" />
     </n-form-item>
+
     <n-form-item label="定时" path="alarm">
-      <n-input-number v-model:value="model.alarm">
+      <n-input-number v-model:value="model.alarm" class="w-full">
         <template #suffix>
           分钟
         </template>
       </n-input-number>
     </n-form-item>
+
     <n-form-item label="过期" path="expried">
-      <n-input-number v-model:value="model.expried">
+      <n-input-number v-model:value="model.expried" class="w-full">
         <template #suffix>
           分钟
         </template>
       </n-input-number>
     </n-form-item>
+
     <n-form-item label="重置">
-      <n-switch v-model:value="resetLoading" :loading="resetLoading" size="small" :round="false" @update:value="reset()" />
+      <n-switch
+        v-model:value="resetLoading"
+        :loading="resetLoading"
+        :round="false"
+        size="small"
+        @update:value="reset()"
+      />
     </n-form-item>
   </n-form>
 </template>
+
 <script setup lang="ts">
 import { useTimeoutFn } from '@vueuse/core'
 import { useMessage } from 'naive-ui'
-import type { ShowConfig } from '~/services/wakatime/model'
 
 import ConfigState from '~/models/keyValue/configState'
 
-const message = useMessage()
+import type { ShowConfig } from '~/services/juejin/model'
+const module = 'juejin'
 
-const module = 'wakatime'
+const message = useMessage()
 
 const data = reactive({
   hasInit: false,
@@ -63,8 +74,6 @@ init()
 
 // 进行设置
 const modelSet = async() => {
-  // eslint-disable-next-line no-console
-  console.log('[mergeset] > ', true)
   await ConfigState.mergeSet(module, model.value)
 }
 

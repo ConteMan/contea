@@ -1,11 +1,3 @@
-export type InfoItem = {
-  module: string
-  module_type: string
-  [other: string]: any
-}
-
-export type InfoList = InfoItem []
-
 export type BaseConfig = {
   key: string
   name: string // 模块名称
@@ -18,22 +10,13 @@ export type BaseConfig = {
   [other: string]: any
 }
 
-export type BaseModule = {
-  ca_login?: boolean
-  ca_expried_at?: number
-  ca_updated_at?: number
-}
-
-// 模块 model 基础
-export type BaseModel = {
-  showCard: boolean
-}
-
-// 基础配置
 export type Config = BaseConfig & {
   showCards: string[]
   defaultPath: string
 }
+
+export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'expried' | 'alarm'>
+
 export const setting: Config = {
   key: 'default',
   name: '基础',
@@ -44,4 +27,23 @@ export const setting: Config = {
   expried: 3600,
   showCards: [],
   defaultPath: '/zen',
+}
+
+export type InfoItem = {
+  module: string
+  module_type: string
+  [other: string]: any
+}
+
+export type InfoList = InfoItem []
+
+export type BaseModule = {
+  ca_login?: boolean
+  ca_expried_at?: number
+  ca_updated_at?: number
+}
+
+// 模块 model 基础
+export type BaseModel = {
+  showCard: boolean
 }

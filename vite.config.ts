@@ -39,6 +39,7 @@ export const sharedConfig: UserConfig = {
   },
   plugins: [
     Vue(),
+    // https://github.com/vbenjs/vite-plugin-vue-setup-extend
     VueSetupExtend(),
 
     AutoImport({
@@ -57,7 +58,9 @@ export const sharedConfig: UserConfig = {
 
     // https://github.com/antfu/unplugin-vue-components
     Components({
-      dirs: [r('src/components'), r('src/options/components')],
+      dirs: [
+        r('src/components'),
+      ],
       // generate `components.d.ts` for ts support with Volar
       dts: true,
       resolvers: [

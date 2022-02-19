@@ -11,6 +11,8 @@ export type Config = BaseConfig & {
   }
 }
 
+export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'expried' | 'alarm'>
+
 export const setting: Config = {
   key: 'movie',
   name: '影视',
@@ -29,8 +31,6 @@ export const setting: Config = {
     },
   },
 }
-
-export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'expried' | 'alarm' | 'showCard'>
 
 export type Item = {
   title?: string

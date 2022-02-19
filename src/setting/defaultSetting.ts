@@ -13,8 +13,9 @@ import { setting as zhihu } from '~/services/zhihu/model'
 import { setting as movie } from '~/services/movie/model'
 import { setting as bilibili } from '~/services/bilibili/model'
 import { setting as wallpaper } from '~/services/wallpaper/model'
+import { setting as sport } from '~/services/sport/model'
 
-export const modules = ['v2ex', 'sspai', 'weread', 'github', 'juejin', 'one', 'wakatime', 'jike', 'bgm', 'weather', 'zhihu', 'movie', 'bilibili']
+export const modules = ['v2ex', 'sspai', 'weread', 'github', 'juejin', 'one', 'wakatime', 'jike', 'bgm', 'weather', 'zhihu', 'movie', 'bilibili', 'sport', 'wallpaper']
 
 export type Setting = {
   base: typeof base
@@ -32,6 +33,7 @@ export type Setting = {
   movie: typeof movie
   bilibili: typeof bilibili
   wallpaper: typeof wallpaper
+  sport: typeof sport
 }
 
 export type SettingKeys = keyof Setting
@@ -52,4 +54,5 @@ export default {
   movie,
   bilibili,
   wallpaper,
+  sport,
 }

@@ -6,10 +6,12 @@ export type Config = BaseConfig & {
   enableTypes: any[]
 }
 
+export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'expried' | 'alarm' | 'showCard' | 'enableTypes'>
+
 export const setting: Config = {
   key: 'sspai',
   name: '少数派',
-  enable: true,
+  enable: false,
   site: 'https://sspai.com',
   url: 'https://sspai.com',
   apiUrl: 'https://sspai.com/api/v1',
