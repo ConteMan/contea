@@ -51,10 +51,10 @@ class AlarmSetting {
     if (!enable)
       return false
 
-    if (module === 'default') {
+    if (module === 'base') {
       const count = await requestState.clean()
       // eslint-disable-next-line no-console
-      console.log('[ Alarm.default.clean ] >', count)
+      console.log('[ Alarm.base.clean ] >', count)
     }
 
     if (module === 'v2ex') {

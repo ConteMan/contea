@@ -18,8 +18,8 @@
         <StatusList v-if="tabSelected === 'status'" class="status-list pl-4 mt-4 overflow-y-auto" />
       </div>
     </div>
-    <div>
-      <CardList class="max-w-[400px] min-w-[400px] max-h-screen" />
+    <div class="pt-4">
+      <CardList class="max-w-[400px] min-w-[400px] max-h-full" />
     </div>
   </div>
 </template>

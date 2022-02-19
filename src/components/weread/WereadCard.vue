@@ -26,9 +26,9 @@
           </div>
         </div>
         <!-- 书籍展示 -->
-        <div class="pt-2">
+        <div v-if="bookList.length" class="pt-2">
           <div class="pt-2 flex flex-row flex-wrap justify-between w-full">
-            <div v-for="book in readDetail.datas[0].readMeta.books" :key="book.bookId" class="flex items-center">
+            <div v-for="book in bookList" :key="book.bookId" class="flex items-center">
               <div class="book-img-container h-[100px] mb-2">
                 <img class="book-img w-full h-full rounded-sm duration-300" :src="book.detail.cover">
               </div>
@@ -93,11 +93,6 @@ const data = reactive({
 
 const { loading, config, login, memberCard, readDetail, showExtend, refreshLoading, extendInfo } = toRefs(data)
 
-const init = async() => {
-  data.config = await ConfigState.getItem(module)
-}
-init()
-
 const getData = async(refresh = false) => {
   if (refresh)
     data.refreshLoading = true
@@ -115,7 +110,17 @@ const getData = async(refresh = false) => {
   else
     data.loading = false
 }
-getData()
+
+const init = async() => {
+  data.config = await ConfigState.getItem(module)
+  await getData()
+}
+init()
+
+// 处理展示书籍，取前两本
+const bookList = computed(() => {
+  return readDetail.value.datas[0].readMeta.books ? (readDetail.value.datas[0].readMeta.books).slice(0, 2) : []
+})
 </script>
 
 <style lang="less">
