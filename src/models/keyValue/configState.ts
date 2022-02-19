@@ -25,10 +25,16 @@ class ConfigState extends AsyncModels.keyValue<InfoItem, DexieDriver> {
 
   // 初始化
   async init(module: SettingKeys | 'all' = 'all') {
-    if (module === 'all')
+    if (module === 'all') {
       await this.bulkSetItem(defaultSetting)
-    else
+      Object.keys(defaultSetting).forEach(async(item) => {
+        await Alarm.setAlarm(item)
+      })
+    }
+    else {
       await this.setItem(module, defaultSetting[module])
+      await Alarm.setAlarm(module)
+    }
   }
 
   /**

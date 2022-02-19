@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="px-4 max-w-[640px]">
     <div class="rounded-md bg-[#f7f7f7] p-4 w-full">
       <div class="pb-4 flex items-center">
         <span class="">定时任务 / Alarms</span>
@@ -13,8 +13,10 @@
         </template>
         <template #right>
           <span>{{ dayjs(item.scheduledTime).format('YYYY-MM-DD HH:mm:ss SSS') }}</span>
-          <span v-if="item.periodInMinutes" class="border-l-1 mx-2"></span>
-          <span v-if="item.periodInMinutes" class="mr-2">{{ item.periodInMinutes }} min</span>
+          <div v-if="item.periodInMinutes" class="border-l-1 mx-2 w-[1px] h-[80%]"></div>
+          <span v-if="item.periodInMinutes">{{ item.periodInMinutes }} min</span>
+          <span class="border-l-1 mx-2 w-[1px] h-[80%]"></span>
+          <mdi-delete class="cursor-pointer hover:(text-red-400)" @click="deleteAlarm(item.name)" />
         </template>
       </SettingItem>
     </div>
@@ -46,4 +48,11 @@ const getAlarms = async(refresh = false) => {
   }
 }
 getAlarms()
+
+const deleteAlarm = async(name: string) => {
+  const res = await Alarm.clear(name)
+  // eslint-disable-next-line no-console
+  console.log(res)
+  await getAlarms()
+}
 </script>

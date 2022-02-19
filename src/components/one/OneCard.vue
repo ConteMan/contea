@@ -19,12 +19,12 @@
             {{ current.questionTitle }}
           </a>
         </div>
-        <div class="pt-4 flex">
-          <div class="flex-grow-0 cursor-pointer inline-block hover:(animate-pulse)" @click="refresh(false)">
+        <div class="pt-4 flex justify-between">
+          <div class="cursor-pointer inline-block hover:(animate-pulse)" @click="refresh(false)">
             {{ current.vol }}
           </div>
           <div
-            class="flex-grow text-right text-white cursor-pointer inline-block w-full font-bold opacity-0 hover:(underline underline-offset-2 animate-pulse opacity-100 duration-200)"
+            class="text-right text-white cursor-pointer inline-block font-bold opacity-0 hover:(underline underline-offset-2 animate-pulse opacity-100 duration-200)"
             @click.stop="openSite(config.site)"
           >
             {{ config.name }}

@@ -108,11 +108,13 @@ const init = async() => {
 init()
 
 const getData = async(refresh = false) => {
-  if (refresh)
-    data.refreshLoading = true
-
   if (data.error)
     await init()
+
+  if (refresh) {
+    data.refreshLoading = true
+    data.error = false
+  }
 
   try {
     const { ca_updated_at, ca_expried_at, data: userData } = await Github.user(refresh)

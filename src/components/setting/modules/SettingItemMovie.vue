@@ -70,7 +70,7 @@ init()
 
 // 进行设置
 const modelSet = async() => {
-  await ConfigState.mergeSet(module, model.value)
+  await ConfigState.mergeSet(module, toRaw(model.value))
 }
 
 // 重置

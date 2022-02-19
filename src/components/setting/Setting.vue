@@ -86,6 +86,11 @@ const list = [
     component: modules.SettingItemWallpaper,
   },
   {
+    name: 'weather',
+    title: '天气',
+    component: modules.SettingItemWeather,
+  },
+  {
     name: 'weread',
     title: '微信读书',
     component: modules.SettingItemWeread,

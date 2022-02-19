@@ -18,7 +18,7 @@ export type Config = BaseConfig & {
 export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'expried' | 'alarm'>
 
 export const setting: Config = {
-  key: 'default',
+  key: 'base',
   name: '基础',
   enable: true,
   site: '',

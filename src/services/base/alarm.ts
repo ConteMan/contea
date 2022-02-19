@@ -14,11 +14,16 @@ class AlarmSetting {
    * @param module - 模块名称
    */
   async setAlarm(module: string) {
-    const exist = await browser.alarms.get(module)
-    if (exist)
-      await browser.alarms.clear(module)
-
     const { enable, alarm } = await configState.getItem(module)
+
+    const exist = await browser.alarms.get(module)
+    if (exist) {
+      if (enable && alarm === exist.periodInMinutes)
+        return true
+      else
+        await browser.alarms.clear(module)
+    }
+
     if (!enable || !alarm)
       return false
 
