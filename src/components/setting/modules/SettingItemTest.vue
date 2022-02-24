@@ -18,6 +18,15 @@
       </div>
     </div>
 
+    <div class="mb-4 flex justify-between items-center">
+      <span>后台操作</span>
+      <div class="space-x-1">
+        <n-button strong secondary type="tertiary" size="small" @click="testFunction(backgrounCommand({ command: 'exec-content-script', param: {} }))">
+          执行脚本
+        </n-button>
+      </div>
+    </div>
+
     <n-log class="break-all" :hljs="hljs" language="naive-log" :log="data.log" />
   </div>
 </template>
@@ -44,5 +53,10 @@ const data = reactive({
 const testFunction = async(functionIns: any) => {
   const res = await functionIns
   data.log += isObject(res) ? `${JSON.stringify(res, null, 2)}\n` : `${String(res)}\n`
+}
+
+const backgrounCommand = async(message: any) => {
+  const extensionId = browser.runtime.id
+  return await browser.runtime.sendMessage(extensionId, message)
 }
 </script>

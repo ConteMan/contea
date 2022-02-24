@@ -54,6 +54,17 @@ class ConfigState extends AsyncModels.keyValue<InfoItem, DexieDriver> {
     const configState = useConfigState()
     await configState.setAll()
   }
+
+  /**
+   * 查询需要执行内容脚本的模块
+   */
+  async getContentScript() {
+    return await this.storage.query()
+      .filter((item) => {
+        return item.enable && item?.contentScript && item?.contentScript.enable && item?.contentScript.alarm > 0
+      })
+      .toArray()
+  }
 }
 
 export default new ConfigState()

@@ -27,7 +27,7 @@ const changeMode = () => {
   router.push({ path })
 }
 
-browser.runtime.onMessage.addListener(async(message, sender) => {
+browser.runtime.onMessage.addListener(async(message: any, sender: any) => {
   if (message.data === 'change-mode')
     changeMode()
 

@@ -20,4 +20,9 @@ export const setting: Config = {
   alarm: 60,
   expried: 3600,
   showCard: true,
+  contentScript: {
+    enable: true,
+    url: 'https://www.bilibili.com',
+    alarm: 10,
+  },
 }

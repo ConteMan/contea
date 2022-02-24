@@ -6,7 +6,7 @@ export type Config = BaseConfig & {
 
 export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'expried' | 'alarm' | 'showCard'>
 
-export const setting = {
+export const setting: Config = {
   key: 'juejin',
   name: '掘金',
   enable: false,
@@ -16,4 +16,9 @@ export const setting = {
   enableTypes: [],
   alarm: 60,
   showCard: true,
+  contentScript: {
+    enable: true,
+    alarm: 10,
+    url: 'https://juejin.cn',
+  },
 }

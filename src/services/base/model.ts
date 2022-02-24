@@ -7,6 +7,11 @@ export type BaseConfig = {
   expried: number // 缓存时间，单位：秒
   showCard?: boolean // 是否显示卡片
   alarm?: number // 定时任务时间，单位：分钟
+  contentScript?: {
+    enable: boolean
+    alarm: number
+    url: string
+  }
   [other: string]: any
 }
 

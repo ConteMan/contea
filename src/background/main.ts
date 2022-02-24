@@ -1,3 +1,4 @@
+import contentScriptService from './contentScriptService'
 import configState from '~/models/keyValue/configState'
 import AlarmService from '~/services/base/alarm'
 
@@ -16,36 +17,56 @@ else {
   console.log('[contea] > build mode')
 }
 
+// 加载内容脚本
+// import('./contentScriptHMR')
+
 /**
  * 安装后初始化
  */
 browser.runtime.onInstalled.addListener((): void => {
   configState.init()
-
-  // 加载内容脚本
-  import('./contentScriptHMR')
 })
 
 /**
  * 消息监听
  */
-browser.runtime.onMessage.addListener(async(message) => {
+browser.runtime.onMessage.addListener(async(message: { command: any; param: any; type?: any; res?: any }, sender) => {
   const { command, param } = message
 
-  let data = {}
-  if (command === 'get-page')
-    data = { command, param }
+  // eslint-disable-next-line no-console
+  console.log('[background.js receive]>', message, sender)
+
+  // 执行内容脚本
+  if (command === 'exec-content-script') {
+    const res = await contentScriptService.execScript()
+    return res
+  }
+
+  // 处理内容脚本
+  if (command === 'deal-content-script') {
+    const { type, res } = param
+
+    // eslint-disable-next-line no-console
+    console.log('[deal-content-script] >', type, res)
+
+    if (type === 'juejin') {
+      // eslint-disable-next-line no-console
+      console.log('[deal-content-script juejin]>', type, res)
+    }
+
+    if (sender.tab?.id)
+      await browser.tabs.remove(sender.tab?.id)
+  }
 
   return {
     command,
-    data,
   }
 })
 
 /**
  * 定时事件监听
  */
-browser.alarms.onAlarm.addListener(async(alarm) => {
+browser.alarms.onAlarm.addListener(async(alarm: { name: any }) => {
   const { name } = alarm
   await AlarmService.alarmDeal(name)
 })
@@ -53,7 +74,7 @@ browser.alarms.onAlarm.addListener(async(alarm) => {
 /**
  * 扩展绑定快捷键监听
  */
-browser.commands.onCommand.addListener(async(command) => {
+browser.commands.onCommand.addListener(async(command: string) => {
   if (command === 'change-mode')
     changeMode()
 })
@@ -79,7 +100,7 @@ async function changeMode() {
 
   // 查询新标签页
   let targetTab = {} as any
-  tabs.every((item) => {
+  tabs.every((item: any) => {
     if (item.url && (item.url === 'chrome://newtab/' || isExtensionPage(item.url))) {
       targetTab = item
       return false

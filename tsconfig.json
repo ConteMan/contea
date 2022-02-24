@@ -24,9 +24,6 @@
       "./types"
     ],
     "paths": {
-      "~o/*": [
-        "src/options/*"
-      ],
       "~/*": [
         "src/*"
       ],

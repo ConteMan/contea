@@ -53,6 +53,10 @@ const dealTabHeight = computed(() => {
 
 const menuOptions = [
   {
+    key: 'divider-1',
+    type: 'divider',
+  },
+  {
     label: 'V2EX',
     key: 'v2ex',
   },
@@ -68,19 +72,35 @@ const menuOptions = [
     label: '知乎',
     key: 'zhihu',
   },
+  {
+    key: 'divider-2',
+    type: 'divider',
+  },
 ]
 
 const dealMenuOptions = computed(() => {
-  return menuOptions.filter((item) => {
+  return menuOptions.filter((item: any) => {
+    if ((item?.type && item.type === 'divider') || item?.disabled)
+      return true
     return _.findIndex(Object.values(data.config), (configItem: any) => {
       return toRaw(configItem.key) === item.key && toRaw(configItem.enable)
     }) > 0
   })
 })
 
+const getDefaultKey = (options: any[]) => {
+  const index = _.findIndex(options, (item: any) => {
+    return item.type !== 'divider' && !item.disabled
+  })
+  if (index < 0)
+    return ''
+  else
+    return options[index].key
+}
+
 const init = () => {
   if (Object.values(dealMenuOptions.value).length)
-    activeKey.value = Object.values(dealMenuOptions.value)[0].key
+    activeKey.value = getDefaultKey(Object.values(dealMenuOptions.value))
 }
 init()
 
@@ -91,7 +111,7 @@ watch(dealMenuOptions, (newValue) => {
   }
 
   if (!activeKey.value && Object.values(newValue).length)
-    activeKey.value = Object.values(newValue)[0].key
+    activeKey.value = getDefaultKey(Object.values(newValue))
 })
 </script>
 

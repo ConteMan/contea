@@ -1,5 +1,6 @@
 import dayjs from 'dayjs'
 
+import contentScriptService from '~/background/contentScriptService'
 import configState from '~/models/keyValue/configState'
 import moduleState from '~/models/keyValue/moduleState'
 import requestState from '~/models/keyValue/requestState'
@@ -44,7 +45,7 @@ class AlarmSetting {
     const configInfo = await configState.getItem(module)
 
     let moduleInfo: any
-    if (['v2ex', 'bilibili'].includes(module))
+    if (['v2ex', 'bilibili', 'juejin'].includes(module))
       moduleInfo = await moduleState.getItem(module)
 
     const { enable } = configInfo
@@ -75,6 +76,12 @@ class AlarmSetting {
       const { data } = moduleInfo
       if (!data.sign || !data.sign.date || dayjs().isAfter(dayjs(data.sign.date), 'day'))
         await bilibili.sign()
+    }
+
+    if (module === 'juejin') {
+      const { data } = moduleInfo
+      if (!data.mission || !data.mission.date || dayjs().isAfter(dayjs(data.mission.date), 'day'))
+        await contentScriptService.execScriptByModule(module)
     }
 
     return true

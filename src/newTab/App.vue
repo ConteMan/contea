@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import { NConfigProvider, GlobalThemeOverrides, zhCN, dateZhCN } from 'naive-ui'
-import AppContent from './views/AppContent.vue'
+import AppContent from '~/newTab/layout/AppContent.vue'
 
 const data = reactive({
   namespace: 'contea-namespace',
