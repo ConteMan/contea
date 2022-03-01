@@ -10,7 +10,9 @@ export const useNewTabState = defineStore('newTab', {
         url: '',
         mode: 'random', // fixed, random
         opacity: 10,
-        source: [],
+        source: [
+          'alphacoders-anime',
+        ],
       },
       settingDrawer: false,
     }
