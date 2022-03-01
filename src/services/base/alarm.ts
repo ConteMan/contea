@@ -42,11 +42,16 @@ class AlarmSetting {
    * @param module string - 模块名称
    */
   async alarmDeal(module: string) {
+    // eslint-disable-next-line no-console
+    console.log('[ Alarm module ] >', module)
     const configInfo = await configState.getItem(module)
 
     let moduleInfo: any
     if (['v2ex', 'bilibili', 'juejin'].includes(module))
       moduleInfo = await moduleState.getItem(module)
+
+    // eslint-disable-next-line no-console
+    console.log('[ Alarm moduleInfo ] >', moduleInfo)
 
     const { enable } = configInfo
     if (!enable)
@@ -80,8 +85,11 @@ class AlarmSetting {
 
     if (module === 'juejin') {
       const { data } = moduleInfo
-      if (!data.mission || !data.mission.date || dayjs().isAfter(dayjs(data.mission.date), 'day'))
+      if (!data.mission || !data.mission.date || !data.mission.status || dayjs().isAfter(dayjs(data.mission.date), 'day')) {
+        // eslint-disable-next-line no-console
+        console.log('[ Alarm.juejin.execScript ] >', data.mission.date, data.mission.status)
         await contentScriptService.execScriptByModule(module)
+      }
     }
 
     return true

@@ -59,8 +59,7 @@
             label-field="name"
             value-field="key"
             children-field="category"
-          >
-          </n-cascader>
+          />
         </n-grid-item>
       </n-grid>
     </n-drawer>
@@ -117,7 +116,7 @@ watch(() => data.wallpaperInfo, (newWallpaperInfo) => {
 }, { deep: true })
 
 watch(backgroundOpacity, (newValue) => {
-  newTabState.changeWallpaperOpcity(newValue)
+  newTabState.changeWallpaperOpacity(newValue)
 })
 
 const showSettingBg = (show = true) => {

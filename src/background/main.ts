@@ -30,8 +30,8 @@ browser.runtime.onInstalled.addListener((): void => {
 /**
  * 消息监听
  */
-browser.runtime.onMessage.addListener(async(message: { command: any; param: any; type?: any; res?: any }, sender) => {
-  const { command, param } = message
+browser.runtime.onMessage.addListener(async(message: { command: any; data: any }, sender) => {
+  const { command, data } = message
 
   // eslint-disable-next-line no-console
   console.log('[background.js receive]>', message, sender)
@@ -44,10 +44,12 @@ browser.runtime.onMessage.addListener(async(message: { command: any; param: any;
 
   // 处理内容脚本
   if (command === 'deal-content-script') {
-    const { type, res } = param
+    const { type, url, res } = data
 
     // eslint-disable-next-line no-console
-    console.log('[deal-content-script] >', type, res)
+    console.log('[deal-content-script] >', type, url, res)
+    // eslint-disable-next-line no-console
+    console.log('[deal-content-script sender]>', sender)
 
     if (type === 'juejin') {
       // eslint-disable-next-line no-console

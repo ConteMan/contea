@@ -24,7 +24,7 @@ import { drawFn, sign } from './modules/juejin'
     moduleType = 'example'
   }
 
-  const response = await browser.runtime.sendMessage(extensionId, { command: 'content-deal', param: { type: moduleType, url: currentUrl, res } })
+  const response = await browser.runtime.sendMessage(extensionId, { command: 'deal-content-script', data: { type: moduleType, url: currentUrl, res } })
   // eslint-disable-next-line no-console
   console.info(`[contea] > content-deal: ${JSON.stringify(response)}`)
 })()

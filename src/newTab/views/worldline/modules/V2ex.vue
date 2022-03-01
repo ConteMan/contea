@@ -49,7 +49,7 @@ const data = reactive({
   loading: false,
   config: {} as Config,
   moduleTypes: {} as any,
-  selectedTags: [] as string[],
+  selectedTags: ['tab-tech'] as string[],
   list: [] as any[],
 })
 const { loading, config, selectedTags, list, moduleTypes } = toRefs(data)
@@ -58,7 +58,6 @@ const { loading, config, selectedTags, list, moduleTypes } = toRefs(data)
 const getData = async() => {
   data.list = await Base.listByModule({ currentPage: 1, num: 100 }, module, toRaw(selectedTags.value))
 }
-getData()
 
 // 获取类型数据
 const getTypes = () => {

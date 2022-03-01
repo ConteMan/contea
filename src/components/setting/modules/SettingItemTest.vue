@@ -21,7 +21,7 @@
     <div class="mb-4 flex justify-between items-center">
       <span>后台操作</span>
       <div class="space-x-1">
-        <n-button strong secondary type="tertiary" size="small" @click="testFunction(backgrounCommand({ command: 'exec-content-script', param: {} }))">
+        <n-button strong secondary type="tertiary" size="small" @click="testFunction(backgrounCommand({ command: 'exec-content-script', data: {} }))">
           执行脚本
         </n-button>
       </div>

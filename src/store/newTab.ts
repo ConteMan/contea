@@ -29,8 +29,8 @@ export const useNewTabState = defineStore('newTab', {
     changeWallpaperMode() {
       this.wallpaper.mode = this.wallpaper.mode === 'fixed' ? 'random' : 'fixed'
     },
-    changeWallpaperOpcity(opcity: number) {
-      this.wallpaper.opacity = opcity
+    changeWallpaperOpacity(opacity: number) {
+      this.wallpaper.opacity = opacity
       this.wallpaper = { ...this.wallpaper }
     },
     changeSettingDrawer() {

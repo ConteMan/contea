@@ -63,6 +63,7 @@ import dayjs from 'dayjs'
 import Card from '~/components/template/TemplateCard.vue'
 import { openSite } from '~/utils'
 import ConfigState from '~/models/keyValue/configState'
+
 import type { Config } from '~/services/wakatime/model'
 import WakaTime from '~/services/wakatime'
 

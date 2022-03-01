@@ -27,11 +27,12 @@ const changeMode = () => {
   router.push({ path })
 }
 
-browser.runtime.onMessage.addListener(async(message: any, sender: any) => {
+// 监听快捷键
+browser.runtime.onMessage.addListener((message: any, sender: any) => {
+  // eslint-disable-next-line no-console
+  console.log('[AppContent receive]>', message, sender)
   if (message.data === 'change-mode')
     changeMode()
-
-  return 'success'
 })
 
 const modalState = useModalState()

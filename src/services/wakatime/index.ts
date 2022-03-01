@@ -1,9 +1,10 @@
 import { defHttp } from '~/utils/http/axios'
+import type { SettingKeys } from '~/setting/defaultSetting'
 import ConfigState from '~/models/keyValue/configState'
 import RequestCache from '~/services/base/requestCache'
 
 class WakaTime {
-  private module = 'wakatime'
+  private module: SettingKeys = 'wakatime'
   private today = dayjs().format('YYYY-MM-DD')
 
   /**
