@@ -8,15 +8,17 @@ class WakaTime {
   private today = dayjs().format('YYYY-MM-DD')
 
   /**
-   * 登录检测（通过查询必要 cookie）
+   * 登录检测
    * @returns Promise<boolean>
    */
   async loginCheck(): Promise<boolean> {
-    const { site } = await ConfigState.getItem(this.module)
+    const { apiUrl } = await ConfigState.getItem(this.module)
 
     try {
-      const res = await browser.cookies.get({ url: site, name: 'remember_token' })
-      return !!res?.value
+      const res = await defHttp.get({
+        url: `${apiUrl}/users/current?show=has_password%2Cemails`,
+      })
+      return !!res.data
     }
     catch (error) {
       return false
