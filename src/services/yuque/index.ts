@@ -1,4 +1,4 @@
-import type { Config, HotParams } from './model'
+import type { Config, RecommendParams } from './model'
 
 import { defHttp } from '~/utils/http/axios'
 
@@ -6,22 +6,21 @@ import configState from '~/models/keyValue/configState'
 import moduleState from '~/models/keyValue/moduleState'
 import RequestCache from '~/services/base/requestCache'
 
-class Zhihu {
-  private module = 'zhihu'
+class Yuque {
+  private module = 'yuque'
 
   /**
    * 登录检测
-   * @returns {Promise<boolean>} 是否登录
    */
   async loginCheck(): Promise<boolean> {
     const { site } = await configState.getItem(this.module) as Config
 
     try {
-      const hotUrl = `${site}/hot`
-      const res = await defHttp.get({ url: hotUrl })
+      const dashboardUrl = `${site}/dashboard`
+      const res = await defHttp.get({ url: dashboardUrl })
 
       // 如果跳转到非指定页面则认为未登录
-      return res.request.responseURL === hotUrl
+      return res.request.responseURL === dashboardUrl
     }
     catch (e) {
       return false
@@ -35,7 +34,7 @@ class Zhihu {
     const { apiUrl } = await configState.getItem(this.module) as Config
     try {
       const res = await defHttp.get({
-        url: `${apiUrl}/api/v4/me?include=ad_type,available_message_types,default_notifications_count,follow_notifications_count,vote_thank_notifications_count,messages_count,email,account_status,is_bind_phone,url_token`,
+        url: `${apiUrl}/mine`,
       })
       return res.data
     }
@@ -63,13 +62,12 @@ class Zhihu {
   }
 
   /**
-   * 获取热榜
-   * @param Params - 热榜请求参数
+   * 获取推荐
+   * @param Params - 请求参数
    * @param refresh - 是否刷新
-   * @returns {Promise<{}>} - 数组
    */
-  async hot(Params: HotParams = { limit: 50 }, refresh = false): Promise<any> {
-    const type = 'hot'
+  async recommend(Params: RecommendParams = { limit: 20, page: 1 }, refresh = false): Promise<any> {
+    const type = 'recommend'
     const cacheKey = [this.module, type]
 
     if (!refresh) {
@@ -78,11 +76,16 @@ class Zhihu {
         return cacheData
     }
 
-    const { limit } = Params
+    const { limit, page } = Params
     const { apiUrl } = await configState.getItem(this.module) as Config
     try {
       const res = await defHttp.get({
-        url: `${apiUrl}/api/v3/feed/topstory/hot-lists/total?limit=${limit}`,
+        url: `${apiUrl}/explore/recommends`,
+        params: {
+          limit,
+          page,
+          type: 'Doc',
+        },
       })
 
       if (res.data.data)
@@ -96,4 +99,4 @@ class Zhihu {
   }
 }
 
-export default new Zhihu()
+export default new Yuque()

@@ -6,19 +6,20 @@ export type Config = BaseConfig & {
 export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'expried' | 'alarm' | 'showCard'>
 
 export const setting: Config = {
-  key: 'zhihu',
-  name: '知乎',
+  key: 'yuque',
+  name: '语雀',
   enable: false,
-  site: 'https://www.zhihu.com',
-  apiUrl: 'https://www.zhihu.com',
+  site: 'https://www.yuque.com',
+  apiUrl: 'https://www.yuque.com/api',
   alarm: 60,
   expried: 3600,
   showCard: true,
 }
 
-export interface HotParams {
+export interface RecommendParams {
   /**
    * 数量限制
    */
   limit: number
+  page: number
 }

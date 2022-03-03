@@ -14,10 +14,11 @@ import { setting as movie } from '~/services/movie/model'
 import { setting as bilibili } from '~/services/bilibili/model'
 import { setting as wallpaper } from '~/services/wallpaper/model'
 import { setting as sport } from '~/services/sport/model'
+import { setting as yuque } from '~/services/yuque/model'
 
-export const modules = ['v2ex', 'sspai', 'weread', 'github', 'juejin', 'one', 'wakatime', 'jike', 'bgm', 'weather', 'zhihu', 'movie', 'bilibili', 'sport', 'wallpaper']
+export const modules = ['v2ex', 'sspai', 'weread', 'github', 'juejin', 'one', 'wakatime', 'jike', 'bgm', 'weather', 'zhihu', 'movie', 'bilibili', 'sport', 'wallpaper', 'yuque']
 
-export type Setting = {
+export interface Setting {
   base: typeof base
   v2ex: typeof v2ex
   sspai: typeof sspai
@@ -34,6 +35,7 @@ export type Setting = {
   bilibili: typeof bilibili
   wallpaper: typeof wallpaper
   sport: typeof sport
+  yuque: typeof yuque
 }
 
 export type SettingKeys = keyof Setting
@@ -55,4 +57,5 @@ export default {
   bilibili,
   wallpaper,
   sport,
+  yuque,
 }

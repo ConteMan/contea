@@ -101,6 +101,11 @@ const list = [
     component: modules.SettingItemZhihu,
   },
   {
+    name: 'yuque',
+    title: '语雀',
+    component: modules.SettingItemYuque,
+  },
+  {
     name: 'test',
     title: '测试',
     component: modules.SettingItemTest,

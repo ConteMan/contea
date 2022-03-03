@@ -1,6 +1,7 @@
 import { AsyncModels } from 'kurimudb'
 import migrations from '../migrations'
-import { dexieDriverFactory, DexieDriver } from '~/utils/kurimudb-driver-dexie'
+import type { DexieDriver } from '~/utils/kurimudb-driver-dexie'
+import { dexieDriverFactory } from '~/utils/kurimudb-driver-dexie'
 
 import type { SettingKeys } from '~/setting/defaultSetting'
 import defaultSetting from '~/setting/defaultSetting'
@@ -10,9 +11,7 @@ import Alarm from '~/services/base/alarm'
 
 import { useConfigState } from '~/store/config'
 
-interface InfoItem {
-  [other: string]: any
-}
+type InfoItem = Record<string, any>;
 
 class ConfigState extends AsyncModels.keyValue<InfoItem, DexieDriver> {
   constructor() {
