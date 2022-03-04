@@ -1,19 +1,22 @@
 <template>
-  <div ref="worldlineContainerRef" class="h-full flex">
-    <div class="worldline-menu pt-8">
+  <div ref="worldlineContainerRef" class="max-h-full flex">
+    <div class="worldline-menu h-full pt-8">
       <n-menu
         v-model:value="activeKey"
         :options="dealMenuOptions"
         :indent="18"
         @update:value="changeActiveKey"
-      ></n-menu>
+      />
     </div>
     <div class="worldline-tab-pane-container flex-1 w-0">
       <V2ex v-if="activeKey === 'v2ex'" class="h-full" />
       <Sspai v-else-if="activeKey === 'sspai'" class="h-full" />
       <Jike v-else-if="activeKey === 'jike'" class="h-full" />
       <Zhihu v-else-if="activeKey === 'zhihu'" class="h-full" />
-      <n-empty v-else description="Nothing ~"></n-empty>
+      <Movie v-else-if="activeKey === 'movie'" class="h-full" />
+      <Sport v-else-if="activeKey === 'sport'" class="h-full" />
+      <Status v-else-if="activeKey === 'status'" class="h-full" />
+      <n-empty v-else class="mt-[50%]" description="Nothing ~" />
     </div>
   </div>
 </template>
@@ -26,6 +29,9 @@ import V2ex from './modules/V2ex.vue'
 import Sspai from './modules/Sspai.vue'
 import Jike from './modules/Jike.vue'
 import Zhihu from './modules/Zhihu.vue'
+import Movie from './modules/Movie.vue'
+import Sport from './modules/Sport.vue'
+import Status from './modules/Status.vue'
 
 import { useConfigState } from '~/store/config'
 
@@ -53,10 +59,6 @@ const dealTabHeight = computed(() => {
 
 const menuOptions = [
   {
-    key: 'divider-1',
-    type: 'divider',
-  },
-  {
     label: 'V2EX',
     key: 'v2ex',
   },
@@ -76,11 +78,28 @@ const menuOptions = [
     key: 'divider-2',
     type: 'divider',
   },
+  {
+    label: '影视',
+    key: 'movie',
+  },
+  {
+    label: '体育',
+    key: 'sport',
+  },
+  {
+    key: 'divider-status',
+    type: 'divider',
+  },
+  {
+    label: '状态',
+    key: 'status',
+    type: 'system',
+  },
 ]
 
 const dealMenuOptions = computed(() => {
   return menuOptions.filter((item: any) => {
-    if ((item?.type && item.type === 'divider') || item?.disabled)
+    if ((item?.type && ['divider', 'system'].includes(item.type)) || item?.disabled)
       return true
     return _.findIndex(Object.values(data.config), (configItem: any) => {
       return toRaw(configItem.key) === item.key && toRaw(configItem.enable)

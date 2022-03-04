@@ -15,7 +15,8 @@
 </template>
 
 <script setup lang="ts">
-import { NConfigProvider, GlobalThemeOverrides, zhCN, dateZhCN } from 'naive-ui'
+import type { GlobalThemeOverrides } from 'naive-ui'
+import { NConfigProvider, dateZhCN, zhCN } from 'naive-ui'
 import AppContent from '~/newTab/layout/AppContent.vue'
 
 const data = reactive({
