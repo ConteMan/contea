@@ -1,7 +1,7 @@
-import type { User } from './model'
+import type { Config, User } from './model'
 import { defHttp } from '~/utils/http/axios'
 import configState from '~/models/keyValue/configState'
-import ModuleState from '~/models/keyValue/moduleState'
+import moduleState from '~/models/keyValue/moduleState'
 
 class WeRead {
   private module = 'weread'
@@ -56,18 +56,25 @@ class WeRead {
    * 获取无限卡信息
    */
   async memberCard() {
+    const moduleType = 'memberCard'
     const { apiUrl } = await configState.getItem(this.module)
 
     if (!await this.loginCheck())
       return false
 
-    const res = await defHttp.get({
-      url: `${apiUrl}/pay/memberCardSummary`,
-      params: {
-        pf: 'ios',
-      },
-    })
-    return res.data
+    try {
+      const res = await defHttp.get({
+        url: `${apiUrl}/pay/memberCardSummary`,
+        params: {
+          pf: 'ios',
+        },
+      })
+      const cacheData = res.data
+      return await moduleState.mergeSet(`${this.module}_${moduleType}`, cacheData)
+    }
+    catch (e) {
+      return false
+    }
   }
 
   /**
@@ -76,19 +83,26 @@ class WeRead {
    * @param count number - 请求数量
    */
   async readDetail(type: 0 | 1 = 0, count = 1) {
+    const moduleType = 'readdetail'
     const { apiUrl_2 } = await configState.getItem(this.module)
 
     if (!await this.loginCheck())
       return false
 
-    const res = await defHttp.get({
-      url: `${apiUrl_2}/readdetail`,
-      params: {
-        type,
-        count,
-      },
-    })
-    return res.data
+    try {
+      const res = await defHttp.get({
+        url: `${apiUrl_2}/readdetail`,
+        params: {
+          type,
+          count,
+        },
+      })
+      const cacheData = res.data
+      return await moduleState.mergeSet(`${this.module}_${moduleType}`, cacheData)
+    }
+    catch (e) {
+      return false
+    }
   }
 
   /**
@@ -97,7 +111,7 @@ class WeRead {
    */
   async user(force = false) {
     if (!force) {
-      const cache = await ModuleState.getValidItem(this.module)
+      const cache = await moduleState.getItem(this.module)
       if (cache)
         return cache
     }
@@ -120,7 +134,7 @@ class WeRead {
       newData.readDetail.datas[0].readMeta.books = showBooks
     }
 
-    return await ModuleState.mergeSet(this.module, newData)
+    return await moduleState.mergeSet(this.module, newData)
   }
 
   /**
@@ -138,6 +152,51 @@ class WeRead {
         url: `${apiUrl_2}/book/info`,
         params: {
           bookId,
+        },
+      })
+      return res.data
+    }
+    catch (e) {
+      return false
+    }
+  }
+
+  /**
+   * 获取书架信息
+   */
+  async shelf() {
+    const { apiUrl } = await configState.getItem(this.module) as Config
+
+    if (!await this.loginCheck())
+      return false
+
+    try {
+      const res = await defHttp.get({
+        url: `${apiUrl}/shelf/sync`,
+      })
+      return res.data
+    }
+    catch (e) {
+      return false
+    }
+  }
+
+  /**
+   * 获取书籍的文章列表
+   */
+  async bookArticles(bookId: string, count = 10, offset = 0) {
+    const { apiUrl_2 } = await configState.getItem(this.module) as Config
+
+    if (!await this.loginCheck())
+      return false
+
+    try {
+      const res = await defHttp.get({
+        url: `${apiUrl_2}/book/articles`,
+        params: {
+          bookId,
+          count,
+          offset,
         },
       })
       return res.data

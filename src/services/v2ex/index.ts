@@ -1,6 +1,6 @@
 /* eslint-disable prefer-regex-literals */
 import dayjs from 'dayjs'
-import type { Config, Module, User, DomList, Mession } from './model'
+import type { Config, DomList, Mession, Module, User } from './model'
 import { defHttp } from '~/utils/http/axios'
 import configState from '~/models/keyValue/configState'
 import moduleState from '~/models/keyValue/moduleState'

@@ -71,7 +71,7 @@ import { openSite } from '~/utils'
 import { puzzling } from '~/utils/extend'
 
 import Card from '~/components/template/TemplateCard.vue'
-import ConfigState from '~/models/keyValue/configState'
+import configState from '~/models/keyValue/configState'
 
 import type { Config } from '~/services/weread/model'
 import weread from '~/services/weread'
@@ -112,7 +112,7 @@ const getData = async(refresh = false) => {
 }
 
 const init = async() => {
-  data.config = await ConfigState.getItem(module)
+  data.config = await configState.getItem(module)
   await getData()
 }
 init()

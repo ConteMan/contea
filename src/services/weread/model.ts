@@ -18,7 +18,7 @@ export const setting: Config = {
   showCard: true,
 }
 
-export type BaseUser = {
+export interface BaseUser {
   userVid: number
 }
 export type User = BaseUser & {
