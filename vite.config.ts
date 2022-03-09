@@ -1,5 +1,6 @@
 import { dirname, relative } from 'path'
-import { defineConfig, UserConfig } from 'vite'
+import type { UserConfig } from 'vite'
+import { defineConfig } from 'vite'
 import Vue from '@vitejs/plugin-vue'
 import VueSetupExtend from 'vite-plugin-vue-setup-extend'
 import Icons from 'unplugin-icons/vite'
@@ -10,7 +11,7 @@ import styleImport, { AndDesignVueResolve } from 'vite-plugin-style-import'
 import AutoImport from 'unplugin-auto-import/vite'
 import WindiCSS from 'vite-plugin-windicss'
 import windiConfig from './windi.config'
-import { r, port, isDev } from './scripts/utils'
+import { isDev, port, r } from './scripts/utils'
 
 export const sharedConfig: UserConfig = {
   root: r('src'),
@@ -38,7 +39,14 @@ export const sharedConfig: UserConfig = {
     __DEV__: isDev,
   },
   plugins: [
-    Vue(),
+    Vue({
+      template: {
+        compilerOptions: {
+          // vue将跳过my-vue-element解析
+          isCustomElement: tag => tag === 'css-doodle',
+        },
+      },
+    }),
     // https://github.com/vbenjs/vite-plugin-vue-setup-extend
     VueSetupExtend(),
 

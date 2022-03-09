@@ -25,6 +25,7 @@ specifiers:
   cross-env: ^7.0.3
   crx: ^5.0.1
   crypto-js: ^4.1.1
+  css-doodle: ^0.26.1
   dayjs: ^1.10.7
   dexie: ^3.2.1
   download: 8.0.0
@@ -69,6 +70,7 @@ dependencies:
   ant-design-vue: 3.0.0-beta.10_vue@3.2.31
   axios: 0.24.0
   crypto-js: 4.1.1
+  css-doodle: 0.26.1
   dayjs: 1.10.7
   dexie: 3.2.1
   fast-xml-parser: 4.0.3
@@ -1987,6 +1989,10 @@ packages:
     resolution: {integrity: sha512-v1plID3y9r/lPhviJ1wrXpLeyUIGAZ2SHNYTEapm7/8A9nLPoyvVp3RK/EPFqn5kEznyWgYZNsRtYYIWbuG8KA==}
     engines: {node: '>=8'}
     dev: true
+
+  /css-doodle/0.26.1:
+    resolution: {integrity: sha512-5/4JHMDloxKkDNpdGuRn6AkllPmcHBuXh64EFvhOzB325d5gidJVJEzwCsZaeP7ZmApOiw1gqxRDBZbdwYlB7w==}
+    dev: false
 
   /css-render/0.15.8:
     resolution: {integrity: sha512-k1gp1MgYDPrFZhzheQkSwm6dmP6nPe2XE6WYpJBPwEc3GbMANPJZfxl7ofZlTl8/+tpMRiGTTgUkTlXaVbLxog==}

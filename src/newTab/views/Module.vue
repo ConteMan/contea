@@ -1,5 +1,16 @@
 <template>
   <div ref="moduleContainerRef" class="module-container py-2 flex">
+    <css-doodle class="fixed z-[-1]">
+      :doodle {
+      @grid: 20 / 100vmax;
+      grid-gap: 4vmax;
+      }
+
+      background: #26C6DA;
+      transform: scale(@rand(.1, .9)) translate3d(@r(50px), @r(100px), 0);
+      background: hsla(@r(360), 85%, @r(70%, 90%), @r(.9));
+      border-radius: @r(10px);
+    </css-doodle>
     <div class="max-h-full flex-grow">
       <WorldlineList class="worldline-list h-full" />
     </div>
@@ -10,10 +21,9 @@
 </template>
 
 <script setup lang="ts">
+import 'css-doodle'
 import { useElementBounding } from '@vueuse/core'
-
 import WorldlineList from '~/newTab/views/worldline/List.vue'
-
 import { useConfigState } from '~/store/config'
 
 const data = reactive({
