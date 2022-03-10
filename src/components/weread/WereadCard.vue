@@ -4,18 +4,19 @@
       ...
     </div>
     <div v-else>
+      <!-- 已登录 -->
       <div v-if="login">
         <div class="flex flex-row justify-between">
           <div class="flex flex-col justify-center">
-            <div>无限 {{ dayjs(memberCard.expiredTime * 1000).format('MM-DD') }}</div>
+            <div>{{ dayjs(memberCard?.data.expiredTime * 1000).format('MM-DD') }}</div>
             <div class="pt-1">
-              本周 {{ dayjs.duration(readDetail.datas[0].timeMeta.totalReadTime, 's').hours() }} hrs {{ dayjs.duration(readDetail.datas[0].timeMeta.totalReadTime, 's').minutes() }} mins
+              {{ dayjs.duration(readDetail?.data.datas[0].timeMeta.totalReadTime, 's').hours() }} hrs {{ dayjs.duration(readDetail?.data.datas[0].timeMeta.totalReadTime, 's').minutes() }} mins
             </div>
           </div>
           <div class="flex flex-col justify-between">
             <div class="flex flex-row-reverse w-full opacity-0 hover:(opacity-100 transition-opacity duration-200)" :class="{'!opacity-100': showExtend}">
               <mdi-information-outline class="text-white cursor-pointer" @click="showExtend = !showExtend" />
-              <mdi-refresh class="text-white cursor-pointer mr-2" :class="{'animate-spin': refreshLoading }" @click="getData(true)" />
+              <mdi-refresh class="text-white cursor-pointer mr-2" :class="{'animate-spin': refreshLoading }" @click="refreshData()" />
             </div>
             <div
               class="cursor-pointer font-bold text-xl text-white select-none hover:(underline underline-offset-2 duration-200 animate-pulse)"
@@ -28,9 +29,9 @@
         <!-- 书籍展示 -->
         <div v-if="bookList.length" class="pt-2">
           <div class="pt-2 flex flex-row flex-wrap justify-between w-full">
-            <div v-for="book in bookList" :key="book.bookId" class="flex items-center">
+            <div v-for="book in bookList" :key="book?.bookId" class="flex items-center">
               <div class="book-img-container h-[100px] mb-2">
-                <img class="book-img w-full h-full rounded-sm duration-300" :src="book.detail.cover">
+                <img class="book-img w-full h-full rounded-sm duration-300" :src="book?.cover">
               </div>
               <div class="ml-2 w-[80px] break-words">
                 <n-ellipsis line-clamp="2">
@@ -45,12 +46,17 @@
         </div>
         <!-- 扩展信息 -->
         <transition name="fade">
-          <div v-if="showExtend" class="pt-4 space-y-1 text-size-[12px] text-gray-400 italic text-right">
-            <div>Updated / Expried</div>
-            <div>{{ dayjs(extendInfo.ca_updated_at).format('DD HH:mm:ss') }} / {{ dayjs(extendInfo.ca_expried_at).format('DD HH:mm:ss') }}</div>
+          <div v-if="showExtend" class="flex flex-col items-end pt-4 space-y-1 text-size-[12px] text-gray-400 italic text-right">
+            <div class="pb-1 border-b border-gray-400">
+              Type / Updated / Expried
+            </div>
+            <div> ModuleData / {{ dayjs(moduleData?.ca_updated_at).format('DD HH:mm:ss') }} / {{ moduleData?.ca_expried_at ? dayjs(moduleData?.ca_expried_at).format('DD HH:mm:ss') : '-' }}</div>
+            <div> MemberCard / {{ dayjs(memberCard?.ca_updated_at).format('DD HH:mm:ss') }} / {{ memberCard?.ca_expried_at ? dayjs(memberCard?.ca_expried_at).format('DD HH:mm:ss') : '-' }}</div>
+            <div> ReadDetail / {{ dayjs(readDetail?.ca_updated_at).format('DD HH:mm:ss') }} / {{ readDetail?.ca_expried_at ? dayjs(readDetail?.ca_expried_at).format('DD HH:mm:ss') : '-' }}</div>
           </div>
         </transition>
       </div>
+      <!-- 未登录 -->
       <div v-else class="flex flex-row justify-between items-center">
         <div>请登录</div>
         <div
@@ -74,6 +80,7 @@ import Card from '~/components/template/TemplateCard.vue'
 import configState from '~/models/keyValue/configState'
 
 import type { Config } from '~/services/weread/model'
+import { ModuleType } from '~/services/weread/model'
 import weread from '~/services/weread'
 
 dayjs.extend(Duration)
@@ -85,42 +92,55 @@ const data = reactive({
   refreshLoading: false,
   config: {} as Config,
   login: false,
+  moduleData: {} as any,
   memberCard: {} as any,
   readDetail: {} as any,
+  bookList: [] as any,
   showExtend: false,
   extendInfo: {} as any,
 })
 
-const { loading, config, login, memberCard, readDetail, showExtend, refreshLoading, extendInfo } = toRefs(data)
+const { loading, config, login, moduleData, memberCard, readDetail, bookList, showExtend, refreshLoading } = toRefs(data)
 
-const getData = async(refresh = false) => {
-  if (refresh)
-    data.refreshLoading = true
+const getConfig = async() => {
+  data.config = await configState.getItem(module)
+}
 
-  data.login = await weread.loginCheck()
-  if (data.login) {
-    const { memberCard, readDetail, ca_updated_at, ca_expried_at } = await weread.user(refresh)
-    data.readDetail = readDetail
-    data.memberCard = memberCard
-    data.extendInfo = { ca_updated_at, ca_expried_at }
-  }
+const loginCheck = async() => {
+  const login = await weread.loginCheck()
+  data.login = login
+  return login
+}
 
-  if (refresh)
-    data.refreshLoading = false
-  else
-    data.loading = false
+const getData = async() => {
+  const moduleTypeData = await weread.moduleTypeData()
+  data.moduleData = moduleTypeData[module]
+  data.readDetail = moduleTypeData[`${module}_${ModuleType.READ_DETAIL}`]
+  data.memberCard = moduleTypeData[`${module}_${ModuleType.MEMBER_CARD}`]
+
+  data.bookList = readDetail.value.data.datas[0].readMeta.books ? (readDetail.value.data.datas[0].readMeta.books).slice(0, 2) : []
+
+  data.loading = false
+}
+
+const refreshData = async() => {
+  data.refreshLoading = true
+  await weread.updateModuleTypeData()
+  await getData()
+  data.refreshLoading = false
 }
 
 const init = async() => {
-  data.config = await configState.getItem(module)
+  await getConfig()
+
+  if (!loginCheck()) {
+    data.loading = false
+    return false
+  }
+
   await getData()
 }
 init()
-
-// 处理展示书籍，取前两本
-const bookList = computed(() => {
-  return readDetail.value.datas[0].readMeta.books ? (readDetail.value.datas[0].readMeta.books).slice(0, 2) : []
-})
 </script>
 
 <style lang="less">

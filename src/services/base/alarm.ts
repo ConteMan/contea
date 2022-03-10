@@ -8,6 +8,7 @@ import requestState from '~/models/keyValue/requestState'
 import sspai from '~/services/sspai'
 import v2ex from '~/services/v2ex'
 import bilibili from '~/services/bilibili'
+import weread from '~/services/weread'
 
 class AlarmSetting {
   /**
@@ -47,11 +48,11 @@ class AlarmSetting {
     const configInfo = await configState.getItem(module)
 
     let moduleInfo: any
-    if (['v2ex', 'bilibili', 'juejin'].includes(module))
+    if (['v2ex', 'bilibili', 'juejin'].includes(module)) {
       moduleInfo = await moduleState.getItem(module)
-
-    // eslint-disable-next-line no-console
-    console.log('[ Alarm moduleInfo ] >', moduleInfo)
+      // eslint-disable-next-line no-console
+      console.log('[ Alarm moduleInfo ] >', moduleInfo)
+    }
 
     const { enable } = configInfo
     if (!enable)
@@ -91,6 +92,9 @@ class AlarmSetting {
         await contentScriptService.execScriptByModule(module)
       }
     }
+
+    if (module === 'weread')
+      weread.updateModuleTypeData()
 
     return true
   }

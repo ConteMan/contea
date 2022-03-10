@@ -1,10 +1,67 @@
-import type { Config, User } from './model'
+import type { Config } from './model'
+import { ModuleType } from './model'
 import { defHttp } from '~/utils/http/axios'
 import configState from '~/models/keyValue/configState'
 import moduleState from '~/models/keyValue/moduleState'
 
 class WeRead {
   private module = 'weread'
+
+  /**
+   * 登录检测
+   * @returns boolean
+   */
+  async loginCheck(): Promise<boolean> {
+    return !!(await this.getUserId())
+  }
+
+  /**
+   * 获取模块类型数据
+   * @param moduleTypes 要更新模块类型，数组
+   */
+  async moduleTypeData(moduleTypes: string[] = []) {
+    if (!moduleTypes.length) {
+      moduleTypes = [
+        this.module,
+        `${this.module}_${ModuleType.MEMBER_CARD}`,
+        `${this.module}_${ModuleType.READ_DETAIL}`,
+      ]
+    }
+
+    const data = {} as any
+    await Promise.all(moduleTypes.map(async(item) => {
+      data[item] = await moduleState.getItem(item) ?? {}
+    }))
+    return data
+  }
+
+  /**
+   * 更新模块类型数据
+   * @param moduleTypes 要更新模块类型，数组
+   */
+  async updateModuleTypeData(moduleTypes: string[] = []) {
+    if (!moduleTypes.length) {
+      moduleTypes = [
+        this.module,
+        `${this.module}_${ModuleType.MEMBER_CARD}`,
+        `${this.module}_${ModuleType.READ_DETAIL}`,
+      ]
+    }
+
+    const relations = {
+      [this.module]: this.me(),
+      [`${this.module}_${ModuleType.MEMBER_CARD}`]: this.memberCard(),
+      [`${this.module}_${ModuleType.READ_DETAIL}`]: this.readDetail(),
+    }
+
+    const data = {} as any
+    await Promise.all(moduleTypes.map(async(item) => {
+      // eslint-disable-next-line no-console
+      console.log('%c [ item ]-59-「index.ts」', 'font-size:13px; background:pink; color:#bf2c9f;', relations[item])
+      data.item = await relations[item] ?? {}
+    }))
+    return data
+  }
 
   /**
    * 获取用户ID
@@ -25,14 +82,6 @@ class WeRead {
   }
 
   /**
-   * 登录检测
-   * @returns boolean
-   */
-  async loginCheck(): Promise<boolean> {
-    return !!(await this.getUserId())
-  }
-
-  /**
    * 获取个人信息
    */
   async me() {
@@ -42,25 +91,26 @@ class WeRead {
     if (!userVid)
       return false
 
-    const res = await defHttp.get({
-      url: `${apiUrl}/user`,
-      params: {
-        userVid,
-      },
-    })
-
-    return res.data as User
+    try {
+      const res = await defHttp.get({
+        url: `${apiUrl}/user`,
+        params: {
+          userVid,
+        },
+      })
+      return await moduleState.mergeSet(this.module, { data: res.data })
+    }
+    catch (e) {
+      return false
+    }
   }
 
   /**
    * 获取无限卡信息
    */
   async memberCard() {
-    const moduleType = 'memberCard'
+    const cacheKey = `${this.module}_${ModuleType.MEMBER_CARD}`
     const { apiUrl } = await configState.getItem(this.module)
-
-    if (!await this.loginCheck())
-      return false
 
     try {
       const res = await defHttp.get({
@@ -69,8 +119,7 @@ class WeRead {
           pf: 'ios',
         },
       })
-      const cacheData = res.data
-      return await moduleState.mergeSet(`${this.module}_${moduleType}`, cacheData)
+      return await moduleState.mergeSet(cacheKey, { data: res.data }, false)
     }
     catch (e) {
       return false
@@ -83,11 +132,8 @@ class WeRead {
    * @param count number - 请求数量
    */
   async readDetail(type: 0 | 1 = 0, count = 1) {
-    const moduleType = 'readdetail'
+    const cacheKey = `${this.module}_${ModuleType.READ_DETAIL}`
     const { apiUrl_2 } = await configState.getItem(this.module)
-
-    if (!await this.loginCheck())
-      return false
 
     try {
       const res = await defHttp.get({
@@ -97,44 +143,19 @@ class WeRead {
           count,
         },
       })
-      const cacheData = res.data
-      return await moduleState.mergeSet(`${this.module}_${moduleType}`, cacheData)
+      const data = res.data
+      const showBooks = data.readDetail?.datas?.[0]?.readMeta?.books
+      if (showBooks) {
+        for (let index = 0; index < showBooks.length; index++)
+          showBooks[index].detail = await this.bookInfo(showBooks[index].bookId)
+
+        data.readDetail.datas[0].readMeta.books = showBooks
+      }
+      return await moduleState.mergeSet(cacheKey, { data }, false)
     }
     catch (e) {
       return false
     }
-  }
-
-  /**
-   * 通过缓存获取个人信息
-   * @param force boolean - 是否强制更新
-   */
-  async user(force = false) {
-    if (!force) {
-      const cache = await moduleState.getItem(this.module)
-      if (cache)
-        return cache
-    }
-
-    if (!this.loginCheck())
-      return false
-
-    const { site: url } = await configState.getItem(this.module)
-    await defHttp.get({ url })
-
-    const newData = {} as any
-    newData.user = await this.me()
-    newData.memberCard = await this.memberCard()
-    newData.readDetail = await this.readDetail()
-    const showBooks = newData.readDetail?.datas?.[0]?.readMeta?.books
-    if (showBooks) {
-      for (let index = 0; index < showBooks.length; index++)
-        showBooks[index].detail = await this.bookInfo(showBooks[index].bookId)
-
-      newData.readDetail.datas[0].readMeta.books = showBooks
-    }
-
-    return await moduleState.mergeSet(this.module, newData)
   }
 
   /**

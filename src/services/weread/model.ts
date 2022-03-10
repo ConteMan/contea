@@ -33,3 +33,11 @@ export type User = BaseUser & {
   signature?: string
   location?: string
 }
+
+/**
+ * 模块类型
+ */
+export enum ModuleType {
+  MEMBER_CARD = 'memberCard',
+  READ_DETAIL = 'readDetail',
+}
