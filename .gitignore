@@ -3,6 +3,7 @@
 
 # IDE
 .idea
+*.code-workspace
 
 # Dependency directories
 node_modules
