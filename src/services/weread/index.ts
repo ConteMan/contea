@@ -12,7 +12,7 @@ class WeRead {
    * @returns boolean
    */
   async loginCheck(): Promise<boolean> {
-    return !!(await this.getUserId())
+    return !!(await this.getUserId()) && !!(this.me())
   }
 
   /**
@@ -54,12 +54,13 @@ class WeRead {
       [`${this.module}_${ModuleType.READ_DETAIL}`]: this.readDetail(),
     }
 
+    await this.refreshLogin()
+
     const data = {} as any
     await Promise.all(moduleTypes.map(async(item) => {
-      // eslint-disable-next-line no-console
-      console.log('%c [ item ]-59-「index.ts」', 'font-size:13px; background:pink; color:#bf2c9f;', relations[item])
       data.item = await relations[item] ?? {}
     }))
+
     return data
   }
 
@@ -74,11 +75,22 @@ class WeRead {
       return res.value
 
     if (times > 1) {
-      await defHttp.get({ url })
+      await this.refreshLogin()
       return this.getUserId(--times)
     }
 
     return false
+  }
+
+  /**
+   * 刷新登录
+   */
+  async refreshLogin() {
+    const { site: url } = await configState.getItem(this.module)
+    await defHttp.get({ url })
+    // eslint-disable-next-line no-console
+    console.log('refreshLogin')
+    return true
   }
 
   /**
@@ -98,7 +110,10 @@ class WeRead {
           userVid,
         },
       })
-      return await moduleState.mergeSet(this.module, { data: res.data })
+      if (res.data?.errCode)
+        return false
+      else
+        return await moduleState.mergeSet(this.module, { data: res.data })
     }
     catch (e) {
       return false
@@ -119,7 +134,10 @@ class WeRead {
           pf: 'ios',
         },
       })
-      return await moduleState.mergeSet(cacheKey, { data: res.data }, false)
+      if (res.data?.errCode)
+        return false
+      else
+        return await moduleState.mergeSet(cacheKey, { data: res.data }, false)
     }
     catch (e) {
       return false
@@ -143,15 +161,20 @@ class WeRead {
           count,
         },
       })
-      const data = res.data
-      const showBooks = data.readDetail?.datas?.[0]?.readMeta?.books
-      if (showBooks) {
-        for (let index = 0; index < showBooks.length; index++)
-          showBooks[index].detail = await this.bookInfo(showBooks[index].bookId)
-
-        data.readDetail.datas[0].readMeta.books = showBooks
+      if (res.data?.errCode) {
+        return false
       }
-      return await moduleState.mergeSet(cacheKey, { data }, false)
+      else {
+        const data = res.data
+        const showBooks = data.readDetail?.datas?.[0]?.readMeta?.books
+        if (showBooks) {
+          for (let index = 0; index < showBooks.length; index++)
+            showBooks[index].detail = await this.bookInfo(showBooks[index].bookId)
+
+          data.readDetail.datas[0].readMeta.books = showBooks
+        }
+        return await moduleState.mergeSet(cacheKey, { data }, false)
+      }
     }
     catch (e) {
       return false
@@ -175,7 +198,10 @@ class WeRead {
           bookId,
         },
       })
-      return res.data
+      if (res.data?.errCode)
+        return false
+      else
+        return res.data
     }
     catch (e) {
       return false
@@ -195,7 +221,10 @@ class WeRead {
       const res = await defHttp.get({
         url: `${apiUrl}/shelf/sync`,
       })
-      return res.data
+      if (res.data?.errCode)
+        return false
+      else
+        return res.data
     }
     catch (e) {
       return false
@@ -220,7 +249,10 @@ class WeRead {
           offset,
         },
       })
-      return res.data
+      if (res.data?.errCode)
+        return false
+      else
+        return res.data
     }
     catch (e) {
       return false
