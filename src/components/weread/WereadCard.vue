@@ -48,11 +48,11 @@
         <transition name="fade">
           <div v-if="showExtend" class="flex flex-col items-end pt-4 space-y-1 text-size-[12px] text-gray-400 italic text-right">
             <div class="pb-1 border-b border-gray-400">
-              Type / Updated / Expried
+              Type / Updated / Expired
             </div>
-            <div> ModuleData / {{ dayjs(moduleData?.ca_updated_at).format('DD HH:mm:ss') }} / {{ moduleData?.ca_expried_at ? dayjs(moduleData?.ca_expried_at).format('DD HH:mm:ss') : '-' }}</div>
-            <div> MemberCard / {{ dayjs(memberCard?.ca_updated_at).format('DD HH:mm:ss') }} / {{ memberCard?.ca_expried_at ? dayjs(memberCard?.ca_expried_at).format('DD HH:mm:ss') : '-' }}</div>
-            <div> ReadDetail / {{ dayjs(readDetail?.ca_updated_at).format('DD HH:mm:ss') }} / {{ readDetail?.ca_expried_at ? dayjs(readDetail?.ca_expried_at).format('DD HH:mm:ss') : '-' }}</div>
+            <div> ModuleData / {{ dayjs(moduleData?.ca_updated_at).format('DD HH:mm:ss') }} / {{ moduleData?.ca_expired_at ? dayjs(moduleData?.ca_expired_at).format('DD HH:mm:ss') : '-' }}</div>
+            <div> MemberCard / {{ dayjs(memberCard?.ca_updated_at).format('DD HH:mm:ss') }} / {{ memberCard?.ca_expired_at ? dayjs(memberCard?.ca_expired_at).format('DD HH:mm:ss') : '-' }}</div>
+            <div> ReadDetail / {{ dayjs(readDetail?.ca_updated_at).format('DD HH:mm:ss') }} / {{ readDetail?.ca_expired_at ? dayjs(readDetail?.ca_expired_at).format('DD HH:mm:ss') : '-' }}</div>
           </div>
         </transition>
       </div>

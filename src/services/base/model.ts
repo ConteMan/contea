@@ -1,10 +1,10 @@
-export type BaseConfig = {
+export interface BaseConfig {
   key: string
   name: string // 模块名称
   enable: boolean // 是否启用
   site: string // 站点 URL
   apiUrl: string // API URL
-  expried: number // 缓存时间，单位：秒
+  expired: number // 缓存时间，单位：秒
   showCard?: boolean // 是否显示卡片
   alarm?: number // 定时任务时间，单位：分钟
   contentScript?: {
@@ -20,7 +20,7 @@ export type Config = BaseConfig & {
   defaultPath: string
 }
 
-export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'expried' | 'alarm'>
+export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'expired' | 'alarm'>
 
 export const setting: Config = {
   key: 'base',
@@ -29,12 +29,12 @@ export const setting: Config = {
   site: '',
   apiUrl: '',
   alarm: 10,
-  expried: 3600,
+  expired: 3600,
   showCards: [],
   defaultPath: '/zen',
 }
 
-export type InfoItem = {
+export interface InfoItem {
   module: string
   module_type: string
   [other: string]: any
@@ -42,13 +42,13 @@ export type InfoItem = {
 
 export type InfoList = InfoItem []
 
-export type BaseModule = {
+export interface BaseModule {
   ca_login?: boolean
-  ca_expried_at?: number
+  ca_expired_at?: number
   ca_updated_at?: number
 }
 
 // 模块 model 基础
-export type BaseModel = {
+export interface BaseModel {
   showCard: boolean
 }

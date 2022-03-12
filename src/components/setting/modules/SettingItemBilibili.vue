@@ -24,8 +24,8 @@
       </n-input-number>
     </n-form-item>
 
-    <n-form-item label="过期" path="expried">
-      <n-input-number v-model:value="model.expried" class="w-full">
+    <n-form-item label="过期" path="expired">
+      <n-input-number v-model:value="model.expired" class="w-full">
         <template #suffix>
           分钟
         </template>

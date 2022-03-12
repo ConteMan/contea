@@ -6,12 +6,12 @@ export type Config = BaseConfig & {
   enable: boolean
   site: string
   apiUrl: string
-  expried?: number
+  expired?: number
   token?: string // AccessToken
   alarm?: number
 }
 
-export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl'| 'expried' | 'alarm'>
+export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl'| 'expired' | 'alarm'>
 
 export const setting: Config = {
   key: 'bgm',
@@ -19,7 +19,7 @@ export const setting: Config = {
   enable: false,
   site: 'https://bgm.tv',
   apiUrl: 'https://api.bgm.tv/v0',
-  expried: 3600,
+  expired: 3600,
   token: '',
   alarm: 60,
   showCard: false,

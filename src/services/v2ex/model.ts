@@ -1,5 +1,5 @@
 import type { types } from '~/enums/v2exEnum'
-import type { BaseModule, BaseConfig } from '~/services/base/model'
+import type { BaseConfig, BaseModule } from '~/services/base/model'
 
 export type Config = BaseConfig & {
   url: string
@@ -7,7 +7,7 @@ export type Config = BaseConfig & {
   enableTypes?: types[]
 }
 
-export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'token' | 'expried' | 'alarm' | 'showCard' | 'enableTypes'>
+export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'token' | 'expired' | 'alarm' | 'showCard' | 'enableTypes'>
 
 export const setting: Config = {
   key: 'v2ex',
@@ -16,7 +16,7 @@ export const setting: Config = {
   site: 'https://www.v2ex.com',
   url: 'https://www.v2ex.com',
   apiUrl: '',
-  expried: 3600,
+  expired: 3600,
   token: '',
   enableTypes: [
     'all',
@@ -28,7 +28,7 @@ export const setting: Config = {
   showCard: true,
 }
 
-export type BaseUser = {
+export interface BaseUser {
   username?: string
 }
 
@@ -54,13 +54,13 @@ export type Module = BaseModule & {
   data?: User
 }
 
-export type Mession = {
+export interface Mission {
   date?: string
   completed?: boolean
   days?: number
 }
 
-export type InfoItem = {
+export interface InfoItem {
   ca_module: string
   ca_module_type: string
   [other: string]: any
@@ -68,7 +68,7 @@ export type InfoItem = {
 
 export type InfoList = InfoItem []
 
-export type DomListItem = {
+export interface DomListItem {
   ca_module: string
   ca_module_type: string
   ca_sort_at: number

@@ -47,8 +47,8 @@
     <!-- 扩展信息 -->
     <transition name="fade">
       <div v-if="showExtend" class="pt-4 space-y-1 text-size-[12px] text-gray-400 italic text-right">
-        <div>Updated / Expried</div>
-        <div>{{ dayjs(extendInfo.ca_updated_at).format('DD HH:mm:ss') }} / {{ dayjs(extendInfo.ca_expried_at).format('DD HH:mm:ss') }}</div>
+        <div>Updated / Expired</div>
+        <div>{{ dayjs(extendInfo.ca_updated_at).format('DD HH:mm:ss') }} / {{ dayjs(extendInfo.ca_expired_at).format('DD HH:mm:ss') }}</div>
       </div>
     </transition>
   </Card>
@@ -80,9 +80,9 @@ const getData = async(refresh = false) => {
   if (refresh)
     data.refreshLoading = true
 
-  const { ca_updated_at, ca_expried_at, data: moduleData, ca_login } = await v2ex.user(refresh)
+  const { ca_updated_at, ca_expired_at, data: moduleData, ca_login } = await v2ex.user(refresh)
   data.moduleInfo = moduleData
-  data.extendInfo = { ca_updated_at, ca_expried_at }
+  data.extendInfo = { ca_updated_at, ca_expired_at }
   data.login = ca_login ?? false
 
   if (refresh)

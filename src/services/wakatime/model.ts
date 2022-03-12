@@ -3,7 +3,7 @@ import type { BaseConfig } from '~/services/base/model'
 export type Config = BaseConfig & {
 }
 
-export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'expried' | 'alarm' | 'showCard'>
+export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'expired' | 'alarm' | 'showCard'>
 
 export const setting: Config = {
   key: 'wakatime',
@@ -11,7 +11,7 @@ export const setting: Config = {
   enable: false,
   site: 'https://wakatime.com',
   apiUrl: 'https://wakatime.com/api/v1',
-  expried: 600,
+  expired: 600,
   alarm: 60,
   showCard: true,
 }

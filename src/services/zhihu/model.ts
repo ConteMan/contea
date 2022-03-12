@@ -3,7 +3,7 @@ import type { BaseConfig } from '~/services/base/model'
 export type Config = BaseConfig & {
 }
 
-export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'expried' | 'alarm' | 'showCard'>
+export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'expired' | 'alarm' | 'showCard'>
 
 export const setting: Config = {
   key: 'zhihu',
@@ -12,7 +12,7 @@ export const setting: Config = {
   site: 'https://www.zhihu.com',
   apiUrl: 'https://www.zhihu.com',
   alarm: 60,
-  expried: 3600,
+  expired: 3600,
   showCard: true,
 }
 

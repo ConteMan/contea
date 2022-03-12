@@ -5,7 +5,7 @@ export type Config = BaseConfig & {
   enableTypes: string[]
 }
 
-export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'expried' | 'alarm' | 'showCard'>
+export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'expired' | 'alarm' | 'showCard'>
 
 export const setting: Config = {
   key: 'one',
@@ -13,7 +13,7 @@ export const setting: Config = {
   enable: true,
   site: 'http://wufazhuce.com/',
   apiUrl: '',
-  expried: 86400,
+  expired: 86400,
   token: '',
   enableTypes: [],
   alarm: 60,

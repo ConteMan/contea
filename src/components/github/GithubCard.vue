@@ -72,8 +72,8 @@
             </div>
           </div>
           <div class="space-y-1 text-size-[12px] text-gray-400 italic text-right">
-            <div>Updated / Expried</div>
-            <div>{{ dayjs(extendInfo.ca_updated_at).format('DD HH:mm:ss') }} / {{ dayjs(extendInfo.ca_expried_at).format('DD HH:mm:ss') }}</div>
+            <div>Updated / Expired</div>
+            <div>{{ dayjs(extendInfo.ca_updated_at).format('DD HH:mm:ss') }} / {{ dayjs(extendInfo.ca_expired_at).format('DD HH:mm:ss') }}</div>
           </div>
         </div>
       </transition>
@@ -117,9 +117,9 @@ const getData = async(refresh = false) => {
   }
 
   try {
-    const { ca_updated_at, ca_expried_at, data: userData } = await Github.user(refresh)
+    const { ca_updated_at, ca_expired_at, data: userData } = await Github.user(refresh)
     data.user = userData
-    data.extendInfo = { ca_updated_at, ca_expried_at }
+    data.extendInfo = { ca_updated_at, ca_expired_at }
   }
   catch (e) {
     data.error = true

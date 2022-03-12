@@ -11,7 +11,7 @@ export type Config = BaseConfig & {
   }
 }
 
-export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'expried' | 'alarm'>
+export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'expired' | 'alarm'>
 
 export const setting: Config = {
   key: 'movie',
@@ -20,7 +20,7 @@ export const setting: Config = {
   site: '',
   apiUrl: '',
   alarm: 60,
-  expried: 3600,
+  expired: 3600,
   showCard: false,
   module: {
     libvio: {
@@ -32,7 +32,7 @@ export const setting: Config = {
   },
 }
 
-export type Item = {
+export interface Item {
   title?: string
   [other: string]: any
 }

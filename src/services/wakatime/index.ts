@@ -56,8 +56,8 @@ class WakaTime {
     })
 
     if (res.data) {
-      const expried = startDate !== endDate ? 43200 : 0 // 如果不是查询当日的数据，设置缓存时间为半天
-      return await RequestCache.set(cacheKey, { ca_login: login, ...res.data }, this.module, expried)
+      const expired = startDate !== endDate ? 43200 : 0 // 如果不是查询当日的数据，设置缓存时间为半天
+      return await RequestCache.set(cacheKey, { ca_login: login, ...res.data }, this.module, expired)
     }
 
     return { ca_login: false }

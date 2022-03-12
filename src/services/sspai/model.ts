@@ -6,7 +6,7 @@ export type Config = BaseConfig & {
   enableTypes: any[]
 }
 
-export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'expried' | 'alarm' | 'showCard' | 'enableTypes'>
+export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'expired' | 'alarm' | 'showCard' | 'enableTypes'>
 
 export const setting: Config = {
   key: 'sspai',
@@ -21,19 +21,19 @@ export const setting: Config = {
     'followActivity',
     'matrix',
   ],
-  expried: 3600,
+  expired: 3600,
   alarm: 30,
   showCard: true,
 }
 
-export type User = {
+export interface User {
   updatedAt?: number
-  expried?: number
+  expired?: number
 
   [propName: string]: any
 }
 
-export type Paginate = {
+export interface Paginate {
   limit: number
   offset: number
 }

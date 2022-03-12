@@ -88,8 +88,8 @@
           </div>
 
           <div class="space-y-1 text-size-[12px] text-light-400 italic text-right">
-            <div>Updated / Expried</div>
-            <div>{{ dayjs(extendInfo.ca_updated_at).format('DD HH:mm:ss') }} / {{ dayjs(extendInfo.ca_expried_at).format('DD HH:mm:ss') }}</div>
+            <div>Updated / Expired</div>
+            <div>{{ dayjs(extendInfo.ca_updated_at).format('DD HH:mm:ss') }} / {{ dayjs(extendInfo.ca_expired_at).format('DD HH:mm:ss') }}</div>
           </div>
         </div>
       </transition>
@@ -126,9 +126,9 @@ const getData = async(refresh = false) => {
     data.refreshLoading = true
 
   try {
-    const { ca_updated_at, ca_expried_at, data: moduleData } = await bilibili.moduleInfo(refresh)
+    const { ca_updated_at, ca_expired_at, data: moduleData } = await bilibili.moduleInfo(refresh)
     data.moduleInfo = moduleData
-    data.extendInfo = { ca_updated_at, ca_expried_at }
+    data.extendInfo = { ca_updated_at, ca_expired_at }
     data.cardStyle = {
       'background-image': moduleData.space.l_img ? `linear-gradient(-45deg, rgb(229, 231, 231, 0.6), rgb(116, 115, 115, 70%)), url(${moduleData.space.l_img})` : '',
     }

@@ -53,8 +53,8 @@
           </div>
         </div>
         <div>
-          <div>Updated / Expried</div>
-          <div>{{ dayjs(extendInfo.ca_updated_at).format('DD HH:mm:ss') }} / {{ dayjs(extendInfo.ca_expried_at).format('DD HH:mm:ss') }}</div>
+          <div>Updated / Expired</div>
+          <div>{{ dayjs(extendInfo.ca_updated_at).format('DD HH:mm:ss') }} / {{ dayjs(extendInfo.ca_expired_at).format('DD HH:mm:ss') }}</div>
         </div>
       </div>
     </transition>
@@ -90,9 +90,9 @@ const getData = async(refresh = false) => {
 
   data.login = await juejin.loginCheck()
   if (data.login) {
-    const { ca_updated_at, ca_expried_at, data: moduleData } = await juejin.moduleInfo(refresh)
+    const { ca_updated_at, ca_expired_at, data: moduleData } = await juejin.moduleInfo(refresh)
     data.moduleInfo = moduleData
-    data.extendInfo = { ca_updated_at, ca_expried_at }
+    data.extendInfo = { ca_updated_at, ca_expired_at }
   }
 
   if (refresh)

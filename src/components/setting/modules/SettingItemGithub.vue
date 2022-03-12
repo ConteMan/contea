@@ -24,15 +24,15 @@
       </n-input-number>
     </n-form-item>
 
-    <n-form-item label="过期" path="expried">
-      <n-input-number v-model:value="model.expried" class="w-full">
+    <n-form-item label="过期" path="expired">
+      <n-input-number v-model:value="model.expired" class="w-full">
         <template #suffix>
           分钟
         </template>
       </n-input-number>
     </n-form-item>
 
-    <n-form-item label="Token" path="expried">
+    <n-form-item label="Token" path="expired">
       <n-input v-model:value="model.token" placeholder="Personal Access Token" />
     </n-form-item>
 

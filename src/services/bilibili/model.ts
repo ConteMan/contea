@@ -6,7 +6,7 @@ export type Config = BaseConfig & {
   liveApiUrl: string
 }
 
-export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'expried' | 'alarm' | 'showCard'>
+export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'expired' | 'alarm' | 'showCard'>
 
 export const setting: Config = {
   key: 'bilibili',
@@ -18,7 +18,7 @@ export const setting: Config = {
   apiUrl: 'https://api.bilibili.com',
   liveApiUrl: 'https://api.live.bilibili.com',
   alarm: 60,
-  expried: 3600,
+  expired: 3600,
   showCard: true,
   contentScript: {
     enable: true,

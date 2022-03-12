@@ -18,18 +18,18 @@ class ModuleState extends AsyncModels.keyValue {
    * 合并式设置
    * @param module string - 模块名称
    * @param data {} - 模块内容
-   * @param expried number | boolean - 过期时间
+   * @param expired number | boolean - 过期时间
    */
-  async mergeSet(module: string, data: any, expried: number | boolean = true) {
+  async mergeSet(module: string, data: any, expired: number | boolean = true) {
     const now = new Date().getTime()
     data.ca_updated_at = now
 
-    if (expried || expried === 0) {
-      if (isBoolean(expried)) {
-        const { expried: moduleExpried } = await configState.getItem(module)
-        expried = parseInt(moduleExpried) ?? 0
+    if (expired || expired === 0) {
+      if (isBoolean(expired)) {
+        const { expired: moduleExpired } = await configState.getItem(module)
+        expired = parseInt(moduleExpired) ?? 0
       }
-      data.ca_expried_at = now + expried * 1000
+      data.ca_expired_at = now + expired * 1000
     }
 
     const res = await this.getItem(module)
@@ -48,7 +48,7 @@ class ModuleState extends AsyncModels.keyValue {
       return false
 
     const now = new Date().getTime()
-    if (res?.ca_expried_at && res?.ca_expried_at < now)
+    if (res?.ca_expired_at && res?.ca_expired_at < now)
       return false
 
     return res

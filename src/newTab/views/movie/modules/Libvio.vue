@@ -61,9 +61,9 @@ const { loading, config, error, moduleTypes, selectedTag, list, extendInfo } = t
 const getList = async(refresh = false) => {
   const res = await Base.libvio(refresh, selectedTag.value)
   if (Object.keys(res).length) {
-    const { ca_updated_at, ca_expried_at, data: listData } = res
+    const { ca_updated_at, ca_expired_at, data: listData } = res
     data.list = listData
-    data.extendInfo = { ca_updated_at, ca_expried_at }
+    data.extendInfo = { ca_updated_at, ca_expired_at }
     data.loading = false
   }
   else {
