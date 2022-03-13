@@ -18,9 +18,10 @@ export interface BaseConfig {
 export type Config = BaseConfig & {
   showCards: string[]
   defaultPath: string
+  statusList: boolean // 状态列表
 }
 
-export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'expired' | 'alarm'>
+export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'expired' | 'alarm' | 'statusList'>
 
 export const setting: Config = {
   key: 'base',
@@ -32,6 +33,7 @@ export const setting: Config = {
   expired: 3600,
   showCards: [],
   defaultPath: '/zen',
+  statusList: false,
 }
 
 export interface InfoItem {

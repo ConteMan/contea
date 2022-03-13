@@ -23,7 +23,6 @@
 
 <script setup lang="ts">
 import _ from 'lodash-es'
-import { useElementBounding } from '@vueuse/core'
 
 import V2ex from './modules/V2ex.vue'
 import Sspai from './modules/Sspai.vue'
@@ -48,14 +47,6 @@ const data = reactive({
 const configState = useConfigState()
 const { all } = storeToRefs(configState)
 data.config = all
-
-const { worldlineContainerRef, worldlineTabRef } = toRefs(data)
-
-const { height: containerHeight } = useElementBounding(worldlineContainerRef)
-const { height: tabHeight } = useElementBounding(worldlineTabRef)
-const dealTabHeight = computed(() => {
-  return `${containerHeight.value - tabHeight.value}px`
-})
 
 const menuOptions = [
   {
@@ -85,13 +76,19 @@ const menuOptions = [
   {
     label: '状态',
     key: 'status',
-    type: 'system',
   },
 ]
 
 const dealMenuOptions = computed(() => {
+  const specialKeys: string[] = []
+
+  if (data.config?.base?.statusList)
+    specialKeys.push('status')
+
   return menuOptions.filter((item: any) => {
-    if ((item?.type && ['divider', 'system'].includes(item.type)) || item?.disabled)
+    if (specialKeys.length && specialKeys.includes(item.key))
+      return true
+    if (item?.type && ['divider', 'system'].includes(item.type))
       return true
     return _.findIndex(Object.values(data.config), (configItem: any) => {
       return toRaw(configItem.key) === item.key && toRaw(configItem.enable)
@@ -130,8 +127,5 @@ watch(dealMenuOptions, (newValue) => {
 .worldline-menu {
   min-width: fit-content;
   max-width: fit-content;
-}
-.worldline-tab-pane-container {
-  height: v-bind(dealTabHeight);
 }
 </style>

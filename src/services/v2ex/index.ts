@@ -1,6 +1,6 @@
 /* eslint-disable prefer-regex-literals */
 import dayjs from 'dayjs'
-import type { Config, DomList, Mession, Module, User } from './model'
+import type { Config, DomList, Mission, Module, User } from './model'
 import { defHttp } from '~/utils/http/axios'
 import configState from '~/models/keyValue/configState'
 import moduleState from '~/models/keyValue/moduleState'
@@ -28,6 +28,47 @@ class V2EX {
   }
 
   /**
+   * 获取模块类型数据
+   * @param moduleTypes 要更新模块类型，数组
+   */
+  async moduleTypeData(moduleTypes: string[] = []) {
+    if (!moduleTypes.length) {
+      moduleTypes = [
+        this.module,
+      ]
+    }
+
+    const data = {} as any
+    await Promise.all(moduleTypes.map(async(item) => {
+      data[item] = await moduleState.getItem(item) ?? {}
+    }))
+    return data
+  }
+
+  /**
+   * 更新模块类型数据
+   * @param moduleTypes 要更新模块类型，数组
+   */
+  async updateModuleTypeData(moduleTypes: string[] = []) {
+    if (!moduleTypes.length) {
+      moduleTypes = [
+        this.module,
+      ]
+    }
+
+    const relations = {
+      [this.module]: this.user(),
+    }
+
+    const data = {} as any
+    await Promise.all(moduleTypes.map(async(item) => {
+      data.item = await relations[item] ?? {}
+    }))
+
+    return data
+  }
+
+  /**
    * 获取用户名
    */
   async getUserName(): Promise<string> {
@@ -49,73 +90,63 @@ class V2EX {
   /**
    * 获取用户信息
    */
-  async user(refresh = false) {
-    if (!refresh) {
-      const cache = await moduleState.getValidItem(this.module)
-      if (cache)
-        return cache
-    }
-
-    if (!await this.loginCheck())
-      return { ca_login: false }
-
-    let username = ''
-    const info = await moduleState.getItem(this.module) as Module
-
-    if (!info?.data?.username)
-      username = await this.getUserName()
-    else
-      username = info?.data?.username
-
+  async user() {
+    const username = await this.getUserName()
     if (!username)
-      return { ca_login: false }
+      return false
 
     const { url } = await configState.getItem(this.module) as Config
-    const res = await defHttp.get({
-      url: `${url}${username}`,
-    })
 
-    const domParser = new DOMParser()
-    const dom = domParser.parseFromString(res.data, 'text/html')
+    try {
+      const res = await defHttp.get({
+        url: `${url}${username}`,
+      })
 
-    const mainDom = dom.querySelector('#Main')
+      const domParser = new DOMParser()
+      const dom = domParser.parseFromString(res.data, 'text/html')
 
-    const idHtml = mainDom?.querySelector('span.gray')?.innerHTML
-    const id = idHtml?.match(/V2EX 第 ([0-9]+?) 号会员/)?.[1]
-    const created = idHtml?.match(/加入于 (.+?) /)?.[1]
-    const dau = mainDom?.querySelector('span.gray a')?.innerHTML
-    const online = mainDom?.querySelector('strong.online')?.innerHTML
-    const balanceHtml = mainDom?.querySelector('div.balance_area')?.innerHTML
-    const balanceArray = [...String(balanceHtml).matchAll(/\s?([0-9]+?)\s\</g)]
-    const balance = {
-      gold: balanceArray[0][1],
-      silver: balanceArray[1][1],
-      bronze: balanceArray[2][1],
+      const mainDom = dom.querySelector('#Main')
+
+      const idHtml = mainDom?.querySelector('span.gray')?.innerHTML
+      const id = idHtml?.match(/V2EX 第 ([0-9]+?) 号会员/)?.[1]
+      const created = idHtml?.match(/加入于 (.+?) /)?.[1]
+      const dau = mainDom?.querySelector('span.gray a')?.innerHTML
+      const online = mainDom?.querySelector('strong.online')?.innerHTML
+      const balanceHtml = mainDom?.querySelector('div.balance_area')?.innerHTML
+      const balanceArray = [...String(balanceHtml).matchAll(/\s?([0-9]+?)\s\</g)]
+      const balance = {
+        gold: balanceArray[0][1],
+        silver: balanceArray[1][1],
+        bronze: balanceArray[2][1],
+      }
+      const showName = username.split('/')?.[2]
+      const signature = mainDom?.querySelector('.bigger')?.innerHTML
+
+      const newInfo: User = {
+        id,
+        created,
+        dau,
+        online,
+        balance,
+        showName,
+        signature,
+      }
+
+      return await moduleState.mergeSet(this.module, { data: newInfo }) as Module
     }
-    const showName = username.split('/')?.[2]
-    const signature = mainDom?.querySelector('.bigger')?.innerHTML
-
-    const newInfo: User = {
-      id,
-      created,
-      dau,
-      online,
-      balance,
-      showName,
-      signature,
+    catch (e) {
+      return false
     }
-
-    return await moduleState.mergeSet(this.module, { ca_login: true, data: newInfo }) as Module
   }
 
   /**
    * 签到
    */
-  async mission(): Promise<Mession> {
+  async mission(): Promise<Mission> {
     const { url } = await await configState.getItem(this.module) as Config
 
     const mainPage = await defHttp.get({ url })
-    const sign = mainPage.data.match(/once=([0-9]+)/)?.[1]
+    const sign = mainPage.data.match(/once=([0-9]+)/)?.[1] // 签名
 
     const missionUrl = `${url}/mission/daily/redeem`
     const res = await defHttp.get({

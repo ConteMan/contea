@@ -88,8 +88,6 @@ class WeRead {
   async refreshLogin() {
     const { site: url } = await configState.getItem(this.module)
     await defHttp.get({ url })
-    // eslint-disable-next-line no-console
-    console.log('refreshLogin')
     return true
   }
 

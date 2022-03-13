@@ -49,6 +49,11 @@ export type User = BaseUser & {
     days?: number
   }
 }
+export interface cacheUser {
+  ca_updated_at: string
+  ca_expired_at: string
+  data: User
+}
 
 export type Module = BaseModule & {
   data?: User

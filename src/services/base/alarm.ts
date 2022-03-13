@@ -71,6 +71,8 @@ class AlarmSetting {
       const { data } = moduleInfo
       if (!data.mission || !data.mission?.date || dayjs().isAfter(dayjs(data.mission.date), 'day'))
         await v2ex.mission()
+
+      await v2ex.updateModuleTypeData()
     }
 
     if (module === 'sspai') {

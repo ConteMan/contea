@@ -1,5 +1,5 @@
 <template>
-  <div ref="moduleContainerRef" class="module-container h-screen flex flex-col">
+  <div ref="moduleContainerRef" class="module-container h-screen flex flex-col overflow-y-hidden">
     <TopBar />
 
     <div class="flex flex-grow h-full">

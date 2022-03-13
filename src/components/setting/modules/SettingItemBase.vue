@@ -28,6 +28,10 @@
       </n-input-number>
     </n-form-item>
 
+    <n-form-item label="状态列表">
+      <n-switch v-model:value="model.statusList" size="small" :round="false" />
+    </n-form-item>
+
     <n-form-item label="重置">
       <n-switch v-model:value="resetLoading" :loading="resetLoading" size="small" :round="false" @update:value="reset()" />
     </n-form-item>
