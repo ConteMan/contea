@@ -24,6 +24,13 @@ const data = reactive({
 })
 const { namespace } = toRefs(data)
 
+useHead({
+  title: 'Contea',
+  meta: [
+    { name: 'description', content: 'Contea' },
+  ],
+})
+
 const themeOverrides: GlobalThemeOverrides = {
   common: {
     primaryColor: '#ff4f49',

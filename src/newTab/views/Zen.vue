@@ -1,6 +1,7 @@
 <template>
   <div class="w-full h-screen bg-center bg-cover" :style="data.wallpaperStyle">
     <div class="zen-setting-container fixed bottom-1 right-2 space-x-2 rounded-md pt-2 px-2 hover:(bg-light-400)" :class="{ '!bg-light-400': settingBg }">
+      <mdi-card-text class="opacity-30 cursor-pointer hover:(opacity-100)" @click="toModulePage" />
       <la-random v-if="wallpaperInfo.mode === 'random'" class="opacity-30 cursor-pointer hover:(opacity-100)" @click="random()" />
       <n-popover
         trigger="hover"
@@ -80,6 +81,11 @@ const data = reactive({
 })
 const { wallpaperInfo, backgroundOpacity, settingBg, showOpacity, showDrawer, wallpaperSourceOptions } = toRefs(data)
 const popover = ref(null)
+
+const router = useRouter()
+const toModulePage = () => {
+  router.push({ path: '/module' })
+}
 
 const newTabState = useNewTabState()
 const { wallpaper } = storeToRefs(newTabState)

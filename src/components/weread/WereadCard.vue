@@ -1,9 +1,6 @@
 <template>
-  <Card class="flex flex-col justify-between cursor-default">
-    <div v-if="loading" class="duration-200 animate-pulse">
-      ...
-    </div>
-    <div v-else>
+  <Card v-if="!loading" class="flex flex-col justify-between cursor-default">
+    <div>
       <!-- 已登录 -->
       <div v-if="login">
         <div class="flex flex-row justify-between">
@@ -58,7 +55,7 @@
       </div>
       <!-- 未登录 -->
       <div v-else class="flex flex-row justify-between items-center">
-        <div>请登录</div>
+        <div>Login</div>
         <div
           class="cursor-pointer font-bold text-xl text-white hover:(underline underline-offset-2 duration-200 animate-pulse)"
           @click.stop="openSite(config.site)"
@@ -74,6 +71,7 @@ import dayjs from 'dayjs'
 import Duration from 'dayjs/plugin/duration'
 
 import { openSite } from '~/utils'
+import { isEmpty } from '~/utils/is'
 import { puzzling } from '~/utils/extend'
 
 import Card from '~/components/template/TemplateCard.vue'
@@ -117,9 +115,13 @@ const getData = async() => {
   data.moduleData = moduleTypeData[module]
   data.readDetail = moduleTypeData[`${module}_${ModuleType.READ_DETAIL}`]
   data.memberCard = moduleTypeData[`${module}_${ModuleType.MEMBER_CARD}`]
+  if (isEmpty(data.moduleData) || isEmpty(data.readDetail) || isEmpty(data.memberCard)) {
+    data.login = false
+    data.loading = false
+    return
+  }
 
   data.bookList = readDetail.value.data.datas[0].readMeta.books ? (readDetail.value.data.datas[0].readMeta.books).slice(0, 2) : []
-
   data.loading = false
 }
 

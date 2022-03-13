@@ -16,7 +16,7 @@ export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiU
 export const setting: Config = {
   key: 'movie',
   name: '影视',
-  enable: true,
+  enable: false,
   site: '',
   apiUrl: '',
   alarm: 60,

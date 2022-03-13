@@ -1,14 +1,5 @@
 <template>
-  <div class="app-content-container max-h-screen min-h-screen flex flex-col">
-    <div class="top-bar px-2 pt-2 bg-light-200">
-      <div class="float-right">
-        <a class="opacity-10 hover:(opacity-100)" @click="changeSettingDrawer()">
-          <mdi-cog />
-        </a>
-      </div>
-    </div>
-    <router-view class="router-container overflow-y-auto flex-grow" />
-  </div>
+  <router-view />
   <SearchModal />
   <SettingDrawer />
 </template>
@@ -28,11 +19,6 @@ const settingKey = 's'
 
 const router = useRouter()
 const route = useRoute()
-
-const data = reactive({
-  topBarHeight: 50, // 顶部栏高度
-})
-const { topBarHeight } = toRefs(data)
 
 const changeMode = () => {
   const path = route.path === defaultPath ? modulePath : defaultPath
@@ -74,12 +60,3 @@ useEventListener(window, 'keyup', (e: any) => {
     changeSettingDrawer()
 })
 </script>
-
-<style lang="less" scoped>
-.top-bar {
-  height: v-bind(topBarHeight)px;
-}
-.router-container {
-  height: calc(100% - v-bind(topBarHeight)px);
-}
-</style>

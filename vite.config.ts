@@ -54,6 +54,8 @@ export const sharedConfig: UserConfig = {
       imports: [
         'vue',
         'vue-router',
+        '@vueuse/core',
+        '@vueuse/head',
         {
           'webextension-polyfill': [['default', 'browser']],
           'dayjs': [['default', 'dayjs']],

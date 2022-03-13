@@ -8,7 +8,7 @@ export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'expired' | 'a
 export const setting: Config = {
   key: 'sport',
   name: '体育',
-  enable: true,
+  enable: false,
   site: '',
   apiUrl: '',
   expired: 600,

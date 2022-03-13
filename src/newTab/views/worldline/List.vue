@@ -75,20 +75,12 @@ const menuOptions = [
     key: 'zhihu',
   },
   {
-    key: 'divider-2',
-    type: 'divider',
-  },
-  {
     label: '影视',
     key: 'movie',
   },
   {
     label: '体育',
     key: 'sport',
-  },
-  {
-    key: 'divider-status',
-    type: 'divider',
   },
   {
     label: '状态',
