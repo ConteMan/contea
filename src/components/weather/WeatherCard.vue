@@ -7,19 +7,16 @@
     <div v-else class="flex flex-row justify-between">
       <div class="flex-col">
         <div class="flex items-center">
-          <mdi-map-marker />
           <a class="ml-2 cursor-pointer hover:(underline underline-offset-2 duration-200 animate-pulse)" :href="config.site">
             {{ base.location.name }} ({{ base.location.longitude }}, {{ base.location.latitude }})
           </a>
         </div>
         <div class="flex items-center">
-          <mdi-temperature-celsius />
           <span class="ml-2">
             {{ base.now.temperature }}
           </span>
         </div>
         <div class="flex items-center">
-          <mdi-windsock />
           <span class="ml-2">
             <template v-if="base.now.windDirection !== '9999'">{{ base.now.windDirection }}</template> {{ base.now.windScale }}
           </span>
