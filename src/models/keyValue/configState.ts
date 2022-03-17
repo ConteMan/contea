@@ -11,9 +11,9 @@ import Alarm from '~/services/base/alarm'
 
 import { useConfigState } from '~/store/config'
 
-type InfoItem = Record<string, any>;
+type Item = Record<string, any>
 
-class ConfigState extends AsyncModels.keyValue<InfoItem, DexieDriver> {
+class ConfigState extends AsyncModels.keyValue<Item, DexieDriver> {
   constructor() {
     super({
       name: 'config_state',

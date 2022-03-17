@@ -45,11 +45,14 @@ class AlarmSetting {
   async alarmDeal(module: string) {
     // eslint-disable-next-line no-console
     console.log('[ Alarm module ] >', module)
-    const configInfo = await configState.getItem(module)
+    const configInfo = await configState.storage.query().get(module)
+
+    // eslint-disable-next-line no-console
+    console.log('%c [ configInfo ]-49-「alarm.ts」', 'font-size:13px; background:pink; color:#bf2c9f;', configInfo)
 
     let moduleInfo: any
     if (['v2ex', 'bilibili', 'juejin'].includes(module)) {
-      moduleInfo = await moduleState.getItem(module)
+      moduleInfo = await moduleState.storage.query().get(module)
       // eslint-disable-next-line no-console
       console.log('[ Alarm moduleInfo ] >', moduleInfo)
     }

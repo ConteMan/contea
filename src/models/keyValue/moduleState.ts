@@ -1,11 +1,14 @@
 import { AsyncModels } from 'kurimudb'
 import migrations from '../migrations'
+import type { DexieDriver } from '~/utils/kurimudb-driver-dexie'
 import { dexieDriverFactory } from '~/utils/kurimudb-driver-dexie'
 import { deepMerge } from '~/utils'
 import configState from '~/models/keyValue/configState'
 import { isBoolean } from '~/utils/is'
 
-class ModuleState extends AsyncModels.keyValue {
+type Item = Record<string, any>
+
+class ModuleState extends AsyncModels.keyValue<Item, DexieDriver> {
   constructor() {
     super({
       name: 'module_state',
