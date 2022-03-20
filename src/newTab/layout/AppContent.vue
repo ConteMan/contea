@@ -26,11 +26,13 @@ const changeMode = () => {
 }
 
 // 监听快捷键
-browser.runtime.onMessage.addListener((message: any, sender: any) => {
+browser.runtime.onMessage.addListener(async(message: any, sender: any) => {
   // eslint-disable-next-line no-console
   console.log('[AppContent receive]>', message, sender)
   if (message.data === 'change-mode')
     changeMode()
+
+  return { from: 'response from AppContent' }
 })
 
 const modalState = useModalState()

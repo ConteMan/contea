@@ -36,11 +36,11 @@ browser.runtime.onMessage.addListener(async(message: { command: any; data: any }
   // eslint-disable-next-line no-console
   console.log('[background.js receive]>', message, sender)
 
+  let messageRes
+
   // 执行内容脚本
-  if (command === 'exec-content-script') {
-    const res = await contentScriptService.execScript()
-    return res
-  }
+  if (command === 'exec-content-script')
+    messageRes = await contentScriptService.execScript()
 
   // 处理内容脚本
   if (command === 'deal-content-script') {
@@ -57,11 +57,13 @@ browser.runtime.onMessage.addListener(async(message: { command: any; data: any }
     }
 
     if (sender.tab?.id)
-      await browser.tabs.remove(sender.tab?.id)
+      messageRes = await browser.tabs.remove(sender.tab?.id)
   }
 
   return {
     command,
+    res: messageRes,
+    from: 'response from Background',
   }
 })
 
