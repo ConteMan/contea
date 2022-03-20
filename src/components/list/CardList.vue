@@ -5,10 +5,10 @@
     item-key="key"
     handle=".handle"
     :list="data.cardList"
-    class="overflow-y-auto flex flex-col space-y-2 px-2 pb-2"
+    class="overflow-y-auto flex flex-col px-2"
   >
     <template #item="{ element }">
-      <div>
+      <div class="not-first:(mt-2)">
         <WakaTimeCard
           v-if="element.key === 'wakatime'"
         />

@@ -8,7 +8,7 @@
         @update:value="changeActiveKey"
       />
     </div>
-    <div class="worldline-tab-pane-container flex-1 w-0">
+    <div class="worldline-tab-pane-container flex-1 w-0 h-full">
       <V2ex v-if="activeKey === 'v2ex'" class="h-full" />
       <Sspai v-else-if="activeKey === 'sspai'" class="h-full" />
       <Jike v-else-if="activeKey === 'jike'" class="h-full" />

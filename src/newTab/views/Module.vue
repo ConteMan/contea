@@ -1,12 +1,12 @@
 <template>
   <div ref="moduleContainerRef" class="module-container h-screen flex flex-col overflow-y-hidden">
-    <TopBar />
+    <TopBar ref="moduleTabRef" />
 
-    <div class="flex flex-grow h-full">
-      <div class="flex-grow min-h-full max-h-full">
+    <div class="flex flex-grow" :style="{ 'max-height': data.dealTabPaneHeight }">
+      <div class="flex-grow max-h-full pb-2">
         <WorldlineList class="worldline-list h-full" />
       </div>
-      <div class="max-h-full">
+      <div class="max-h-full pb-2">
         <CardList class="max-w-[400px] min-w-[400px] max-h-full overflow-y-auto" />
       </div>
     </div>
