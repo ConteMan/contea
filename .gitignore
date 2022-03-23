@@ -1,0 +1,32 @@
+# System
+.DS_Store
+
+# IDE
+.idea
+*.code-workspace
+
+# Dependency directories
+node_modules
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# This project
+.vite-ssg-dist
+.vite-ssg-temp
+*.crx
+*.local
+*.pem
+*.xpi
+*.zip
+dist
+dist-ssr
+extension/manifest.json
+extension_build/manifest.json
+src/auto-imports.d.ts
+src/components.d.ts
