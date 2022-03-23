@@ -1,7 +1,7 @@
 import fs from 'fs-extra'
 import type { Manifest } from 'webextension-polyfill'
 import type PkgType from '../package.json'
-import { port, r } from '../utils'
+import { r } from '../utils'
 
 // interface newManifest extends Omit<Manifest.WebExtensionManifest, 'commands'> {
 //   commands?: Record<string, Manifest.WebExtensionManifest['commands'] & { global?: boolean }>
@@ -44,8 +44,11 @@ export async function getManifest() {
       'history',
       'commands',
       'webNavigation',
+      'scripting',
+      'declarativeNetRequest',
+      'declarativeNetRequestFeedback',
     ],
-    host_permissions: ['*://*/*'],
+    host_permissions: ['*://*/*', '<all_urls>', 'http://localhost:*/*'],
     // // 覆盖浏览器默认页面
     // chrome_url_overrides:
     // {
@@ -75,7 +78,7 @@ export async function getManifest() {
       },
     ],
     content_security_policy: {
-      extension_pages: `script-src 'self' http://localhost:${port}; default-src 'self' http://localhost:${port}`,
+      extension_pages: 'script-src \'self\' http://localhost http://localhost:9001; object-src \'self\' http://localhost http://localhost:9001',
     },
   }
 

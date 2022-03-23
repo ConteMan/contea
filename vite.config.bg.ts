@@ -6,14 +6,6 @@ import packageJson from './package.json'
 export default defineConfig({
   base: '/dist/',
   root: r('src'),
-  // resolve: {
-  //   alias: [
-  //     {
-  //       find: '~/',
-  //       replacement: `${r('src')}/`,
-  //     },
-  //   ],
-  // },
   define: {
     __DEV__: isDev,
   },
@@ -25,7 +17,7 @@ export default defineConfig({
         ],
       }
       : undefined,
-    outDir: isDev ? r('extension/dist/background') : r('extension_build/dist/background'),
+    outDir: r('extension/dist/background'),
     cssCodeSplit: false,
     emptyOutDir: false,
     sourcemap: isDev ? 'inline' : false,

@@ -2,26 +2,15 @@
 import { execSync } from 'child_process'
 import fs from 'fs-extra'
 import chokidar from 'chokidar'
-import { isDev, log, port, r } from '../utils'
+import { isDev, log, r } from '../utils'
 
 /**
  * Stub index.html to use Vite in development
  */
-async function stubIndexHtml() {
-  const views = [
-    'options',
-    'popup',
-  ]
-
-  for (const view of views) {
-    await fs.ensureDir(r(`extension/dist/${view}`))
-    let data = await fs.readFile(r(`src/${view}/index.html`), 'utf-8')
-    data = data
-      .replace('"./main.ts"', `"http://localhost:${port}/${view}/main.ts"`)
-      .replace('<div id="app"></div>', '<div id="app">Vite server did not start</div>')
-    await fs.writeFile(r(`extension/dist/${view}/index.html`), data, 'utf-8')
-    log('PRE', `stub ${view}`)
-  }
+async function stubIndexHtml(type = '') {
+  const version = new Date().getTime()
+  await fs.writeFile(r('extension/version.json'), JSON.stringify({ version, type }), 'utf-8')
+  log('PRE', `version: ${version}`)
 }
 
 function writeManifest() {
@@ -30,14 +19,23 @@ function writeManifest() {
 
 writeManifest()
 
+console.log(`[prepare]> ${isDev}`)
+
 if (isDev) {
   stubIndexHtml()
-  chokidar.watch(r('src/**/*.html'))
-    .on('change', () => {
-      stubIndexHtml()
+  chokidar.watch(r('extension/dist/**/*'))
+    .on('change', (path) => {
+      if (/.*\/background\/.*/.test(path)) {
+        log('PRE', `path: ${path}`)
+        stubIndexHtml('background')
+      }
+      else {
+        stubIndexHtml()
+      }
     })
   chokidar.watch([r('src/manifest.ts'), r('package.json')])
     .on('change', () => {
       writeManifest()
+      stubIndexHtml('background')
     })
 }
