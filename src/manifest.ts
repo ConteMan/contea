@@ -3,21 +3,14 @@ import type { Manifest } from 'webextension-polyfill'
 import type PkgType from '../package.json'
 import { r } from '../utils'
 
-// interface newManifest extends Omit<Manifest.WebExtensionManifest, 'commands'> {
-//   commands?: Record<string, Manifest.WebExtensionManifest['commands'] & { global?: boolean }>
-// }
-
 export async function getManifest() {
   const pkg = await fs.readJSON(r('package.json')) as typeof PkgType
 
-  // update this file to update this manifest.json
-  // can also be conditional based on your need
   const manifest: Manifest.WebExtensionManifest = {
     manifest_version: 3,
     name: pkg.name,
     version: pkg.version,
     description: pkg.description,
-
     action: {
       default_icon: './assets/icon-128.png',
       default_popup: './dist/popup/index.html',
@@ -48,13 +41,13 @@ export async function getManifest() {
       'declarativeNetRequest',
       'declarativeNetRequestFeedback',
     ],
-    host_permissions: ['*://*/*', '<all_urls>', 'http://localhost:*/*'],
-    // // 覆盖浏览器默认页面
-    // chrome_url_overrides:
-    // {
-    //   // 覆盖浏览器默认的新标签页
-    //   newtab: './dist/newTab/index.html',
-    // },
+    host_permissions: [
+      '<all_urls>',
+    ],
+    chrome_url_overrides:
+    {
+      newtab: './dist/newTab/index.html',
+    },
     commands: {
       '_execute_browser_action': {
         suggested_key: {
@@ -78,7 +71,7 @@ export async function getManifest() {
       },
     ],
     content_security_policy: {
-      extension_pages: 'script-src \'self\' http://localhost http://localhost:9001; object-src \'self\' http://localhost http://localhost:9001',
+      extension_pages: 'script-src \'self\'; object-src \'self\'',
     },
   }
 

@@ -1,13 +1,13 @@
-// generate stub index.html files for dev entry
+// generate stub version.json files for dev entry
 import { execSync } from 'child_process'
 import fs from 'fs-extra'
 import chokidar from 'chokidar'
 import { isDev, log, r } from '../utils'
 
 /**
- * Stub index.html to use Vite in development
+ * Stub version.json in development
  */
-async function stubIndexHtml(type = '') {
+async function stubVersionJSON(type = '') {
   const version = new Date().getTime()
   await fs.writeFile(r('extension/version.json'), JSON.stringify({ version, type }), 'utf-8')
   log('PRE', `version: ${version}`)
@@ -22,20 +22,20 @@ writeManifest()
 console.log(`[prepare]> ${isDev}`)
 
 if (isDev) {
-  stubIndexHtml()
+  stubVersionJSON()
   chokidar.watch(r('extension/dist/**/*'))
     .on('change', (path) => {
       if (/.*\/background\/.*/.test(path)) {
         log('PRE', `path: ${path}`)
-        stubIndexHtml('background')
+        stubVersionJSON('background')
       }
       else {
-        stubIndexHtml()
+        stubVersionJSON()
       }
     })
   chokidar.watch([r('src/manifest.ts'), r('package.json')])
     .on('change', () => {
       writeManifest()
-      stubIndexHtml('background')
+      stubVersionJSON('background')
     })
 }

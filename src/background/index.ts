@@ -34,15 +34,15 @@ browser.runtime.onInstalled.addListener(async() => {
 
   // eslint-disable-next-line no-console
   console.log(`[version] ${JSON.stringify(version)} ...`)
-})
 
-if (version) {
-  browser.alarms.create(
-    'DEV_WATCH',
-    {
-      periodInMinutes: 0.1,
-    })
-}
+  if (version) {
+    browser.alarms.create(
+      'DEV_WATCH',
+      {
+        periodInMinutes: 0.1,
+      })
+  }
+})
 
 browser.alarms.onAlarm.addListener(async(alarm: { name: any }) => {
   const { name } = alarm
@@ -50,6 +50,7 @@ browser.alarms.onAlarm.addListener(async(alarm: { name: any }) => {
   // eslint-disable-next-line no-console
   console.log(`[bg onAlarm] > ${name}`)
 
+  // 开发模式
   if (name === 'DEV_WATCH') {
     const currentVersion = await getVersion()
     if (currentVersion.version !== version.version) {
@@ -60,21 +61,17 @@ browser.alarms.onAlarm.addListener(async(alarm: { name: any }) => {
         return
       }
       else {
-        const tabs = await browser.tabs.query({ active: true })
+        const tabs = await browser.tabs.query({ })
         if (Object.keys(tabs).length) {
           tabs.forEach((item) => {
             const idReg = new RegExp(`/.*${extensionId}.*/`)
-            if (item?.url && idReg.test(item.url)) {
+            if (item?.url && (idReg.test(item.url) || /chrome:\/\/newtab.*/.test(item.url))) {
               browser.tabs.reload(item.id)
               // eslint-disable-next-line no-console
               console.log(`[bg DEV_WATCH reload]> ${item.id}`)
             }
           })
         }
-        // eslint-disable-next-line no-console
-        console.log(`[bg DEV_WATCH extensionId]> ${extensionId}`)
-        // eslint-disable-next-line no-console
-        console.log(`[bg DEV_WATCH tabs]> ${JSON.stringify(tabs)}`)
       }
 
       version = currentVersion

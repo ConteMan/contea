@@ -1,16 +1,9 @@
 import { dirname, relative } from 'path'
 import { defineConfig } from 'vite'
 import Vue from '@vitejs/plugin-vue'
-import { isDev, port, r } from './utils'
+import { isDev, r } from './utils'
 
-export default defineConfig(({ command }) => ({
-  base: command === 'serve' ? `http://localhost:${port}/` : '/dist/',
-  server: {
-    port,
-    hmr: {
-      host: 'localhost',
-    },
-  },
+export default defineConfig(({
   root: r('src'),
   resolve: {
     alias: [
@@ -35,6 +28,7 @@ export default defineConfig(({ command }) => ({
       input: {
         options: r('src/options/index.html'),
         popup: r('src/popup/index.html'),
+        newTab: r('src/newTab/index.html'),
       },
     },
   },
