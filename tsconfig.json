@@ -15,15 +15,43 @@
     "paths": {
       "~/*": [
         "src/*"
-      ]
+      ],
+      "@utils/*": [
+        "utils/*"
+      ],
+      "@services/*": [
+        "services/*"
+      ],
+      "@models/*": [
+        "models/*"
+      ],
+      "@setting/*": [
+        "setting/*"
+      ],
+      "@enums/*": [
+        "enums/*"
+      ],
+      "@localTypes/*": [
+        "types/*"
+      ],
     },
   },
   "include": [
+    "vite.config.ts",
+    "vite.config.bg.ts",
+    "vite.config.content.ts",
     "src/**/*.ts",
     "src/**/*.d.ts",
+    "src/*.d.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
-    "vite.config.ts",
+    "utils/**/*.ts",
+    "services/**/*.ts",
+    "models/**/*.ts",
+    "setting/*.ts",
+    "enums/*.ts",
+    "types/*.d.ts",
+    "scripts/*.ts",
   ],
   "exclude": [
     "dist",

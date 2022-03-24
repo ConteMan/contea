@@ -1,10 +1,12 @@
-import browser from 'webextension-polyfill'
+import configState from '@models/keyValue/configState'
 
 interface IVersion {
   isDev: boolean
   version?: string
   type?: string
 }
+
+const devStateKey = 'DEV_VERSION'
 
 const currentUrl = browser.runtime.getURL('')
 const extensionId = currentUrl.replace(/chrome-extension:\/\/|\//g, '')
@@ -16,7 +18,7 @@ async function getVersion(): Promise<IVersion> {
     .then((res: any) => res.json())
     .catch(() => false)
 
-  return res ?? { isDev: false }
+  return typeof res === 'boolean' ? { isDev: false } : res
 }
 
 let version: IVersion = {
@@ -27,21 +29,24 @@ browser.runtime.onInstalled.addListener(async() => {
   // eslint-disable-next-line no-console
   console.log('init')
 
-  // eslint-disable-next-line no-console
-  console.log('watching ...2ssss')
-
   version = await getVersion()
-
   // eslint-disable-next-line no-console
   console.log(`[version] ${JSON.stringify(version)} ...`)
 
-  if (version) {
-    browser.alarms.create(
+  if (version.isDev) {
+    // eslint-disable-next-line no-console
+    console.log('watching ...', { [devStateKey]: version })
+
+    await browser.storage.local.set({ [devStateKey]: version })
+
+    await browser.alarms.create(
       'DEV_WATCH',
       {
-        periodInMinutes: 0.1,
+        periodInMinutes: 0.2,
       })
   }
+
+  configState.init()
 })
 
 browser.alarms.onAlarm.addListener(async(alarm: { name: any }) => {
@@ -53,17 +58,21 @@ browser.alarms.onAlarm.addListener(async(alarm: { name: any }) => {
   // 开发模式
   if (name === 'DEV_WATCH') {
     const currentVersion = await getVersion()
-    if (currentVersion.version !== version.version) {
+    const storage = await browser.storage.local.get([devStateKey])
+    const oldVersion = storage[devStateKey]
+    // eslint-disable-next-line no-console
+    console.log(`[bg onAlarm DEV_WATCH] > ${currentVersion.version}`, oldVersion)
+    if (currentVersion.version !== oldVersion.version) {
+      browser.storage.local.set({ [devStateKey]: currentVersion })
       if (currentVersion.type === 'background') {
         // eslint-disable-next-line no-console
         console.log(`[bg DEV_WATCH]> background ${JSON.stringify(currentVersion)}`)
         browser.runtime.reload()
-        return
       }
       else {
         const tabs = await browser.tabs.query({ })
         if (Object.keys(tabs).length) {
-          tabs.forEach((item) => {
+          tabs.forEach((item: any) => {
             const idReg = new RegExp(`/.*${extensionId}.*/`)
             if (item?.url && (idReg.test(item.url) || /chrome:\/\/newtab.*/.test(item.url))) {
               browser.tabs.reload(item.id)
@@ -73,8 +82,8 @@ browser.alarms.onAlarm.addListener(async(alarm: { name: any }) => {
           })
         }
       }
-
-      version = currentVersion
     }
   }
 })
+
+export {}

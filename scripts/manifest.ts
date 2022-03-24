@@ -1,9 +1,9 @@
 import fs from 'fs-extra'
-import { getManifest } from '../src/manifest'
-import { isDev, log, r } from '../utils'
+import { log, r } from '@utils/script'
+import { getManifest } from '~/manifest'
 
 export async function writeManifest() {
-  const dir = isDev ? 'extension' : 'extension_build'
+  const dir = 'extension'
   await fs.writeJSON(r(`${dir}/manifest.json`), await getManifest(), { spaces: 2 })
   log('PRE', 'write manifest.json')
 }

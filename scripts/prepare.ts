@@ -2,14 +2,14 @@
 import { execSync } from 'child_process'
 import fs from 'fs-extra'
 import chokidar from 'chokidar'
-import { isDev, log, r } from '../utils'
+import { isDev, log, r } from '@utils/script'
 
 /**
  * Stub version.json in development
  */
 async function stubVersionJSON(type = '') {
   const version = new Date().getTime()
-  await fs.writeFile(r('extension/version.json'), JSON.stringify({ version, type }), 'utf-8')
+  await fs.writeFile(r('extension/version.json'), JSON.stringify({ version, type, isDev: true }), 'utf-8')
   log('PRE', `version: ${version}`)
 }
 

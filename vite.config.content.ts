@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite'
+import { isDev, r } from './utils'
 import { sharedConfig } from './vite.config'
-import { isDev, r } from './utils/script'
 import packageJson from './package.json'
 
 // bundling the content script using Vite
@@ -11,16 +11,16 @@ export default defineConfig({
     watch: isDev
       ? {
         include: [
-          r('src/background/**/*'),
+          r('src/contentScripts/**/*'),
         ],
       }
       : undefined,
-    outDir: r('extension/dist/background'),
+    outDir: r('extension/dist/contentScripts'),
     cssCodeSplit: false,
     emptyOutDir: false,
     sourcemap: isDev ? 'inline' : false,
     lib: {
-      entry: r('src/background/index.ts'),
+      entry: r('src/contentScripts/index.ts'),
       name: packageJson.name,
       formats: ['iife'],
     },

@@ -18,23 +18,41 @@
     "build:prepare": "esno scripts/prepare.ts",
     "build:web": "vite build",
     "build:bg": "vite build --config vite.config.bg.ts",
+    "build:content": "vite build --config vite.config.content.ts",
     "watch": "npm run clear && run-p watch-build:web watch:prepare watch-build:bg",
     "watch:prepare": "esno scripts/prepare.ts",
-    "watch-build:web": "vite build --mode watch --watch",
+    "watch-build:web": "vite build --watch",
     "watch-build:bg": "vite build --config vite.config.bg.ts --watch",
-    "clear": "rimraf extension/dist extension/manifest.json extension.*",
+    "watch-build:content": "vite build --config vite.config.content.ts --watch",
+    "clear": "rimraf extension/dist extension/manifest.json extension/version.json extension.*",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bugs": {
     "url": "https://github.com/ConteMan/contea/issues"
   },
   "homepage": "https://github.com/ConteMan/contea#readme",
+  "dependencies": {
+    "axios": "^0.26.1",
+    "crypto-js": "^4.1.1",
+    "dayjs": "^1.11.0",
+    "dexie": "^3.2.1",
+    "kurimudb": "^5.0.0",
+    "kurimudb-driver-dexie": "^5.2.3",
+    "kurimudb-driver-localstorage": "^5.1.1",
+    "lodash-es": "^4.17.21",
+    "qs": "^6.10.3"
+  },
   "devDependencies": {
     "@antfu/eslint-config": "^0.16.1",
+    "@iconify/json": "^2.1.19",
+    "@types/crypto-js": "^4.1.1",
     "@types/fs-extra": "^9.0.13",
+    "@types/lodash-es": "^4.17.6",
     "@types/node": "^17.0.21",
-    "@types/webextension-polyfill": "^0.8.0",
+    "@types/qs": "^6.9.7",
+    "@types/webextension-polyfill": "0.8.0",
     "@vitejs/plugin-vue": "^2.2.4",
+    "@vueuse/core": "^8.1.2",
     "chokidar": "^3.5.3",
     "cross-env": "^7.0.3",
     "eslint": "^8.11.0",
@@ -44,8 +62,12 @@
     "npm-run-all": "^4.1.5",
     "rimraf": "^3.0.2",
     "typescript": "^4.6.2",
+    "unplugin-auto-import": "^0.6.6",
+    "unplugin-icons": "^0.14.1",
     "vite": "^2.8.6",
+    "vite-plugin-windicss": "^1.8.3",
     "vue": "^3.2.31",
-    "webextension-polyfill": "^0.8.0"
+    "webextension-polyfill": "0.8.0",
+    "windicss": "^3.5.1"
   }
 }

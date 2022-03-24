@@ -1,7 +1,7 @@
 import fs from 'fs-extra'
 import type { Manifest } from 'webextension-polyfill'
+import { r } from '@utils/script'
 import type PkgType from '../package.json'
-import { r } from '../utils'
 
 export async function getManifest() {
   const pkg = await fs.readJSON(r('package.json')) as typeof PkgType
@@ -48,6 +48,15 @@ export async function getManifest() {
     {
       newtab: './dist/newTab/index.html',
     },
+    web_accessible_resources: [
+      {
+        resources: ['dist/contentScripts/style.css'],
+        matches: ['<all_urls>'],
+      },
+    ],
+    content_security_policy: {
+      extension_pages: 'script-src \'self\'; object-src \'self\'',
+    },
     commands: {
       '_execute_browser_action': {
         suggested_key: {
@@ -63,15 +72,6 @@ export async function getManifest() {
         },
         description: 'Change Mode',
       },
-    },
-    web_accessible_resources: [
-      {
-        resources: ['dist/contentScripts/style.css'],
-        matches: ['<all_urls>'],
-      },
-    ],
-    content_security_policy: {
-      extension_pages: 'script-src \'self\'; object-src \'self\'',
     },
   }
 

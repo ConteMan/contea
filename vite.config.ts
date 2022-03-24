@@ -1,9 +1,14 @@
 import { dirname, relative } from 'path'
 import { defineConfig } from 'vite'
+import type { UserConfig } from 'vite'
 import Vue from '@vitejs/plugin-vue'
-import { isDev, r } from './utils'
+import Icons from 'unplugin-icons/vite'
+import AutoImport from 'unplugin-auto-import/vite'
+import WindiCSS from 'vite-plugin-windicss'
+import windiConfig from './windi.config'
+import { isDev, r } from './utils/script'
 
-export default defineConfig(({
+export const sharedConfig: UserConfig = {
   root: r('src'),
   resolve: {
     alias: [
@@ -11,11 +16,66 @@ export default defineConfig(({
         find: '~/',
         replacement: `${r('src')}/`,
       },
+      {
+        find: '@utils/',
+        replacement: `${r('utils')}/`,
+      },
+      {
+        find: '@models/',
+        replacement: `${r('models')}/`,
+      },
+      {
+        find: '@services/',
+        replacement: `${r('services')}/`,
+      },
+      {
+        find: '@setting/',
+        replacement: `${r('setting')}/`,
+      },
+      {
+        find: '@enums/',
+        replacement: `${r('enums')}/`,
+      },
+      {
+        find: '@localTypes/',
+        replacement: `${r('types')}/`,
+      },
     ],
   },
   define: {
     __DEV__: isDev,
   },
+  plugins: [
+    Vue(),
+    AutoImport({
+      imports: [
+        'vue',
+        {
+          'webextension-polyfill': [['default', 'browser']],
+        },
+      ],
+      dts: r('src/auto-imports.d.ts'),
+    }),
+    {
+      name: 'assets-rewrite',
+      enforce: 'post',
+      apply: 'build',
+      transformIndexHtml(html, { path }) {
+        return html.replace(/"\/assets\//g, `"${relative(dirname(path), '/assets')}/`)
+      },
+    },
+
+    // https://github.com/antfu/unplugin-icons
+    Icons(),
+  ],
+  optimizeDeps: {
+    include: ['vue', '@vueuse/core', 'webextension-polyfill'],
+    exclude: ['vue-demi'],
+  },
+}
+
+export default defineConfig(({
+  ...sharedConfig,
   build: {
     outDir: r('extension/dist'),
     emptyOutDir: false,
@@ -33,14 +93,10 @@ export default defineConfig(({
     },
   },
   plugins: [
-    Vue(),
-    {
-      name: 'assets-rewrite',
-      enforce: 'post',
-      apply: 'build',
-      transformIndexHtml(html, { path }) {
-        return html.replace(/"\/assets\//g, `"${relative(dirname(path), '/assets')}/`)
-      },
-    },
+    ...sharedConfig.plugins!,
+    // https://github.com/antfu/vite-plugin-windicss
+    WindiCSS({
+      config: windiConfig,
+    }),
   ],
 }))
