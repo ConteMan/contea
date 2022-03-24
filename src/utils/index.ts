@@ -62,9 +62,7 @@ export function firstUpper(str: string) {
  * @param mode number - 模式
  * @param keys [] - 对象键
  */
-interface dataType {
-  [other: string]: any
-}
+type dataType = Record<string, any>;
 export function enumToObj(data: dataType, keys: any[] = ['key', 'value']) {
   const res = []
   const indexs = Object.keys(data)

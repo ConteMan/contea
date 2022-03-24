@@ -1,6 +1,6 @@
 import fs from 'fs-extra'
 import { getManifest } from '../src/manifest'
-import { r, log, isDev } from './utils'
+import { isDev, log, r } from './utils'
 
 export async function writeManifest() {
   const dir = isDev ? 'extension' : 'extension_build'
