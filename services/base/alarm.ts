@@ -1,10 +1,11 @@
-import dayjs from 'dayjs'
+// import dayjs from 'dayjs'
 
 import configState from '@models/keyValue/configState'
 import moduleState from '@models/keyValue/moduleState'
 import requestState from '@models/keyValue/requestState'
 
 import v2ex from '@services/v2ex'
+import sspai from '@services/sspai'
 
 class AlarmSetting {
   /**
@@ -41,14 +42,16 @@ class AlarmSetting {
   async alarmDeal(module: string) {
     // eslint-disable-next-line no-console
     console.log('[ Alarm module ] >', module)
+
     const configInfo = await configState.storage.query().get(module)
 
     // eslint-disable-next-line no-console
-    console.log('%c [ configInfo ]-49-「alarm.ts」', 'font-size:13px; background:pink; color:#bf2c9f;', configInfo)
+    console.log('[ configInfo ] >', configInfo)
 
     let moduleInfo: any
     if (['v2ex', 'bilibili', 'juejin'].includes(module)) {
       moduleInfo = await moduleState.storage.query().get(module)
+
       // eslint-disable-next-line no-console
       console.log('[ Alarm moduleInfo ] >', moduleInfo)
     }
@@ -59,6 +62,7 @@ class AlarmSetting {
 
     if (module === 'base') {
       const count = await requestState.clean()
+
       // eslint-disable-next-line no-console
       console.log('[ Alarm.base.clean ] >', count)
     }
@@ -72,6 +76,11 @@ class AlarmSetting {
         await v2ex.mission()
 
       await v2ex.updateModuleTypeData()
+    }
+
+    if (module === 'sspai') {
+      const { enableTypes } = configInfo
+      await sspai.lists(enableTypes)
     }
 
     return true

@@ -1,5 +1,5 @@
-import type { types } from '~/enums/v2exEnum'
-import type { BaseConfig, BaseModule } from '~/services/base/model'
+import type { types } from '@enums/v2exEnum'
+import type { BaseConfig, BaseModule } from '@services/base/model'
 
 export type Config = BaseConfig & {
   url: string

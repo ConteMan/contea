@@ -1,7 +1,7 @@
-import type { SettingKeys } from '~/setting/defaultSetting'
+import type { SettingKeys } from '@setting/index'
 
-import configState from '~/models/keyValue/configState'
-import requestState from '~/models/keyValue/requestState'
+import configState from '@models/keyValue/configState'
+import requestState from '@models/keyValue/requestState'
 
 class RequestCache {
   /**

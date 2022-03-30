@@ -1,4 +1,3 @@
-/* eslint-disable prefer-regex-literals */
 import dayjs from 'dayjs'
 import { defHttp } from '@utils/http/axios'
 import configState from '@models/keyValue/configState'
@@ -72,19 +71,26 @@ class V2EX {
    * 获取用户名
    */
   async getUserName(): Promise<string> {
-    const { url } = await configState.getItem(this.module) as Config
+    try {
+      const { url } = await configState.getItem(this.module) as Config
 
-    const res = await defHttp.get({ url })
+      const res = await defHttp.get({ url })
 
-    const domParser = new DOMParser()
-    const dom = domParser.parseFromString(res.data, 'text/html')
+      const domParser = new DOMParser()
+      const dom = domParser.parseFromString(res.data, 'text/html')
 
-    const aDoms = dom.querySelectorAll('#Top .tools a')
-    const username = aDoms?.[1].getAttribute('href') ?? ''
+      const aDoms = dom.querySelectorAll('#Top .tools a')
+      const username = aDoms?.[1].getAttribute('href') ?? ''
 
-    await moduleState.mergeSet(this.module, { data: { username }, ca_login: true }, 0)
+      await moduleState.mergeSet(this.module, { data: { username }, ca_login: true }, 0)
 
-    return username
+      return username
+    }
+    catch (e) {
+      // eslint-disable-next-line no-console
+      console.log('in getUserName >', e)
+      return ''
+    }
   }
 
   /**
@@ -103,8 +109,7 @@ class V2EX {
       })
 
       const domParser = new DOMParser()
-      const dom = domParser.parseFromString(res.data, 'text/html')
-
+      const dom = domParser.parseFromString(res, 'text/html')
       const mainDom = dom.querySelector('#Main')
 
       const idHtml = mainDom?.querySelector('span.gray')?.innerHTML

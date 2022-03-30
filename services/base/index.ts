@@ -1,4 +1,4 @@
-import infoList from '~/models/list/infoList'
+import infoList from '@models/list/infoList'
 
 type Paginate = {
   currentPage: number

@@ -1,16 +1,23 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
-    "module": "commonjs",
+    "module": "ESNext",
     "target": "es2016",
+    "lib": [
+      "DOM",
+      "ESNext"
+    ],
     "strict": true,
     "esModuleInterop": true,
+    "incremental": false,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
     "isolatedModules": true,
+    "moduleResolution": "node",
     "resolveJsonModule": true,
     "typeRoots": [
-      "./node_modules/@types/"
+      "./node_modules/@types/",
+      "./types"
     ],
     "paths": {
       "~/*": [
@@ -56,5 +63,5 @@
   "exclude": [
     "dist",
     "node_modules",
-  ]
+  ],
 }
