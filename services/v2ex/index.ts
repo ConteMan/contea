@@ -3,6 +3,7 @@ import { defHttp } from '@utils/http/axios'
 import configState from '@models/keyValue/configState'
 import moduleState from '@models/keyValue/moduleState'
 import infoList from '@models/list/infoList'
+import { transform } from '@utils/transform'
 import type { Config, DomList, Mission, Module, User } from './model'
 
 class V2EX {
@@ -75,6 +76,10 @@ class V2EX {
       const { url } = await configState.getItem(this.module) as Config
 
       const res = await defHttp.get({ url })
+
+      const transformRes = await transform('transform', 'v2ex', 'getUserName', res.data)
+      // eslint-disable-next-line no-console
+      console.log(transformRes)
 
       const domParser = new DOMParser()
       const dom = domParser.parseFromString(res.data, 'text/html')

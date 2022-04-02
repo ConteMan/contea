@@ -15,6 +15,7 @@ export const useNewTabState = defineStore('newTab', {
         ],
       },
       settingDrawer: false,
+      settingDrawerPosition: 'right',
     }
   },
   actions: {
@@ -37,6 +38,9 @@ export const useNewTabState = defineStore('newTab', {
     },
     changeSettingDrawer() {
       this.settingDrawer = !this.settingDrawer
+    },
+    changeSettingDrawerPosition(position: 'left' | 'right') {
+      this.settingDrawerPosition = position
     },
   },
   persist: {
