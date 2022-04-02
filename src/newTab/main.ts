@@ -17,6 +17,7 @@ const app = createApp(App)
 app.use(store)
 app.use(router)
 app.use(head)
+
 app.mount('#app')
 
 init()

@@ -9,6 +9,8 @@ import defaultSetting from '@setting/index'
 import Alarm from '@services/base/alarm'
 import migrations from '../migrations'
 
+import { useConfigState } from '~/store/config'
+
 type Item = Record<string, any>
 
 class ConfigState extends AsyncModels.keyValue<Item, DexieDriver> {
@@ -43,6 +45,8 @@ class ConfigState extends AsyncModels.keyValue<Item, DexieDriver> {
     const res = await this.getItem(module)
     const mergeRes = deepMerge(res, data)
     await this.setItem(module, mergeRes)
+
+    await useConfigState().setAll()
 
     // 定时任务
     if (data.enable || data.alarm)
