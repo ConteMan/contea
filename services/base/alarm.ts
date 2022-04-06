@@ -6,6 +6,7 @@ import requestState from '@models/keyValue/requestState'
 
 import v2ex from '@services/v2ex'
 import sspai from '@services/sspai'
+import weread from '@services/weread'
 
 class AlarmSetting {
   /**
@@ -41,30 +42,25 @@ class AlarmSetting {
    */
   async alarmDeal(module: string) {
     // eslint-disable-next-line no-console
-    console.log('[ Alarm module ] >', module)
+    console.log('[Alarm Deal] >', module)
 
     const configInfo = await configState.storage.query().get(module)
-
     // eslint-disable-next-line no-console
-    console.log('[ configInfo ] >', configInfo)
-
-    let moduleInfo: any
-    if (['v2ex', 'bilibili', 'juejin'].includes(module)) {
-      moduleInfo = await moduleState.storage.query().get(module)
-
-      // eslint-disable-next-line no-console
-      console.log('[ Alarm moduleInfo ] >', moduleInfo)
-    }
+    console.log('[Alarm Deal] > configInfo >', configInfo)
 
     const { enable } = configInfo
     if (!enable)
       return false
 
+    const moduleInfo = await moduleState.storage.query().get(module)
+    // eslint-disable-next-line no-console
+    console.log('[Alarm Deal] > moduleInfo >', moduleInfo)
+
     if (module === 'base') {
       const count = await requestState.clean()
 
       // eslint-disable-next-line no-console
-      console.log('[ Alarm.base.clean ] >', count)
+      console.log('[Alarm Deal] > base.clean >', count)
     }
 
     if (module === 'v2ex') {
@@ -82,6 +78,9 @@ class AlarmSetting {
       const { enableTypes } = configInfo
       await sspai.lists(enableTypes)
     }
+
+    if (module === 'weread')
+      await weread.updateModuleTypeData()
 
     return true
   }

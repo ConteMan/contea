@@ -40,6 +40,10 @@ export const sharedConfig: UserConfig = {
         replacement: `${r('setting')}/`,
       },
       {
+        find: '@store/',
+        replacement: `${r('src/store')}/`,
+      },
+      {
         find: '@enums/',
         replacement: `${r('enums')}/`,
       },

@@ -2,20 +2,30 @@
   <router-view />
   <SearchModal />
   <SettingDrawer />
+  <Log />
 </template>
 <script setup lang="ts">
+import type { alarmName, message } from '@localTypes/message'
 import { useActiveElement, useEventListener } from '@vueuse/core'
+import { sleep } from '@utils/index'
+
+import AlarmService from '@services/base/alarm'
+
 import SearchModal from '~/components/search/Search.vue'
 import SettingDrawer from '~/components/setting/SettingDrawer.vue'
+import Log from '~/components/log/Log.vue'
 
 import { useModalState } from '~/store/modal'
 import { useNewTabState } from '~/store/newTab'
+import { useAlarmState } from '~/store/alarm'
 
 const defaultPath = '/zen'
 const modulePath = '/module'
 const searchKey = 'q'
 const zenKey = 'z'
 const settingKey = 's'
+
+const alarmNames = ['weread', 'v2ex', 'wakatime']
 
 const router = useRouter()
 const route = useRoute()
@@ -25,12 +35,33 @@ const changeMode = () => {
   router.push({ path })
 }
 
-// 监听快捷键
-browser.runtime.onMessage.addListener(async(message: any, sender: any) => {
-  // eslint-disable-next-line no-console
-  console.log('[AppContent receive]>', message, sender)
-  if (message.data === 'change-mode')
-    changeMode()
+const newTabState = useNewTabState()
+const alarmState = useAlarmState()
+
+// 监听消息
+browser.runtime.onMessage.addListener(async(message: message, sender: any) => {
+  const { type, name } = message
+
+  newTabState.setLog({ sender, message })
+
+  switch (type) {
+    case 'change-mode':
+      changeMode()
+      break
+    case 'alarm':
+    case 'alarm-sync': {
+      if (!name || !alarmNames.includes(name))
+        break
+      if (type === 'alarm') {
+        await AlarmService.alarmDeal(name)
+        await sleep(1000)
+      }
+      alarmState.addAlarm(name as alarmName, 1) // 通过状态通知组件更新数据
+      break
+    }
+    default:
+      break
+  }
 
   return { from: 'response from AppContent' }
 })
@@ -43,12 +74,7 @@ const notUsingInput = computed(() =>
   && activeElement.value?.tagName !== 'TEXTAREA',
 )
 
-// 显示/隐藏设置抽屉
-const changeSettingDrawer = () => {
-  const newTabState = useNewTabState()
-  newTabState.changeSettingDrawer()
-}
-
+// 监听按键事件
 useEventListener(window, 'keyup', (e: any) => {
   // 搜索
   if (e.key === searchKey && notUsingInput.value)
@@ -58,7 +84,8 @@ useEventListener(window, 'keyup', (e: any) => {
   if (e.key === zenKey && notUsingInput.value) // 非输入模式
     changeMode()
 
+  // 显示/隐藏设置抽屉
   if (e.key === settingKey && notUsingInput.value)
-    changeSettingDrawer()
+    newTabState.changeSettingDrawer()
 })
 </script>

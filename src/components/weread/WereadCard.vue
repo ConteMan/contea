@@ -13,7 +13,7 @@
           <div class="flex flex-col justify-between">
             <div class="flex flex-row-reverse w-full opacity-0 hover:(opacity-100 transition-opacity duration-200)" :class="{'!opacity-100': showExtend}">
               <mdi-information-outline class="text-white cursor-pointer" @click="showExtend = !showExtend" />
-              <mdi-refresh class="text-white cursor-pointer mr-2" :class="{'animate-spin': refreshLoading }" @click="refreshData()" />
+              <mdi-refresh class="text-white cursor-pointer mr-2" :class="{'animate-spin': refreshLoading }" @click="refreshData(2)" />
             </div>
             <div
               class="cursor-pointer font-bold text-xl text-white select-none hover:(underline underline-offset-2 duration-200 animate-pulse)"
@@ -78,6 +78,7 @@ import { puzzling } from '@utils/extend'
 import type { Config } from '@services/weread/model'
 import { ModuleType } from '@services/weread/model'
 import weread from '@services/weread'
+import { useAlarmState } from '@store/alarm'
 import Card from '~/components/template/TemplateCard.vue'
 
 dayjs.extend(Duration)
@@ -88,13 +89,14 @@ const data = reactive({
   loading: true,
   refreshLoading: false,
   config: {} as Config,
-  login: false,
+  login: true,
   moduleData: {} as any,
   memberCard: {} as any,
   readDetail: {} as any,
   bookList: [] as any,
   showExtend: false,
   extendInfo: {} as any,
+  alarms: {} as any,
 })
 
 const { loading, config, login, moduleData, memberCard, readDetail, bookList, showExtend, refreshLoading } = toRefs(data)
@@ -120,13 +122,17 @@ const getData = async() => {
     return
   }
 
+  // eslint-disable-next-line no-console
+  console.log(`[weread][getData] > MEMBER_CARD > ${moduleTypeData[`${module}_${ModuleType.MEMBER_CARD}`].ca_updated_at}`)
+
   data.bookList = readDetail.value.data.datas[0].readMeta.books ? (readDetail.value.data.datas[0].readMeta.books).slice(0, 2) : []
   data.loading = false
 }
 
-const refreshData = async() => {
+const refreshData = async(update: 1 | 2 = 1) => {
   data.refreshLoading = true
-  await weread.updateModuleTypeData()
+  if (update > 1)
+    await weread.updateModuleTypeData()
   await getData()
   data.refreshLoading = false
 }
@@ -134,6 +140,7 @@ const refreshData = async() => {
 const init = async() => {
   await getConfig()
 
+  await loginCheck()
   if (!loginCheck()) {
     data.loading = false
     return false
@@ -141,6 +148,20 @@ const init = async() => {
 
   await getData()
 }
+
+const alarmState = useAlarmState()
+const { alarms } = storeToRefs(alarmState)
+data.alarms = alarms
+
+watch(() => data.alarms, async(newVal) => {
+  // eslint-disable-next-line no-console
+  console.log('[weread component] > alarms', newVal)
+  if (newVal[module]) {
+    await refreshData(newVal[module])
+    alarmState.removeAlarm(module)
+  }
+}, { deep: true })
+
 init()
 </script>
 

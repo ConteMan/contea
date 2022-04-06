@@ -1,3 +1,4 @@
+import type { message } from '@localTypes/message'
 import configState from '@models/keyValue/configState'
 
 /**
@@ -35,10 +36,13 @@ export async function changeMode(extensionId: string) {
     }
     else {
       // 激活标签页
-      if (!targetTab.active)
+      if (!targetTab.active) {
         await browser.tabs.update(targetTab.id, { active: true })
-      else
-        await browser.tabs.sendMessage(targetTab.id as number, { data: 'change-mode' })
+      }
+      else {
+        const message: message = { type: 'change-mode' }
+        await browser.tabs.sendMessage(targetTab.id as number, message)
+      }
     }
   }
   else {

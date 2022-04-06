@@ -1,0 +1,34 @@
+<template>
+  <div class="fixed bottom-0 w-full" :class="showLogWindow ? 'max-h-[30%] bg-light-900' : 'h-4'">
+    <div class="w-full flex justify-center opacity-20 cursor-pointer hover:(opacity-100)" @click="newTabState.changeLogWindow()">
+      <mdi-chevron-down v-if="showLogWindow" class="text-black" />
+      <mdi-chevron-up v-else class="text-black" />
+    </div>
+    <n-log v-if="showLogWindow" ref="logInst" class="break-all" :hljs="hljs" language="naive-log" :log="data.log" />
+  </div>
+</template>
+
+<script setup lang="ts">
+import hljs from 'highlight.js/lib/core'
+import type { LogInst } from 'naive-ui'
+import { isObject } from '@utils/is'
+import { useNewTabState } from '~/store/newTab'
+
+const logInst = ref<LogInst|null>(null)
+
+const data = reactive({
+  log: '' as any,
+})
+
+const newTabState = useNewTabState()
+const { log, showLogWindow } = storeToRefs(newTabState)
+watch(log, (newVal: any) => {
+  data.log += isObject(newVal) ? `${JSON.stringify(newVal, null, 2)}\n` : `${String(newVal)}\n`
+  if (data.log.length > 10000)
+    data.log = data.log.slice(data.log.length - 10000)
+
+  nextTick(() => {
+    logInst.value?.scrollTo({ position: 'bottom', slient: true })
+  })
+})
+</script>

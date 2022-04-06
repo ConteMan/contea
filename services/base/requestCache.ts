@@ -12,7 +12,7 @@ class RequestCache {
   async get(key: any[], withExpired = true) {
     const now = new Date().getTime()
     const keyString = key.join('_')
-    const res = await requestState.getItem(keyString)
+    const res = await requestState.storage.query().get(keyString)
     if (!res || !res?.ca_expired_at || res?.ca_expired_at < now)
       return false
 

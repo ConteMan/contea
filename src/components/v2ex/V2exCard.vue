@@ -58,6 +58,7 @@ import configState from '@models/keyValue/configState'
 import type { Config, cacheUser } from '@services/v2ex/model'
 import v2ex from '@services/v2ex'
 import Card from '~/components/template/TemplateCard.vue'
+import { useAlarmState } from '~/store/alarm'
 
 const module = 'v2ex'
 
@@ -82,9 +83,9 @@ const getData = async() => {
   data.loading = false
 }
 
-const refreshData = async() => {
+const refreshData = async(update: 1|2 = 1) => {
   data.refreshLoading = true
-  await v2ex.updateModuleTypeData()
+  if (update > 1) await v2ex.updateModuleTypeData()
   await getData()
   data.refreshLoading = false
 }
@@ -115,4 +116,16 @@ const showDays = (date: string | undefined) => {
     return true
   return false
 }
+
+const alarmState = useAlarmState()
+const { alarms } = storeToRefs(alarmState)
+
+watch(() => alarms.value[module], async(newVal) => {
+  // eslint-disable-next-line no-console
+  console.log(`[${module} component] > alarms`, newVal)
+  if (newVal) {
+    await refreshData(newVal)
+    alarmState.removeAlarm(module)
+  }
+}, { deep: true })
 </script>

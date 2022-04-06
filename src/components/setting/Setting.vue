@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full max-w-[700px] mb-4">
+  <div class="setting-container w-full max-w-[700px] mb-4">
     <n-collapse v-model:expanded-names="expandedNames" class="max-w-full">
       <template v-for="item in list" :key="item.name">
         <n-collapse-item :name="item.name" :title="item.title">
@@ -24,6 +24,11 @@ const list = [
     name: 'base',
     title: '基础',
     component: modules.SettingItemBase,
+  },
+  {
+    name: 'sync',
+    title: '同步',
+    component: modules.SettingItemSync,
   },
   {
     name: 'bgm',
@@ -116,18 +121,20 @@ const expandedNames = ref([])
 </script>
 
 <style scoped lang="less">
-.n-collapse .n-collapse-item {
-  margin: 0.5rem 0 0 0;
-  background-color: rgba(209, 213, 219, 0.178);
-  border-radius: 0.25rem;
-  :deep(.n-collapse-item__header) {
-    padding: 1rem;
-  }
-  :deep(.n-collapse-item__content-wrapper) {
-    padding: 0 2rem 0 2rem;
-  }
-  :deep(.n-collapse-item__content-inner) {
-    padding-top: 0;
+.setting-container {
+  .n-collapse .n-collapse-item {
+    margin: 0.5rem 0 0 0;
+    background-color: rgba(209, 213, 219, 0.178);
+    border-radius: 0.25rem;
+    :deep(.n-collapse-item__header) {
+      padding: 1rem;
+    }
+    :deep(.n-collapse-item__content-wrapper) {
+      padding: 0 2rem 0 2rem;
+    }
+    :deep(.n-collapse-item__content-inner) {
+      padding-top: 0;
+    }
   }
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div class="w-full flex flex-col">
     <div class="w-full bg-white pb-3 pl-2">
-      <span class="cursor-pointer leading-none align-middle mr-4" @click="refresh()">
+      <span class="cursor-pointer leading-none align-middle mr-4" @click="refreshData(2)">
         <mdi-refresh :class="{'animate-spin': loading}" />
       </span>
       <template v-for="item in moduleTypes" :key="item.key">
@@ -42,6 +42,7 @@ import type { Config } from '@services/v2ex/model'
 import Alarm from '@services/base/alarm'
 import Base from '@services/base'
 import { TypeEnum } from '@enums/v2exEnum'
+import { useAlarmState } from '~/store/alarm'
 
 const module = 'v2ex'
 
@@ -88,10 +89,20 @@ const handleChange = (tag: string, checked: boolean) => {
 }
 
 // 刷新
-const refresh = async() => {
+const refreshData = async(update: 1|2 = 1) => {
   data.loading = true
-  await Alarm.alarmDeal(module)
+  if (update > 1) await Alarm.alarmDeal(module)
   await getData()
   data.loading = false
 }
+
+const alarmState = useAlarmState()
+const { alarms } = storeToRefs(alarmState)
+
+watch(() => alarms.value[module], async(newVal) => {
+  // eslint-disable-next-line no-console
+  console.log(`[${module} list component] > alarms`, newVal)
+  if (newVal)
+    await refreshData(newVal)
+}, { deep: true })
 </script>

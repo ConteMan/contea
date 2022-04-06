@@ -1,6 +1,6 @@
 import infoList from '@models/list/infoList'
 
-type Paginate = {
+interface Paginate {
   currentPage: number
   num: number
   orderBy?: string | Array<string>

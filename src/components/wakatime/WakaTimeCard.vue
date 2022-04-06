@@ -66,6 +66,7 @@ import configState from '@models/keyValue/configState'
 import type { Config } from '@services/wakatime/model'
 import WakaTime from '@services/wakatime'
 import Card from '~/components/template/TemplateCard.vue'
+import { useAlarmState } from '~/store/alarm'
 
 const module = 'wakatime'
 
@@ -106,4 +107,16 @@ const getInfo = async(refresh = false) => {
 getInfo()
 
 const { loading, login, showExtend, config, today, pastWeek } = toRefs(data)
+
+const alarmState = useAlarmState()
+const { alarms } = storeToRefs(alarmState)
+
+watch(() => alarms.value[module], async(newVal) => {
+  // eslint-disable-next-line no-console
+  console.log(`[${module} component] > alarms`, alarms.value, newVal)
+  if (newVal) {
+    await getInfo(!!newVal)
+    alarmState.removeAlarm(module)
+  }
+}, { deep: true })
 </script>

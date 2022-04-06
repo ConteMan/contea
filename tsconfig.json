@@ -35,6 +35,9 @@
       "@setting/*": [
         "setting/*"
       ],
+      "@store/*": [
+        "src/store/*"
+      ],
       "@enums/*": [
         "enums/*"
       ],

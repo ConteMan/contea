@@ -107,3 +107,15 @@ export function getRandomIntInclusive(min: number, max: number): number {
   max = Math.floor(max)
   return Math.floor(Math.random() * (max - min + 1)) + min // 含最大值，含最小值
 }
+
+/**
+ * 休眠等待
+ * @param time - 毫秒数
+ */
+export function sleep(time: number): Promise<void> {
+  return new Promise<void>((resolve) => {
+    setTimeout(() => {
+      resolve()
+    }, time)
+  })
+}

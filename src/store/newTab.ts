@@ -16,6 +16,8 @@ export const useNewTabState = defineStore('newTab', {
       },
       settingDrawer: false,
       settingDrawerPosition: 'right',
+      log: '',
+      showLogWindow: false,
     }
   },
   actions: {
@@ -41,6 +43,12 @@ export const useNewTabState = defineStore('newTab', {
     },
     changeSettingDrawerPosition(position: 'left' | 'right') {
       this.settingDrawerPosition = position
+    },
+    setLog(data: any) {
+      this.log = data
+    },
+    changeLogWindow() {
+      this.showLogWindow = !this.showLogWindow
     },
   },
   persist: {

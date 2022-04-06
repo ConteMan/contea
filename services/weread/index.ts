@@ -1,4 +1,5 @@
 import { defHttp } from '@utils/http/axios'
+import { sleep } from '@utils/index'
 import configState from '@models/keyValue/configState'
 import moduleState from '@models/keyValue/moduleState'
 import type { Config } from './model'
@@ -30,7 +31,7 @@ class WeRead {
 
     const data = {} as any
     await Promise.all(moduleTypes.map(async(item) => {
-      data[item] = await moduleState.getItem(item) ?? {}
+      data[item] = await moduleState.storage.query().get(item) ?? {}
     }))
     return data
   }
@@ -88,6 +89,7 @@ class WeRead {
   async refreshLogin() {
     const { site: url } = await configState.getItem(this.module)
     await defHttp.get({ url })
+    await sleep(1000)
     return true
   }
 
