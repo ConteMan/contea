@@ -1,5 +1,6 @@
 // generate stub version.json files for dev entry
 import { execSync } from 'child_process'
+import _ from 'lodash-es'
 import fs from 'fs-extra'
 import chokidar from 'chokidar'
 import { isDev, log, r } from '@utils/script'
@@ -24,15 +25,16 @@ console.log(`[prepare]> ${isDev}`)
 if (isDev) {
   stubVersionJSON()
   chokidar.watch(r('extension/dist/**/*'))
-    .on('change', (path) => {
+    .on('change', _.throttle((path) => {
       if (/.*\/background\/.*/.test(path)) {
         log('PRE', `path: ${path}`)
         stubVersionJSON('background')
       }
       else {
+        log('PRE', `path: ${path}`)
         stubVersionJSON()
       }
-    })
+    }, 1000))
   chokidar.watch([r('src/manifest.ts'), r('package.json')])
     .on('change', () => {
       writeManifest()

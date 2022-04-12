@@ -58,6 +58,7 @@ import configState from '@models/keyValue/configState'
 import type { Config, cacheUser } from '@services/v2ex/model'
 import v2ex from '@services/v2ex'
 import Card from '~/components/template/TemplateCard.vue'
+import { useNewTabState } from '~/store/newTab'
 import { useAlarmState } from '~/store/alarm'
 
 const module = 'v2ex'
@@ -83,9 +84,9 @@ const getData = async() => {
   data.loading = false
 }
 
-const refreshData = async(update: 1|2 = 1) => {
+const refreshData = async(force: 1|2 = 1) => {
   data.refreshLoading = true
-  if (update > 1) await v2ex.updateModuleTypeData()
+  if (force > 1) await v2ex.updateModuleTypeData()
   await getData()
   data.refreshLoading = false
 }
@@ -117,12 +118,12 @@ const showDays = (date: string | undefined) => {
   return false
 }
 
+const newTabState = useNewTabState()
 const alarmState = useAlarmState()
 const { alarms } = storeToRefs(alarmState)
 
 watch(() => alarms.value[module], async(newVal) => {
-  // eslint-disable-next-line no-console
-  console.log(`[${module} component] > alarms`, newVal)
+  newTabState.setLog(`[Card] [${module}] > watch: ${newVal}`)
   if (newVal) {
     await refreshData(newVal)
     alarmState.removeAlarm(module)

@@ -24,6 +24,47 @@ class Sspai {
   }
 
   /**
+ * 获取模块类型数据
+ * @param moduleTypes 要更新模块类型，数组
+ */
+  async moduleTypeData(moduleTypes: string[] = []) {
+    if (!moduleTypes.length) {
+      moduleTypes = [
+        this.module,
+      ]
+    }
+
+    const data = {} as any
+    await Promise.all(moduleTypes.map(async(item) => {
+      data[item] = await moduleState.getItem(item) ?? {}
+    }))
+    return data
+  }
+
+  /**
+   * 更新模块类型数据
+   * @param moduleTypes 要更新模块类型，数组
+   */
+  async updateModuleTypeData(moduleTypes: string[] = []) {
+    if (!moduleTypes.length) {
+      moduleTypes = [
+        this.module,
+      ]
+    }
+
+    const relations = {
+      [this.module]: this.moduleInfo(),
+    }
+
+    const data = {} as any
+    await Promise.all(moduleTypes.map(async(item) => {
+      data.item = await relations[item] ?? {}
+    }))
+
+    return data
+  }
+
+  /**
    * 获取 Token
    * @returns string
    */

@@ -76,13 +76,8 @@ class V2EX {
 
       const res = await defHttp.get({ url })
 
-      // const transformRes = await transform('transform', 'v2ex', 'getUserName', res.data)
-      // // eslint-disable-next-line no-console
-      // console.log(transformRes)
-
       const domParser = new DOMParser()
       const dom = domParser.parseFromString(res.data, 'text/html')
-
       const aDoms = dom.querySelectorAll('#Top .tools a')
       const username = aDoms?.[1].getAttribute('href') ?? ''
 

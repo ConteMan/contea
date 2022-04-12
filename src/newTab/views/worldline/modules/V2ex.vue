@@ -42,6 +42,7 @@ import type { Config } from '@services/v2ex/model'
 import Alarm from '@services/base/alarm'
 import Base from '@services/base'
 import { TypeEnum } from '@enums/v2exEnum'
+import { useNewTabState } from '~/store/newTab'
 import { useAlarmState } from '~/store/alarm'
 
 const module = 'v2ex'
@@ -89,19 +90,19 @@ const handleChange = (tag: string, checked: boolean) => {
 }
 
 // 刷新
-const refreshData = async(update: 1|2 = 1) => {
+const refreshData = async(force: 1|2 = 1) => {
   data.loading = true
-  if (update > 1) await Alarm.alarmDeal(module)
+  if (force > 1) await Alarm.alarmDeal(module)
   await getData()
   data.loading = false
 }
 
+const newTabState = useNewTabState()
 const alarmState = useAlarmState()
 const { alarms } = storeToRefs(alarmState)
 
 watch(() => alarms.value[module], async(newVal) => {
-  // eslint-disable-next-line no-console
-  console.log(`[${module} list component] > alarms`, newVal)
+  newTabState.setLog(`[Worldline] [${module}] > watch: ${newVal}`)
   if (newVal)
     await refreshData(newVal)
 }, { deep: true })

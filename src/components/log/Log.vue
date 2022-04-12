@@ -4,7 +4,14 @@
       <mdi-chevron-down v-if="showLogWindow" class="text-black" />
       <mdi-chevron-up v-else class="text-black" />
     </div>
-    <n-log v-if="showLogWindow" ref="logInst" class="break-all" :hljs="hljs" language="naive-log" :log="data.log" />
+    <n-log
+      v-if="showLogWindow"
+      ref="logInst"
+      class="break-all p-2"
+      language="naive-log"
+      :hljs="hljs"
+      :log="data.log"
+    />
   </div>
 </template>
 
