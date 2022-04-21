@@ -1,6 +1,6 @@
 <template>
   <div class="top-bar px-2 pt-2 opacity-0 hover:(opacity-100)">
-    <div class="flex justify-end gap-2">
+    <div class="flex justify-end gap-2 text-gray-400">
       <a class="opacity-10 hover:(opacity-100)" @click="changeTheme()">
         <ic-sharp-light-mode v-if="newTabState.theme === 'light'" />
         <ic-sharp-dark-mode v-else />
