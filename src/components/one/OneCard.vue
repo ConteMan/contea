@@ -24,7 +24,7 @@
             {{ current.vol }}
           </div>
           <div
-            class="text-right text-white cursor-pointer inline-block font-bold opacity-0 hover:(underline underline-offset-2 animate-pulse opacity-100 duration-200)"
+            class="text-right cursor-pointer inline-block font-bold opacity-0 hover:(underline underline-offset-2 animate-pulse opacity-100 duration-200)"
             @click.stop="openSite(config.site)"
           >
             {{ config.name }}

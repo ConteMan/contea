@@ -10,6 +10,7 @@ import Alarm from '@services/base/alarm'
 import migrations from '../migrations'
 
 import { useConfigState } from '~/store/config'
+import { useNewTabState } from '~/store/newTab'
 
 type Item = Record<string, any>
 
@@ -34,6 +35,10 @@ class ConfigState extends AsyncModels.keyValue<Item, DexieDriver> {
       await this.setItem(module, defaultSetting[module])
       await Alarm.setAlarm(module)
     }
+
+    // 主题模式
+    if (['all', 'base'].includes(module))
+      useNewTabState().setThemeMode()
   }
 
   /**
@@ -51,6 +56,9 @@ class ConfigState extends AsyncModels.keyValue<Item, DexieDriver> {
     // 定时任务
     if (data.enable || data.alarm)
       await Alarm.setAlarm(module)
+    // 主题模式
+    if (module === 'base')
+      useNewTabState().setThemeMode()
   }
 
   /**

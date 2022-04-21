@@ -32,6 +32,17 @@
       <n-switch v-model:value="model.statusList" size="small" :round="false" />
     </n-form-item>
 
+    <n-form-item label="主题模式">
+      <n-switch v-model:value="model.themeMode" size="small" :round="false">
+        <template #checked>
+          系统
+        </template>
+        <template #unchecked>
+          手动
+        </template>
+      </n-switch>
+    </n-form-item>
+
     <n-form-item label="重置">
       <n-switch v-model:value="resetLoading" :loading="resetLoading" size="small" :round="false" @update:value="reset()" />
     </n-form-item>

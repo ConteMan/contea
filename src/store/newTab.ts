@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import storeState from '@models/keyValue/storeState'
 import wallpaperService from '@services/wallpaper'
+import { useConfigState } from '@store/config'
 
 export const useNewTabState = defineStore('newTab', {
   state: () => {
@@ -16,8 +17,13 @@ export const useNewTabState = defineStore('newTab', {
       },
       settingDrawer: false,
       settingDrawerPosition: 'right',
+
       log: '',
       showLogWindow: false,
+
+      isPreferredDark: false,
+      themeMode: true, // true => system, false => manual
+      theme: 'light', // light, dark
     }
   },
   actions: {
@@ -49,6 +55,22 @@ export const useNewTabState = defineStore('newTab', {
     },
     changeLogWindow() {
       this.showLogWindow = !this.showLogWindow
+    },
+
+    // 主题
+    changeIsPreferredDark(status: boolean) {
+      this.isPreferredDark = status
+      if (this.themeMode)
+        this.changeTheme(status ? 'dark' : 'light')
+    },
+    setThemeMode() {
+      const mode = useConfigState().all?.base.themeMode ?? true
+      this.themeMode = mode
+      if (mode)
+        this.changeTheme(this.isPreferredDark ? 'dark' : 'light')
+    },
+    changeTheme(theme: 'light' | 'dark') {
+      this.theme = theme
     },
   },
   persist: {

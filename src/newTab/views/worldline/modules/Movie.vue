@@ -1,6 +1,6 @@
 <template>
   <div class="max-w-[600px] relative">
-    <div class="tags sticky top-0 w-full max-w-[600px] bg-white pb-2 pl-2 pr-2 flex items-center">
+    <div class="tags sticky top-0 w-full max-w-[600px] pb-2 pl-2 pr-2 flex items-center">
       <a class="cursor-pointer leading-none align-middle mr-4" @click="refresh()">
         <mdi-refresh :class="{'animate-spin': loading }" />
       </a>

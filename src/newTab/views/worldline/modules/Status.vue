@@ -1,6 +1,6 @@
 <template>
   <div class="px-4 max-w-[640px]">
-    <div class="rounded-md bg-[#f7f7f7] p-4 w-full">
+    <div class="rounded-md p-4 w-full">
       <div class="pb-4 flex items-center">
         <span class="">定时任务 / Alarms</span>
         <mdi-refresh class="ml-4 opacity-40 cursor-pointer hover:(opacity-100)" :class="{ 'animate-spin': loading }" @click="getAlarms(true)" />
@@ -26,8 +26,8 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
 import { useTimeoutFn } from '@vueuse/core'
-import SettingItem from '~/components/template/SettingItem.vue'
 import { Alarm } from '@services/browser'
+import SettingItem from '~/components/template/SettingItem.vue'
 
 const alarms = ref({} as any)
 const loading = ref(false)

@@ -20,9 +20,10 @@ export type Config = BaseConfig & {
   showCards: string[]
   defaultPath: string
   statusList: boolean // 状态列表
+  themeMode: boolean // true => system, false => manual
 }
 
-export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'expired' | 'alarm' | 'statusList'>
+export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'expired' | 'alarm' | 'statusList' | 'themeMode'>
 
 export const setting: Config = {
   key: 'base',
@@ -35,6 +36,7 @@ export const setting: Config = {
   showCards: [],
   defaultPath: '/zen',
   statusList: false,
+  themeMode: true,
 }
 
 export interface InfoItem {

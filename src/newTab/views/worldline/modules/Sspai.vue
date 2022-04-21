@@ -1,6 +1,6 @@
 <template>
   <div class="w-full flex flex-col">
-    <div class="w-full bg-white pb-3 pl-2">
+    <div class="w-full pb-3 pl-2">
       <a class="cursor-pointer leading-none align-middle mr-4" @click="refresh()">
         <mdi-refresh :class="{'animate-spin': loading}" />
       </a>

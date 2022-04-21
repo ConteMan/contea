@@ -27,7 +27,7 @@
       <div
         ref="resultRef"
         :style="{ height: `${resultContainerHeight}px` }"
-        class="mt-2 rounded-sm bg-white overflow-y-auto"
+        class="mt-2 rounded-sm bg-gray-400 overflow-y-auto"
       >
         <!-- 书签、历史记录搜索模式  -->
         <template v-if="[1, 2].includes(data.searchMode)">

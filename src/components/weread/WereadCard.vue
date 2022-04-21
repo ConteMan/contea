@@ -12,11 +12,11 @@
           </div>
           <div class="flex flex-col justify-between">
             <div class="flex flex-row-reverse w-full opacity-0 hover:(opacity-100 transition-opacity duration-200)" :class="{'!opacity-100': showExtend}">
-              <mdi-information-outline class="text-white cursor-pointer" @click="showExtend = !showExtend" />
-              <mdi-refresh class="text-white cursor-pointer mr-2" :class="{'animate-spin': refreshLoading }" @click="refreshData(2)" />
+              <mdi-information-outline class="cursor-pointer" @click="showExtend = !showExtend" />
+              <mdi-refresh class="cursor-pointer mr-2" :class="{'animate-spin': refreshLoading }" @click="refreshData(2)" />
             </div>
             <div
-              class="cursor-pointer font-bold text-xl text-white select-none hover:(underline underline-offset-2 duration-200 animate-pulse)"
+              class="cursor-pointer font-bold text-xl select-none hover:(underline underline-offset-2 duration-200 animate-pulse)"
               @click.stop="openSite(config.site)"
             >
               {{ config.name }}
@@ -57,7 +57,7 @@
       <div v-else class="flex flex-row justify-between items-center">
         <div>Login</div>
         <div
-          class="cursor-pointer font-bold text-xl text-white hover:(underline underline-offset-2 duration-200 animate-pulse)"
+          class="cursor-pointer font-bold text-xl hover:(underline underline-offset-2 duration-200 animate-pulse)"
           @click.stop="openSite(config.site)"
         >
           {{ config.name }}

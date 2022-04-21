@@ -1,9 +1,8 @@
 <template>
-  <div class="relative pb-4 shadow-sm rounded-sm bg-gray-300">
-    <div class="relative handle cursor-move w-full h-4">
-    </div>
+  <div class="relative pb-4 shadow-sm rounded-sm border border-gray-200">
+    <div class="relative handle cursor-move w-full h-4" />
     <div class="px-4">
-      <slot></slot>
+      <slot />
     </div>
   </div>
 </template>

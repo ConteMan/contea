@@ -36,11 +36,11 @@
           :class="{ 'opacity-100': !login, '!opacity-100': showExtend }"
         >
           <div class="flex flex-row-reverse w-full">
-            <mdi-information-outline v-if="login" class="text-white cursor-pointer" @click="showExtend = !showExtend" />
-            <mdi-refresh v-if="login" class="text-white cursor-pointer mr-2" :class="{'animate-spin': data.refreshLoading}" @click="getInfo(true)" />
+            <mdi-information-outline v-if="login" class="cursor-pointer" @click="showExtend = !showExtend" />
+            <mdi-refresh v-if="login" class="cursor-pointer mr-2" :class="{'animate-spin': data.refreshLoading}" @click="getInfo(true)" />
           </div>
           <div
-            class="leading-none cursor-pointer font-bold text-xl text-white select-none hover:(underline underline-offset-2 duration-200 animate-pulse)"
+            class="leading-none cursor-pointer font-bold text-xl select-none hover:(underline underline-offset-2 duration-200 animate-pulse)"
             @click.stop="openSite(config.site)"
           >
             {{ config.name }}

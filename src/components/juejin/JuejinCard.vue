@@ -27,11 +27,11 @@
       </div>
       <div class="flex flex-col justify-between">
         <div class="flex-grow flex justify-end w-full opacity-0 hover:(opacity-100 transition-opacity duration-200)" :class="{'!opacity-100': showExtend}">
-          <mdi-refresh class="text-white cursor-pointer mr-2" :class="{'animate-spin': refreshLoading }" @click="getData(true)" />
-          <mdi-information-outline class="text-white cursor-pointer" @click="showExtend = !showExtend" />
+          <mdi-refresh class="cursor-pointer mr-2" :class="{'animate-spin': refreshLoading }" @click="getData(true)" />
+          <mdi-information-outline class="cursor-pointer" @click="showExtend = !showExtend" />
         </div>
         <div
-          class="cursor-pointer font-bold text-xl text-white select-none hover:(underline underline-offset-2 duration-200 animate-pulse)"
+          class="cursor-pointer font-bold text-xl select-none hover:(underline underline-offset-2 duration-200 animate-pulse)"
           @click.stop="openSite(config.site)"
         >
           {{ config.name }}
@@ -40,7 +40,7 @@
     </div>
     <!-- 扩展信息 -->
     <transition name="fade">
-      <div v-if="showExtend" class="flex flex-col pt-4 space-y-1 text-xs text-white italic text-right">
+      <div v-if="showExtend" class="flex flex-col pt-4 space-y-1 text-xs italic text-right">
         <div class="max-w-2/3 flex flex-wrap items-center">
           <div class="flex items-center pb-1">
             <mdi-calendar-check class="mr-2" />
