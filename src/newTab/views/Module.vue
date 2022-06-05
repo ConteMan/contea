@@ -14,7 +14,6 @@
 </template>
 
 <script setup lang="ts">
-import 'css-doodle'
 import { useElementBounding } from '@vueuse/core'
 import { useConfigState } from '~/store/config'
 

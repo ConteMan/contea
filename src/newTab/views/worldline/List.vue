@@ -10,13 +10,12 @@
     </div>
     <div class="worldline-tab-pane-container flex-1 w-0 h-full">
       <V2ex v-if="activeKey === 'v2ex'" class="h-full" />
-      <Sspai v-else-if="activeKey === 'sspai'" class="h-full" />
-      <Jike v-else-if="activeKey === 'jike'" class="h-full" />
-      <Zhihu v-else-if="activeKey === 'zhihu'" class="h-full" />
-      <Movie v-else-if="activeKey === 'movie'" class="h-full" />
-      <Sport v-else-if="activeKey === 'sport'" class="h-full" />
-      <Status v-else-if="activeKey === 'status'" class="h-full" />
-      <n-empty v-else class="mt-[50%]" description="Nothing ~" />
+      <Sspai v-if="activeKey === 'sspai'" class="h-full" />
+      <Jike v-if="activeKey === 'jike'" class="h-full" />
+      <Zhihu v-if="activeKey === 'zhihu'" class="h-full" />
+      <Movie v-if="activeKey === 'movie'" class="h-full" />
+      <Sport v-if="activeKey === 'sport'" class="h-full" />
+      <Status v-if="activeKey === 'status'" class="h-full" />
     </div>
   </div>
 </template>

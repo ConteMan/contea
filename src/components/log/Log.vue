@@ -10,7 +10,7 @@
       class="break-all p-2"
       language="naive-log"
       :hljs="hljs"
-      :log="data.log"
+      :log="data.dealLog"
     />
   </div>
 </template>
@@ -24,15 +24,16 @@ import { useNewTabState } from '~/store/newTab'
 const logInst = ref<LogInst|null>(null)
 
 const data = reactive({
-  log: '' as any,
+  dealLog: '' as any,
 })
 
 const newTabState = useNewTabState()
 const { log, showLogWindow } = storeToRefs(newTabState)
+
 watch(log, (newVal: any) => {
-  data.log += isObject(newVal) ? `${JSON.stringify(newVal, null, 2)}\n` : `${String(newVal)}\n`
-  if (data.log.length > 10000)
-    data.log = data.log.slice(data.log.length - 10000)
+  data.dealLog += isObject(newVal) ? `${JSON.stringify(newVal, null, 2)}\n` : `${String(newVal)}\n`
+  if (data.dealLog.length > 10000)
+    data.dealLog = data.dealLog.slice(data.dealLog.length - 10000)
 
   nextTick(() => {
     logInst.value?.scrollTo({ position: 'bottom', slient: true })

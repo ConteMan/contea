@@ -7,6 +7,7 @@ import requestState from '@models/keyValue/requestState'
 import v2ex from '@services/v2ex'
 import sspai from '@services/sspai'
 import weread from '@services/weread'
+import one from '@services/one'
 
 class AlarmSetting {
   /**
@@ -37,16 +38,16 @@ class AlarmSetting {
   }
 
   /**
-   * 定时任务处理
+   * 处理定时任务
    * @param module string - 模块名称
    */
-  async alarmDeal(module: string) {
+  async dealAlarm(module: string) {
     // eslint-disable-next-line no-console
-    console.log('[Alarm Deal] >', module)
+    console.log('>>> Services >> base alarm > alarmDeal - module: ', module)
 
     const configInfo = await configState.storage.query().get(module)
     // eslint-disable-next-line no-console
-    console.log('[Alarm Deal] > configInfo >', configInfo)
+    console.log('>>> Services >> base alarm > alarmDeal - configInfo: ', configInfo)
 
     const { enable } = configInfo
     if (!enable)
@@ -54,34 +55,44 @@ class AlarmSetting {
 
     const moduleInfo = await moduleState.storage.query().get(module)
     // eslint-disable-next-line no-console
-    console.log('[Alarm Deal] > moduleInfo >', moduleInfo)
+    console.log('>>> Services >> base alarm > alarmDeal - moduleInfo: ', moduleInfo)
 
     if (module === 'base') {
       const count = await requestState.clean()
 
       // eslint-disable-next-line no-console
-      console.log('[Alarm Deal] > base.clean >', count)
+      console.log('>>> Services >> base alarm > alarmDeal - requestState clean: ', count)
     }
 
-    if (module === 'v2ex') {
-      const { enableTypes } = configInfo
-      await v2ex.tabLists(enableTypes)
+    switch (module) {
+      case 'v2ex': {
+        const { enableTypes } = configInfo
+        await v2ex.tabLists(enableTypes)
 
-      const { data } = moduleInfo
-      if (!data.mission || !data.mission?.date || dayjs().isAfter(dayjs(data.mission.date), 'day'))
-        await v2ex.mission()
+        const { data } = moduleInfo
+        if (!data.mission || !data.mission?.date || dayjs().isAfter(dayjs(data.mission.date), 'day'))
+          await v2ex.mission()
 
-      await v2ex.updateModuleTypeData()
+        await v2ex.updateModuleTypeData()
+        break
+      }
+      case 'sspai': {
+        const { enableTypes } = configInfo
+        await sspai.lists(enableTypes)
+        break
+      }
+      case 'weread': {
+        await weread.updateModuleTypeData()
+        break
+      }
+      case 'one': {
+        await one.list(true)
+        break
+      }
+      default: {
+        break
+      }
     }
-
-    if (module === 'sspai') {
-      const { enableTypes } = configInfo
-      await sspai.lists(enableTypes)
-    }
-
-    if (module === 'weread')
-      await weread.updateModuleTypeData()
-
     return true
   }
 }

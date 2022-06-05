@@ -8,7 +8,7 @@ export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiU
 export const setting: Config = {
   key: 'wallpaper',
   name: 'Wallpaper',
-  enable: true,
+  enable: false,
   site: '',
   apiUrl: '',
   expired: 3600,

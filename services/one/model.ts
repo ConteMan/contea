@@ -17,5 +17,5 @@ export const setting: Config = {
   token: '',
   enableTypes: [],
   alarm: 60,
-  showCard: true,
+  showCard: false,
 }

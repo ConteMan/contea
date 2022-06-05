@@ -1,5 +1,5 @@
 import type { RouteRecordRaw } from 'vue-router'
-import LayoutBase from '../layout/Base.vue'
+import LayoutBase from '~/newTab/layout/Base.vue'
 
 export const routes: Array<RouteRecordRaw> = [
   {

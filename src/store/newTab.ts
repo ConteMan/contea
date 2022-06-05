@@ -18,7 +18,7 @@ export const useNewTabState = defineStore('newTab', {
       settingDrawer: false,
       settingDrawerPosition: 'right',
 
-      log: '',
+      log: 'start log ...',
       showLogWindow: false,
 
       isPreferredDark: false,

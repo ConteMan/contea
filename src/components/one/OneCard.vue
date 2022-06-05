@@ -25,7 +25,7 @@
           </div>
           <div
             class="text-right cursor-pointer inline-block font-bold opacity-0 hover:(underline underline-offset-2 animate-pulse opacity-100 duration-200)"
-            @click.stop="openSite(config.site)"
+            @click="getData(true)"
           >
             {{ config.name }}
           </div>
@@ -36,7 +36,7 @@
 </template>
 <script setup lang="ts" name="OneCard">
 import configState from '@models/keyValue/configState'
-import { getRandomIntInclusive, openSite } from '@utils/index'
+import { getRandomIntInclusive } from '@utils/index'
 import type { Config } from '@services/one/model'
 import One from '@services/one'
 import Card from '~/components/template/TemplateCard.vue'
@@ -67,9 +67,9 @@ const refresh = (init = true) => {
   }
 }
 
-const getData = async() => {
+const getData = async(force = false) => {
   data.config = await configState.getItem(module)
-  data.data = await One.list()
+  data.data = await One.list(force)
   data.list = data.data.data
   refresh()
   data.loading = false

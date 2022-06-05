@@ -1,7 +1,8 @@
 import _ from 'lodash-es'
-import configState from '@models/keyValue/configState'
+import ConfigState from '@models/keyValue/configState'
 import RequestCache from '@services/base/requestCache'
 import { defHttp } from '@utils/http/axios'
+import { toDesktop } from '@services/desktop'
 
 class One {
   private module = 'one'
@@ -9,19 +10,27 @@ class One {
   /**
    * 列表数据
    */
-  async list() {
-    const cacheKey = [this.module, 'list']
-    const cacheData = await RequestCache.get(cacheKey)
-    if (cacheData)
-      return cacheData
-
-    const { site } = await configState.getItem(this.module)
-
+  async list(force = false) {
     try {
+      const cacheKey = [this.module, 'list']
+
+      if (!force) {
+        const cacheData = await RequestCache.get(cacheKey)
+        if (cacheData)
+          return cacheData
+      }
+
+      const { site } = await ConfigState.getItem(this.module)
+
       const res = await defHttp.get({ url: site })
       const dealRes = this.domDeal(res.data)
 
-      return await RequestCache.set(cacheKey, { data: dealRes }, this.module)
+      toDesktop(this.module, dealRes)
+
+      // eslint-disable-next-line no-console
+      console.log('>>> Services >> one > list', dealRes)
+
+      return await RequestCache.set(cacheKey, { data: dealRes })
     }
     catch (error) {
       return false
@@ -30,6 +39,7 @@ class One {
 
   /**
    * 页面数据处理
+   * @param string - 页面 DOM 字符串
    */
   domDeal(domSting: string) {
     const domParser = new DOMParser()

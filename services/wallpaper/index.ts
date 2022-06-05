@@ -16,6 +16,8 @@ class Wallpaper {
 
       if (type === 'alphacoders') {
         const res = await this.alphacoders(category)
+        // eslint-disable-next-line no-console
+        console.log('>>> Services >> wallpaper > random alphacoders', res)
         if (res) {
           const pics = res.data
           return pics[getRandomIntInclusive(0, pics.length - 1)]
@@ -55,40 +57,49 @@ class Wallpaper {
    * https://wall.alphacoders.com/
    */
   async alphacoders(category = 'alphacoders-anime') {
-    const type = 'alphacoders'
+    try {
+      const type = 'alphacoders'
 
-    const cacheKey = [this.module, type, category]
-    const cacheData = await RequestCache.get(cacheKey)
-    if (cacheData)
-      return cacheData
+      const cacheKey = [this.module, type, category]
+      const cacheData = await RequestCache.get(cacheKey)
+      if (cacheData)
+        return cacheData
 
-    const url = 'https://wall.alphacoders.com'
-    const categories = alphacodersInfo.category
-    const categoryIndex = _.findIndex(categories, item => item.key === category)
-    const urlParams = categories[categoryIndex].url
+      const url = 'https://wall.alphacoders.com'
+      const categories = alphacodersInfo.category
+      const categoryIndex = _.findIndex(categories, item => item.key === category)
+      const urlParams = categories[categoryIndex].url
 
-    const res = await defHttp.get({ url: `${url}${urlParams}` })
+      const res = await defHttp.get({ url: `${url}${urlParams}` })
 
-    const domParser = new DOMParser()
-    const dom = domParser.parseFromString(res.data, 'text/html')
+      const domParser = new DOMParser()
+      const dom = domParser.parseFromString(res.data, 'text/html')
 
-    const picDoms = dom.querySelectorAll('.page_container .center .thumb-container-big')
-    const pics: any = []
-    picDoms.forEach((item) => {
-      const imgUrl = item.querySelector('.img-responsive')?.getAttribute('src')
-      const oriImgUrl = imgUrl?.replace('thumbbig-', '')
-      const commonImgUrl = imgUrl?.replace('thumbbig-', 'thumb-1920-')
-      pics.push({
-        imgUrl,
-        oriImgUrl,
-        commonImgUrl,
+      const picDoms = dom.querySelectorAll('.page_container .center .thumb-container-big')
+      // eslint-disable-next-line no-console
+      console.log('>>> Services >> wallpaper > alphacoders', `${url}${urlParams}`, picDoms)
+      const pics: any = []
+      picDoms.forEach((item) => {
+        const imgUrl = item.querySelector('.img-responsive')?.getAttribute('src')
+        const oriImgUrl = imgUrl?.replace('thumbbig-', '')
+        const commonImgUrl = imgUrl?.replace('thumbbig-', 'thumb-1920-')
+        pics.push({
+          imgUrl,
+          oriImgUrl,
+          commonImgUrl,
+        })
       })
-    })
 
-    if (pics.length)
-      return await RequestCache.set(cacheKey, { data: pics })
-    else
+      if (pics.length)
+        return await RequestCache.set(cacheKey, { data: pics })
+      else
+        return false
+    }
+    catch (e) {
+      // eslint-disable-next-line no-console
+      console.log('>>> Services >> wallpaper > alphacoders error', e)
       return false
+    }
   }
 }
 

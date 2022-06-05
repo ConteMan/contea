@@ -25,8 +25,6 @@ const searchKey = 'q'
 const zenKey = 'z'
 const settingKey = 's'
 
-const alarmNames = ['weread', 'v2ex', 'wakatime']
-
 const router = useRouter()
 const route = useRoute()
 
@@ -42,7 +40,7 @@ const alarmState = useAlarmState()
 browser.runtime.onMessage.addListener(async(message: message, sender: any) => {
   const { type, name } = message
 
-  newTabState.setLog(`[NewTab AppContent] 收到 [${sender.id}] 发来的信息：${JSON.stringify(message)}`)
+  newTabState.setLog(`${new Date()} [NewTab AppContent] 收到 [${sender.id}] 发来的信息：${JSON.stringify(message)}`)
 
   switch (type) {
     case 'change-mode':
@@ -50,10 +48,10 @@ browser.runtime.onMessage.addListener(async(message: message, sender: any) => {
       break
     case 'alarm':
     case 'alarm-sync': {
-      if (!name || !alarmNames.includes(name))
+      if (!name)
         break
       if (type === 'alarm') {
-        await AlarmService.alarmDeal(name)
+        await AlarmService.dealAlarm(name)
         await sleep(1000) // 处理后等待 1 秒再继续
       }
       alarmState.addAlarm(name as alarmName, 1) // 通过状态通知组件更新数据

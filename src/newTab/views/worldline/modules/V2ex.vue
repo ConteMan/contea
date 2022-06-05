@@ -92,7 +92,7 @@ const handleChange = (tag: string, checked: boolean) => {
 // 刷新
 const refreshData = async(force: 1|2 = 1) => {
   data.loading = true
-  if (force > 1) await Alarm.alarmDeal(module)
+  if (force > 1) await Alarm.dealAlarm(module)
   await getData()
   data.loading = false
 }

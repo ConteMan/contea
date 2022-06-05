@@ -7,10 +7,10 @@ import type { SettingKeys } from '@setting/index'
 import defaultSetting from '@setting/index'
 
 import Alarm from '@services/base/alarm'
-import migrations from '../migrations'
+import migrations from '@models/migrations'
 
-import { useConfigState } from '~/store/config'
-import { useNewTabState } from '~/store/newTab'
+// import { useConfigState } from '~/store/config'
+// import { useNewTabState } from '~/store/newTab'
 
 type Item = Record<string, any>
 
@@ -37,8 +37,8 @@ class ConfigState extends AsyncModels.keyValue<Item, DexieDriver> {
     }
 
     // 主题模式
-    if (['all', 'base'].includes(module))
-      useNewTabState().setThemeMode()
+    // if (['all', 'base'].includes(module))
+    //   useNewTabState().setThemeMode()
   }
 
   /**
@@ -51,14 +51,14 @@ class ConfigState extends AsyncModels.keyValue<Item, DexieDriver> {
     const mergeRes = deepMerge(res, data)
     await this.setItem(module, mergeRes)
 
-    await useConfigState().setAll()
+    // await useConfigState().setAll()
 
     // 定时任务
     if (data.enable || data.alarm)
       await Alarm.setAlarm(module)
     // 主题模式
-    if (module === 'base')
-      useNewTabState().setThemeMode()
+    // if (module === 'base')
+    //   useNewTabState().setThemeMode()
   }
 
   /**

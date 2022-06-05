@@ -21,9 +21,10 @@ export type Config = BaseConfig & {
   defaultPath: string
   statusList: boolean // 状态列表
   themeMode: boolean // true => system, false => manual
+  desktopInterface: string // 桌面接口
 }
 
-export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'expired' | 'alarm' | 'statusList' | 'themeMode'>
+export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'expired' | 'alarm' | 'statusList' | 'themeMode' | 'desktopInterface'>
 
 export const setting: Config = {
   key: 'base',
@@ -37,6 +38,7 @@ export const setting: Config = {
   defaultPath: '/zen',
   statusList: false,
   themeMode: true,
+  desktopInterface: '',
 }
 
 export interface InfoItem {
