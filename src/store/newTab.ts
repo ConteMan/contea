@@ -32,8 +32,10 @@ export const useNewTabState = defineStore('newTab', {
     },
     async changeWallpaper() {
       const info = await wallpaperService.random(this.wallpaper.source)
-      if (info.commonImgUrl) {
-        this.wallpaper.url = info.commonImgUrl
+      if (info.url) {
+        // eslint-disable-next-line no-console
+        console.log('>>> Store >> newTab > actions changeWallpaper', info)
+        this.wallpaper.url = info.url
         this.wallpaper = { ...this.wallpaper }
       }
     },

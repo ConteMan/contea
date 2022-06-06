@@ -32,6 +32,19 @@ export const alphacodersInfo = {
   ],
 }
 
+export const bing = {
+  name: 'Bing',
+  key: 'bing',
+  category: [
+    {
+      name: '七日壁纸',
+      key: 'bing-week',
+      url: 'https://cn.bing.com/HPImageArchive.aspx?format=js&idx=0&n=7&uhd=1&uhdwidth=2560&uhdheight=1440',
+    },
+  ],
+}
+
 export const SourceTypes = [
   alphacodersInfo,
+  bing,
 ]

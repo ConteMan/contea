@@ -43,11 +43,11 @@ class AlarmSetting {
    */
   async dealAlarm(module: string) {
     // eslint-disable-next-line no-console
-    console.log('>>> Services >> base alarm > alarmDeal - module: ', module)
+    console.log('>>> Services >> base alarm > dealAlarm - module: ', module)
 
     const configInfo = await configState.storage.query().get(module)
     // eslint-disable-next-line no-console
-    console.log('>>> Services >> base alarm > alarmDeal - configInfo: ', configInfo)
+    console.log('>>> Services >> base alarm > dealAlarm - configInfo: ', configInfo)
 
     const { enable } = configInfo
     if (!enable)
@@ -55,13 +55,13 @@ class AlarmSetting {
 
     const moduleInfo = await moduleState.storage.query().get(module)
     // eslint-disable-next-line no-console
-    console.log('>>> Services >> base alarm > alarmDeal - moduleInfo: ', moduleInfo)
+    console.log('>>> Services >> base alarm > dealAlarm - moduleInfo: ', moduleInfo)
 
     if (module === 'base') {
       const count = await requestState.clean()
 
       // eslint-disable-next-line no-console
-      console.log('>>> Services >> base alarm > alarmDeal - requestState clean: ', count)
+      console.log('>>> Services >> base alarm > dealAlarm - requestState clean: ', count)
     }
 
     switch (module) {

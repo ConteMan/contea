@@ -9,7 +9,7 @@
           class="mr-2 text-xs h-auto py-0.8"
           checkable
           :checked="selectedTags.indexOf(item.value) > -1"
-          @update:checked="checked => handleChange(item.value, checked)"
+          @update:checked="(checked: boolean) => handleChange(item.value, checked)"
         >
           {{ item.key }}
         </n-tag>
@@ -111,7 +111,7 @@ const handleChange = async(tag: string, checked: boolean) => {
 // 刷新数据
 const refresh = async() => {
   data.loading = true
-  await Alarm.alarmDeal(module)
+  await Alarm.dealAlarm(module)
   await getData()
   data.loading = false
 }
