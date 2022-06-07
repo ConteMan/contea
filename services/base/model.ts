@@ -35,7 +35,7 @@ export const setting: Config = {
   alarm: 10,
   expired: 3600,
   showCards: [],
-  defaultPath: '/zen',
+  defaultPath: '/module',
   statusList: false,
   themeMode: true,
   desktopInterface: '',

@@ -6,7 +6,10 @@ import type PkgType from '../package.json'
 export async function getManifest() {
   const pkg = await fs.readJSON(r('package.json')) as typeof PkgType
 
-  const manifest: Manifest.WebExtensionManifest = {
+  const manifest: Omit<Manifest.WebExtensionManifest, 'commands' | 'host_permissions'> & {
+    commands: Record<string, Manifest.WebExtensionManifest['commands']>
+    host_permissions: string[]
+  } = {
     manifest_version: 3,
     name: pkg.name,
     version: pkg.version,
@@ -23,8 +26,8 @@ export async function getManifest() {
       service_worker: './dist/background/index.global.js',
     },
     icons: {
-      16: './assets/icon-128.png',
-      48: './assets/icon-128.png',
+      16: './assets/icon-16.png',
+      48: './assets/icon-48.png',
       128: './assets/icon-128.png',
     },
     permissions: [

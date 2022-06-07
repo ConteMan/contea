@@ -1,29 +1,25 @@
 <template>
-  <div class="zen-container w-full h-screen bg-center bg-cover" :style="data.wallpaperStyle">
-    <div class="zen-setting-container fixed bottom-1 right-2 space-x-2 rounded-md pt-2 px-2 hover:(bg-light-400)" :class="{ '!bg-light-400': settingBg }">
-      <mdi-card-text class="opacity-30 cursor-pointer hover:(opacity-100)" @click="toModulePage" />
-      <la-random v-if="wallpaperInfo.mode === 'random'" class="opacity-30 cursor-pointer hover:(opacity-100)" @click="random()" />
+  <div>
+    <div class="flex justify-end gap-2 zen-setting-container fixed bottom-1 right-8 text-[14px] rounded-md p-2 opacity-40 hover:(opacity-100)">
+      <a class="icon-btn" @click="changeTheme()">
+        <ic:sharp-light-mode v-if="newTabState.theme === 'light'" />
+        <ic:sharp-dark-mode v-else />
+      </a>
       <n-popover
         trigger="hover"
         raw
-        display-directive="if"
+        display-directive="show"
         placement="top"
-        :to="false"
+        :keep-alive-on-hover="true"
         :show-arrow="false"
         :overlap="false"
-        :duration="300"
+        :duration="100"
       >
         <template #trigger>
-          <mdi-opacity
-            class="opacity-30 cursor-pointer hover:(opacity-100)"
-            :class="{ '!opacity-100': showOpacity }"
-          />
+          <mdi-opacity class="icon-btn" />
         </template>
         <div
-          ref="popover"
           class="h-[200px] mb-[10px]"
-          @mouseover="showSettingBg()"
-          @mouseout="showSettingBg(false)"
         >
           <n-slider
             v-model:value="data.backgroundOpacity"
@@ -33,10 +29,13 @@
           />
         </div>
       </n-popover>
-      <mdi-pin-off-outline v-if="wallpaperInfo.mode === 'random'" class="opacity-30 cursor-pointer hover:(opacity-100)" @click="changeMode()" />
-      <mdi-pin v-else class="opacity-30 cursor-pointer hover:(opacity-100)" @click="changeMode()" />
-      <mdi-information-outline class="opacity-30 cursor-pointer hover:(opacity-100)" @click="data.showDrawer = !data.showDrawer" />
+      <la:random v-if="wallpaperInfo.mode === 'random'" class="icon-btn" @click="random()" />
+      <mdi:pin-off-outline v-if="wallpaperInfo.mode === 'random'" class="icon-btn" @click="changeMode()" />
+      <mdi:pin v-else class="icon-btn" @click="changeMode()" />
+      <mdi:wallpaper class="icon-btn" @click="data.showDrawer = !data.showDrawer" />
+      <mdi:cog class="icon-btn" @click="changeSettingDrawer()" />
     </div>
+
     <n-drawer
       v-model:show="showDrawer"
       class="py-4 px-4"
@@ -66,28 +65,22 @@
     </n-drawer>
   </div>
 </template>
+
 <script setup lang="ts">
 import { SourceTypes } from '@services/wallpaper/model'
 import { useNewTabState } from '~/store/newTab'
+
+const newTabState = useNewTabState()
 
 const data = reactive({
   wallpaperInfo: {} as any,
   wallpaperStyle: {} as any,
   backgroundOpacity: 0,
-  settingBg: false, // 设置栏背景显隐
-  showOpacity: false, // Opacity 按钮显隐
   showDrawer: false, // 抽屉显隐
   wallpaperSourceOptions: [] as any,
 })
-const { wallpaperInfo, backgroundOpacity, settingBg, showOpacity, showDrawer, wallpaperSourceOptions } = toRefs(data)
-const popover = ref(null)
+const { wallpaperInfo, backgroundOpacity, showDrawer, wallpaperSourceOptions } = toRefs(data)
 
-const router = useRouter()
-const toModulePage = () => {
-  router.push({ path: '/module' })
-}
-
-const newTabState = useNewTabState()
 const { wallpaper } = storeToRefs(newTabState)
 data.wallpaperInfo = wallpaper
 
@@ -115,33 +108,25 @@ const changeMode = async() => {
   newTabState.changeWallpaperMode()
 }
 
-watch(() => data.wallpaperInfo, (newWallpaperInfo) => {
-  data.wallpaperStyle = {
-    'background-image': `-webkit-cross-fade(url(data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==), url(${newWallpaperInfo.url}), ${newWallpaperInfo.opacity}%)`,
-  }
-}, { deep: true })
-
 watch(backgroundOpacity, (newValue) => {
   newTabState.changeWallpaperOpacity(newValue)
 })
 
-const showSettingBg = (show = true) => {
-  if (show) {
-    data.settingBg = true
-  }
-  else {
-    if (!data.showOpacity)
-      data.settingBg = false
-  }
+// 显示/隐藏设置抽屉
+const changeSettingDrawer = () => {
+  newTabState.changeSettingDrawer()
 }
 
-watch(popover, (newValue) => {
-  data.showOpacity = !!newValue
-  data.settingBg = !!newValue
-})
+const changeTheme = () => {
+  newTabState.changeTheme(newTabState.theme === 'dark' ? 'light' : 'dark')
+}
 </script>
-<style lang="less" scoped>
+
+<style>
 .zen-opacity-slider {
   border-radius: 1.5rem;
+}
+.icon-btn {
+  cursor: pointer;
 }
 </style>

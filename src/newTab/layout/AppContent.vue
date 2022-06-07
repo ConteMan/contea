@@ -2,7 +2,7 @@
   <router-view />
   <SearchModal />
   <SettingDrawer />
-  <Log />
+  <!-- <Log /> -->
 </template>
 <script setup lang="ts">
 import type { alarmName, message } from '@localTypes/message'
@@ -13,14 +13,14 @@ import AlarmService from '@services/base/alarm'
 
 import SearchModal from '~/components/search/Search.vue'
 import SettingDrawer from '~/components/setting/SettingDrawer.vue'
-import Log from '~/components/log/Log.vue'
+// import Log from '~/components/log/Log.vue'
 
 import { useModalState } from '~/store/modal'
 import { useNewTabState } from '~/store/newTab'
 import { useAlarmState } from '~/store/alarm'
 
-const defaultPath = '/zen'
-const modulePath = '/module'
+const defaultPath = '/module'
+// const modulePath = '/module'
 const searchKey = 'q'
 const zenKey = 'z'
 const settingKey = 's'
@@ -29,7 +29,7 @@ const router = useRouter()
 const route = useRoute()
 
 const changeMode = () => {
-  const path = route.path === defaultPath ? modulePath : defaultPath
+  const path = defaultPath
   router.push({ path })
 }
 
