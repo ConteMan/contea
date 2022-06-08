@@ -17,7 +17,7 @@
     </div>
 
     <n-scrollbar class="sspai-content-container">
-      <n-back-top :right="10000" :bottom="8" to=".sspai-content-container" class="left-1 text-xl text-gray-400 shadow-none hover:(shadow-none text-[#fd2720])">
+      <n-back-top :right="10000" :bottom="8" to=".sspai-content-container" class="left-3 text-xl text-gray-400 shadow-none bg-transparent hover:(shadow-none text-[#fd2720])">
         <bx-bx-arrow-to-top />
       </n-back-top>
       <template v-for="item in list" :key="item.title">
