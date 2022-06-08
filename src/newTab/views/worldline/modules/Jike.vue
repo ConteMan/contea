@@ -109,7 +109,7 @@ import { enumToObj, openSite } from '@utils/index'
 import type { Config } from '@services/jike/model'
 import Base from '@services/jike'
 import { TypeEnum } from '@enums/jikeEnum'
-import OriginalPost from '~/components/jike/components/OriginalPost.vue'
+import OriginalPost from '@newTab/components/jike/components/OriginalPost.vue'
 
 dayjs.locale('zh-cn')
 dayjs.extend(RelativeTime)

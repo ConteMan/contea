@@ -27,7 +27,7 @@
 import dayjs from 'dayjs'
 import { useTimeoutFn } from '@vueuse/core'
 import { Alarm } from '@services/browser'
-import SettingItem from '~/components/template/SettingItem.vue'
+import SettingItem from '@newTab/components/template/SettingItem.vue'
 
 const alarms = ref({} as any)
 const loading = ref(false)

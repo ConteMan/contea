@@ -1,14 +1,14 @@
 import 'animate.css'
 import 'virtual:windi.css'
-import '~/styles/index.less'
+import '@styles/index.less'
 
 import { createApp } from 'vue'
 import { createHead } from '@vueuse/head'
 import App from './App.vue'
-import store from '~/store'
-import router from '~/newTab/router'
+import store from './store'
+import router from './router'
 
-import { init } from '~/newTab/core'
+import { init } from './core'
 
 const head = createHead()
 

@@ -31,7 +31,7 @@ import Movie from './modules/Movie.vue'
 import Sport from './modules/Sport.vue'
 import Status from './modules/Status.vue'
 
-import { useConfigState } from '~/store/config'
+import { useConfigState } from '@newTab/store/config'
 
 const activeKey = ref('')
 const changeActiveKey = (key: string) => {

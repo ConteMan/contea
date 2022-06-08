@@ -32,7 +32,7 @@ import { enumToObj } from '@utils/index'
 import type { Config } from '@services/zhihu/model'
 import Base from '@services/zhihu'
 import { TypeEnum } from '@enums/zhihuEnum'
-import ListItem from '~/components/zhihu/components/ListItem.vue'
+import ListItem from '@newTab/components/zhihu/components/ListItem.vue'
 
 const module = 'zhihu'
 const defaultType = 'hot'

@@ -24,6 +24,14 @@ export const sharedConfig: UserConfig = {
         replacement: `${r('src')}/`,
       },
       {
+        find: '@newTab/',
+        replacement: `${r('src/newTab')}/`,
+      },
+      {
+        find: '@styles/',
+        replacement: `${r('src/styles')}/`,
+      },
+      {
         find: '@utils/',
         replacement: `${r('utils')}/`,
       },
@@ -38,10 +46,6 @@ export const sharedConfig: UserConfig = {
       {
         find: '@setting/',
         replacement: `${r('setting')}/`,
-      },
-      {
-        find: '@store/',
-        replacement: `${r('src/store')}/`,
       },
       {
         find: '@enums/',

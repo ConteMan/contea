@@ -42,8 +42,8 @@ import type { Config } from '@services/v2ex/model'
 import Alarm from '@services/base/alarm'
 import Base from '@services/base'
 import { TypeEnum } from '@enums/v2exEnum'
-import { useNewTabState } from '~/store/newTab'
-import { useAlarmState } from '~/store/alarm'
+import { useNewTabState } from '@newTab/store/newTab'
+import { useAlarmState } from '@newTab/store/alarm'
 
 const module = 'v2ex'
 

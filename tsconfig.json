@@ -24,6 +24,9 @@
       "~/*": [
         "src/*"
       ],
+      "@newTab/*": [
+        "src/newTab/*"
+      ],
       "@utils/*": [
         "utils/*"
       ],
@@ -35,9 +38,6 @@
       ],
       "@setting/*": [
         "setting/*"
-      ],
-      "@store/*": [
-        "src/store/*"
       ],
       "@enums/*": [
         "enums/*"

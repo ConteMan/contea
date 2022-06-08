@@ -11,13 +11,13 @@ import { sleep } from '@utils/index'
 
 import AlarmService from '@services/base/alarm'
 
-import SearchModal from '~/components/search/Search.vue'
-import SettingDrawer from '~/components/setting/SettingDrawer.vue'
-// import Log from '~/components/log/Log.vue'
+import SearchModal from '@newTab/components/search/Search.vue'
+import SettingDrawer from '@newTab/components/setting/SettingDrawer.vue'
+// import Log from '@newTab/components/log/Log.vue'
 
-import { useModalState } from '~/store/modal'
-import { useNewTabState } from '~/store/newTab'
-import { useAlarmState } from '~/store/alarm'
+import { useModalState } from '@newTab/store/modal'
+import { useNewTabState } from '@newTab/store/newTab'
+import { useAlarmState } from '@newTab/store/alarm'
 
 const defaultPath = '/module'
 // const modulePath = '/module'

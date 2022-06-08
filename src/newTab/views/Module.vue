@@ -19,11 +19,11 @@
 
 <script setup lang="ts">
 import { useElementBounding } from '@vueuse/core'
-import { useConfigState } from '~/store/config'
-import { useNewTabState } from '~/store/newTab'
+import { useConfigState } from '@newTab/store/config'
+import { useNewTabState } from '@newTab/store/newTab'
 
 import WorldlineList from '~/newTab/views/worldline/List.vue'
-import ActionBar from '~/components/layout/ActionBar.vue'
+import ActionBar from '@newTab/components/layout/ActionBar.vue'
 
 const data = reactive({
   wallpaperInfo: {} as any,

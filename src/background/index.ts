@@ -1,9 +1,8 @@
 import _ from 'lodash-es'
 import type { message } from '@localTypes/message'
 import type { Tabs } from 'webextension-polyfill'
-import configState from '@models/keyValue/configState'
+import ConfigState from '@models/keyValue/configState'
 import AlarmService from '@services/base/alarm'
-import type { Version } from './version'
 import { getVersion } from './version'
 import { changeMode } from './shortcuts'
 
@@ -21,7 +20,7 @@ browser.runtime.onInstalled.addListener(async() => {
     // eslint-disable-next-line no-console
     console.log(`[${SERVICE_WORKER_NAME}] > [bg] > onInstalled`)
 
-    const version: Version = await getVersion()
+    const version = await getVersion()
 
     // eslint-disable-next-line no-console
     console.log(`[${SERVICE_WORKER_NAME}] > [bg] > version > ${JSON.stringify(version)}`)
@@ -35,7 +34,7 @@ browser.runtime.onInstalled.addListener(async() => {
         })
     }
 
-    await configState.init()
+    await ConfigState.init()
   }
   catch (e) {
     // eslint-disable-next-line no-console
@@ -45,6 +44,8 @@ browser.runtime.onInstalled.addListener(async() => {
 
 /**
  * 监听定时任务
+ * @param alarm string - 定时任务信息
+ * - @param name string - 定时任务名称
  */
 browser.alarms.onAlarm.addListener(async(alarm: { name: string }) => {
   try {
@@ -59,9 +60,10 @@ browser.alarms.onAlarm.addListener(async(alarm: { name: string }) => {
       const storage = await browser.storage.local.get([DEV_VERSION_KEY])
       const oldVersion = storage[DEV_VERSION_KEY]
 
-      if (currentVersion.version === oldVersion.version) return
+      if (currentVersion.version === oldVersion.version)
+        return
 
-      browser.storage.local.set({ [DEV_VERSION_KEY]: currentVersion })
+      await browser.storage.local.set({ [DEV_VERSION_KEY]: currentVersion })
 
       if (currentVersion.type === 'background') // 暂不处理 background 更新
         return
@@ -78,15 +80,16 @@ browser.alarms.onAlarm.addListener(async(alarm: { name: string }) => {
       return
     }
 
-    if (name === 'base') // base 模块可以直接处理
+    if (name === 'base') { // base 模块可以直接处理
       await AlarmService.dealAlarm(name)
+    }
 
-    // 发送消息到页面在进行处理
+    // 非 base 模块，发送消息到页面在进行处理
     // 如果存在多个扩展页面，优先发送给激活状态页面，其他页面仅做同步
-    // 页面根据请求提交到后台，后台处理后返回结果
-    if (name !== 'base') {
+    // 页面根据请求提交到后台，后台处理后返回结果，绕一圈主要是需要页面的 DOM 处理能力
+    else {
       const extensionTabs: Tabs.Tab[] = []
-      const tabs = await browser.tabs.query({ })
+      const tabs = await browser.tabs.query({})
 
       if (!Object.keys(tabs).length) return
 
@@ -120,6 +123,7 @@ browser.alarms.onAlarm.addListener(async(alarm: { name: string }) => {
 
 /**
  * 监听扩展绑定的快捷键
+ * @param command string - 快捷键名称
  */
 browser.commands.onCommand.addListener(async(command: string) => {
   if (command === 'change-mode')

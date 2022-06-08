@@ -1,4 +1,4 @@
-import { useConfigState } from '~/store/config'
+import { useConfigState } from '@newTab/store/config'
 
 export function init() {
   useConfigState().setAll()
