@@ -4,6 +4,7 @@
 # IDE
 .idea
 *.code-workspace
+.vscode
 
 # Dependency directories
 node_modules
