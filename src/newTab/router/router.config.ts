@@ -1,17 +1,16 @@
 import type { RouteRecordRaw } from 'vue-router'
-import LayoutBase from '~/newTab/layout/Base.vue'
+import LayoutBase from '@newTab/layout/Base.vue'
 
 export const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    name: 'Root',
     component: LayoutBase,
-    redirect: '/module',
+    redirect: '/index',
     children: [
       {
-        path: '/module',
-        name: 'Module',
-        component: () => import('~/newTab/views/Module.vue'),
+        path: '/index',
+        name: 'Index',
+        component: () => import('~/newTab/views/Index.vue'),
         meta: { title: '', keepAlive: false },
       },
     ],

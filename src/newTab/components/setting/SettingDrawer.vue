@@ -27,8 +27,8 @@
   </n-drawer>
 </template>
 <script setup lang="ts">
-import Setting from './Setting.vue'
 import { useNewTabState } from '@newTab/store/newTab'
+import Setting from './Setting.vue'
 
 const newTabState = useNewTabState()
 const { settingDrawer, settingDrawerPosition } = storeToRefs(newTabState)

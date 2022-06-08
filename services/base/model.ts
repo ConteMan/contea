@@ -35,11 +35,13 @@ export const setting: Config = {
   alarm: 10,
   expired: 3600,
   showCards: [],
-  defaultPath: '/module',
+  defaultPath: '/index',
   statusList: false,
   themeMode: true,
   desktopInterface: '',
 }
+
+export const configKeys = Object.keys(setting)
 
 export interface InfoItem {
   module: string

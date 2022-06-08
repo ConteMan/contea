@@ -22,7 +22,7 @@ import { useElementBounding } from '@vueuse/core'
 import { useConfigState } from '@newTab/store/config'
 import { useNewTabState } from '@newTab/store/newTab'
 
-import WorldlineList from '~/newTab/views/worldline/List.vue'
+import WorldlineList from '@newTab/views/worldline/List.vue'
 import ActionBar from '@newTab/components/layout/ActionBar.vue'
 
 const data = reactive({

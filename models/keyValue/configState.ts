@@ -59,6 +59,7 @@ class ConfigState extends AsyncModels.keyValue<Item, DexieDriver> {
     // 主题模式
     // if (module === 'base')
     //   useNewTabState().setThemeMode()
+    return true
   }
 
   /**

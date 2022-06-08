@@ -57,15 +57,14 @@ export function firstUpper(str: string) {
 
 /**
  * 枚举转对象
- * @param data {} - 枚举值
- * @param mode number - 模式
- * @param keys [] - 对象键
+ * @param data - 枚举值
+ * @param keys - 对象键
  */
 type dataType = Record<string, any>
-export function enumToObj(data: dataType, keys: any[] = ['key', 'value']) {
-  const res = []
-  const indexs = Object.keys(data)
-  for (const index of indexs) {
+export function enumToObj(data: dataType, keys: string[] = ['key', 'value']) {
+  const res = [] as Record<string, any>[]
+  const indexArr = Object.keys(data)
+  for (const index of indexArr) {
     res.push({
       [keys[0]]: index,
       [keys[1]]: data[index],

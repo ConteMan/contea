@@ -19,6 +19,7 @@ export default defineConfig({
     cssCodeSplit: false,
     emptyOutDir: false,
     sourcemap: isDev ? 'inline' : false,
+    chunkSizeWarningLimit: 1024 * 1,
     lib: {
       entry: r('src/background/index.ts'),
       name: packageJson.name,

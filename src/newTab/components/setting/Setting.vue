@@ -9,8 +9,7 @@
     </n-collapse>
   </div>
 </template>
-<script lang="ts" setup>
-
+<script setup lang="ts">
 const modules: any = {}
 const file = import.meta.globEager('./modules/*.vue')
 const paths = Object.keys(file)
@@ -19,21 +18,18 @@ paths.forEach((path) => {
   modules[key] = file[path].default
 })
 
+const expandedNames = ref([])
+
 const list = [
   {
     name: 'base',
     title: '基础',
-    component: modules.SettingItemBase,
+    component: modules.Base,
   },
   {
-    name: 'sync',
-    title: '同步',
-    component: modules.SettingItemSync,
-  },
-  {
-    name: 'bgm',
-    title: '番组计划',
-    component: modules.SettingItemBgm,
+    name: 'sspai',
+    title: '少数派',
+    component: modules.Sspai,
   },
   {
     name: 'bilibili',
@@ -71,11 +67,6 @@ const list = [
     component: modules.SettingItemSport,
   },
   {
-    name: 'sspai',
-    title: '少数派',
-    component: modules.SettingItemSspai,
-  },
-  {
     name: 'v2ex',
     title: 'V2EX',
     component: modules.SettingItemV2ex,
@@ -84,11 +75,6 @@ const list = [
     name: 'wakatime',
     title: 'WakaTime',
     component: modules.SettingItemWakaTime,
-  },
-  {
-    name: 'wallpaper',
-    title: '壁纸',
-    component: modules.SettingItemWallpaper,
   },
   {
     name: 'weather',
@@ -116,8 +102,6 @@ const list = [
     component: modules.SettingItemTest,
   },
 ]
-
-const expandedNames = ref([])
 </script>
 
 <style scoped lang="less">

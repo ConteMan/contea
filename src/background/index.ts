@@ -126,8 +126,14 @@ browser.alarms.onAlarm.addListener(async(alarm: { name: string }) => {
  * @param command string - 快捷键名称
  */
 browser.commands.onCommand.addListener(async(command: string) => {
-  if (command === 'change-mode')
-    changeMode(EXTENSION_ID)
+  try {
+    if (command === 'change-mode')
+      changeMode(EXTENSION_ID)
+  }
+  catch (e) {
+    // eslint-disable-next-line no-console
+    console.log(`[${SERVICE_WORKER_NAME}] > [bg] > onCommand error`, e)
+  }
 })
 
 export {}

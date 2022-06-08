@@ -46,66 +46,29 @@
         :loading="resetLoading"
         :round="false"
         size="small"
-        @update:value="reset()"
+        @update:value="reset(module)"
       />
     </n-form-item>
   </n-form>
 </template>
 <script setup lang="ts">
-import { useTimeoutFn } from '@vueuse/core'
-import { useMessage } from 'naive-ui'
-
-import configState from '@models/keyValue/configState'
-import { enumToObj } from '@utils/index'
-
-import { TypeEnum } from '@enums/sspaiEnum'
+import type { SettingKeys } from '@setting/index'
 import type { ShowConfig } from '@services/sspai/model'
-const module = 'sspai'
+import { configKeys } from '@services/sspai/model'
+import type { Ref } from 'vue'
+import { enumToObj } from '@utils/index'
+import { TypeEnum } from '@enums/sspaiEnum'
+import Setting from '../index'
 
-const message = useMessage()
+const module: SettingKeys = 'sspai'
 
-const data = reactive({
-  hasInit: false,
-  resetLoading: false,
-  model: {} as ShowConfig,
-  rules: {} as any,
-  baseTypes: {} as any,
-})
-const { hasInit, resetLoading, model, rules, baseTypes } = toRefs(data)
-
+const baseTypes = ref([] as Record<string, any>[])
 const getTypes = () => {
   baseTypes.value = enumToObj(TypeEnum, ['value', 'label'])
 }
+getTypes()
 
-const init = async() => {
-  getTypes()
-  data.hasInit = false
-  await nextTick()
-  data.model = await configState.getItem(module)
-  await nextTick()
-  data.hasInit = true
-}
-init()
-
-// 进行设置
-const modelSet = async() => {
-  await configState.mergeSet(module, toRaw(model.value))
-}
-
-// 重置
-const reset = async() => {
-  data.resetLoading = true
-  useTimeoutFn(async() => {
-    await configState.init(module)
-    init()
-    data.resetLoading = false
-    message.success('Success!')
-  }, 1000)
-}
-
-watch(model, async() => {
-  if (hasInit.value)
-    await modelSet()
-},
-{ deep: true })
+const setting = Setting(module, configKeys)
+const { rules, resetLoading, reset } = setting
+const { model }: { model: Ref<ShowConfig> } = setting
 </script>

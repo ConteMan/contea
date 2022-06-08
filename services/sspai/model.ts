@@ -23,8 +23,10 @@ export const setting: Config = {
   ],
   expired: 3600,
   alarm: 30,
-  showCard: true,
+  showCard: false,
 }
+
+export const configKeys = Object.keys(setting)
 
 export interface User {
   updatedAt?: number
