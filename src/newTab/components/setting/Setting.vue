@@ -27,80 +27,81 @@ const list = [
     component: modules.Base,
   },
   {
+    name: 'one',
+    title: '一个',
+    component: modules.One,
+  },
+  {
     name: 'sspai',
     title: '少数派',
     component: modules.Sspai,
   },
-  {
-    name: 'bilibili',
-    title: '哔哩哔哩',
-    component: modules.SettingItemBilibili,
-  },
-  {
-    name: 'github',
-    title: 'Github',
-    component: modules.SettingItemGithub,
-  },
-  {
-    name: 'jike',
-    title: '即刻',
-    component: modules.SettingItemJike,
-  },
-  {
-    name: 'juejin',
-    title: '掘金',
-    component: modules.SettingItemJuejin,
-  },
-  {
-    name: 'movie',
-    title: '影视',
-    component: modules.SettingItemMovie,
-  },
-  {
-    name: 'one',
-    title: '一个',
-    component: modules.SettingItemOne,
-  },
-  {
-    name: 'sport',
-    title: '体育',
-    component: modules.SettingItemSport,
-  },
-  {
-    name: 'v2ex',
-    title: 'V2EX',
-    component: modules.SettingItemV2ex,
-  },
-  {
-    name: 'wakatime',
-    title: 'WakaTime',
-    component: modules.SettingItemWakaTime,
-  },
-  {
-    name: 'weather',
-    title: '天气',
-    component: modules.SettingItemWeather,
-  },
-  {
-    name: 'weread',
-    title: '微信读书',
-    component: modules.SettingItemWeread,
-  },
-  {
-    name: 'zhihu',
-    title: '知乎',
-    component: modules.SettingItemZhihu,
-  },
-  {
-    name: 'yuque',
-    title: '语雀',
-    component: modules.SettingItemYuque,
-  },
-  {
-    name: 'test',
-    title: '测试',
-    component: modules.SettingItemTest,
-  },
+  // {
+  //   name: 'bilibili',
+  //   title: '哔哩哔哩',
+  //   component: modules.SettingItemBilibili,
+  // },
+  // {
+  //   name: 'github',
+  //   title: 'Github',
+  //   component: modules.SettingItemGithub,
+  // },
+  // {
+  //   name: 'jike',
+  //   title: '即刻',
+  //   component: modules.SettingItemJike,
+  // },
+  // {
+  //   name: 'juejin',
+  //   title: '掘金',
+  //   component: modules.SettingItemJuejin,
+  // },
+  // {
+  //   name: 'movie',
+  //   title: '影视',
+  //   component: modules.SettingItemMovie,
+  // },
+
+  // {
+  //   name: 'sport',
+  //   title: '体育',
+  //   component: modules.SettingItemSport,
+  // },
+  // {
+  //   name: 'v2ex',
+  //   title: 'V2EX',
+  //   component: modules.SettingItemV2ex,
+  // },
+  // {
+  //   name: 'wakatime',
+  //   title: 'WakaTime',
+  //   component: modules.SettingItemWakaTime,
+  // },
+  // {
+  //   name: 'weather',
+  //   title: '天气',
+  //   component: modules.SettingItemWeather,
+  // },
+  // {
+  //   name: 'weread',
+  //   title: '微信读书',
+  //   component: modules.SettingItemWeread,
+  // },
+  // {
+  //   name: 'zhihu',
+  //   title: '知乎',
+  //   component: modules.SettingItemZhihu,
+  // },
+  // {
+  //   name: 'yuque',
+  //   title: '语雀',
+  //   component: modules.SettingItemYuque,
+  // },
+  // {
+  //   name: 'test',
+  //   title: '测试',
+  //   component: modules.SettingItemTest,
+  // },
 ]
 </script>
 

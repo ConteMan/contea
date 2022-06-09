@@ -19,3 +19,5 @@ export const setting: Config = {
   alarm: 60,
   showCard: false,
 }
+
+export const configKeys = Object.keys(setting)
