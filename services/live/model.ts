@@ -13,7 +13,7 @@ export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiU
 export const setting: Config = {
   key: 'live',
   name: '直播',
-  enable: true,
+  enable: false,
   site: '',
   apiUrl: '',
   alarm: 60,

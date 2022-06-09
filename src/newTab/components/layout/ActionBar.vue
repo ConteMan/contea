@@ -38,20 +38,20 @@
         </div>
       </n-popover>
 
-      <a v-if="wallpaperInfo.mode === 'random'" class="icon-btn" title="切换背景" @click="random()">
+      <a v-if="wallpaperInfo.mode === 'random'" class="icon-btn" title="切换背景" @click="newTabState.changeWallpaper()">
         <la-random />
       </a>
 
-      <a class="icon-btn" title="固定背景" @click="changeMode()">
+      <a class="icon-btn" title="固定背景" @click="newTabState.changeWallpaperMode()">
         <mdi-pin-off-outline v-if="wallpaperInfo.mode === 'random'" />
-        <mdi-pin v-else class="icon-btn" @click="changeMode()" />
+        <mdi-pin v-else />
       </a>
 
       <a class="icon-btn" title="背景设置" @click="data.showDrawer = !data.showDrawer">
         <mdi-wallpaper />
       </a>
 
-      <a class="icon-btn" title="应用设置" @click="changeSettingDrawer()">
+      <a class="icon-btn" title="应用设置" @click="newTabState.changeSettingDrawer()">
         <mdi-cog />
       </a>
     </div>
@@ -120,22 +120,9 @@ const init = async() => {
 }
 init()
 
-const random = async() => {
-  await newTabState.changeWallpaper()
-}
-
-const changeMode = async() => {
-  newTabState.changeWallpaperMode()
-}
-
 watch(backgroundOpacity, (newValue) => {
   newTabState.changeWallpaperOpacity(newValue)
 })
-
-// 显示/隐藏设置抽屉
-const changeSettingDrawer = () => {
-  newTabState.changeSettingDrawer()
-}
 
 const changeTheme = () => {
   newTabState.changeTheme(newTabState.theme === 'dark' ? 'light' : 'dark')
