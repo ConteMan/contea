@@ -1,10 +1,16 @@
 <template>
   <div>
-    <div class="flex justify-end gap-2 zen-setting-container fixed bottom-1 right-8 text-[14px] rounded-md p-2 opacity-40 hover:(opacity-100)">
-      <a class="icon-btn" @click="changeTheme()">
-        <ic:sharp-light-mode v-if="newTabState.theme === 'light'" />
-        <ic:sharp-dark-mode v-else />
+    <div class="flex justify-end gap-2 zen-setting-container fixed bottom-4 right-8 text-[14px] rounded-md p-2 opacity-40 hover:(opacity-100)">
+      <a class="icon-btn" title="布局模式" @click="newTabState.changeLayoutMode()">
+        <mdi-border-all-variant v-if="newTabState.layoutMode === 'clean'" />
+        <mdi-border-all v-else />
       </a>
+
+      <a class="icon-btn" title="主题" @click="changeTheme()">
+        <ic-sharp-light-mode v-if="newTabState.theme === 'light'" />
+        <ic-sharp-dark-mode v-else />
+      </a>
+
       <n-popover
         trigger="hover"
         raw
@@ -16,7 +22,9 @@
         :duration="100"
       >
         <template #trigger>
-          <mdi-opacity class="icon-btn" />
+          <a class="icon-btn" title="背景透明度">
+            <mdi-opacity />
+          </a>
         </template>
         <div
           class="h-[200px] mb-[10px]"
@@ -29,11 +37,23 @@
           />
         </div>
       </n-popover>
-      <la:random v-if="wallpaperInfo.mode === 'random'" class="icon-btn" @click="random()" />
-      <mdi:pin-off-outline v-if="wallpaperInfo.mode === 'random'" class="icon-btn" @click="changeMode()" />
-      <mdi:pin v-else class="icon-btn" @click="changeMode()" />
-      <mdi:wallpaper class="icon-btn" @click="data.showDrawer = !data.showDrawer" />
-      <mdi:cog class="icon-btn" @click="changeSettingDrawer()" />
+
+      <a v-if="wallpaperInfo.mode === 'random'" class="icon-btn" title="切换背景" @click="random()">
+        <la-random />
+      </a>
+
+      <a class="icon-btn" title="固定背景" @click="changeMode()">
+        <mdi-pin-off-outline v-if="wallpaperInfo.mode === 'random'" />
+        <mdi-pin v-else class="icon-btn" @click="changeMode()" />
+      </a>
+
+      <a class="icon-btn" title="背景设置" @click="data.showDrawer = !data.showDrawer">
+        <mdi-wallpaper />
+      </a>
+
+      <a class="icon-btn" title="应用设置" @click="changeSettingDrawer()">
+        <mdi-cog />
+      </a>
     </div>
 
     <n-drawer

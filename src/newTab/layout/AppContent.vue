@@ -17,21 +17,16 @@ import { useModalState } from '@newTab/store/modal'
 import { useNewTabState } from '@newTab/store/newTab'
 import { useAlarmState } from '@newTab/store/alarm'
 
-const defaultPath = '/index'
 const searchKey = 'q'
 const zenKey = 'z'
 const settingKey = 's'
 
-const router = useRouter()
-const route = useRoute()
-
-const changeMode = () => {
-  const path = defaultPath
-  router.push({ path })
-}
-
 const newTabState = useNewTabState()
 const alarmState = useAlarmState()
+
+const changeMode = () => {
+  newTabState.changeLayoutMode()
+}
 
 // 监听消息
 browser.runtime.onMessage.addListener(async(message: message, sender: any) => {
@@ -75,7 +70,7 @@ useEventListener(window, 'keyup', (e: any) => {
   if (e.key === searchKey && notUsingInput.value)
     modalState.change(true)
 
-  // 模块、禅模式切换
+  // 布局模式切换
   if (e.key === zenKey && notUsingInput.value) // 非输入模式
     changeMode()
 

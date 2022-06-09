@@ -5,7 +5,10 @@
     :style="data.wallpaperStyle"
   >
     <div class="flex flex-grow" :style="{ 'max-height': data.dealTabPaneHeight }">
-      <div class="flex-grow max-h-full pb-2">
+      <div
+        v-if="newTabState.layoutMode !== 'clean'"
+        class="flex-grow max-h-full pb-2"
+      >
         <WorldlineList class="worldline-list h-full" />
       </div>
       <!-- <div class="max-h-full pb-2">

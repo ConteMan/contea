@@ -24,6 +24,8 @@ export const useNewTabState = defineStore('newTab', {
       isPreferredDark: false,
       themeMode: true, // true => system, false => manual
       theme: 'light', // light, dark
+
+      layoutMode: 'clean', // clean, list
     }
   },
   actions: {
@@ -73,6 +75,13 @@ export const useNewTabState = defineStore('newTab', {
     },
     changeTheme(theme: 'light' | 'dark') {
       this.theme = theme
+    },
+
+    changeLayoutMode() {
+      this.layoutMode = this.layoutMode === 'clean' ? 'list' : 'clean'
+    },
+    setLayoutMode(mode: 'clean' | 'list' | 'card') {
+      this.layoutMode = mode
     },
   },
   persist: {

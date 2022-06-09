@@ -5,7 +5,7 @@
     width="500px"
     :auto-focus="false"
   >
-    <div class="flex h-screen max-h-screen">
+    <div class="flex h-screen max-h-screen pt-4">
       <div
         v-if="settingDrawerPosition === 'right'"
         class="w-2 h-full flex-grow flex flex-col justify-center opacity-20 cursor-pointer hover:(opacity-100)"
