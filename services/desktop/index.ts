@@ -16,6 +16,8 @@ export async function toDesktop(module: string, data: any) {
     })
   }
   catch (e) {
+    // eslint-disable-next-line no-console
+    console.log('>>> desktop >> toDesktop error', e)
     return false
   }
 }

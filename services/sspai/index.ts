@@ -3,6 +3,7 @@ import { defHttp } from '@utils/http/axios'
 import configState from '@models/keyValue/configState'
 import moduleState from '@models/keyValue/moduleState'
 import infoList from '@models/list/infoList'
+import { toDesktop } from '@services/desktop'
 import type { Paginate, User } from './model'
 class Sspai {
   private module = 'sspai'
@@ -138,6 +139,7 @@ class Sspai {
 
     await infoList.deleteByModule(this.module, [moduleType])
     await infoList.bulkSetItemByModule(list, ['ca_data_id', 'ca_author_slug'])
+    await toDesktop(this.module, list)
 
     return list
   }
@@ -179,6 +181,7 @@ class Sspai {
 
     await infoList.deleteByModule(this.module, [moduleType])
     await infoList.bulkSetItemByModule(list, ['ca_data_id', 'ca_author_slug'])
+    await toDesktop(this.module, list)
 
     return list
   }

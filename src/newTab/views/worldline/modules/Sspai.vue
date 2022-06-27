@@ -1,12 +1,9 @@
 <template>
   <div class="w-full flex flex-col">
-    <div class="w-full pb-3 pl-2">
-      <a class="cursor-pointer leading-none align-middle mr-4" @click="refresh()">
-        <mdi-refresh :class="{'animate-spin': loading}" />
-      </a>
+    <div class="w-full pt-2 pb-3 pl-2 flex items-center gap-2">
       <template v-for="item in data.moduleTypes" :key="item.key">
         <n-tag
-          class="mr-2 text-xs h-auto py-0.8"
+          class="text-xs h-auto py-0.8"
           checkable
           :checked="selectedTags.indexOf(item.value) > -1"
           @update:checked="(checked: boolean) => handleChange(item.value, checked)"
@@ -14,6 +11,9 @@
           {{ item.key }}
         </n-tag>
       </template>
+      <a class="cursor-pointer flex items-center hover:(cursor-pointer)" @click="refresh()">
+        <mdi-refresh :class="{ 'animate-spin': loading }" />
+      </a>
     </div>
 
     <n-scrollbar class="sspai-content-container">
@@ -34,7 +34,7 @@
               {{ item.title }}
             </a>
           </template>
-          <div class="text-xs py-1 text-gray-300">
+          <div class="text-xs py-1">
             <span v-if="item.ca_module_type === 'followActivity'">
               <a :href="`${config.site}/u/${item.author.slug}/updates`">{{ item.author.nickname }}</a> {{ transformAction(item.key) }} / <a :href="`${config.site}/u/${item.data.author.slug}/updates`">{{ item.data.author.nickname }}</a> /
             </span>
