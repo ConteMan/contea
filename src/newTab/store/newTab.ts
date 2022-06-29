@@ -9,7 +9,7 @@ export const useNewTabState = defineStore('newTab', {
       tabSelected: 'worldline',
       wallpaper: {
         url: '',
-        mode: 'random', // fixed, random
+        mode: 'random', // fixed, random, local
         opacity: 10,
         source: [
           'alphacoders-anime',
@@ -47,6 +47,11 @@ export const useNewTabState = defineStore('newTab', {
     },
     changeWallpaperOpacity(opacity: number) {
       this.wallpaper.opacity = opacity
+      this.wallpaper = { ...this.wallpaper }
+    },
+    setLocalWallpaper(url: string) {
+      this.wallpaper.url = url
+      this.wallpaper.mode = 'local'
       this.wallpaper = { ...this.wallpaper }
     },
     changeSettingDrawer() {

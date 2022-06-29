@@ -62,26 +62,43 @@
       placement="bottom"
       :auto-focus="false"
     >
-      <div class="pb-2">
-        <span>当前</span>
+      <div v-if="['fixed', 'random'].includes(wallpaperInfo.mode) && wallpaperInfo.url.length < 500" class="pb-2">
+        <div class="mb-1">
+          当前
+        </div>
         <div>
           <a :href="wallpaperInfo.url">{{ wallpaperInfo.url }}</a>
         </div>
       </div>
-      <n-grid cols="24">
-        <n-grid-item :span="24">
-          <span>来源</span>
-          <n-cascader
-            v-model:value="wallpaperInfo.source"
-            multiple
-            check-strategy="child"
-            :options="wallpaperSourceOptions"
-            label-field="name"
-            value-field="key"
-            children-field="category"
-          />
-        </n-grid-item>
-      </n-grid>
+      <div class="pb-2">
+        <div class="mb-1">
+          线上
+        </div>
+        <n-cascader
+          v-model:value="wallpaperInfo.source"
+          multiple
+          check-strategy="child"
+          :options="wallpaperSourceOptions"
+          label-field="name"
+          value-field="key"
+          children-field="category"
+        />
+      </div>
+      <div class="pb-2">
+        <div class="mb-1">
+          本地
+        </div>
+        <n-button size="small" @click="uploadClick()">
+          点击上传
+        </n-button>
+        <div class="invisible">
+          <input
+            ref="uploadRef"
+            type="file"
+            @change="handleChange"
+          >
+        </div>
+      </div>
     </n-drawer>
   </div>
 </template>
@@ -98,8 +115,9 @@ const data = reactive({
   backgroundOpacity: 0,
   showDrawer: false, // 抽屉显隐
   wallpaperSourceOptions: [] as any,
+  uploadRef: null as any,
 })
-const { wallpaperInfo, backgroundOpacity, showDrawer, wallpaperSourceOptions } = toRefs(data)
+const { wallpaperInfo, backgroundOpacity, showDrawer, wallpaperSourceOptions, uploadRef } = toRefs(data)
 
 const { wallpaper } = storeToRefs(newTabState)
 data.wallpaperInfo = wallpaper
@@ -126,6 +144,20 @@ watch(backgroundOpacity, (newValue) => {
 
 const changeTheme = () => {
   newTabState.changeTheme(newTabState.theme === 'dark' ? 'light' : 'dark')
+}
+
+const uploadClick = () => {
+  uploadRef.value.click()
+}
+
+const handleChange = () => {
+  const file = uploadRef.value.files[0]
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    if (e.target?.result)
+      newTabState.setLocalWallpaper(String(e.target?.result))
+  }
+  reader.readAsDataURL(file)
 }
 </script>
 

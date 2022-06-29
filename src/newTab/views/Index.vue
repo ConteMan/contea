@@ -4,7 +4,7 @@
     class="module-container fixed h-full w-full bg-cover"
     :style="data.wallpaperStyle"
   >
-    <div class="order-10">
+    <div>
       <div class="flex flex-grow" :style="{ 'max-height': data.dealTabPaneHeight }">
         <div
           v-if="newTabState.layoutMode !== 'clean'"
@@ -12,9 +12,6 @@
         >
           <WorldlineList class="worldline-list h-full" />
         </div>
-        <!-- <div class="max-h-full pb-2">
-          <CardList class="max-w-[400px] min-w-[400px] max-h-full overflow-y-auto" />
-        </div> -->
       </div>
 
       <ActionBar ref="moduleTabRef" />
