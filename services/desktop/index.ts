@@ -1,7 +1,7 @@
 import configState from '@models/keyValue/configState'
 import { defHttp } from '@utils/http/axios'
 
-export async function toDesktop(module: string, data: any) {
+export async function toDesktop(type: string, data: any) {
   try {
     const baseConfig = await configState.getItem('base')
     const url = baseConfig?.desktopInterface ?? ''
@@ -10,7 +10,7 @@ export async function toDesktop(module: string, data: any) {
     return await defHttp.post({
       url,
       data: {
-        type: module,
+        type,
         data,
       },
     })

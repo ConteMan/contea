@@ -56,11 +56,11 @@ const list = [
   //   title: '掘金',
   //   component: modules.SettingItemJuejin,
   // },
-  // {
-  //   name: 'movie',
-  //   title: '影视',
-  //   component: modules.SettingItemMovie,
-  // },
+  {
+    name: 'movie',
+    title: '影视',
+    component: modules.SettingItemMovie,
+  },
 
   // {
   //   name: 'sport',

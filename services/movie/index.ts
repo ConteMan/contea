@@ -1,5 +1,6 @@
 import requestCache from '@services/base/requestCache'
 import { defHttp } from '@utils/http/axios'
+import { toDesktop } from '@services/desktop'
 
 class Movie {
   private module = 'movie'
@@ -118,6 +119,59 @@ class Movie {
     })
 
     return list
+  }
+
+  /**
+   * 同步到桌面端
+   */
+  async sync() {
+    try {
+      const typeAllSelector = '.stui-pannel .stui-vodlist li .stui-vodlist__box'
+      const typeRules: any = {
+        latest: {
+          url: '',
+          allSelector: '.stui-pannel__bd > .stui-vodlist:first-child li .stui-vodlist__box',
+        },
+        film: {
+          url: '/type/1.html',
+          allSelector: typeAllSelector,
+        },
+        tv: {
+          url: '/type/2.html',
+          allSelector: typeAllSelector,
+        },
+        anime: {
+          url: '/type/4.html',
+          allSelector: typeAllSelector,
+        },
+        kj: {
+          url: '/type/15.html',
+          allSelector: typeAllSelector,
+        },
+        om: {
+          url: '/type/16.html',
+          allSelector: typeAllSelector,
+        },
+      }
+
+      const url = 'https://www.libvio.me'
+
+      const res = await defHttp.get({
+        url: `${url}${typeRules.latest.url}`,
+      })
+
+      if (res.data) {
+        await toDesktop('libvio', {
+          type: 'list-latest',
+          html: res.data,
+        })
+      }
+
+      return true
+    }
+    catch (e) {
+      return false
+    }
   }
 }
 

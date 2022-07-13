@@ -16,6 +16,7 @@
           <div v-if="item.periodInMinutes" class="border-l-1 mx-2 w-[1px] h-[80%]" />
           <span v-if="item.periodInMinutes">{{ item.periodInMinutes }} min</span>
           <span class="border-l-1 mx-2 w-[1px] h-[80%]" />
+          <mdi-access-point class="cursor-pointer hover:(text-red-400)" @click="AlarmService.dealAlarm(item.name)" />
           <mdi-delete class="cursor-pointer hover:(text-red-400)" @click="deleteAlarm(item.name)" />
         </template>
       </SettingItem>
@@ -27,6 +28,7 @@
 import dayjs from 'dayjs'
 import { useTimeoutFn } from '@vueuse/core'
 import { Alarm } from '@services/browser'
+import AlarmService from '@services/base/alarm'
 import SettingItem from '@newTab/components/template/SettingItem.vue'
 
 const alarms = ref({} as any)

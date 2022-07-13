@@ -23,6 +23,7 @@
 <script setup lang="ts">
 import _ from 'lodash-es'
 
+import { useConfigState } from '@newTab/store/config'
 import V2ex from './modules/V2ex.vue'
 import Sspai from './modules/Sspai.vue'
 import Jike from './modules/Jike.vue'
@@ -30,8 +31,6 @@ import Zhihu from './modules/Zhihu.vue'
 import Movie from './modules/Movie.vue'
 import Sport from './modules/Sport.vue'
 import Status from './modules/Status.vue'
-
-import { useConfigState } from '@newTab/store/config'
 
 const activeKey = ref('')
 const changeActiveKey = (key: string) => {
@@ -63,10 +62,6 @@ const menuOptions = [
   {
     label: '知乎',
     key: 'zhihu',
-  },
-  {
-    label: '影视',
-    key: 'movie',
   },
   {
     label: '体育',

@@ -8,6 +8,7 @@ import v2ex from '@services/v2ex'
 import sspai from '@services/sspai'
 import weread from '@services/weread'
 import one from '@services/one'
+import movie from '@services/movie'
 
 class AlarmSetting {
   /**
@@ -87,6 +88,10 @@ class AlarmSetting {
       }
       case 'one': {
         await one.list(true)
+        break
+      }
+      case 'movie': {
+        await movie.sync()
         break
       }
       default: {
