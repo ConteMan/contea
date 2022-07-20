@@ -5,6 +5,7 @@ import type { RequestOptions, Result } from '@localTypes/axios'
 
 import { deepMerge } from '@utils/index'
 import { ContentTypeEnum } from '@enums/httpEnum'
+import fetchAdapter from '@vespaiach/axios-fetch-adapter'
 import { VAxios } from './Axios'
 import type { AxiosTransform, CreateAxiosOptions } from './axiosTransform'
 
@@ -94,6 +95,7 @@ function createAxios(opt?: Partial<CreateAxiosOptions>) {
           // 是否携带token
           withToken: false,
         },
+        adapter: fetchAdapter,
       },
       opt || {},
     ),
