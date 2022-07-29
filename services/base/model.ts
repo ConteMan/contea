@@ -38,7 +38,7 @@ export const setting: Config = {
   defaultPath: '/index',
   statusList: false,
   themeMode: true,
-  desktopInterface: '',
+  desktopInterface: 'http://127.0.0.1:7788/extension',
 }
 
 export const configKeys = Object.keys(setting)

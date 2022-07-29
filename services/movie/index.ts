@@ -126,31 +126,38 @@ class Movie {
    */
   async sync() {
     try {
-      const typeAllSelector = '.stui-pannel .stui-vodlist li .stui-vodlist__box'
+      await this.syncLibvio()
+      await this.syncDdrk()
+      return true
+    }
+    catch (e) {
+      return false
+    }
+  }
+
+  /**
+   * 同步 Libvio 到桌面端
+   */
+  async syncLibvio() {
+    try {
       const typeRules: any = {
         latest: {
           url: '',
-          allSelector: '.stui-pannel__bd > .stui-vodlist:first-child li .stui-vodlist__box',
         },
         film: {
           url: '/type/1.html',
-          allSelector: typeAllSelector,
         },
         tv: {
           url: '/type/2.html',
-          allSelector: typeAllSelector,
         },
         anime: {
           url: '/type/4.html',
-          allSelector: typeAllSelector,
         },
         kj: {
           url: '/type/15.html',
-          allSelector: typeAllSelector,
         },
         om: {
           url: '/type/16.html',
-          allSelector: typeAllSelector,
         },
       }
 
@@ -162,6 +169,37 @@ class Movie {
 
       if (res.data) {
         await toDesktop('libvio', {
+          type: 'list-latest',
+          html: res.data,
+        })
+      }
+
+      return true
+    }
+    catch (e) {
+      return false
+    }
+  }
+
+  /**
+   * 同步 ddrk 到桌面端
+   */
+  async syncDdrk() {
+    try {
+      const typeRules: any = {
+        latest: {
+          url: '',
+        },
+      }
+
+      const url = 'https://ddrk.me'
+
+      const res = await defHttp.get({
+        url: `${url}${typeRules.latest.url}`,
+      })
+
+      if (res.data) {
+        await toDesktop('ddrk', {
           type: 'list-latest',
           html: res.data,
         })

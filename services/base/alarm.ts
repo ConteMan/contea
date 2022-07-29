@@ -6,7 +6,6 @@ import requestState from '@models/keyValue/requestState'
 
 import v2ex from '@services/v2ex'
 import sspai from '@services/sspai'
-import weread from '@services/weread'
 import one from '@services/one'
 import movie from '@services/movie'
 
@@ -46,7 +45,7 @@ class AlarmSetting {
     // eslint-disable-next-line no-console
     console.log('>>> Services >> base alarm > dealAlarm - module: ', module)
 
-    const configInfo = await configState.storage.query().get(module)
+    const configInfo = await configState.storage.query().get(module) // 使用此查询方法来避免查询缓存
     // eslint-disable-next-line no-console
     console.log('>>> Services >> base alarm > dealAlarm - configInfo: ', configInfo)
 
@@ -67,8 +66,8 @@ class AlarmSetting {
 
     switch (module) {
       case 'v2ex': {
-        const { enableTypes } = configInfo
-        await v2ex.tabLists(enableTypes)
+        // const { enableTypes } = configInfo
+        // await v2ex.tabLists(enableTypes)
 
         const { data } = moduleInfo
         if (!data.mission || !data.mission?.date || dayjs().isAfter(dayjs(data.mission.date), 'day'))
@@ -80,10 +79,6 @@ class AlarmSetting {
       case 'sspai': {
         const { enableTypes } = configInfo
         await sspai.lists(enableTypes)
-        break
-      }
-      case 'weread': {
-        await weread.updateModuleTypeData()
         break
       }
       case 'one': {

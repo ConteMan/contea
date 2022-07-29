@@ -10,7 +10,7 @@ export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiU
 export const setting: Config = {
   key: 'one',
   name: '一个',
-  enable: false,
+  enable: true,
   site: 'http://wufazhuce.com/',
   apiUrl: '',
   expired: 86400,

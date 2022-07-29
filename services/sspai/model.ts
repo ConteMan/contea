@@ -11,7 +11,7 @@ export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiU
 export const setting: Config = {
   key: 'sspai',
   name: '少数派',
-  enable: false,
+  enable: true,
   site: 'https://sspai.com',
   url: 'https://sspai.com',
   apiUrl: 'https://sspai.com/api/v1',

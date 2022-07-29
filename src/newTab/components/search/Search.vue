@@ -119,8 +119,6 @@ const defaultSearchIndex = 0
 const data = reactive({
   searchContent: '',
   result: [] as any,
-  historyResult: [] as any,
-  bookmarkResult: [] as any,
   index: 0, // 选中结果索引
   divs: {} as any, // 搜索结果引用
   mode: 1, // 1 鼠标，2 键盘

@@ -62,7 +62,7 @@ browser.alarms.onAlarm.addListener(async(alarm: { name: string }) => {
       const storage = await browser.storage.local.get([DEV_VERSION_KEY])
       const oldVersion = storage[DEV_VERSION_KEY]
 
-      toDesktop(DEV_ALARM_NAME, { now: dayjs().format('HH:mm:ss') })
+      toDesktop(DEV_ALARM_NAME, { now: dayjs().format('HH:mm:ss') }) // 发送给桌面端，判断活跃状态
 
       if (currentVersion.version === oldVersion.version)
         return
@@ -85,14 +85,13 @@ browser.alarms.onAlarm.addListener(async(alarm: { name: string }) => {
     }
 
     // 直接处理的模块
-    if (['base', 'v2ex', 'sspai', 'movie'].includes(name)) {
+    if (['sspai', 'movie'].includes(name))
       await AlarmService.dealAlarm(name)
-    }
 
     // 需前端页面处理的模块，发送消息到页面在进行处理
     // 如果存在多个扩展页面，优先发送给激活状态页面，其他页面仅做同步
     // 页面根据请求提交到后台，后台处理后返回结果，绕一圈主要是需要页面的 DOM 处理能力
-    else {
+    if (['one', 'v2ex'].includes(name)) {
       const extensionTabs: Tabs.Tab[] = []
       const tabs = await browser.tabs.query({})
 
