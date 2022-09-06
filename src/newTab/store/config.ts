@@ -3,36 +3,43 @@ import _ from 'lodash-es'
 import configState from '@models/keyValue/configState'
 import storeState from '@models/keyValue/storeState'
 
-export const useConfigState = defineStore('config', {
-  state: () => {
-    return {
-      all: {} as any,
-      sortList: [] as any,
-    }
-  },
-  actions: {
+interface DataType {
+  all: any
+  sortList: any[]
+}
+
+export const useConfigState = defineStore('config',
+  () => {
+    const data: DataType = reactive({
+      all: {},
+      sortList: [],
+    })
+
+    const { all, sortList } = toRefs(data)
+
     // 初始化
-    async setAll() {
-      this.all = await configState.storage.all()
-      await this.dealSortList()
-    },
+    async function setAll() {
+      data.all = await configState.storage.all()
+      await dealSortList()
+    }
+
     // 排序，优先按照传入排序，没有的放在最后
-    async dealSortList(data: any[] = []) {
-      if (data.length) {
-        this.sortList = data
+    async function dealSortList(dealData: any[] = []) {
+      if (dealData.length) {
+        data.sortList = dealData
         return
       }
 
-      let allList = Object.values(this.all)
+      let allList = Object.values(data.all)
       allList = allList.filter((i: any) => {
         return i?.showCard
       })
-      if (!this.sortList) {
-        this.sortList = allList
+      if (!data.sortList) {
+        data.sortList = allList
         return
       }
 
-      const currentList = this.sortList
+      const currentList = data.sortList
       let newList: any = []
       currentList.forEach((item: any) => {
         const index = _.findIndex(allList, (i: any) => {
@@ -50,13 +57,22 @@ export const useConfigState = defineStore('config', {
         newList = [...newList, ...allList]
       }
 
-      this.sortList = newList
+      data.sortList = newList
+    }
+
+    return {
+      all,
+      sortList,
+
+      setAll,
+      dealSortList,
+    }
+  },
+  {
+    persist: {
+      key: 'config',
+      storage: storeState,
+      paths: ['sortList'], // 只存储排序列表
     },
   },
-  persist: {
-    key: 'config',
-    storage: storeState,
-    paths: ['sortList'], // 只存储排序列表
-    overwrite: true,
-  },
-})
+)

@@ -1,7 +1,9 @@
 import type { Tabs } from 'webextension-polyfill'
 import type { message } from '@localTypes/message'
+
 import _ from 'lodash-es'
 import dayjs from 'dayjs'
+
 import ConfigState from '@models/keyValue/configState'
 import AlarmService from '@services/base/alarm'
 import { toDesktop } from '@services/desktop'
@@ -88,7 +90,7 @@ browser.alarms.onAlarm.addListener(async (alarm: { name: string }) => {
     if (['sspai', 'movie'].includes(name))
       await AlarmService.dealAlarm(name)
 
-    // 需前端页面处理的模块，发送消息到页面在进行处理
+    // 需前端页面处理的模块，发送消息到页面再进行处理
     // 如果存在多个扩展页面，优先发送给激活状态页面，其他页面仅做同步
     // 页面根据请求提交到后台，后台处理后返回结果，绕一圈主要是需要页面的 DOM 处理能力
     if (['one', 'v2ex'].includes(name)) {

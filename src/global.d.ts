@@ -1,3 +1,5 @@
+/// <reference types="vue/macros-global" />
+
 declare const __DEV__: boolean
 
 declare module '*.vue' {

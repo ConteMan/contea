@@ -62,12 +62,13 @@ export const sharedConfig: UserConfig = {
   },
   plugins: [
     Vue({
-      template: {
-        compilerOptions: {
-          // vue将跳过my-vue-element解析
-          isCustomElement: tag => tag === 'css-doodle',
-        },
-      },
+      reactivityTransform: true, // 响应性语法糖
+      // template: {
+      //   compilerOptions: {
+      //     // 跳过标签解析
+      //     isCustomElement: tag => tag === 'xxx',
+      //   },
+      // },
     }),
     AutoImport({
       imports: [

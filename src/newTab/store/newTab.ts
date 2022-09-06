@@ -1,12 +1,12 @@
 import { defineStore } from 'pinia'
+import { reactive } from 'vue'
 import storeState from '@models/keyValue/storeState'
 import wallpaperService from '@services/wallpaper'
 import { useConfigState } from '@newTab/store/config'
 
-export const useNewTabState = defineStore('newTab', {
-  state: () => {
-    return {
-      tabSelected: 'worldline',
+export const useNewTabState = defineStore('newTab',
+  () => {
+    const data = reactive({
       wallpaper: {
         url: '',
         mode: 'random', // fixed, random, local
@@ -26,73 +26,128 @@ export const useNewTabState = defineStore('newTab', {
       theme: 'light', // light, dark
 
       layoutMode: 'clean', // clean, list
+    })
+
+    const {
+      wallpaper,
+      settingDrawer,
+      settingDrawerPosition,
+      log,
+      showLogWindow,
+      isPreferredDark,
+      theme,
+      themeMode,
+      layoutMode,
+    } = toRefs(data)
+
+    const tabSelected = ref('worldline')
+    function changeTab(name: string) {
+      tabSelected.value = name
     }
-  },
-  actions: {
-    changeTab(name: string) {
-      this.tabSelected = name
-    },
-    async changeWallpaper() {
-      const info = await wallpaperService.random(this.wallpaper.source)
+
+    async function changeWallpaper() {
+      const info = await wallpaperService.random(data.wallpaper.source)
       if (info.url) {
-        // eslint-disable-next-line no-console
-        console.log('>>> Store >> newTab > actions changeWallpaper', info)
-        this.wallpaper.url = info.url
-        this.wallpaper = { ...this.wallpaper }
+        data.wallpaper.url = info.url
+        data.wallpaper = { ...data.wallpaper }
       }
-    },
-    changeWallpaperMode() {
-      this.wallpaper.mode = this.wallpaper.mode === 'fixed' ? 'random' : 'fixed'
-      this.wallpaper = { ...this.wallpaper }
-    },
-    changeWallpaperOpacity(opacity: number) {
-      this.wallpaper.opacity = opacity
-      this.wallpaper = { ...this.wallpaper }
-    },
-    setLocalWallpaper(url: string) {
-      this.wallpaper.url = url
-      this.wallpaper.mode = 'local'
-      this.wallpaper = { ...this.wallpaper }
-    },
-    changeSettingDrawer() {
-      this.settingDrawer = !this.settingDrawer
-    },
-    changeSettingDrawerPosition(position: 'left' | 'right') {
-      this.settingDrawerPosition = position
-    },
-    setLog(data: any) {
-      this.log = data
-    },
-    changeLogWindow() {
-      this.showLogWindow = !this.showLogWindow
-    },
+    }
+
+    function changeWallpaperMode() {
+      data.wallpaper.mode = data.wallpaper.mode === 'fixed' ? 'random' : 'fixed'
+      data.wallpaper = { ...data.wallpaper }
+    }
+
+    function changeWallpaperOpacity(opacity: number) {
+      data.wallpaper.opacity = opacity
+      data.wallpaper = { ...data.wallpaper }
+    }
+
+    function setLocalWallpaper(url: string) {
+      data.wallpaper.url = url
+      data.wallpaper.mode = 'local'
+      data.wallpaper = { ...data.wallpaper }
+    }
+
+    function changeSettingDrawer() {
+      data.settingDrawer = !data.settingDrawer
+    }
+
+    function changeSettingDrawerPosition(position: 'left' | 'right') {
+      data.settingDrawerPosition = position
+    }
+
+    function setLog(data: any) {
+      data.log = data
+    }
+
+    function changeLogWindow() {
+      data.showLogWindow = !data.showLogWindow
+    }
 
     // 主题
-    changeIsPreferredDark(status: boolean) {
-      this.isPreferredDark = status
-      if (this.themeMode)
-        this.changeTheme(status ? 'dark' : 'light')
-    },
-    setThemeMode() {
-      const mode = useConfigState().all?.base.themeMode ?? true
-      this.themeMode = mode
-      if (mode)
-        this.changeTheme(this.isPreferredDark ? 'dark' : 'light')
-    },
-    changeTheme(theme: 'light' | 'dark') {
-      this.theme = theme
-    },
+    function changeTheme(theme: 'light' | 'dark') {
+      data.theme = theme
+    }
 
-    changeLayoutMode() {
-      this.layoutMode = this.layoutMode === 'clean' ? 'list' : 'clean'
-    },
-    setLayoutMode(mode: 'clean' | 'list' | 'card') {
-      this.layoutMode = mode
+    function changeIsPreferredDark(status: boolean) {
+      data.isPreferredDark = status
+      if (data.themeMode)
+        changeTheme(status ? 'dark' : 'light')
+    }
+
+    function setThemeMode() {
+      const mode = useConfigState().all?.base.themeMode ?? true
+      data.themeMode = mode
+      if (mode)
+        changeTheme(data.isPreferredDark ? 'dark' : 'light')
+    }
+
+    function changeLayoutMode() {
+      data.layoutMode = data.layoutMode === 'clean' ? 'list' : 'clean'
+    }
+
+    function setLayoutMode(mode: 'clean' | 'list' | 'card') {
+      data.layoutMode = mode
+    }
+
+    return {
+      tabSelected,
+
+      wallpaper,
+      settingDrawer,
+      settingDrawerPosition,
+      log,
+      showLogWindow,
+      isPreferredDark,
+      theme,
+      themeMode,
+      layoutMode,
+
+      changeTab,
+
+      changeWallpaper,
+      changeWallpaperMode,
+      changeWallpaperOpacity,
+      setLocalWallpaper,
+
+      changeSettingDrawer,
+      changeSettingDrawerPosition,
+
+      setLog,
+      changeLogWindow,
+
+      setThemeMode,
+      changeIsPreferredDark,
+
+      changeLayoutMode,
+      setLayoutMode,
+    }
+  },
+  {
+    persist: {
+      key: 'newTab',
+      storage: storeState,
     },
   },
-  persist: {
-    key: 'newTab',
-    storage: storeState,
-    overwrite: true,
-  },
-})
+)
