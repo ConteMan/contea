@@ -27,7 +27,7 @@ export const setting: Config = {
       site: 'https://www.libvio.com',
     },
     ddrk: {
-      site: 'https://ddrk.com',
+      site: 'https://ddys.tv',
     },
   },
 }

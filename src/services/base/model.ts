@@ -36,7 +36,7 @@ export const setting: Config = {
   expired: 3600,
   showCards: [],
   defaultPath: '/index',
-  statusList: false,
+  statusList: true,
   themeMode: true,
   desktopInterface: 'http://127.0.0.1:7788/extension',
 }

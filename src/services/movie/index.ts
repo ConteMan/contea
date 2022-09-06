@@ -85,7 +85,7 @@ class Movie {
    * @returns
    */
   async ddrk() {
-    const url = 'https://ddrk.me/'
+    const url = 'https://ddys.tv/'
 
     const res = await defHttp.get({
       url,
@@ -192,7 +192,7 @@ class Movie {
         },
       }
 
-      const url = 'https://ddrk.me'
+      const url = 'https://ddys.tv'
 
       const res = await defHttp.get({
         url: `${url}${typeRules.latest.url}`,

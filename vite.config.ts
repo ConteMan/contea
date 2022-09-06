@@ -8,8 +8,8 @@ import Components from 'unplugin-vue-components/vite'
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 import AutoImport from 'unplugin-auto-import/vite'
 import WindiCSS from 'vite-plugin-windicss'
+import { isDev, r } from './src/utils/script'
 import windiConfig from './windi.config'
-import { isDev, r } from './utils/script'
 
 export const sharedConfig: UserConfig = {
   root: r('src'),
@@ -33,27 +33,27 @@ export const sharedConfig: UserConfig = {
       },
       {
         find: '@utils/',
-        replacement: `${r('utils')}/`,
+        replacement: `${r('src/utils')}/`,
       },
       {
         find: '@models/',
-        replacement: `${r('models')}/`,
+        replacement: `${r('src/models')}/`,
       },
       {
         find: '@services/',
-        replacement: `${r('services')}/`,
+        replacement: `${r('src/services')}/`,
       },
       {
         find: '@setting/',
-        replacement: `${r('setting')}/`,
+        replacement: `${r('src/setting')}/`,
       },
       {
         find: '@enums/',
-        replacement: `${r('enums')}/`,
+        replacement: `${r('src/enums')}/`,
       },
       {
         find: '@localTypes/',
-        replacement: `${r('types')}/`,
+        replacement: `${r('src/types')}/`,
       },
     ],
   },

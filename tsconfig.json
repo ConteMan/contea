@@ -28,22 +28,22 @@
         "src/newTab/*"
       ],
       "@utils/*": [
-        "utils/*"
+        "src/utils/*"
       ],
       "@services/*": [
-        "services/*"
+        "src/services/*"
       ],
       "@models/*": [
-        "models/*"
+        "src/models/*"
       ],
       "@setting/*": [
-        "setting/*"
+        "src/setting/*"
       ],
       "@enums/*": [
-        "enums/*"
+        "src/enums/*"
       ],
       "@localTypes/*": [
-        "types/*"
+        "src/types/*"
       ],
     },
   },

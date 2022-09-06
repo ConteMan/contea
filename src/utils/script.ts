@@ -1,7 +1,7 @@
 import { resolve } from 'path'
 import { bgCyan, black } from 'kolorist'
 
-export const r = (...args: string[]) => resolve(__dirname, '..', ...args)
+export const r = (...args: string[]) => resolve(__dirname, '../..', ...args)
 
 export function log(name: string, message: string) {
   // eslint-disable-next-line no-console
