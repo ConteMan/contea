@@ -138,6 +138,7 @@ export const useNewTabState = defineStore('newTab',
       changeLogWindow,
 
       setThemeMode,
+      changeTheme,
       changeIsPreferredDark,
 
       changeLayoutMode,
