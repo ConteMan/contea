@@ -1,4 +1,3 @@
-
 class Storage {
   /**
    * 使用存储信息

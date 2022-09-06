@@ -30,7 +30,7 @@ class WeRead {
     }
 
     const data = {} as any
-    await Promise.all(moduleTypes.map(async(item) => {
+    await Promise.all(moduleTypes.map(async (item) => {
       data[item] = await moduleState.storage.query().get(item) ?? {}
     }))
     return data
@@ -58,7 +58,7 @@ class WeRead {
     await this.refreshLogin()
 
     const data = {} as any
-    await Promise.all(moduleTypes.map(async(item) => {
+    await Promise.all(moduleTypes.map(async (item) => {
       data.item = await relations[item] ?? {}
     }))
 

@@ -11,7 +11,7 @@ export type Config = BaseConfig & {
   alarm?: number
 }
 
-export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl'| 'expired' | 'alarm'>
+export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'expired' | 'alarm'>
 
 export const setting: Config = {
   key: 'bgm',

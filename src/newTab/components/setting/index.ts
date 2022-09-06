@@ -25,7 +25,7 @@ export default (module: SettingKeys, configKeys: string[]) => {
   const ConfigStateStore = useConfigState()
 
   // 保存设置
-  const modelSet = async(module: SettingKeys, data: any) => {
+  const modelSet = async (module: SettingKeys, data: any) => {
     // eslint-disable-next-line no-console
     console.log(`${module} setting save`, data)
     await ConfigState.mergeSet(module, data)
@@ -33,7 +33,7 @@ export default (module: SettingKeys, configKeys: string[]) => {
   }
 
   // 初始化
-  const init = async(module: SettingKeys) => {
+  const init = async (module: SettingKeys) => {
     const showModel = {} as any
     const model = await ConfigState.getItem(module)
     configKeys.forEach((key) => {
@@ -46,9 +46,9 @@ export default (module: SettingKeys, configKeys: string[]) => {
   }
 
   // 重置模块设置
-  const reset = async(module: SettingKeys) => {
+  const reset = async (module: SettingKeys) => {
     data.resetLoading = true
-    useTimeoutFn(async() => {
+    useTimeoutFn(async () => {
       await ConfigState.init(module)
       data.resetLoading = false
       message.success('重置成功!')
@@ -56,10 +56,10 @@ export default (module: SettingKeys, configKeys: string[]) => {
   }
 
   // 初始化扩展设置
-  const initConfig = async() => {
+  const initConfig = async () => {
     data.initConfigLoading = true
 
-    useTimeoutFn(async() => {
+    useTimeoutFn(async () => {
       await ConfigState.init('all')
       data.initConfigLoading = false
       message.success('应用恢复默认成功!')

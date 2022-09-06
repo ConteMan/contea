@@ -1,3 +1,38 @@
+<script setup lang="ts">
+import dayjs from 'dayjs'
+import { useTimeoutFn } from '@vueuse/core'
+import { Alarm } from '@services/browser'
+import AlarmService from '@services/base/alarm'
+import SettingItem from '@newTab/components/template/SettingItem.vue'
+
+const alarms = ref({} as any)
+const loading = ref(false)
+
+const getAlarms = async (refresh = false) => {
+  if (refresh)
+    loading.value = true
+
+  if (refresh) {
+    useTimeoutFn(async () => {
+      alarms.value = await Alarm.all()
+      loading.value = false
+    }, 2000)
+  }
+  else {
+    alarms.value = await Alarm.all()
+    loading.value = false
+  }
+}
+getAlarms()
+
+const deleteAlarm = async (name: string) => {
+  const res = await Alarm.clear(name)
+  // eslint-disable-next-line no-console
+  console.log(res)
+  await getAlarms()
+}
+</script>
+
 <template>
   <div class="px-4 max-w-[640px]">
     <div class="rounded-md p-4 w-full">
@@ -23,38 +58,3 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import dayjs from 'dayjs'
-import { useTimeoutFn } from '@vueuse/core'
-import { Alarm } from '@services/browser'
-import AlarmService from '@services/base/alarm'
-import SettingItem from '@newTab/components/template/SettingItem.vue'
-
-const alarms = ref({} as any)
-const loading = ref(false)
-
-const getAlarms = async(refresh = false) => {
-  if (refresh)
-    loading.value = true
-
-  if (refresh) {
-    useTimeoutFn(async() => {
-      alarms.value = await Alarm.all()
-      loading.value = false
-    }, 2000)
-  }
-  else {
-    alarms.value = await Alarm.all()
-    loading.value = false
-  }
-}
-getAlarms()
-
-const deleteAlarm = async(name: string) => {
-  const res = await Alarm.clear(name)
-  // eslint-disable-next-line no-console
-  console.log(res)
-  await getAlarms()
-}
-</script>

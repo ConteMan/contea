@@ -1,25 +1,3 @@
-<template>
-  <div ref="worldlineContainerRef" class="max-h-full flex">
-    <div class="worldline-menu h-full pt-8">
-      <n-menu
-        v-model:value="activeKey"
-        :options="dealMenuOptions"
-        :indent="18"
-        @update:value="changeActiveKey"
-      />
-    </div>
-    <div class="worldline-tab-pane-container flex-1 w-0 h-full">
-      <!-- <V2ex v-if="activeKey === 'v2ex'" class="h-full" />
-      <Sspai v-if="activeKey === 'sspai'" class="h-full" />
-      <Jike v-if="activeKey === 'jike'" class="h-full" />
-      <Zhihu v-if="activeKey === 'zhihu'" class="h-full" />
-      <Movie v-if="activeKey === 'movie'" class="h-full" />
-      <Sport v-if="activeKey === 'sport'" class="h-full" /> -->
-      <Status v-if="activeKey === 'status'" class="h-full" />
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import _ from 'lodash-es'
 
@@ -116,6 +94,28 @@ watch(dealMenuOptions, (newValue) => {
     activeKey.value = getDefaultKey(Object.values(newValue))
 })
 </script>
+
+<template>
+  <div ref="worldlineContainerRef" class="max-h-full flex">
+    <div class="worldline-menu h-full pt-8">
+      <n-menu
+        v-model:value="activeKey"
+        :options="dealMenuOptions"
+        :indent="18"
+        @update:value="changeActiveKey"
+      />
+    </div>
+    <div class="worldline-tab-pane-container flex-1 w-0 h-full">
+      <!-- <V2ex v-if="activeKey === 'v2ex'" class="h-full" />
+      <Sspai v-if="activeKey === 'sspai'" class="h-full" />
+      <Jike v-if="activeKey === 'jike'" class="h-full" />
+      <Zhihu v-if="activeKey === 'zhihu'" class="h-full" />
+      <Movie v-if="activeKey === 'movie'" class="h-full" />
+      <Sport v-if="activeKey === 'sport'" class="h-full" /> -->
+      <Status v-if="activeKey === 'status'" class="h-full" />
+    </div>
+  </div>
+</template>
 
 <style scoped>
 .worldline-menu {

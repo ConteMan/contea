@@ -43,7 +43,8 @@ export class VAxios {
    * @description: Reconfigure axios
    */
   configAxios(config: CreateAxiosOptions) {
-    if (!this.axiosInstance) return
+    if (!this.axiosInstance)
+      return
     this.createAxios(config)
   }
 
@@ -51,7 +52,8 @@ export class VAxios {
    * @description: Set general header
    */
   setHeader(headers: any): void {
-    if (!this.axiosInstance) return
+    if (!this.axiosInstance)
+      return
     Object.assign(this.axiosInstance.defaults.headers, headers)
   }
 
@@ -60,7 +62,8 @@ export class VAxios {
    */
   private setupInterceptors() {
     const transform = this.getTransform()
-    if (!transform) return
+    if (!transform)
+      return
     const {
       requestInterceptors,
       requestInterceptorsCatch,
@@ -99,7 +102,8 @@ export class VAxios {
     // Response result interceptor processing
     this.axiosInstance.interceptors.response.use((res: AxiosResponse<any>) => {
       res && axiosCanceler.removePending(res.config)
-      if (responseInterceptors && isFunction(responseInterceptors)) res = responseInterceptors(res)
+      if (responseInterceptors && isFunction(responseInterceptors))
+        res = responseInterceptors(res)
 
       return res
     }, undefined)
@@ -117,7 +121,8 @@ export class VAxios {
     const formData = new window.FormData()
     const customFilename = params.name || 'file'
 
-    if (params.filename) formData.append(customFilename, params.file, params.filename)
+    if (params.filename)
+      formData.append(customFilename, params.file, params.filename)
     else formData.append(customFilename, params.file)
 
     if (params.data) {
@@ -140,7 +145,7 @@ export class VAxios {
       data: formData,
       headers: {
         'Content-type': ContentTypeEnum.FORM_DATA,
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+
         'ignoreCancelToken': true,
       },
     })
@@ -189,7 +194,8 @@ export class VAxios {
     const opt: RequestOptions = Object.assign({}, requestOptions, options)
 
     const { beforeRequestHook, requestCatchHook, transformRequestHook } = transform || {}
-    if (beforeRequestHook && isFunction(beforeRequestHook)) conf = beforeRequestHook(conf, opt)
+    if (beforeRequestHook && isFunction(beforeRequestHook))
+      conf = beforeRequestHook(conf, opt)
 
     conf.requestOptions = opt
 

@@ -1,21 +1,3 @@
-<template>
-  <n-config-provider
-    class="config-container"
-    :theme="theme"
-    :theme-overrides="themeOverrides"
-    :namespace="namespace"
-    :locale="zhCN"
-    :date-locale="dateZhCN"
-  >
-    <n-notification-provider>
-      <n-message-provider>
-        <AppContent />
-      </n-message-provider>
-    </n-notification-provider>
-    <n-global-style />
-  </n-config-provider>
-</template>
-
 <script setup lang="ts">
 import { usePreferredDark } from '@vueuse/core'
 import type { GlobalThemeOverrides } from 'naive-ui'
@@ -64,3 +46,21 @@ const themeOverrides: GlobalThemeOverrides = {
   },
 }
 </script>
+
+<template>
+  <NConfigProvider
+    class="config-container"
+    :theme="theme"
+    :theme-overrides="themeOverrides"
+    :namespace="namespace"
+    :locale="zhCN"
+    :date-locale="dateZhCN"
+  >
+    <n-notification-provider>
+      <n-message-provider>
+        <AppContent />
+      </n-message-provider>
+    </n-notification-provider>
+    <n-global-style />
+  </NConfigProvider>
+</template>

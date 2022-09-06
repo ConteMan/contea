@@ -1,3 +1,49 @@
+<script lang="ts" setup>
+import dayjs from 'dayjs'
+import { openSite } from '@utils/index'
+
+import configState from '@models/keyValue/configState'
+import type { Config } from '@services/juejin/model'
+import juejin from '@services/juejin'
+import Card from '@newTab/components/template/TemplateCard.vue'
+
+const module = 'juejin'
+
+const data = reactive({
+  loading: true,
+  refreshLoading: false,
+  config: {} as Config,
+  login: false,
+  moduleInfo: {} as any,
+  showExtend: false,
+  extendInfo: {} as any,
+})
+const { loading, refreshLoading, config, login, moduleInfo, showExtend, extendInfo } = toRefs(data)
+
+const getData = async (refresh = false) => {
+  if (refresh)
+    data.refreshLoading = true
+
+  data.login = await juejin.loginCheck()
+  if (data.login) {
+    const { ca_updated_at, ca_expired_at, data: moduleData } = await juejin.moduleInfo(refresh)
+    data.moduleInfo = moduleData
+    data.extendInfo = { ca_updated_at, ca_expired_at }
+  }
+
+  if (refresh)
+    data.refreshLoading = false
+  else
+    data.loading = false
+}
+
+const init = async () => {
+  data.config = await configState.getItem(module)
+  await getData()
+}
+init()
+</script>
+
 <template>
   <Card class="flex flex-col">
     <div v-if="loading" class="duration-200 animate-pulse">
@@ -26,8 +72,8 @@
         请登录
       </div>
       <div class="flex flex-col justify-between">
-        <div class="flex-grow flex justify-end w-full opacity-0 hover:(opacity-100 transition-opacity duration-200)" :class="{'!opacity-100': showExtend}">
-          <mdi-refresh class="cursor-pointer mr-2" :class="{'animate-spin': refreshLoading }" @click="getData(true)" />
+        <div class="flex-grow flex justify-end w-full opacity-0 hover:(opacity-100 transition-opacity duration-200)" :class="{ '!opacity-100': showExtend }">
+          <mdi-refresh class="cursor-pointer mr-2" :class="{ 'animate-spin': refreshLoading }" @click="getData(true)" />
           <mdi-information-outline class="cursor-pointer" @click="showExtend = !showExtend" />
         </div>
         <div
@@ -60,49 +106,3 @@
     </transition>
   </Card>
 </template>
-
-<script lang="ts" setup>
-import dayjs from 'dayjs'
-import { openSite } from '@utils/index'
-
-import configState from '@models/keyValue/configState'
-import type { Config } from '@services/juejin/model'
-import juejin from '@services/juejin'
-import Card from '@newTab/components/template/TemplateCard.vue'
-
-const module = 'juejin'
-
-const data = reactive({
-  loading: true,
-  refreshLoading: false,
-  config: {} as Config,
-  login: false,
-  moduleInfo: {} as any,
-  showExtend: false,
-  extendInfo: {} as any,
-})
-const { loading, refreshLoading, config, login, moduleInfo, showExtend, extendInfo } = toRefs(data)
-
-const getData = async(refresh = false) => {
-  if (refresh)
-    data.refreshLoading = true
-
-  data.login = await juejin.loginCheck()
-  if (data.login) {
-    const { ca_updated_at, ca_expired_at, data: moduleData } = await juejin.moduleInfo(refresh)
-    data.moduleInfo = moduleData
-    data.extendInfo = { ca_updated_at, ca_expired_at }
-  }
-
-  if (refresh)
-    data.refreshLoading = false
-  else
-    data.loading = false
-}
-
-const init = async() => {
-  data.config = await configState.getItem(module)
-  await getData()
-}
-init()
-</script>

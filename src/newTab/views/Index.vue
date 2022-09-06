@@ -1,24 +1,3 @@
-<template>
-  <div
-    ref="moduleContainerRef"
-    class="module-container fixed h-full w-full bg-cover"
-    :style="data.wallpaperStyle"
-  >
-    <div>
-      <div class="flex flex-grow" :style="{ 'max-height': data.dealTabPaneHeight }">
-        <div
-          v-if="newTabState.layoutMode !== 'clean'"
-          class="flex-grow max-h-full py-2"
-        >
-          <WorldlineList class="worldline-list h-full" />
-        </div>
-      </div>
-
-      <ActionBar ref="moduleTabRef" />
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { useElementBounding } from '@vueuse/core'
 import { useConfigState } from '@newTab/store/config'
@@ -53,7 +32,7 @@ const newTabState = useNewTabState()
 const { wallpaper } = storeToRefs(newTabState)
 data.wallpaperInfo = wallpaper
 
-const init = async() => {
+const init = async () => {
   if (data.wallpaperInfo.url) {
     data.wallpaperStyle = {
       'background-image': `-webkit-cross-fade(url(data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==), url(${data.wallpaperInfo.url}), ${data.wallpaperInfo.opacity}%)`,
@@ -67,5 +46,25 @@ watch(() => data.wallpaperInfo, (newWallpaperInfo) => {
     'background-image': `-webkit-cross-fade(url(data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==), url(${newWallpaperInfo.url}), ${newWallpaperInfo.opacity}%)`,
   }
 }, { deep: true })
-
 </script>
+
+<template>
+  <div
+    ref="moduleContainerRef"
+    class="module-container fixed h-full w-full bg-cover"
+    :style="data.wallpaperStyle"
+  >
+    <div>
+      <div class="flex flex-grow" :style="{ 'max-height': data.dealTabPaneHeight }">
+        <div
+          v-if="newTabState.layoutMode !== 'clean'"
+          class="flex-grow max-h-full py-2"
+        >
+          <WorldlineList class="worldline-list h-full" />
+        </div>
+      </div>
+
+      <ActionBar ref="moduleTabRef" />
+    </div>
+  </div>
+</template>

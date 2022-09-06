@@ -1,3 +1,56 @@
+<script setup lang="ts" name="BilibiliCard">
+import dayjs from 'dayjs'
+import { openSite } from '@utils/index'
+
+import configState from '@models/keyValue/configState'
+import type { Config } from '@services/bilibili/model'
+import jike from '@services/jike'
+import Card from '@newTab/components/template/TemplateCard.vue'
+
+const module = 'jike'
+
+const data = reactive({
+  loading: true,
+  refreshLoading: false,
+  error: false,
+  config: {} as Config,
+  moduleInfo: {} as any,
+  showExtend: false,
+  extendInfo: {} as any,
+  cardStyle: {} as any,
+})
+const { loading, refreshLoading, error, config, moduleInfo, showExtend, extendInfo, cardStyle } = toRefs(data)
+
+const getData = async (refresh = false) => {
+  if (refresh)
+    data.refreshLoading = true
+
+  try {
+    const { ca_updated_at, ca_expired_at, data: moduleData } = await jike.moduleInfo(refresh)
+    data.moduleInfo = moduleData
+    data.extendInfo = { ca_updated_at, ca_expired_at }
+    data.cardStyle = {
+      'background-image': moduleData.profile.backgroundImage.picUrl ? `linear-gradient(-45deg, rgb(229, 231, 231, 0.6), rgb(116, 115, 115, 70%)), url(${moduleData.profile.backgroundImage.picUrl})` : '',
+    }
+    data.error = false
+  }
+  catch (e) {
+    data.error = true
+  }
+
+  if (refresh)
+    data.refreshLoading = false
+  else
+    data.loading = false
+}
+
+const init = async () => {
+  data.config = await configState.getItem(module)
+  getData()
+}
+init()
+</script>
+
 <template>
   <Card class="text-light-400 cursor-default flex flex-col justify-between bg-cover bg-center" :style="cardStyle">
     <div v-if="loading" class="duration-200 animate-pulse">
@@ -29,9 +82,9 @@
           </div>
         </template>
         <div class="flex flex-col justify-between">
-          <div class="flex flex-row-reverse w-full opacity-0 hover:(opacity-100 transition-opacity duration-200)" :class="{'!opacity-100': showExtend}">
+          <div class="flex flex-row-reverse w-full opacity-0 hover:(opacity-100 transition-opacity duration-200)" :class="{ '!opacity-100': showExtend }">
             <mdi-information-outline class="cursor-pointer" @click="showExtend = !showExtend" />
-            <mdi-refresh class="cursor-pointer mr-2" :class="{'animate-spin': refreshLoading }" @click="getData(true)" />
+            <mdi-refresh class="cursor-pointer mr-2" :class="{ 'animate-spin': refreshLoading }" @click="getData(true)" />
           </div>
           <div
             class="cursor-pointer font-bold text-xl select-none hover:(underline underline-offset-2 duration-200 animate-pulse)"
@@ -54,55 +107,3 @@
     </template>
   </Card>
 </template>
-<script setup lang="ts" name="BilibiliCard">
-import dayjs from 'dayjs'
-import { openSite } from '@utils/index'
-
-import configState from '@models/keyValue/configState'
-import type { Config } from '@services/bilibili/model'
-import jike from '@services/jike'
-import Card from '@newTab/components/template/TemplateCard.vue'
-
-const module = 'jike'
-
-const data = reactive({
-  loading: true,
-  refreshLoading: false,
-  error: false,
-  config: {} as Config,
-  moduleInfo: {} as any,
-  showExtend: false,
-  extendInfo: {} as any,
-  cardStyle: {} as any,
-})
-const { loading, refreshLoading, error, config, moduleInfo, showExtend, extendInfo, cardStyle } = toRefs(data)
-
-const getData = async(refresh = false) => {
-  if (refresh)
-    data.refreshLoading = true
-
-  try {
-    const { ca_updated_at, ca_expired_at, data: moduleData } = await jike.moduleInfo(refresh)
-    data.moduleInfo = moduleData
-    data.extendInfo = { ca_updated_at, ca_expired_at }
-    data.cardStyle = {
-      'background-image': moduleData.profile.backgroundImage.picUrl ? `linear-gradient(-45deg, rgb(229, 231, 231, 0.6), rgb(116, 115, 115, 70%)), url(${moduleData.profile.backgroundImage.picUrl})` : '',
-    }
-    data.error = false
-  }
-  catch (e) {
-    data.error = true
-  }
-
-  if (refresh)
-    data.refreshLoading = false
-  else
-    data.loading = false
-}
-
-const init = async() => {
-  data.config = await configState.getItem(module)
-  getData()
-}
-init()
-</script>

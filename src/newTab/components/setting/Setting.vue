@@ -1,14 +1,3 @@
-<template>
-  <div class="setting-container w-full max-w-[700px] mb-4">
-    <n-collapse v-model:expanded-names="expandedNames" class="max-w-full">
-      <template v-for="item in list" :key="item.name">
-        <n-collapse-item :name="item.name" :title="item.title">
-          <component :is="item.component" />
-        </n-collapse-item>
-      </template>
-    </n-collapse>
-  </div>
-</template>
 <script setup lang="ts">
 const modules: any = {}
 const file = import.meta.globEager('./modules/*.vue')
@@ -104,6 +93,18 @@ const list = [
   // },
 ]
 </script>
+
+<template>
+  <div class="setting-container w-full max-w-[700px] mb-4">
+    <n-collapse v-model:expanded-names="expandedNames" class="max-w-full">
+      <template v-for="item in list" :key="item.name">
+        <n-collapse-item :name="item.name" :title="item.title">
+          <component :is="item.component" />
+        </n-collapse-item>
+      </template>
+    </n-collapse>
+  </div>
+</template>
 
 <style scoped lang="less">
 .setting-container {

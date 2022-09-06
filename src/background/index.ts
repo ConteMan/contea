@@ -17,7 +17,7 @@ const DEV_ALARM_NAME = 'DEV_WATCH'
 /**
  * 初始化
  */
-browser.runtime.onInstalled.addListener(async() => {
+browser.runtime.onInstalled.addListener(async () => {
   try {
     // eslint-disable-next-line no-console
     console.log(`[${SERVICE_WORKER_NAME}] > [bg] > onInstalled`)
@@ -49,7 +49,7 @@ browser.runtime.onInstalled.addListener(async() => {
  * @param alarm string - 定时任务信息
  * - @param name string - 定时任务名称
  */
-browser.alarms.onAlarm.addListener(async(alarm: { name: string }) => {
+browser.alarms.onAlarm.addListener(async (alarm: { name: string }) => {
   try {
     const { name } = alarm
 
@@ -95,7 +95,8 @@ browser.alarms.onAlarm.addListener(async(alarm: { name: string }) => {
       const extensionTabs: Tabs.Tab[] = []
       const tabs = await browser.tabs.query({})
 
-      if (!Object.keys(tabs).length) return
+      if (!Object.keys(tabs).length)
+        return
 
       const idReg = new RegExp(`/.*${EXTENSION_ID}.*/`)
       tabs.filter((item: Tabs.Tab) => {
@@ -104,13 +105,15 @@ browser.alarms.onAlarm.addListener(async(alarm: { name: string }) => {
         item.active ? extensionTabs.splice(0, 0, item) : extensionTabs.push(item) // 激活的标签页放在最前面
       })
 
-      if (!extensionTabs.length) return
+      if (!extensionTabs.length)
+        return
 
       let message: message = { type: 'alarm', name }
       await browser.tabs.sendMessage(extensionTabs[0].id as number, message)
       extensionTabs.shift()
 
-      if (!extensionTabs.length) return
+      if (!extensionTabs.length)
+        return
 
       message = { type: 'alarm-sync', name } // 同步消息
       extensionTabs.every((item: Tabs.Tab) => {
@@ -129,7 +132,7 @@ browser.alarms.onAlarm.addListener(async(alarm: { name: string }) => {
  * 监听扩展绑定的快捷键
  * @param command string - 快捷键名称
  */
-browser.commands.onCommand.addListener(async(command: string) => {
+browser.commands.onCommand.addListener(async (command: string) => {
   try {
     if (command === 'change-mode')
       changeMode(EXTENSION_ID)

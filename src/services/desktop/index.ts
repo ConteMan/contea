@@ -5,7 +5,8 @@ export async function toDesktop(type: string, data: any) {
   try {
     const baseConfig = await configState.getItem('base')
     const url = baseConfig?.desktopInterface ?? ''
-    if (!url) return false
+    if (!url)
+      return false
 
     return await defHttp.post({
       url,

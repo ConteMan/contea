@@ -1,9 +1,107 @@
+<script setup lang="ts">
+import dayjs from 'dayjs'
+import 'dayjs/locale/zh-cn'
+import RelativeTime from 'dayjs/plugin/relativeTime'
+import configState from '@models/keyValue/configState'
+import { enumToObj, openSite } from '@utils/index'
+
+import type { Config } from '@services/jike/model'
+import Base from '@services/jike'
+import { TypeEnum } from '@enums/jikeEnum'
+import OriginalPost from '@newTab/components/jike/components/OriginalPost.vue'
+
+dayjs.locale('zh-cn')
+dayjs.extend(RelativeTime)
+
+const module = 'jike'
+const defaultTag = 'selfFeed'
+
+const data = reactive({
+  loading: true,
+  loadmore: false,
+  config: {} as Config,
+  moduleTypes: {} as any,
+  selectedTag: defaultTag,
+  list: [] as any[],
+  pageInfo: {} as any,
+})
+const { loading, loadmore, config, selectedTag } = toRefs(data)
+
+// 列表数据
+const getPage = async () => {
+  if (data.selectedTag === defaultTag) {
+    const res = await Base.selfFeed(data.pageInfo?.loadMoreKey ?? undefined)
+    data.list = [...data.list, ...res.viewer.followingUpdates.nodes]
+    data.pageInfo = res.viewer.followingUpdates.pageInfo
+    data.loadmore = res.viewer.followingUpdates.pageInfo.hasNextPage
+  }
+  data.loading = false
+}
+
+// 处理后的列表
+const dealList = computed(() => data.list.filter((item) => {
+  return item.__typename !== 'BannerMessage'
+}))
+
+// 获取栏目类型
+const getTypes = () => {
+  data.moduleTypes = enumToObj(TypeEnum, ['value', 'key'])
+}
+
+const init = async () => {
+  getTypes()
+  data.config = await configState.getItem(module)
+  await getPage()
+}
+init()
+
+// 选择标签
+const handleChange = (tag: string, checked: boolean) => {
+  data.selectedTag = checked ? tag : defaultTag
+  data.pageInfo = {}
+  data.list = []
+  data.loadmore = false
+  getPage()
+}
+
+// 刷新数据
+const refresh = async () => {
+  data.loading = true
+  await getPage()
+}
+
+const typeUrl = (type: string) => {
+  const typeUrls: any = {
+    ORIGINAL_POST: 'originalPost',
+    REPOST: 'repost',
+  }
+  return typeUrls[type]
+}
+
+const contentDeal = (data: any) => {
+  let content = data.content.replace(/\n/gi, '<br>')
+  if (data?.urlsInText && data?.urlsInText.length) {
+    data.urlsInText.forEach((urlItem: any) => {
+      // 站内链接
+      if (/^jike:\/\/(.){1,}/.test(urlItem.url)) {
+        const userId = (urlItem.url).replace('jike://page.jk/user/', '')
+        content = content.replace(urlItem.originalUrl, `<a class="px-1 cursor-pointer underline underline-offset-2 hover:(duration-200 animate-pulse)" href="${config.value.site}/u/${userId}">${urlItem.title}</a>`)
+      }
+      else {
+        content = content.replace(urlItem.originalUrl, `<a class="px-1 cursor-pointer underline underline-offset-2 hover:(duration-200 animate-pulse)" href="${urlItem.originalUrl}">${urlItem.title}</a>`)
+      }
+    })
+  }
+  return content
+}
+</script>
+
 <template>
   <div class="flex flex-col">
     <!-- 顶部操作栏 -->
     <div class="w-full pb-3 pl-2">
       <a class="cursor-pointer leading-none align-middle mr-4" @click="refresh()">
-        <mdi-refresh :class="{'animate-spin': loading}" />
+        <mdi-refresh :class="{ 'animate-spin': loading }" />
       </a>
       <template v-for="item in data.moduleTypes" :key="item.key">
         <n-tag
@@ -59,7 +157,7 @@
             </div>
             <div v-if="item.content" class="pb-2" v-html="contentDeal(item)" />
             <div class="ml-2 p-2 border-l border-l-light-600 relative">
-              <OriginalPost :data="{...item.target, isRepost: true }" />
+              <OriginalPost :data="{ ...item.target, isRepost: true }" />
             </div>
           </template>
 
@@ -98,101 +196,3 @@
     </n-scrollbar>
   </div>
 </template>
-
-<script setup lang="ts">
-import dayjs from 'dayjs'
-import 'dayjs/locale/zh-cn'
-import RelativeTime from 'dayjs/plugin/relativeTime'
-import configState from '@models/keyValue/configState'
-import { enumToObj, openSite } from '@utils/index'
-
-import type { Config } from '@services/jike/model'
-import Base from '@services/jike'
-import { TypeEnum } from '@enums/jikeEnum'
-import OriginalPost from '@newTab/components/jike/components/OriginalPost.vue'
-
-dayjs.locale('zh-cn')
-dayjs.extend(RelativeTime)
-
-const module = 'jike'
-const defaultTag = 'selfFeed'
-
-const data = reactive({
-  loading: true,
-  loadmore: false,
-  config: {} as Config,
-  moduleTypes: {} as any,
-  selectedTag: defaultTag,
-  list: [] as any[],
-  pageInfo: {} as any,
-})
-const { loading, loadmore, config, selectedTag } = toRefs(data)
-
-// 列表数据
-const getPage = async() => {
-  if (data.selectedTag === defaultTag) {
-    const res = await Base.selfFeed(data.pageInfo?.loadMoreKey ?? undefined)
-    data.list = [...data.list, ...res.viewer.followingUpdates.nodes]
-    data.pageInfo = res.viewer.followingUpdates.pageInfo
-    data.loadmore = res.viewer.followingUpdates.pageInfo.hasNextPage
-  }
-  data.loading = false
-}
-
-// 处理后的列表
-const dealList = computed(() => data.list.filter((item) => {
-  return item.__typename !== 'BannerMessage'
-}))
-
-// 获取栏目类型
-const getTypes = () => {
-  data.moduleTypes = enumToObj(TypeEnum, ['value', 'key'])
-}
-
-const init = async() => {
-  getTypes()
-  data.config = await configState.getItem(module)
-  await getPage()
-}
-init()
-
-// 选择标签
-const handleChange = (tag: string, checked: boolean) => {
-  data.selectedTag = checked ? tag : defaultTag
-  data.pageInfo = {}
-  data.list = []
-  data.loadmore = false
-  getPage()
-}
-
-// 刷新数据
-const refresh = async() => {
-  data.loading = true
-  await getPage()
-}
-
-const typeUrl = (type: string) => {
-  const typeUrls: any = {
-    ORIGINAL_POST: 'originalPost',
-    REPOST: 'repost',
-  }
-  return typeUrls[type]
-}
-
-const contentDeal = (data: any) => {
-  let content = data.content.replace(/\n/gi, '<br>')
-  if (data?.urlsInText && data?.urlsInText.length) {
-    data.urlsInText.forEach((urlItem: any) => {
-      // 站内链接
-      if (/^jike:\/\/(.){1,}/.test(urlItem.url)) {
-        const userId = (urlItem.url).replace('jike://page.jk/user/', '')
-        content = content.replace(urlItem.originalUrl, `<a class="px-1 cursor-pointer underline underline-offset-2 hover:(duration-200 animate-pulse)" href="${config.value.site}/u/${userId}">${urlItem.title}</a>`)
-      }
-      else {
-        content = content.replace(urlItem.originalUrl, `<a class="px-1 cursor-pointer underline underline-offset-2 hover:(duration-200 animate-pulse)" href="${urlItem.originalUrl}">${urlItem.title}</a>`)
-      }
-    })
-  }
-  return content
-}
-</script>

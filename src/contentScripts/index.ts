@@ -1,6 +1,6 @@
 import { drawFn, sign } from './modules/juejin'
 
-(async() => {
+(async () => {
   const cssUrl = browser.runtime.getURL('dist/contentScripts/style.css')
   const currentUrl = document.URL
   const extensionId = browser.runtime.id

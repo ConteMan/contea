@@ -1,3 +1,17 @@
+<script setup lang="ts">
+import type { SettingKeys } from '@setting/index'
+import type { ShowConfig } from '@services/base/model'
+import { configKeys } from '@services/base/model'
+import type { Ref } from 'vue'
+import Setting from '../index'
+
+const module: SettingKeys = 'base'
+
+const setting = Setting(module, configKeys)
+const { rules, resetLoading, reset, initConfig, initConfigLoading } = setting
+const { model }: { model: Ref<ShowConfig> } = setting
+</script>
+
 <template>
   <n-form
     ref="formRef"
@@ -54,17 +68,3 @@
     </n-form-item>
   </n-form>
 </template>
-
-<script setup lang="ts">
-import type { SettingKeys } from '@setting/index'
-import type { ShowConfig } from '@services/base/model'
-import { configKeys } from '@services/base/model'
-import type { Ref } from 'vue'
-import Setting from '../index'
-
-const module: SettingKeys = 'base'
-
-const setting = Setting(module, configKeys)
-const { rules, resetLoading, reset, initConfig, initConfigLoading } = setting
-const { model }: { model: Ref<ShowConfig> } = setting
-</script>

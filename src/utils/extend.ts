@@ -10,7 +10,7 @@
  * @param t string - BookId
  */
 export function puzzling(t: any): any {
-  const MD5 = function(d: any) { const r = M(V(Y(X(d), 8 * d.length))); return r.toLowerCase() }
+  const MD5 = function (d: any) { const r = M(V(Y(X(d), 8 * d.length))); return r.toLowerCase() }
   function M(d: any) { for (var _, m = '0123456789ABCDEF', f = '', r = 0; r < d.length; r++)_ = d.charCodeAt(r), f += m.charAt(_ >>> 4 & 15) + m.charAt(15 & _); return f }
   function X(d: any) { for (var _ = Array(d.length >> 2), m = 0; m < _.length; m++)_[m] = 0; for (m = 0; m < 8 * d.length; m += 8)_[m >> 5] |= (255 & d.charCodeAt(m / 8)) << m % 32; return _ }
   function V(d: any) { for (var _ = '', m = 0; m < 32 * d.length; m += 8)_ += String.fromCharCode(d[m >> 5] >>> m % 32 & 255); return _ }
@@ -27,7 +27,7 @@ export function puzzling(t: any): any {
     return t
   const e = MD5(t)
   let n = e.substr(0, 3)
-  const r = (function(t) {
+  const r = (function (t) {
     if (/^\d*$/.test(t)) {
       for (var e = t.length, n = [], r = 0; r < e; r += 9) {
         const i = t.slice(r, Math.min(r + 9, e))

@@ -1,4 +1,4 @@
-const drawFn = async() => {
+const drawFn = async () => {
   // 查询今日是否有免费抽奖机会
   const today = await fetch('https://api.juejin.cn/growth_api/v1/lottery_config/get', {
     headers: {
@@ -41,7 +41,7 @@ const drawFn = async() => {
 }
 
 // 签到
-const sign = async() => {
+const sign = async () => {
   // 查询今日是否已经签到
   const today_status = await fetch('https://api.juejin.cn/growth_api/v1/get_today_status', {
     headers: {

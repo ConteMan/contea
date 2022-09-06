@@ -1,4 +1,3 @@
-
 import { isObject } from './is'
 
 /**
@@ -20,7 +19,7 @@ export function getPopupContainer(node?: HTMLElement): HTMLElement {
  */
 export function setObjToUrlParams(baseUrl: string, obj: any): string {
   let parameters = ''
-  // eslint-disable-next-line no-restricted-syntax
+
   for (const key in obj)
     parameters += `${key}=${encodeURIComponent(obj[key])}&`
 
@@ -30,9 +29,9 @@ export function setObjToUrlParams(baseUrl: string, obj: any): string {
 
 export function deepMerge<T = any>(src: any = {}, target: any = {}): T {
   let key: string
-  // eslint-disable-next-line no-restricted-syntax
+
   for (key in target)
-    src[key] = isObject(src[key]) && !(src[key] instanceof Array) ? deepMerge(src[key], target[key]) : (src[key] = target[key])
+    src[key] = isObject(src[key]) && !(Array.isArray(src[key])) ? deepMerge(src[key], target[key]) : (src[key] = target[key])
 
   return src
 }

@@ -1,3 +1,49 @@
+<script setup lang="ts" name="OriginalPost">
+import configState from '@models/keyValue/configState'
+import type { Config } from '@services/jike/model'
+import jike from '@services/jike'
+
+const props = defineProps({
+  data: {} as any,
+})
+
+const module = 'jike'
+
+const { data } = toRefs(props)
+
+const moduleData = reactive({
+  config: {} as Config,
+  mediaMeta: {} as any,
+})
+const { config, mediaMeta } = toRefs(moduleData)
+const init = async () => {
+  moduleData.config = await configState.getItem(module)
+}
+init()
+
+const contentDeal = (data: any) => {
+  let content = data.content.replace(/\n/gi, '<br>')
+  if (data?.urlsInText && data?.urlsInText.length) {
+    data.urlsInText.forEach((urlItem: any) => {
+      // 站内链接
+      if (/^jike:\/\/(.){1,}/.test(urlItem.url)) {
+        const userId = (urlItem.url).replace('jike://page.jk/user/', '')
+        content = content.replace(urlItem.originalUrl, `<a class="px-1 cursor-pointer underline underline-offset-2 hover:(duration-200 animate-pulse)" href="${moduleData.config.site}/u/${userId}">${urlItem.title}</a>`)
+      }
+      else {
+        content = content.replace(urlItem.originalUrl, `<a class="px-1 cursor-pointer underline underline-offset-2 hover:(duration-200 animate-pulse)" href="${urlItem.originalUrl}">${urlItem.title}</a>`)
+      }
+    })
+  }
+  return content
+}
+
+const getMediaMeta = async (messageId: string, messageType: 'ORIGINAL_POST' | 'REPOST') => {
+  const res = await jike.mediaMeta(messageId, messageType)
+  moduleData.mediaMeta = res
+}
+</script>
+
 <template>
   <div class="py-1 pb-1 cursor-default">
     <div class="font-medium">
@@ -40,51 +86,6 @@
     />
   </div>
 </template>
-
-<script setup lang="ts" name="OriginalPost">
-import configState from '@models/keyValue/configState'
-import type { Config } from '@services/jike/model'
-import jike from '@services/jike'
-
-const module = 'jike'
-
-const props = defineProps({
-  data: {} as any,
-})
-const { data } = toRefs(props)
-
-const moduleData = reactive({
-  config: {} as Config,
-  mediaMeta: {} as any,
-})
-const { config, mediaMeta } = toRefs(moduleData)
-const init = async() => {
-  moduleData.config = await configState.getItem(module)
-}
-init()
-
-const contentDeal = (data: any) => {
-  let content = data.content.replace(/\n/gi, '<br>')
-  if (data?.urlsInText && data?.urlsInText.length) {
-    data.urlsInText.forEach((urlItem: any) => {
-      // 站内链接
-      if (/^jike:\/\/(.){1,}/.test(urlItem.url)) {
-        const userId = (urlItem.url).replace('jike://page.jk/user/', '')
-        content = content.replace(urlItem.originalUrl, `<a class="px-1 cursor-pointer underline underline-offset-2 hover:(duration-200 animate-pulse)" href="${moduleData.config.site}/u/${userId}">${urlItem.title}</a>`)
-      }
-      else {
-        content = content.replace(urlItem.originalUrl, `<a class="px-1 cursor-pointer underline underline-offset-2 hover:(duration-200 animate-pulse)" href="${urlItem.originalUrl}">${urlItem.title}</a>`)
-      }
-    })
-  }
-  return content
-}
-
-const getMediaMeta = async(messageId: string, messageType: 'ORIGINAL_POST' | 'REPOST') => {
-  const res = await jike.mediaMeta(messageId, messageType)
-  moduleData.mediaMeta = res
-}
-</script>
 
 <style scoped>
 .pic-container {

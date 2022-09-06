@@ -1,3 +1,25 @@
+<script setup lang="ts">
+import type { SettingKeys } from '@setting/index'
+import type { ShowConfig } from '@services/sspai/model'
+import { configKeys } from '@services/sspai/model'
+import type { Ref } from 'vue'
+import { enumToObj } from '@utils/index'
+import { TypeEnum } from '@enums/sspaiEnum'
+import Setting from '../index'
+
+const module: SettingKeys = 'sspai'
+
+const baseTypes = ref([] as Record<string, any>[])
+const getTypes = () => {
+  baseTypes.value = enumToObj(TypeEnum, ['value', 'label'])
+}
+getTypes()
+
+const setting = Setting(module, configKeys)
+const { rules, resetLoading, reset } = setting
+const { model }: { model: Ref<ShowConfig> } = setting
+</script>
+
 <template>
   <n-form
     ref="formRef"
@@ -51,24 +73,3 @@
     </n-form-item>
   </n-form>
 </template>
-<script setup lang="ts">
-import type { SettingKeys } from '@setting/index'
-import type { ShowConfig } from '@services/sspai/model'
-import { configKeys } from '@services/sspai/model'
-import type { Ref } from 'vue'
-import { enumToObj } from '@utils/index'
-import { TypeEnum } from '@enums/sspaiEnum'
-import Setting from '../index'
-
-const module: SettingKeys = 'sspai'
-
-const baseTypes = ref([] as Record<string, any>[])
-const getTypes = () => {
-  baseTypes.value = enumToObj(TypeEnum, ['value', 'label'])
-}
-getTypes()
-
-const setting = Setting(module, configKeys)
-const { rules, resetLoading, reset } = setting
-const { model }: { model: Ref<ShowConfig> } = setting
-</script>

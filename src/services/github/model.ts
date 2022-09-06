@@ -5,7 +5,7 @@ export type Config = BaseConfig & {
   gistUrl: string
 }
 
-export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'token'| 'expired' | 'alarm' | 'showCard'>
+export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'token' | 'expired' | 'alarm' | 'showCard'>
 
 export const setting: Config = {
   key: 'github',

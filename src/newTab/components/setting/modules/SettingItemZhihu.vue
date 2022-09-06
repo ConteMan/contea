@@ -1,3 +1,54 @@
+<script setup lang="ts">
+import { useTimeoutFn } from '@vueuse/core'
+import { useMessage } from 'naive-ui'
+
+import configState from '@models/keyValue/configState'
+
+import type { ShowConfig } from '@services/zhihu/model'
+const module = 'zhihu'
+
+const message = useMessage()
+
+const data = reactive({
+  hasInit: false,
+  resetLoading: false,
+  model: {} as ShowConfig,
+  rules: {} as any,
+})
+const { hasInit, resetLoading, model, rules } = toRefs(data)
+
+const init = async () => {
+  data.hasInit = false
+  await nextTick()
+  data.model = await configState.getItem(module)
+  await nextTick()
+  data.hasInit = true
+}
+init()
+
+// 进行设置
+const modelSet = async () => {
+  await configState.mergeSet(module, toRaw(model.value))
+}
+
+// 重置
+const reset = async () => {
+  data.resetLoading = true
+  useTimeoutFn(async () => {
+    await configState.init(module)
+    init()
+    data.resetLoading = false
+    message.success('Success!')
+  }, 1000)
+}
+
+watch(model, async () => {
+  if (hasInit.value)
+    await modelSet()
+},
+{ deep: true })
+</script>
+
 <template>
   <n-form
     ref="formRef"
@@ -43,53 +94,3 @@
     </n-form-item>
   </n-form>
 </template>
-<script setup lang="ts">
-import { useTimeoutFn } from '@vueuse/core'
-import { useMessage } from 'naive-ui'
-
-import configState from '@models/keyValue/configState'
-
-import type { ShowConfig } from '@services/zhihu/model'
-const module = 'zhihu'
-
-const message = useMessage()
-
-const data = reactive({
-  hasInit: false,
-  resetLoading: false,
-  model: {} as ShowConfig,
-  rules: {} as any,
-})
-const { hasInit, resetLoading, model, rules } = toRefs(data)
-
-const init = async() => {
-  data.hasInit = false
-  await nextTick()
-  data.model = await configState.getItem(module)
-  await nextTick()
-  data.hasInit = true
-}
-init()
-
-// 进行设置
-const modelSet = async() => {
-  await configState.mergeSet(module, toRaw(model.value))
-}
-
-// 重置
-const reset = async() => {
-  data.resetLoading = true
-  useTimeoutFn(async() => {
-    await configState.init(module)
-    init()
-    data.resetLoading = false
-    message.success('Success!')
-  }, 1000)
-}
-
-watch(model, async() => {
-  if (hasInit.value)
-    await modelSet()
-},
-{ deep: true })
-</script>

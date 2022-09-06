@@ -1,3 +1,36 @@
+<script setup lang="ts" name="Test">
+import hljs from 'highlight.js/lib/core'
+import { isObject } from '@utils/is'
+import { Storage } from '@services/browser/index'
+import Live from '@services/live'
+
+hljs.registerLanguage('naive-log', () => ({
+  contains: [
+    {
+      className: 'number',
+      begin: /\d+/,
+    },
+  ],
+}))
+
+const data = reactive({
+  log: '',
+})
+
+const testFunction = async (functionIns: any) => {
+  const res = await functionIns
+  data.log += isObject(res) ? `${JSON.stringify(res, null, 2)}\n` : `${String(res)}\n`
+}
+
+const backgroundCommand = async (message: any) => {
+  const extensionId = browser.runtime.id
+  const res = await browser.runtime.sendMessage(extensionId, message)
+  // eslint-disable-next-line no-console
+  console.log('[backgroundCommand] >', res)
+  return res
+}
+</script>
+
 <template>
   <div class="pb-2">
     <div class="mb-4 flex justify-between items-center">
@@ -30,36 +63,3 @@
     <n-log class="break-all" :hljs="hljs" language="naive-log" :log="data.log" />
   </div>
 </template>
-
-<script setup lang="ts" name="Test">
-import hljs from 'highlight.js/lib/core'
-import { isObject } from '@utils/is'
-import { Storage } from '@services/browser/index'
-import Live from '@services/live'
-
-hljs.registerLanguage('naive-log', () => ({
-  contains: [
-    {
-      className: 'number',
-      begin: /\d+/,
-    },
-  ],
-}))
-
-const data = reactive({
-  log: '',
-})
-
-const testFunction = async(functionIns: any) => {
-  const res = await functionIns
-  data.log += isObject(res) ? `${JSON.stringify(res, null, 2)}\n` : `${String(res)}\n`
-}
-
-const backgroundCommand = async(message: any) => {
-  const extensionId = browser.runtime.id
-  const res = await browser.runtime.sendMessage(extensionId, message)
-  // eslint-disable-next-line no-console
-  console.log('[backgroundCommand] >', res)
-  return res
-}
-</script>

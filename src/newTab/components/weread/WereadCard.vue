@@ -1,3 +1,102 @@
+<script setup lang="ts" name="WereadCard">
+import dayjs from 'dayjs'
+import Duration from 'dayjs/plugin/duration'
+
+import { openSite } from '@utils/index'
+import configState from '@models/keyValue/configState'
+import { isEmpty } from '@utils/is'
+import { puzzling } from '@utils/extend'
+
+import type { Config } from '@services/weread/model'
+import { ModuleType } from '@services/weread/model'
+import weread from '@services/weread'
+import Card from '@newTab/components/template/TemplateCard.vue'
+import { useAlarmState } from '@newTab/store/alarm'
+
+dayjs.extend(Duration)
+
+const module = 'weread'
+
+const data = reactive({
+  loading: true,
+  refreshLoading: false,
+  config: {} as Config,
+  login: true,
+  moduleData: {} as any,
+  memberCard: {} as any,
+  readDetail: {} as any,
+  bookList: [] as any,
+  showExtend: false,
+  extendInfo: {} as any,
+  alarms: {} as any,
+})
+
+const { loading, config, login, moduleData, memberCard, readDetail, bookList, showExtend, refreshLoading } = toRefs(data)
+
+const getConfig = async () => {
+  data.config = await configState.getItem(module)
+}
+
+const loginCheck = async () => {
+  const login = await weread.loginCheck()
+  data.login = login
+  return login
+}
+
+const getData = async () => {
+  const moduleTypeData = await weread.moduleTypeData()
+  data.moduleData = moduleTypeData[module]
+  data.readDetail = moduleTypeData[`${module}_${ModuleType.READ_DETAIL}`]
+  data.memberCard = moduleTypeData[`${module}_${ModuleType.MEMBER_CARD}`]
+  if (isEmpty(data.moduleData) || isEmpty(data.readDetail) || isEmpty(data.memberCard)) {
+    data.login = false
+    data.loading = false
+    return
+  }
+
+  // eslint-disable-next-line no-console
+  console.log(`[weread][getData] > MEMBER_CARD > ${moduleTypeData[`${module}_${ModuleType.MEMBER_CARD}`].ca_updated_at}`)
+
+  data.bookList = readDetail.value.data.datas[0].readMeta.books ? (readDetail.value.data.datas[0].readMeta.books).slice(0, 2) : []
+  data.loading = false
+}
+
+const refreshData = async (update: 1 | 2 = 1) => {
+  data.refreshLoading = true
+  if (update > 1)
+    await weread.updateModuleTypeData()
+  await getData()
+  data.refreshLoading = false
+}
+
+const init = async () => {
+  await getConfig()
+
+  await loginCheck()
+  if (!loginCheck()) {
+    data.loading = false
+    return false
+  }
+
+  await getData()
+}
+
+const alarmState = useAlarmState()
+const { alarms } = storeToRefs(alarmState)
+data.alarms = alarms
+
+watch(() => data.alarms, async (newVal) => {
+  // eslint-disable-next-line no-console
+  console.log('[weread component] > alarms', newVal)
+  if (newVal[module]) {
+    await refreshData(newVal[module])
+    alarmState.removeAlarm(module)
+  }
+}, { deep: true })
+
+init()
+</script>
+
 <template>
   <Card v-if="!loading" class="flex flex-col justify-between cursor-default">
     <div>
@@ -11,9 +110,9 @@
             </div>
           </div>
           <div class="flex flex-col justify-between">
-            <div class="flex flex-row-reverse w-full opacity-0 hover:(opacity-100 transition-opacity duration-200)" :class="{'!opacity-100': showExtend}">
+            <div class="flex flex-row-reverse w-full opacity-0 hover:(opacity-100 transition-opacity duration-200)" :class="{ '!opacity-100': showExtend }">
               <mdi-information-outline class="cursor-pointer" @click="showExtend = !showExtend" />
-              <mdi-refresh class="cursor-pointer mr-2" :class="{'animate-spin': refreshLoading }" @click="refreshData(2)" />
+              <mdi-refresh class="cursor-pointer mr-2" :class="{ 'animate-spin': refreshLoading }" @click="refreshData(2)" />
             </div>
             <div
               class="cursor-pointer font-bold text-xl select-none hover:(underline underline-offset-2 duration-200 animate-pulse)"
@@ -66,104 +165,6 @@
     </div>
   </Card>
 </template>
-<script setup lang="ts" name="WereadCard">
-import dayjs from 'dayjs'
-import Duration from 'dayjs/plugin/duration'
-
-import { openSite } from '@utils/index'
-import configState from '@models/keyValue/configState'
-import { isEmpty } from '@utils/is'
-import { puzzling } from '@utils/extend'
-
-import type { Config } from '@services/weread/model'
-import { ModuleType } from '@services/weread/model'
-import weread from '@services/weread'
-import Card from '@newTab/components/template/TemplateCard.vue'
-import { useAlarmState } from '@newTab/store/alarm'
-
-dayjs.extend(Duration)
-
-const module = 'weread'
-
-const data = reactive({
-  loading: true,
-  refreshLoading: false,
-  config: {} as Config,
-  login: true,
-  moduleData: {} as any,
-  memberCard: {} as any,
-  readDetail: {} as any,
-  bookList: [] as any,
-  showExtend: false,
-  extendInfo: {} as any,
-  alarms: {} as any,
-})
-
-const { loading, config, login, moduleData, memberCard, readDetail, bookList, showExtend, refreshLoading } = toRefs(data)
-
-const getConfig = async() => {
-  data.config = await configState.getItem(module)
-}
-
-const loginCheck = async() => {
-  const login = await weread.loginCheck()
-  data.login = login
-  return login
-}
-
-const getData = async() => {
-  const moduleTypeData = await weread.moduleTypeData()
-  data.moduleData = moduleTypeData[module]
-  data.readDetail = moduleTypeData[`${module}_${ModuleType.READ_DETAIL}`]
-  data.memberCard = moduleTypeData[`${module}_${ModuleType.MEMBER_CARD}`]
-  if (isEmpty(data.moduleData) || isEmpty(data.readDetail) || isEmpty(data.memberCard)) {
-    data.login = false
-    data.loading = false
-    return
-  }
-
-  // eslint-disable-next-line no-console
-  console.log(`[weread][getData] > MEMBER_CARD > ${moduleTypeData[`${module}_${ModuleType.MEMBER_CARD}`].ca_updated_at}`)
-
-  data.bookList = readDetail.value.data.datas[0].readMeta.books ? (readDetail.value.data.datas[0].readMeta.books).slice(0, 2) : []
-  data.loading = false
-}
-
-const refreshData = async(update: 1 | 2 = 1) => {
-  data.refreshLoading = true
-  if (update > 1)
-    await weread.updateModuleTypeData()
-  await getData()
-  data.refreshLoading = false
-}
-
-const init = async() => {
-  await getConfig()
-
-  await loginCheck()
-  if (!loginCheck()) {
-    data.loading = false
-    return false
-  }
-
-  await getData()
-}
-
-const alarmState = useAlarmState()
-const { alarms } = storeToRefs(alarmState)
-data.alarms = alarms
-
-watch(() => data.alarms, async(newVal) => {
-  // eslint-disable-next-line no-console
-  console.log('[weread component] > alarms', newVal)
-  if (newVal[module]) {
-    await refreshData(newVal[module])
-    alarmState.removeAlarm(module)
-  }
-}, { deep: true })
-
-init()
-</script>
 
 <style lang="less">
 .book-img-container {

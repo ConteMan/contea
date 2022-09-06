@@ -36,7 +36,7 @@ class Sspai {
     }
 
     const data = {} as any
-    await Promise.all(moduleTypes.map(async(item) => {
+    await Promise.all(moduleTypes.map(async (item) => {
       data[item] = await moduleState.getItem(item) ?? {}
     }))
     return data
@@ -58,7 +58,7 @@ class Sspai {
     }
 
     const data = {} as any
-    await Promise.all(moduleTypes.map(async(item) => {
+    await Promise.all(moduleTypes.map(async (item) => {
       data.item = await relations[item] ?? {}
     }))
 

@@ -1,3 +1,66 @@
+<script setup lang="ts" name="WakaTimeCard">
+import dayjs from 'dayjs'
+import { openSite } from '@utils/index'
+import configState from '@models/keyValue/configState'
+
+import type { Config } from '@services/wakatime/model'
+import WakaTime from '@services/wakatime'
+import Card from '@newTab/components/template/TemplateCard.vue'
+import { useAlarmState } from '@newTab/store/alarm'
+
+const module = 'wakatime'
+
+interface Info {
+  cummulative_total: {
+    text: string
+  }
+  [other: string]: any
+}
+
+const data = reactive({
+  loading: 1,
+  refreshLoading: false,
+  login: false,
+  showExtend: false,
+  config: {} as Config,
+  today: {} as Info,
+  pastWeek: {} as Info,
+})
+
+const getInfo = async (refresh = false) => {
+  if (refresh)
+    data.refreshLoading = true
+
+  const today = dayjs().format('YYYY-MM-DD')
+  data.config = await configState.getItem(module)
+  data.login = await WakaTime.loginCheck()
+  if (data.login) {
+    data.today = await WakaTime.daySummary(today, today, refresh)
+    data.pastWeek = await WakaTime.daySummary(dayjs().subtract(7, 'day').format('YYYY-MM-DD'), dayjs().subtract(1, 'day').format('YYYY-MM-DD'), refresh)
+  }
+
+  if (refresh)
+    data.refreshLoading = false
+  else
+    data.loading--
+}
+getInfo()
+
+const { loading, login, showExtend, config, today, pastWeek } = toRefs(data)
+
+const alarmState = useAlarmState()
+const { alarms } = storeToRefs(alarmState)
+
+watch(() => alarms.value[module], async (newVal) => {
+  // eslint-disable-next-line no-console
+  console.log(`[${module} component] > alarms`, alarms.value, newVal)
+  if (newVal) {
+    await getInfo(!!newVal)
+    alarmState.removeAlarm(module)
+  }
+}, { deep: true })
+</script>
+
 <template>
   <Card class="flex flex-col">
     <!-- 加载 -->
@@ -37,7 +100,7 @@
         >
           <div class="flex flex-row-reverse w-full">
             <mdi-information-outline v-if="login" class="cursor-pointer" @click="showExtend = !showExtend" />
-            <mdi-refresh v-if="login" class="cursor-pointer mr-2" :class="{'animate-spin': data.refreshLoading}" @click="getInfo(true)" />
+            <mdi-refresh v-if="login" class="cursor-pointer mr-2" :class="{ 'animate-spin': data.refreshLoading }" @click="getInfo(true)" />
           </div>
           <div
             class="leading-none cursor-pointer font-bold text-xl select-none hover:(underline underline-offset-2 duration-200 animate-pulse)"
@@ -57,66 +120,3 @@
     </div>
   </Card>
 </template>
-
-<script setup lang="ts" name="WakaTimeCard">
-import dayjs from 'dayjs'
-import { openSite } from '@utils/index'
-import configState from '@models/keyValue/configState'
-
-import type { Config } from '@services/wakatime/model'
-import WakaTime from '@services/wakatime'
-import Card from '@newTab/components/template/TemplateCard.vue'
-import { useAlarmState } from '@newTab/store/alarm'
-
-const module = 'wakatime'
-
-interface Info {
-  cummulative_total: {
-    text: string
-  }
-  [other: string]: any
-}
-
-const data = reactive({
-  loading: 1,
-  refreshLoading: false,
-  login: false,
-  showExtend: false,
-  config: {} as Config,
-  today: {} as Info,
-  pastWeek: {} as Info,
-})
-
-const getInfo = async(refresh = false) => {
-  if (refresh)
-    data.refreshLoading = true
-
-  const today = dayjs().format('YYYY-MM-DD')
-  data.config = await configState.getItem(module)
-  data.login = await WakaTime.loginCheck()
-  if (data.login) {
-    data.today = await WakaTime.daySummary(today, today, refresh)
-    data.pastWeek = await WakaTime.daySummary(dayjs().subtract(7, 'day').format('YYYY-MM-DD'), dayjs().subtract(1, 'day').format('YYYY-MM-DD'), refresh)
-  }
-
-  if (refresh)
-    data.refreshLoading = false
-  else
-    data.loading--
-}
-getInfo()
-
-const { loading, login, showExtend, config, today, pastWeek } = toRefs(data)
-
-const alarmState = useAlarmState()
-const { alarms } = storeToRefs(alarmState)
-
-watch(() => alarms.value[module], async(newVal) => {
-  // eslint-disable-next-line no-console
-  console.log(`[${module} component] > alarms`, alarms.value, newVal)
-  if (newVal) {
-    await getInfo(!!newVal)
-    alarmState.removeAlarm(module)
-  }
-}, { deep: true })
-</script>

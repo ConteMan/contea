@@ -1,8 +1,3 @@
-<template>
-  <router-view />
-  <SearchModal />
-  <SettingDrawer />
-</template>
 <script setup lang="ts">
 import type { alarmName, message } from '@localTypes/message'
 import { useActiveElement, useEventListener } from '@vueuse/core'
@@ -29,7 +24,7 @@ const changeMode = () => {
 }
 
 // 监听消息
-browser.runtime.onMessage.addListener(async(message: message, sender: any) => {
+browser.runtime.onMessage.addListener(async (message: message, sender: any) => {
   const { type, name } = message
 
   newTabState.setLog(`${new Date()} [NewTab AppContent] 收到 [${sender.id}] 发来的信息：${JSON.stringify(message)}`)
@@ -79,3 +74,9 @@ useEventListener(window, 'keyup', (e: any) => {
     newTabState.changeSettingDrawer()
 })
 </script>
+
+<template>
+  <router-view />
+  <SearchModal />
+  <SettingDrawer />
+</template>

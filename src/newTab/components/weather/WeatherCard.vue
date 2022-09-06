@@ -1,3 +1,45 @@
+<script setup lang="ts">
+import dayjs from 'dayjs'
+import configState from '@models/keyValue/configState'
+import type { Config } from '@services/weather/model'
+import Weather from '@services/weather'
+import Card from '@newTab/components/template/TemplateCard.vue'
+
+const module = 'weather'
+
+const data = reactive({
+  base: {} as any,
+  config: {} as Config,
+  error: false,
+})
+const { base, config } = toRefs(data)
+
+const getData = async () => {
+  data.config = await configState.getItem(module)
+  const res = await Weather.data()
+  if (!res)
+    data.error = true
+  else
+    data.base = res
+}
+getData()
+
+const dayShow = (date: string) => {
+  const format = 'YYYY-MM-DD'
+  const dateFormat = dayjs(date).format(format)
+  if (dateFormat === dayjs().subtract(1, 'day').format(format))
+    return '昨日'
+  if (dateFormat === dayjs().format(format))
+    return '今日'
+  if (dateFormat === dayjs().add(1, 'day').format(format))
+    return '明日'
+  if (dateFormat === dayjs().add(2, 'day').format(format))
+    return '后日'
+
+  return date
+}
+</script>
+
 <template>
   <Card class="flex flex-col justify-center cursor-default">
     <div v-if="!Object.keys(base).length" class="duration-200 animate-pulse">
@@ -36,45 +78,3 @@
     </div>
   </Card>
 </template>
-
-<script setup lang="ts">
-import dayjs from 'dayjs'
-import configState from '@models/keyValue/configState'
-import type { Config } from '@services/weather/model'
-import Weather from '@services/weather'
-import Card from '@newTab/components/template/TemplateCard.vue'
-
-const module = 'weather'
-
-const data = reactive({
-  base: {} as any,
-  config: {} as Config,
-  error: false,
-})
-const { base, config } = toRefs(data)
-
-const getData = async() => {
-  data.config = await configState.getItem(module)
-  const res = await Weather.data()
-  if (!res)
-    data.error = true
-  else
-    data.base = res
-}
-getData()
-
-const dayShow = (date: string) => {
-  const format = 'YYYY-MM-DD'
-  const dateFormat = dayjs(date).format(format)
-  if (dateFormat === dayjs().subtract(1, 'day').format(format))
-    return '昨日'
-  if (dateFormat === dayjs().format(format))
-    return '今日'
-  if (dateFormat === dayjs().add(1, 'day').format(format))
-    return '明日'
-  if (dateFormat === dayjs().add(2, 'day').format(format))
-    return '后日'
-
-  return date
-}
-</script>

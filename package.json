@@ -3,10 +3,6 @@
   "version": "0.3.6",
   "description": "Chrome Extension",
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ConteMan/contea.git"
-  },
   "author": "ConteMan",
   "main": "index.js",
   "scripts": {
@@ -21,7 +17,9 @@
     "watch-build:bg": "vite build --config vite.config.bg.ts --watch",
     "watch-build:content": "vite build --config vite.config.content.ts --watch",
     "clear": "rimraf extension/dist extension/manifest.json extension/version.json extension.*",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "dependencies": {
     "@vespaiach/axios-fetch-adapter": "^0.3.0",

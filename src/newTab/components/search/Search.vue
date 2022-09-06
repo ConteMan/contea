@@ -1,80 +1,3 @@
-<template>
-  <n-modal
-    v-model:show="show"
-    transform-origin="center"
-    :auto-focus="true"
-  >
-    <div class="w-1/2">
-      <n-input
-        ref="searchInputRef"
-        v-model:value="searchContent"
-        placeholder="Search"
-        size="large"
-        class="search-input"
-      >
-        <template #prefix>
-          <transition
-            mode="out-in"
-            enter-active-class="animate__animated animate__faster animate__flipInX"
-            leave-active-class="animate__animated animate__faster animate__flipOutX"
-          >
-            <mdi-history v-if="data.searchMode === 1" class="mr-1" />
-            <mdi-book-outline v-else-if="data.searchMode === 2" class="mr-1" />
-            <icon-park-outline-search v-else class="mr-1" />
-          </transition>
-        </template>
-      </n-input>
-      <div
-        ref="resultRef"
-        :style="{ height: `${resultContainerHeight}px` }"
-        class="mt-2 rounded-sm bg-gray-400 overflow-y-auto"
-      >
-        <!-- 书签、历史记录搜索模式  -->
-        <template v-if="[1, 2].includes(data.searchMode)">
-          <div
-            v-for="(hItem, hIndex) in result"
-            :key="hItem.lastVisitTime ?? hItem?.dateAdded"
-            :ref="el => { if (el) divs[hIndex] = el }"
-            class="py-2 px-4 cursor-pointer"
-            :class="{ 'bg-gray-200': active(hIndex) }"
-            @click="openSite(hItem.url)"
-            @mouseover="setIndex(hIndex)"
-          >
-            <div class="truncate" :title="hItem.title">
-              {{ hItem.title }}
-            </div>
-            <div class="text-gray-400 text-xs italic truncate" :title="hItem.url">
-              <span v-if="hItem?.lastVisitTime">{{ dayjs(hItem.lastVisitTime).format('MM-DD HH:mm') }}</span>
-              <span v-if="hItem?.dateAdded">{{ dayjs(hItem.dateAdded).format('YYYY-MM-DD HH:mm') }}</span>
-              / {{ hItem.url }}
-            </div>
-          </div>
-        </template>
-
-        <!-- 搜索引擎搜索模式  -->
-        <template v-if="[3].includes(data.searchMode)">
-          <div
-            v-for="(item, index) in result"
-            :key="item.name"
-            :ref="el => { if (el) divs[index] = el }"
-            class="py-2 px-4 cursor-pointer"
-            :class="{ 'bg-gray-200': active(index) }"
-            @click="openSite(`${item.url}${data.searchContent}`)"
-            @mouseover="setIndex(index)"
-          >
-            <div class="truncate" :title="item.name">
-              {{ item.name }}
-            </div>
-            <div class="text-gray-400 text-xs italic truncate" :title="item.url">
-              {{ item.url }}
-            </div>
-          </div>
-        </template>
-      </div>
-    </div>
-  </n-modal>
-</template>
-
 <script setup lang="ts">
 import dayjs from 'dayjs'
 import { debouncedWatch, onKeyStroke, onStartTyping, useMouse } from '@vueuse/core'
@@ -136,7 +59,7 @@ const clearSearch = () => {
 }
 
 // 搜索历史记录
-const searchHistory = async() => {
+const searchHistory = async () => {
   data.searchMode = 1
   data.result = await browser.history.search({
     text: searchContent.value,
@@ -146,7 +69,7 @@ const searchHistory = async() => {
 }
 
 // 搜索书签
-const searchBookmark = async(content = '') => {
+const searchBookmark = async (content = '') => {
   data.searchMode = 2
   if (!content) { // 没有搜索内容，加载最近书签
     data.result = await browser.bookmarks.getRecent(bookmarkRecent)
@@ -160,7 +83,7 @@ const searchBookmark = async(content = '') => {
 }
 
 // 搜索引擎搜索
-const searchWeb = async() => {
+const searchWeb = async () => {
   data.searchMode = 3
   data.result = webSearch
 }
@@ -299,6 +222,83 @@ watch(y, () => {
   data.mode = 1
 })
 </script>
+
+<template>
+  <n-modal
+    v-model:show="show"
+    transform-origin="center"
+    :auto-focus="true"
+  >
+    <div class="w-1/2">
+      <n-input
+        ref="searchInputRef"
+        v-model:value="searchContent"
+        placeholder="Search"
+        size="large"
+        class="search-input"
+      >
+        <template #prefix>
+          <transition
+            mode="out-in"
+            enter-active-class="animate__animated animate__faster animate__flipInX"
+            leave-active-class="animate__animated animate__faster animate__flipOutX"
+          >
+            <mdi-history v-if="data.searchMode === 1" class="mr-1" />
+            <mdi-book-outline v-else-if="data.searchMode === 2" class="mr-1" />
+            <icon-park-outline-search v-else class="mr-1" />
+          </transition>
+        </template>
+      </n-input>
+      <div
+        ref="resultRef"
+        :style="{ height: `${resultContainerHeight}px` }"
+        class="mt-2 rounded-sm bg-gray-400 overflow-y-auto"
+      >
+        <!-- 书签、历史记录搜索模式  -->
+        <template v-if="[1, 2].includes(data.searchMode)">
+          <div
+            v-for="(hItem, hIndex) in result"
+            :key="hItem.lastVisitTime ?? hItem?.dateAdded"
+            :ref="el => { if (el) divs[hIndex] = el }"
+            class="py-2 px-4 cursor-pointer"
+            :class="{ 'bg-gray-200': active(hIndex) }"
+            @click="openSite(hItem.url)"
+            @mouseover="setIndex(hIndex)"
+          >
+            <div class="truncate" :title="hItem.title">
+              {{ hItem.title }}
+            </div>
+            <div class="text-gray-400 text-xs italic truncate" :title="hItem.url">
+              <span v-if="hItem?.lastVisitTime">{{ dayjs(hItem.lastVisitTime).format('MM-DD HH:mm') }}</span>
+              <span v-if="hItem?.dateAdded">{{ dayjs(hItem.dateAdded).format('YYYY-MM-DD HH:mm') }}</span>
+              / {{ hItem.url }}
+            </div>
+          </div>
+        </template>
+
+        <!-- 搜索引擎搜索模式  -->
+        <template v-if="[3].includes(data.searchMode)">
+          <div
+            v-for="(item, index) in result"
+            :key="item.name"
+            :ref="el => { if (el) divs[index] = el }"
+            class="py-2 px-4 cursor-pointer"
+            :class="{ 'bg-gray-200': active(index) }"
+            @click="openSite(`${item.url}${data.searchContent}`)"
+            @mouseover="setIndex(index)"
+          >
+            <div class="truncate" :title="item.name">
+              {{ item.name }}
+            </div>
+            <div class="text-gray-400 text-xs italic truncate" :title="item.url">
+              {{ item.url }}
+            </div>
+          </div>
+        </template>
+      </div>
+    </div>
+  </n-modal>
+</template>
 
 <style lang="less">
 .search-input {

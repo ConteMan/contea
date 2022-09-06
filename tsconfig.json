@@ -44,8 +44,8 @@
       ],
       "@localTypes/*": [
         "src/types/*"
-      ],
-    },
+      ]
+    }
   },
   "include": [
     "vite.config.ts",
@@ -62,10 +62,10 @@
     "setting/*.ts",
     "enums/*.ts",
     "types/*.d.ts",
-    "scripts/*.ts",
+    "scripts/*.ts"
   ],
   "exclude": [
     "dist",
-    "node_modules",
-  ],
+    "node_modules"
+  ]
 }

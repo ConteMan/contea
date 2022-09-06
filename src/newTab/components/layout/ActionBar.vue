@@ -1,3 +1,61 @@
+<script setup lang="ts">
+import { SourceTypes } from '@services/wallpaper/model'
+import { useNewTabState } from '@newTab/store/newTab'
+
+const newTabState = useNewTabState()
+
+const data = reactive({
+  wallpaperInfo: {} as any,
+  wallpaperStyle: {} as any,
+  backgroundOpacity: 0,
+  showDrawer: false, // 抽屉显隐
+  wallpaperSourceOptions: [] as any,
+  uploadRef: null as any,
+})
+const { wallpaperInfo, backgroundOpacity, showDrawer, wallpaperSourceOptions, uploadRef } = toRefs(data)
+
+const { wallpaper } = storeToRefs(newTabState)
+data.wallpaperInfo = wallpaper
+
+const init = async () => {
+  if (data.wallpaperInfo.mode === 'random') {
+    await newTabState.changeWallpaper()
+  }
+  else {
+    if (data.wallpaperInfo.url) {
+      data.backgroundOpacity = data.wallpaperInfo.opacity
+      data.wallpaperStyle = {
+        'background-image': `-webkit-cross-fade(url(data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==), url(${data.wallpaperInfo.url}), ${data.wallpaperInfo.opacity}%)`,
+      }
+    }
+  }
+  data.wallpaperSourceOptions = SourceTypes
+}
+init()
+
+watch(backgroundOpacity, (newValue) => {
+  newTabState.changeWallpaperOpacity(newValue)
+})
+
+const changeTheme = () => {
+  newTabState.changeTheme(newTabState.theme === 'dark' ? 'light' : 'dark')
+}
+
+const uploadClick = () => {
+  uploadRef.value.click()
+}
+
+const handleChange = () => {
+  const file = uploadRef.value.files[0]
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    if (e.target?.result)
+      newTabState.setLocalWallpaper(String(e.target?.result))
+  }
+  reader.readAsDataURL(file)
+}
+</script>
+
 <template>
   <div>
     <div class="flex justify-end gap-2 zen-setting-container fixed bottom-4 right-8 text-[14px] rounded-md p-2 opacity-40 hover:(opacity-100)">
@@ -102,64 +160,6 @@
     </n-drawer>
   </div>
 </template>
-
-<script setup lang="ts">
-import { SourceTypes } from '@services/wallpaper/model'
-import { useNewTabState } from '@newTab/store/newTab'
-
-const newTabState = useNewTabState()
-
-const data = reactive({
-  wallpaperInfo: {} as any,
-  wallpaperStyle: {} as any,
-  backgroundOpacity: 0,
-  showDrawer: false, // 抽屉显隐
-  wallpaperSourceOptions: [] as any,
-  uploadRef: null as any,
-})
-const { wallpaperInfo, backgroundOpacity, showDrawer, wallpaperSourceOptions, uploadRef } = toRefs(data)
-
-const { wallpaper } = storeToRefs(newTabState)
-data.wallpaperInfo = wallpaper
-
-const init = async() => {
-  if (data.wallpaperInfo.mode === 'random') {
-    await newTabState.changeWallpaper()
-  }
-  else {
-    if (data.wallpaperInfo.url) {
-      data.backgroundOpacity = data.wallpaperInfo.opacity
-      data.wallpaperStyle = {
-        'background-image': `-webkit-cross-fade(url(data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==), url(${data.wallpaperInfo.url}), ${data.wallpaperInfo.opacity}%)`,
-      }
-    }
-  }
-  data.wallpaperSourceOptions = SourceTypes
-}
-init()
-
-watch(backgroundOpacity, (newValue) => {
-  newTabState.changeWallpaperOpacity(newValue)
-})
-
-const changeTheme = () => {
-  newTabState.changeTheme(newTabState.theme === 'dark' ? 'light' : 'dark')
-}
-
-const uploadClick = () => {
-  uploadRef.value.click()
-}
-
-const handleChange = () => {
-  const file = uploadRef.value.files[0]
-  const reader = new FileReader()
-  reader.onload = (e) => {
-    if (e.target?.result)
-      newTabState.setLocalWallpaper(String(e.target?.result))
-  }
-  reader.readAsDataURL(file)
-}
-</script>
 
 <style>
 .zen-opacity-slider {

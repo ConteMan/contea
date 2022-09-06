@@ -38,7 +38,7 @@ class V2EX {
     }
 
     const data = {} as any
-    await Promise.all(moduleTypes.map(async(item) => {
+    await Promise.all(moduleTypes.map(async (item) => {
       data[item] = await moduleState.getItem(item) ?? {}
     }))
     return data
@@ -60,7 +60,7 @@ class V2EX {
     }
 
     const data = {} as any
-    await Promise.all(moduleTypes.map(async(item) => {
+    await Promise.all(moduleTypes.map(async (item) => {
       data.item = await relations[item] ?? {}
     }))
 

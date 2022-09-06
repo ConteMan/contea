@@ -24,7 +24,7 @@ export const useAlarmState = defineStore('alarm', {
     } as alarmsType
   },
   actions: {
-    addAlarm(name: alarmName, update: 0|1|2 = 1) {
+    addAlarm(name: alarmName, update: 0 | 1 | 2 = 1) {
       this.alarms[name] = update
       this.alarms = { ...this.alarms }
     },

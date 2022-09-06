@@ -1,3 +1,25 @@
+<script setup lang="ts">
+import dayjs from 'dayjs'
+import KBS from '@services/sport/kbs'
+
+const matches = ref({})
+
+const getMatches = async () => {
+  matches.value = await KBS.matches('hot')
+}
+getMatches()
+
+const important = (name: string) => {
+  return [
+    'TES', 'LNG', 'V5', 'WBG', 'RNG', 'EDG', 'FPX',
+    '曼城', '切尔西', '曼联', '巴黎圣日耳曼',
+    '拜仁慕尼黑',
+    '皇家马德里',
+    '湖人',
+  ].includes(name)
+}
+</script>
+
 <template>
   <div class="overflow-y-auto">
     <div v-for="(day, key) in matches" :key="key">
@@ -25,25 +47,3 @@
     </div>
   </div>
 </template>
-<script setup lang="ts">
-import dayjs from 'dayjs'
-import KBS from '@services/sport/kbs'
-
-const matches = ref({})
-
-const getMatches = async() => {
-  matches.value = await KBS.matches('hot')
-}
-getMatches()
-
-const important = (name: string) => {
-  return [
-    'TES', 'LNG', 'V5', 'WBG', 'RNG', 'EDG', 'FPX',
-    '曼城', '切尔西', '曼联', '巴黎圣日耳曼',
-    '拜仁慕尼黑',
-    '皇家马德里',
-    '湖人',
-  ].includes(name)
-}
-
-</script>

@@ -10,10 +10,10 @@ export default defineConfig({
   build: {
     watch: isDev
       ? {
-        include: [
-          r('src/background/**/*'),
-        ],
-      }
+          include: [
+            r('src/background/**/*'),
+          ],
+        }
       : undefined,
     outDir: r('extension/dist/background'),
     cssCodeSplit: false,

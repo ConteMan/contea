@@ -95,7 +95,8 @@ class DexieDriverFactory extends AsyncAbstractDriverFactory {
             .add(encode(value), this.restorePrimaryType(key))
             .then(() => resolve(true))
             .catch((error) => {
-              if (error?.name === 'ConstraintError') resolve(false)
+              if (error?.name === 'ConstraintError')
+                resolve(false)
               else reject(error)
             })
         })
@@ -146,7 +147,7 @@ class DexieDriverFactory extends AsyncAbstractDriverFactory {
 
       bulkInsert(items: Record<string, unknown>) {
         const itemsArr: Array<unknown> = []
-        // eslint-disable-next-line no-restricted-syntax
+
         for (const key in items) {
           const item = encode(items[key])
           item[this.getPrimaryName()] = this.restorePrimaryType(key)
@@ -154,39 +155,41 @@ class DexieDriverFactory extends AsyncAbstractDriverFactory {
         }
 
         return new Promise((resolve) => {
-          db.transaction('rw', this.query(), async() => {
+          db.transaction('rw', this.query(), async () => {
             await this.query().bulkAdd(itemsArr)
             resolve(true)
           }).catch((error) => {
-            if (error?.name !== 'BulkError') throw error
+            if (error?.name !== 'BulkError')
+              throw error
           })
         })
       },
 
       bulkInsertAutoIncrement(items: Array<unknown>) {
         const itemsArr: Array<unknown> = []
-        // eslint-disable-next-line no-restricted-syntax
+
         for (const key in items) {
           const item = encode(items[key])
           itemsArr.push(item)
         }
 
         return new Promise((resolve) => {
-          db.transaction('rw', this.query(), async() => {
+          db.transaction('rw', this.query(), async () => {
             resolve(
               (await this.query().bulkAdd(itemsArr, { allKeys: true })).map(
                 v => String(v),
               ),
             )
           }).catch((error) => {
-            if (error?.name !== 'BulkError') throw error
+            if (error?.name !== 'BulkError')
+              throw error
           })
         })
       },
 
       async bulkUpdate(items: Record<string, unknown>) {
         const itemsArr: Array<unknown> = []
-        // eslint-disable-next-line no-restricted-syntax
+
         for (const key in items) {
           const item = encode(items[key])
           item[this.getPrimaryName()] = this.restorePrimaryType(key)
@@ -194,18 +197,19 @@ class DexieDriverFactory extends AsyncAbstractDriverFactory {
         }
 
         return new Promise((resolve) => {
-          db.transaction('rw', this.query(), async() => {
+          db.transaction('rw', this.query(), async () => {
             await this.query().bulkPut(itemsArr)
             resolve(true)
           }).catch((error) => {
-            if (error?.name !== 'BulkError') throw error
+            if (error?.name !== 'BulkError')
+              throw error
           })
         })
       },
 
       async bulkInsertOrUpdate(items: Record<string, unknown>) {
         const itemsArr: Array<unknown> = []
-        // eslint-disable-next-line no-restricted-syntax
+
         for (const key in items) {
           const item = encode(items[key])
           item[this.getPrimaryName()] = this.restorePrimaryType(key)
@@ -213,11 +217,12 @@ class DexieDriverFactory extends AsyncAbstractDriverFactory {
         }
 
         return new Promise((resolve) => {
-          db.transaction('rw', this.query(), async() => {
+          db.transaction('rw', this.query(), async () => {
             await this.query().bulkPut(itemsArr)
             resolve(true)
           }).catch((error) => {
-            if (error?.name !== 'BulkError') throw error
+            if (error?.name !== 'BulkError')
+              throw error
           })
         })
       },
@@ -248,17 +253,20 @@ class DexieDriverFactory extends AsyncAbstractDriverFactory {
         orderBy?: string | Array<string>,
         isReverse?: boolean,
       ) {
-        if (currentPpage < 1) currentPpage = 1
+        if (currentPpage < 1)
+          currentPpage = 1
         const query = this.query()
-        if (undefined !== orderBy) query.orderBy(orderBy)
-        if (undefined !== isReverse) query.reverse()
+        if (undefined !== orderBy)
+          query.orderBy(orderBy)
+        if (undefined !== isReverse)
+          query.reverse()
         const res: Array<Record<string, unknown>> = await query
           .offset((currentPpage - 1) * num)
           .limit(num)
           .toArray()
 
         const data = makeKMap()
-        // eslint-disable-next-line no-restricted-syntax
+
         for (const key in res) {
           const item = res[key]
           data[item[this.getPrimaryName()] as string] = decode(item)
@@ -269,7 +277,8 @@ class DexieDriverFactory extends AsyncAbstractDriverFactory {
 
       async seeding(seeding: Function) {
         const table = db.table('_seed')
-        if (await table.get(`${options.name}_is_seeded`)) return
+        if (await table.get(`${options.name}_is_seeded`))
+          return
 
         await table.add({
           _id: `${options.name}_is_seeded`,

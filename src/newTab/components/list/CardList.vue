@@ -1,3 +1,22 @@
+<script setup lang="ts">
+import draggable from 'vuedraggable'
+
+import { useConfigState } from '@newTab/store/config'
+
+const data = reactive({
+  cardList: [] as any,
+})
+const configState = useConfigState()
+const { sortList } = storeToRefs(configState)
+
+data.cardList = sortList
+
+const setSortList = () => {
+  configState.dealSortList(toRaw(data.cardList))
+}
+watch(data.cardList, setSortList)
+</script>
+
 <template>
   <draggable
     v-if="data.cardList.length"
@@ -56,22 +75,3 @@
     </template>
   </draggable>
 </template>
-
-<script setup lang="ts">
-import draggable from 'vuedraggable'
-
-import { useConfigState } from '@newTab/store/config'
-
-const data = reactive({
-  cardList: [] as any,
-})
-const configState = useConfigState()
-const { sortList } = storeToRefs(configState)
-
-data.cardList = sortList
-
-const setSortList = () => {
-  configState.dealSortList(toRaw(data.cardList))
-}
-watch(data.cardList, setSortList)
-</script>

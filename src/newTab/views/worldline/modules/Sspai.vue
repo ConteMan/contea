@@ -1,3 +1,72 @@
+<script setup lang="ts">
+import dayjs from 'dayjs'
+import 'dayjs/locale/zh-cn'
+import RelativeTime from 'dayjs/plugin/relativeTime'
+import configState from '@models/keyValue/configState'
+import { enumToObj } from '@utils/index'
+import Base from '@services/base'
+import Alarm from '@services/base/alarm'
+import { TypeEnum } from '@enums/sspaiEnum'
+
+const module = 'sspai'
+
+dayjs.locale('zh-cn')
+dayjs.extend(RelativeTime)
+
+const data = reactive({
+  loading: false,
+  config: {} as any,
+  moduleTypes: {} as any,
+  selectedTags: [] as string[],
+  list: [] as any[],
+})
+const { config, loading, selectedTags, list } = toRefs(data)
+
+// 列表数据
+const getData = async () => {
+  data.list = await Base.listByModule({ currentPage: 1, num: 100 }, module, toRaw(selectedTags.value))
+}
+
+// 获取栏目类型
+const getTypes = () => {
+  data.moduleTypes = enumToObj(TypeEnum, ['value', 'key'])
+}
+
+// 初始化
+const init = async () => {
+  data.config = await configState.getItem(module)
+  getTypes()
+  await getData()
+}
+init()
+
+// 选择标签
+const handleChange = async (tag: string, checked: boolean) => {
+  const { selectedTags } = data
+  const nextSelectedTags = checked
+    ? [...selectedTags, tag]
+    : selectedTags.filter(t => t !== tag)
+  data.selectedTags = nextSelectedTags
+  await getData()
+}
+
+// 刷新数据
+const refresh = async () => {
+  data.loading = true
+  await Alarm.dealAlarm(module)
+  await getData()
+  data.loading = false
+}
+
+// 动作描述转换
+const transformAction = (action: string) => {
+  if (action === 'like_article')
+    return '喜欢'
+  if (action === 'release_article')
+    return '发布'
+}
+</script>
+
 <template>
   <div class="w-full flex flex-col">
     <div class="w-full pt-2 pb-3 pl-2 flex items-center gap-2">
@@ -55,72 +124,3 @@
     </n-scrollbar>
   </div>
 </template>
-
-<script setup lang="ts">
-import dayjs from 'dayjs'
-import 'dayjs/locale/zh-cn'
-import RelativeTime from 'dayjs/plugin/relativeTime'
-import configState from '@models/keyValue/configState'
-import { enumToObj } from '@utils/index'
-import Base from '@services/base'
-import Alarm from '@services/base/alarm'
-import { TypeEnum } from '@enums/sspaiEnum'
-
-const module = 'sspai'
-
-dayjs.locale('zh-cn')
-dayjs.extend(RelativeTime)
-
-const data = reactive({
-  loading: false,
-  config: {} as any,
-  moduleTypes: {} as any,
-  selectedTags: [] as string[],
-  list: [] as any[],
-})
-const { config, loading, selectedTags, list } = toRefs(data)
-
-// 列表数据
-const getData = async() => {
-  data.list = await Base.listByModule({ currentPage: 1, num: 100 }, module, toRaw(selectedTags.value))
-}
-
-// 获取栏目类型
-const getTypes = () => {
-  data.moduleTypes = enumToObj(TypeEnum, ['value', 'key'])
-}
-
-// 初始化
-const init = async() => {
-  data.config = await configState.getItem(module)
-  getTypes()
-  await getData()
-}
-init()
-
-// 选择标签
-const handleChange = async(tag: string, checked: boolean) => {
-  const { selectedTags } = data
-  const nextSelectedTags = checked
-    ? [...selectedTags, tag]
-    : selectedTags.filter(t => t !== tag)
-  data.selectedTags = nextSelectedTags
-  await getData()
-}
-
-// 刷新数据
-const refresh = async() => {
-  data.loading = true
-  await Alarm.dealAlarm(module)
-  await getData()
-  data.loading = false
-}
-
-// 动作描述转换
-const transformAction = (action: string) => {
-  if (action === 'like_article')
-    return '喜欢'
-  if (action === 'release_article')
-    return '发布'
-}
-</script>
