@@ -1,7 +1,7 @@
 import type { SettingKeys } from '@setting/index'
 import { useMessage } from 'naive-ui'
 import { useTimeoutFn, watchDebounced } from '@vueuse/core'
-import ConfigState from '@models/keyValue/configState'
+import ConfigModel from '@models/config'
 import { useConfigState } from '@newTab/store/config'
 
 export default (module: SettingKeys, configKeys: string[]) => {
@@ -28,14 +28,14 @@ export default (module: SettingKeys, configKeys: string[]) => {
   const modelSet = async (module: SettingKeys, data: any) => {
     // eslint-disable-next-line no-console
     console.log(`${module} setting save`, data)
-    await ConfigState.mergeSet(module, data)
+    await ConfigModel.mergeSet(module, data)
     await ConfigStateStore.setAll()
   }
 
   // 初始化
   const init = async (module: SettingKeys) => {
     const showModel = {} as any
-    const model = await ConfigState.getItem(module)
+    const model = await ConfigModel.getItem(module)
     configKeys.forEach((key) => {
       if (model?.[key])
         showModel[key] = model[key]
@@ -49,7 +49,7 @@ export default (module: SettingKeys, configKeys: string[]) => {
   const reset = async (module: SettingKeys) => {
     data.resetLoading = true
     useTimeoutFn(async () => {
-      await ConfigState.init(module)
+      await ConfigModel.init(module)
       data.resetLoading = false
       message.success('重置成功!')
     }, 1000)
@@ -60,7 +60,7 @@ export default (module: SettingKeys, configKeys: string[]) => {
     data.initConfigLoading = true
 
     useTimeoutFn(async () => {
-      await ConfigState.init('all')
+      await ConfigModel.init('all')
       data.initConfigLoading = false
       message.success('应用恢复默认成功!')
     }, 1000)

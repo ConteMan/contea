@@ -1,7 +1,6 @@
-import { defineStore } from 'pinia'
 import _ from 'lodash-es'
-import configState from '@models/keyValue/configState'
-import storeState from '@models/keyValue/storeState'
+import { defineStore } from 'pinia'
+import ConfigModel from '@models/config'
 
 interface DataType {
   all: any
@@ -19,7 +18,7 @@ export const useConfigState = defineStore('config',
 
     // 初始化
     async function setAll() {
-      data.all = await configState.storage.all()
+      data.all = await ConfigModel.getAll('obj')
       await dealSortList()
     }
 
@@ -71,8 +70,6 @@ export const useConfigState = defineStore('config',
   {
     persist: {
       key: 'config',
-      storage: storeState,
-      paths: ['sortList'], // 只存储排序列表
     },
   },
 )

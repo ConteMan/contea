@@ -2,7 +2,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "module": "ESNext",
-    "target": "es2016",
+    "target": "ESNext",
     "lib": [
       "DOM",
       "ESNext"
@@ -18,7 +18,7 @@
     "jsx": "preserve",
     "typeRoots": [
       "./node_modules/@types/",
-      "./types"
+      "./src/types"
     ],
     "paths": {
       "~/*": [
@@ -56,11 +56,6 @@
     "src/*.d.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
-    "utils/**/*.ts",
-    "services/**/*.ts",
-    "models/**/*.ts",
-    "setting/*.ts",
-    "enums/*.ts",
     "types/*.d.ts",
     "scripts/*.ts"
   ],

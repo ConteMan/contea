@@ -5,6 +5,7 @@ import _ from 'lodash-es'
 import dayjs from 'dayjs'
 
 import ConfigState from '@models/keyValue/configState'
+import { ConfigModel } from '@models/index'
 import AlarmService from '@services/base/alarm'
 import { toDesktop } from '@services/desktop'
 import { getVersion } from './version'
@@ -39,6 +40,7 @@ browser.runtime.onInstalled.addListener(async () => {
     }
 
     await ConfigState.init()
+    await ConfigModel.init()
   }
   catch (e) {
     // eslint-disable-next-line no-console

@@ -26,6 +26,7 @@ newTabState.changeIsPreferredDark(isPreferredDark.value)
 watch(isPreferredDark, (isDark) => {
   newTabState.changeIsPreferredDark(isDark)
 })
+data.theme = newTabState.theme === 'dark' ? darkTheme : null
 watch(() => newTabState.theme, (newVal) => {
   data.theme = newVal === 'dark' ? darkTheme : null
 })

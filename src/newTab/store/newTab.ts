@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
 import { reactive } from 'vue'
-import storeState from '@models/keyValue/storeState'
 import wallpaperService from '@services/wallpaper'
 import { useConfigState } from '@newTab/store/config'
 
@@ -22,7 +21,7 @@ export const useNewTabState = defineStore('newTab',
       showLogWindow: false,
 
       isPreferredDark: false,
-      themeMode: true, // true => system, false => manual
+      themeMode: false, // true => system, false => manual
       theme: 'light', // light, dark
 
       layoutMode: 'clean', // clean, list
@@ -64,9 +63,7 @@ export const useNewTabState = defineStore('newTab',
     }
 
     function setLocalWallpaper(url: string) {
-      data.wallpaper.url = url
-      data.wallpaper.mode = 'local'
-      data.wallpaper = { ...data.wallpaper }
+      data.wallpaper = { ...data.wallpaper, url, mode: 'local' }
     }
 
     function changeSettingDrawer() {
@@ -97,7 +94,7 @@ export const useNewTabState = defineStore('newTab',
     }
 
     function setThemeMode() {
-      const mode = useConfigState().all?.base.themeMode ?? true
+      const mode = useConfigState().all.base.themeMode
       data.themeMode = mode
       if (mode)
         changeTheme(data.isPreferredDark ? 'dark' : 'light')
@@ -147,8 +144,8 @@ export const useNewTabState = defineStore('newTab',
   },
   {
     persist: {
-      key: 'newTab',
-      storage: storeState,
+      key: 'newTabStore',
+      paths: undefined,
     },
   },
 )

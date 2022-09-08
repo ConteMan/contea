@@ -19,7 +19,7 @@ export interface DexieDriver extends AsyncAbstractDriverInterface {
   all(): Promise<KMap<any>>
   getLength(): Promise<number>
   paginate(
-    currentPpage: number,
+    currentPage: number,
     num: number,
     orderBy?: string | Array<string>,
     isReverse?: boolean,
@@ -54,7 +54,7 @@ export const decode = (value: Record<string, unknown>) => {
 
 class DexieDriverFactory extends AsyncAbstractDriverFactory {
   make<
-    DataType,
+    DataType extends Record<string, any>,
     DriverType extends
     | AsyncAbstractDriverInterface
     | SyncAbstractDriverInterface
@@ -248,20 +248,20 @@ class DexieDriverFactory extends AsyncAbstractDriverFactory {
       },
 
       async paginate(
-        currentPpage: number,
+        currentPage: number,
         num: number,
         orderBy?: string | Array<string>,
         isReverse?: boolean,
       ) {
-        if (currentPpage < 1)
-          currentPpage = 1
+        if (currentPage < 1)
+          currentPage = 1
         const query = this.query()
         if (undefined !== orderBy)
           query.orderBy(orderBy)
         if (undefined !== isReverse)
           query.reverse()
         const res: Array<Record<string, unknown>> = await query
-          .offset((currentPpage - 1) * num)
+          .offset((currentPage - 1) * num)
           .limit(num)
           .toArray()
 

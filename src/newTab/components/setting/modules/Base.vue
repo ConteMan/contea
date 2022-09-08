@@ -3,6 +3,7 @@ import type { SettingKeys } from '@setting/index'
 import type { ShowConfig } from '@services/base/model'
 import { configKeys } from '@services/base/model'
 import type { Ref } from 'vue'
+import { useNewTabState } from '@newTab/store/newTab'
 import Setting from '../index'
 
 const module: SettingKeys = 'base'
@@ -10,6 +11,8 @@ const module: SettingKeys = 'base'
 const setting = Setting(module, configKeys)
 const { rules, resetLoading, reset, initConfig, initConfigLoading } = setting
 const { model }: { model: Ref<ShowConfig> } = setting
+
+const newTabState = useNewTabState()
 </script>
 
 <template>
@@ -43,7 +46,7 @@ const { model }: { model: Ref<ShowConfig> } = setting
     </n-form-item>
 
     <n-form-item label="主题模式">
-      <n-switch v-model:value="model.themeMode" size="small" :round="false">
+      <n-switch v-model:value="model.themeMode" size="small" :round="false" @update:value="newTabState.setThemeMode()">
         <template #checked>
           系统
         </template>
