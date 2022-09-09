@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { usePreferredDark } from '@vueuse/core'
 import type { GlobalThemeOverrides } from 'naive-ui'
+import { usePreferredDark } from '@vueuse/core'
 import { NConfigProvider, darkTheme, dateZhCN, zhCN } from 'naive-ui'
 import { useNewTabState } from '@newTab/store/newTab'
 import AppContent from '@newTab/layout/AppContent.vue'

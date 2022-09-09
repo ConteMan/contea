@@ -5,7 +5,7 @@ import configState from '@models/keyValue/configState'
  * 快捷键切换标签页模式
  */
 export async function changeMode(extensionId: string) {
-  const defaultPath = '/index'
+  const defaultPath = '/'
   const tabs = await browser.tabs.query({ currentWindow: true })
 
   // 判断页面是否为扩展页面

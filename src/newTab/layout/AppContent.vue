@@ -12,9 +12,9 @@ import { useModalState } from '@newTab/store/modal'
 import { useNewTabState } from '@newTab/store/newTab'
 import { useAlarmState } from '@newTab/store/alarm'
 
-const searchKey = 'q'
-const zenKey = 'z'
-const settingKey = 's'
+const SEARCH_KEY = 'q'
+const ZEN_KEY = 'z'
+const SETTING_KEY = 's'
 
 const newTabState = useNewTabState()
 const alarmState = useAlarmState()
@@ -59,18 +59,18 @@ const notUsingInput = computed(() =>
   && activeElement.value?.tagName !== 'TEXTAREA',
 )
 
-// 监听按键事件
+// 监听按键事件（非输入模式下）
 useEventListener(window, 'keyup', (e: any) => {
   // 搜索
-  if (e.key === searchKey && notUsingInput.value)
+  if (e.key === SEARCH_KEY && notUsingInput.value)
     modalState.change(true)
 
-  // 布局模式切换
-  if (e.key === zenKey && notUsingInput.value) // 非输入模式
+  // 模式切换
+  if (e.key === ZEN_KEY && notUsingInput.value)
     changeMode()
 
-  // 显示/隐藏设置抽屉
-  if (e.key === settingKey && notUsingInput.value)
+  // 显示/隐藏设置
+  if (e.key === SETTING_KEY && notUsingInput.value)
     newTabState.changeSettingDrawer()
 })
 </script>
