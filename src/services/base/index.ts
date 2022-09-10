@@ -1,4 +1,4 @@
-import infoList from '@models/list/infoList'
+import InfoModel from '@models/info'
 
 interface Paginate {
   currentPage: number
@@ -14,9 +14,9 @@ class Base {
    * @param module 模块名称
    * @returns []
    */
-  async listByModule(paginate: Paginate, module: ('sspai' | 'v2ex') = 'v2ex', moduleType: string[] = []) {
+  async listByModule(paginate: Paginate, module: 'sspai' = 'sspai', moduleType: string[] = []) {
     const { currentPage = 1, num = 10 } = paginate
-    const res = await infoList.storage.query()
+    const res = await InfoModel.query()
       .orderBy('ca_sort_at')
       .filter((item) => {
         if (moduleType.length) {
@@ -36,9 +36,8 @@ class Base {
    * @returns []
    */
   async list(paginate: Paginate) {
-    const v2ex = await this.listByModule(paginate, 'v2ex')
     const sspai = await this.listByModule(paginate, 'sspai')
-    return [...v2ex, ...sspai]
+    return [...sspai]
   }
 }
 

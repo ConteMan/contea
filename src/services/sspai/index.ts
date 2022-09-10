@@ -1,19 +1,19 @@
 import dayjs from 'dayjs'
 import { defHttp } from '@utils/http/axios'
-import configState from '@models/keyValue/configState'
-import moduleState from '@models/keyValue/moduleState'
-import infoList from '@models/list/infoList'
+import ConfigModel from '@models/config'
+import Info from '@models/info'
 import { toDesktop } from '@services/desktop'
-import type { Paginate, User } from './model'
+import type { Paginate } from './model'
 class Sspai {
   private module = 'sspai'
+  private moduleInfoKey = 'sspai_module_info'
 
   /**
    * 登录检测
    * @returns boolean
    */
   async loginCheck() {
-    const { url } = await configState.getItem(this.module)
+    const { url } = await ConfigModel.getItem(this.module)
 
     try {
       const res = await browser.cookies.get({ url, name: 'sspai_jwt_token' })
@@ -37,7 +37,7 @@ class Sspai {
 
     const data = {} as any
     await Promise.all(moduleTypes.map(async (item) => {
-      data[item] = await moduleState.getItem(item) ?? {}
+      data[item] = await ConfigModel.getItem(this.moduleInfoKey) ?? {}
     }))
     return data
   }
@@ -70,7 +70,7 @@ class Sspai {
    * @returns string
    */
   async getToken() {
-    const { url } = await configState.getItem(this.module)
+    const { url } = await ConfigModel.getItem(this.module)
 
     const res = await browser.cookies.get({ url, name: 'sspai_jwt_token' })
     return res?.value
@@ -79,11 +79,12 @@ class Sspai {
   /**
    * 获取用户信息
    */
-  async moduleInfo(refresh = false): Promise<User> {
-    const { apiUrl } = await configState.getItem(this.module)
+  async moduleInfo(refresh = false) {
+    const { apiUrl } = await ConfigModel.getItem(this.module)
+    let cache = {}
     if (!refresh) {
-      const cache = await moduleState.getValidItem(this.module)
-      if (cache)
+      cache = await ConfigModel.getItem(this.moduleInfoKey)
+      if (Object.keys(cache))
         return cache
     }
 
@@ -96,7 +97,7 @@ class Sspai {
     })
 
     if (res.data.data)
-      return await moduleState.mergeSet(this.module, { data: res.data.data })
+      return await ConfigModel.mergeSet(this.moduleInfoKey, { data: res.data.data })
     else
       return {}
   }
@@ -107,7 +108,7 @@ class Sspai {
   async followActivity(paginate: Paginate = { limit: 10, offset: 0 }) {
     const moduleType = 'followActivity'
 
-    const { apiUrl } = await configState.getItem(this.module)
+    const { apiUrl } = await ConfigModel.getItem(this.module)
     const jwtToken = await this.getToken()
 
     const now = dayjs().unix()
@@ -123,22 +124,24 @@ class Sspai {
 
     const list: any = []
     data.forEach((item: any) => {
+      const dealItem = {
+        ca_module: this.module,
+        ca_module_type: moduleType,
+        ca_sort_at: item.data.released_time * 1000,
+
+        ca_data_id: item.data.id,
+        ca_author_slug: item.data.author.slug,
+
+        data: item,
+      }
       list.push(
-        {
-          ca_module: this.module,
-          ca_module_type: moduleType,
-          ca_sort_at: item.data.created_time * 1000,
-
-          ca_data_id: item.data.id,
-          ca_author_slug: item.data.author.slug,
-
-          ...item,
-        },
+        dealItem,
       )
     })
 
-    await infoList.deleteByModule(this.module, [moduleType])
-    await infoList.bulkSetItemByModule(list, ['ca_data_id', 'ca_author_slug'])
+    await Info.deleteByModule(this.module, [moduleType])
+    await Info.bulkSetItemByModule(list, ['ca_data_id'])
+
     await toDesktop(this.module, list)
 
     return list
@@ -149,7 +152,7 @@ class Sspai {
    * @param paginate Paginate - 分页数据
    */
   async commonList(moduleType = 'index', paginate: Paginate = { limit: 10, offset: 0 }) {
-    const { apiUrl } = await configState.getItem(this.module)
+    const { apiUrl } = await ConfigModel.getItem(this.module)
     const jwtToken = await this.getToken()
 
     const now = dayjs().unix()
@@ -165,22 +168,24 @@ class Sspai {
 
     const list: any = []
     data.forEach((item: any) => {
+      const dealItem = {
+        ca_module: this.module,
+        ca_module_type: moduleType,
+        ca_sort_at: item.released_time * 1000,
+
+        ca_data_id: item.id,
+        ca_author_slug: item.author.slug,
+
+        data: item,
+      }
       list.push(
-        {
-          ca_module: this.module,
-          ca_module_type: moduleType,
-          ca_sort_at: item.created_time * 1000,
-
-          ca_data_id: item.id,
-          ca_author_slug: item.author.slug,
-
-          ...item,
-        },
+        dealItem,
       )
     })
 
-    await infoList.deleteByModule(this.module, [moduleType])
-    await infoList.bulkSetItemByModule(list, ['ca_data_id', 'ca_author_slug'])
+    await Info.deleteByModule(this.module, [moduleType])
+    await Info.bulkSetItemByModule(list, ['ca_data_id'])
+
     await toDesktop(this.module, list)
 
     return list
@@ -207,14 +212,12 @@ class Sspai {
    * @param types [] - 类型数组
    */
   async lists(types: any[]) {
-    for (const type of types) {
-      if (type === 'followActivity')
-        await this.followActivity()
-      if (type === 'index')
-        await this.indexList()
-      if (type === 'matrix')
-        await this.matrixList()
-    }
+    if (types.includes('followActivity'))
+      await this.followActivity()
+    if (types.includes('index'))
+      await this.indexList()
+    if (types.includes('matrix'))
+      await this.matrixList()
     return true
   }
 }

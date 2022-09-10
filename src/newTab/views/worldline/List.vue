@@ -2,13 +2,13 @@
 import _ from 'lodash-es'
 
 import { useConfigState } from '@newTab/store/config'
-// import V2ex from './modules/V2ex.vue'
-// import Sspai from './modules/Sspai.vue'
+import V2ex from './modules/V2ex.vue'
+import Sspai from './modules/Sspai.vue'
+import Status from './modules/Status.vue'
 // import Jike from './modules/Jike.vue'
 // import Zhihu from './modules/Zhihu.vue'
 // import Movie from './modules/Movie.vue'
 // import Sport from './modules/Sport.vue'
-import Status from './modules/Status.vue'
 
 const activeKey = ref('')
 const changeActiveKey = (key: string) => {
@@ -25,14 +25,14 @@ const { all } = storeToRefs(configState)
 data.config = all
 
 const menuOptions = [
-  // {
-  //   label: 'V2EX',
-  //   key: 'v2ex',
-  // },
-  // {
-  //   label: '少数派',
-  //   key: 'sspai',
-  // },
+  {
+    label: 'V2EX',
+    key: 'v2ex',
+  },
+  {
+    label: '少数派',
+    key: 'sspai',
+  },
   // {
   //   label: '即刻',
   //   key: 'jike',
@@ -106,9 +106,9 @@ watch(dealMenuOptions, (newValue) => {
       />
     </div>
     <div class="worldline-tab-pane-container flex-1 w-0 h-full">
-      <!-- <V2ex v-if="activeKey === 'v2ex'" class="h-full" />
+      <V2ex v-if="activeKey === 'v2ex'" class="h-full" />
       <Sspai v-if="activeKey === 'sspai'" class="h-full" />
-      <Jike v-if="activeKey === 'jike'" class="h-full" />
+      <!-- <Jike v-if="activeKey === 'jike'" class="h-full" />
       <Zhihu v-if="activeKey === 'zhihu'" class="h-full" />
       <Movie v-if="activeKey === 'movie'" class="h-full" />
       <Sport v-if="activeKey === 'sport'" class="h-full" /> -->

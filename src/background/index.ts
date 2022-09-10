@@ -4,7 +4,7 @@ import type { message } from '@localTypes/message'
 import _ from 'lodash-es'
 import dayjs from 'dayjs'
 
-import ConfigState from '@models/keyValue/configState'
+// import ConfigState from '@models/keyValue/configState'
 import { ConfigModel } from '@models/index'
 import AlarmService from '@services/base/alarm'
 import { toDesktop } from '@services/desktop'
@@ -39,7 +39,7 @@ browser.runtime.onInstalled.addListener(async () => {
         })
     }
 
-    await ConfigState.init()
+    // await ConfigState.init()
     await ConfigModel.init()
   }
   catch (e) {

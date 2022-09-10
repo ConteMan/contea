@@ -7,6 +7,10 @@ class Base {
     this.currentTable = db
   }
 
+  query() {
+    return this.currentTable
+  }
+
   async reset() {
     return await this.currentTable.clear()
   }
@@ -26,6 +30,11 @@ class Base {
 
   async getItem(key: string) {
     const res = await this.currentTable.where('key').equals(key).first()
+    return res
+  }
+
+  async putItem(key: string, data: any) {
+    const res = await this.currentTable.put(key, data)
     return res
   }
 }

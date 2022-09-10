@@ -1,9 +1,9 @@
 import { setting as base } from '@services/base/model'
-import { setting as v2ex } from '@services/v2ex/model'
 import { setting as sspai } from '@services/sspai/model'
 import { setting as movie } from '@services/movie/model'
-import { setting as one } from '@services/one/model'
 
+// import { setting as one } from '@services/one/model'
+// import { setting as v2ex } from '@services/v2ex/model'
 // import { setting as weread } from '@services/weread/model'
 // import { setting as bgm } from '@services/bgm/model'
 // import { setting as github } from '@services/github/model'
@@ -19,11 +19,11 @@ import { setting as one } from '@services/one/model'
 // import { setting as sync } from '@services/sync/model'
 
 export const modules = [
-  'v2ex',
   'sspai',
   'movie',
-  'one',
 
+  // 'v2ex',
+  // 'one',
   // 'weread',
   // 'github',
   // 'juejin',
@@ -41,11 +41,11 @@ export const modules = [
 
 export interface Setting {
   base: typeof base
-  v2ex: typeof v2ex
   sspai: typeof sspai
   movie: typeof movie
-  one: typeof one
 
+  // v2ex: typeof v2ex
+  // one: typeof one
   // weread: typeof weread
   // bgm: typeof bgm
   // github: typeof github
@@ -65,11 +65,11 @@ export type SettingKeys = keyof Setting
 
 export default {
   base,
-  v2ex,
   sspai,
   movie,
-  one,
 
+  // v2ex,
+  // one,
   // weread,
   // bgm,
   // github,

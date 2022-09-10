@@ -1,7 +1,7 @@
 import type { SettingKeys } from '@setting/index'
 
-import configState from '@models/keyValue/configState'
-import requestState from '@models/keyValue/requestState'
+import ConfigModel from '@models/config'
+import CacheModel from '@models/cache'
 
 class RequestCache {
   /**
@@ -12,7 +12,7 @@ class RequestCache {
   async get(key: any[], withExpired = true) {
     const now = new Date().getTime()
     const keyString = key.join('_')
-    const res = await requestState.storage.query().get(keyString)
+    const res = await CacheModel.getItem(keyString)
     if (!res || !res?.ca_expired_at || res?.ca_expired_at < now)
       return false
 
@@ -31,7 +31,7 @@ class RequestCache {
    */
   async set(key: any[], data: any, module: SettingKeys = 'base', expired = 0) {
     if (!expired) {
-      const { expired: moduleExpired } = await configState.getItem(module)
+      const { expired: moduleExpired } = await ConfigModel.getItem(module)
       expired = parseInt(moduleExpired) ?? 0
     }
 
@@ -40,7 +40,7 @@ class RequestCache {
 
     data.ca_updated_at = now
     data.ca_expired_at = now + expired * 1000
-    await requestState.setItem(keyString, data)
+    await CacheModel.putItem(keyString, data)
 
     return data
   }

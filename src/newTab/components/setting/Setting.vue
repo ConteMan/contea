@@ -1,10 +1,12 @@
 <script setup lang="ts">
-const modules: any = {}
-const file = import.meta.globEager('./modules/*.vue')
+import type { Component } from 'vue'
+
+const modules: Record<string, Component> = {}
+const file: Record<string, Component> = import.meta.glob('./modules/*.vue', { import: 'default', eager: true })
 const paths = Object.keys(file)
 paths.forEach((path) => {
-  const key = path.replace('./modules/', '').replace('.vue', '')
-  modules[key] = file[path].default
+  const key = path.replace('\.\/modules\/', '').replace('.vue', '')
+  modules[key] = file[path]
 })
 
 const expandedNames = ref([])
@@ -16,15 +18,20 @@ const list = [
     component: modules.Base,
   },
   {
-    name: 'one',
-    title: '一个',
-    component: modules.One,
-  },
-  {
     name: 'sspai',
     title: '少数派',
     component: modules.Sspai,
   },
+  {
+    name: 'movie',
+    title: '影视',
+    component: modules.SettingItemMovie,
+  },
+  // {
+  //   name: 'one',
+  //   title: '一个',
+  //   component: modules.One,
+  // },
   // {
   //   name: 'bilibili',
   //   title: '哔哩哔哩',
@@ -45,12 +52,6 @@ const list = [
   //   title: '掘金',
   //   component: modules.SettingItemJuejin,
   // },
-  {
-    name: 'movie',
-    title: '影视',
-    component: modules.SettingItemMovie,
-  },
-
   // {
   //   name: 'sport',
   //   title: '体育',
@@ -99,7 +100,7 @@ const list = [
     <n-collapse v-model:expanded-names="expandedNames" class="max-w-full">
       <template v-for="item in list" :key="item.name">
         <n-collapse-item :name="item.name" :title="item.title">
-          <component :is="item.component" />
+          <Component :is="item.component" />
         </n-collapse-item>
       </template>
     </n-collapse>

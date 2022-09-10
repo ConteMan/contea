@@ -2,7 +2,7 @@
 import dayjs from 'dayjs'
 import 'dayjs/locale/zh-cn'
 import RelativeTime from 'dayjs/plugin/relativeTime'
-import configState from '@models/keyValue/configState'
+import ConfigModel from '@models/config'
 import { enumToObj } from '@utils/index'
 import Base from '@services/base'
 import Alarm from '@services/base/alarm'
@@ -34,7 +34,7 @@ const getTypes = () => {
 
 // 初始化
 const init = async () => {
-  data.config = await configState.getItem(module)
+  data.config = await ConfigModel.getItem(module)
   getTypes()
   await getData()
 }
@@ -86,32 +86,29 @@ const transformAction = (action: string) => {
     </div>
 
     <n-scrollbar class="sspai-content-container">
-      <n-back-top :right="10000" :bottom="8" to=".sspai-content-container" class="left-3 text-xl text-gray-400 shadow-none bg-transparent hover:(shadow-none text-[#fd2720])">
-        <bx-bx-arrow-to-top />
-      </n-back-top>
       <template v-for="item in list" :key="item.title">
         <div class="p-2 rounded-sm">
           <template v-if="item.ca_module_type === 'followActivity'">
-            <template v-if="['like_article', 'release_article'].includes(item.key)">
-              <a :href="`${config.site}/post/${item.data.id}`">
-                {{ item.data.title }}
+            <template v-if="['like_article', 'release_article'].includes(item.data.key)">
+              <a :href="`${config.site}/post/${item.ca_data_id}`">
+                {{ item.data.data.title }}
               </a>
             </template>
           </template>
           <template v-if="['index', 'matrix'].includes(item.ca_module_type)">
-            <a :href="`${config.site}/post/${item.id}`">
-              {{ item.title }}
+            <a :href="`${config.site}/post/${item.ca_data_id}`">
+              {{ item.data.title }}
             </a>
           </template>
           <div class="text-xs py-1">
             <span v-if="item.ca_module_type === 'followActivity'">
-              <a :href="`${config.site}/u/${item.author.slug}/updates`">{{ item.author.nickname }}</a> {{ transformAction(item.key) }} / <a :href="`${config.site}/u/${item.data.author.slug}/updates`">{{ item.data.author.nickname }}</a> /
+              <a :href="`${config.site}/u/${item.data.author.slug}/updates`">{{ item.data.author.nickname }}</a> {{ transformAction(item.data.key) }} / <a :href="`${config.site}/u/${item.data.author.slug}/updates`">{{ item.data.author.nickname }}</a> /
             </span>
             <template v-if="['index', 'matrix'].includes(item.ca_module_type)">
               <span>
-                <a :href="`${config.site}/u/${item.author.slug}/updates`">{{ item.author.nickname }}</a> /
+                <a :href="`${config.site}/u/${item.data.author.slug}/updates`">{{ item.data.author.nickname }}</a> /
               </span>
-              <span v-if="item.is_matrix">
+              <span v-if="item.data.is_matrix">
                 MATRIX /
               </span>
             </template>
