@@ -7,7 +7,7 @@ export async function getManifest() {
   const pkg = await fs.readJSON(r('package.json')) as typeof PkgType
 
   const manifest: Omit<Manifest.WebExtensionManifest, 'commands' | 'host_permissions'> & {
-    commands: Record<string, Manifest.WebExtensionManifest['commands']>
+    commands: Record<string, Manifest.WebExtensionManifestCommandsType>
     host_permissions: string[]
   } = {
     manifest_version: 3,
@@ -66,14 +66,12 @@ export async function getManifest() {
           default: 'Alt+Q',
           mac: 'Alt+Q',
         },
-        description: '激活新标签页',
       },
       'change-mode': {
         suggested_key: {
           default: 'Alt+W',
           mac: 'Alt+W',
         },
-        description: 'Change Mode',
       },
     },
   }

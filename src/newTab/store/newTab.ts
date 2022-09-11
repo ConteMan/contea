@@ -74,8 +74,8 @@ export const useNewTabState = defineStore('newTab',
       data.settingDrawerPosition = position
     }
 
-    function setLog(data: any) {
-      data.log = data
+    function setLog(log: any) {
+      data.log = log
     }
 
     function changeLogWindow() {
