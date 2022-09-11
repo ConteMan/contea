@@ -27,15 +27,15 @@ const list = [
     title: '影视',
     component: modules.Movie,
   },
+  {
+    name: 'bilibili',
+    title: '哔哩哔哩',
+    component: modules.Bilibili,
+  },
   // {
   //   name: 'one',
   //   title: '一个',
   //   component: modules.One,
-  // },
-  // {
-  //   name: 'bilibili',
-  //   title: '哔哩哔哩',
-  //   component: modules.SettingItemBilibili,
   // },
   // {
   //   name: 'github',

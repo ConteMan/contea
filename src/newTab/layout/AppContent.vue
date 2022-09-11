@@ -6,7 +6,7 @@ import { sleep } from '@utils/index'
 import AlarmService from '@services/base/alarm'
 
 import SearchModal from '@newTab/components/search/Search.vue'
-import SettingDrawer from '@newTab/components/setting/SettingDrawer.vue'
+import SettingDrawer from '@newTab/views/setting/SettingDrawer.vue'
 
 import { useModalState } from '@newTab/store/modal'
 import { useNewTabState } from '@newTab/store/newTab'

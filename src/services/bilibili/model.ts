@@ -26,3 +26,5 @@ export const setting: Config = {
     alarm: 10,
   },
 }
+
+export const configKeys = Object.keys(setting)

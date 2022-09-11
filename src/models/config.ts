@@ -55,8 +55,13 @@ export default new class ConfigModel extends Base {
    */
   async mergeSet(module: string, data: Record<string, any>) {
     const res = await this.currentTable.get({ key: module })
-    const mergeRes = deepMerge(res, data)
-    await this.currentTable.put(mergeRes)
+    if (res) {
+      const mergeRes = deepMerge(res, data)
+      await this.currentTable.put(mergeRes)
+    }
+    else {
+      await this.currentTable.add({ key: module, ...data })
+    }
 
     // 定时任务
     if (data?.enable || data?.alarm)

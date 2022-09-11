@@ -2,6 +2,7 @@ import ConfigModel from '@models/config'
 
 import sspai from '@services/sspai'
 import movie from '@services/movie'
+import bilibili from '@services/bilibili'
 
 class Alarm {
   /**
@@ -50,6 +51,11 @@ class Alarm {
       }
       case 'movie': {
         await movie.sync()
+        break
+      }
+      case 'bilibili': {
+        await bilibili.moduleInfo(true)
+        await bilibili.sign()
         break
       }
       default: {

@@ -51,7 +51,7 @@ browser.alarms.onAlarm.addListener(async (alarm: { name: string }) => {
     // eslint-disable-next-line no-console
     console.log(`[${SERVICE_WORKER_NAME}] >>> [bg] >> onAlarm > ${JSON.stringify(alarm)}`)
 
-    const DEAL_MODULES = ['sspai', 'movie']
+    const DEAL_MODULES = ['sspai', 'movie', 'bilibili']
     const REDIRECT_MODULES = ['one', 'v2ex']
     const { name } = alarm
 

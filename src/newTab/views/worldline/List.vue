@@ -46,7 +46,7 @@ const menuOptions = [
   //   key: 'sport',
   // },
   {
-    label: '状态',
+    label: '定时',
     key: 'status',
   },
 ]
