@@ -1,8 +1,10 @@
 import { defHttp } from '@utils/http/axios'
-import { toDesktop } from '@services/desktop'
+import { getEnable, toDesktop } from '@services/desktop'
 
 class Movie {
   private module = 'movie'
+  private URL_LIBVIO = 'https://www.libvio.me'
+  private URL_DDRK = 'https://ddys.tv'
 
   /**
    * 同步到桌面端
@@ -23,38 +25,24 @@ class Movie {
    */
   async syncLibvio() {
     try {
-      const typeRules: any = {
+      const typeRules: Record<string, any> = {
         latest: {
           url: '',
         },
-        film: {
-          url: '/type/1.html',
-        },
-        tv: {
-          url: '/type/2.html',
-        },
-        anime: {
-          url: '/type/4.html',
-        },
-        kj: {
-          url: '/type/15.html',
-        },
-        om: {
-          url: '/type/16.html',
-        },
       }
 
-      const url = 'https://www.libvio.me'
-
       const res = await defHttp.get({
-        url: `${url}${typeRules.latest.url}`,
+        url: `${this.URL_LIBVIO}${typeRules.latest.url}`,
       })
 
       if (res.data) {
-        await toDesktop('libvio', {
-          type: 'list-latest',
-          html: res.data,
-        })
+        const enableDesktop = await getEnable()
+        if (enableDesktop) {
+          await toDesktop('libvio', {
+            type: 'list-latest',
+            html: res.data,
+          })
+        }
       }
 
       return true
@@ -69,23 +57,24 @@ class Movie {
    */
   async syncDdrk() {
     try {
-      const typeRules: any = {
+      const typeRules: Record<string, any> = {
         latest: {
           url: '',
         },
       }
 
-      const url = 'https://ddys.tv'
-
       const res = await defHttp.get({
-        url: `${url}${typeRules.latest.url}`,
+        url: `${this.URL_DDRK}${typeRules.latest.url}`,
       })
 
       if (res.data) {
-        await toDesktop('ddrk', {
-          type: 'list-latest',
-          html: res.data,
-        })
+        const enableDesktop = await getEnable()
+        if (enableDesktop) {
+          await toDesktop('ddrk', {
+            type: 'list-latest',
+            html: res.data,
+          })
+        }
       }
 
       return true

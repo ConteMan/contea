@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 import { defHttp } from '@utils/http/axios'
 import ConfigModel from '@models/config'
 import Info from '@models/info'
-import { toDesktop } from '@services/desktop'
+import { getEnable, toDesktop } from '@services/desktop'
 import type { Paginate } from './model'
 class Sspai {
   private module = 'sspai'
@@ -142,7 +142,9 @@ class Sspai {
     await Info.deleteByModule(this.module, [moduleType])
     await Info.bulkSetItemByModule(list, ['ca_data_id'])
 
-    await toDesktop(this.module, list)
+    const enableDesktop = await getEnable()
+    if (enableDesktop)
+      await toDesktop(this.module, list)
 
     return list
   }
@@ -186,7 +188,9 @@ class Sspai {
     await Info.deleteByModule(this.module, [moduleType])
     await Info.bulkSetItemByModule(list, ['ca_data_id'])
 
-    await toDesktop(this.module, list)
+    const enableDesktop = await getEnable()
+    if (enableDesktop)
+      await toDesktop(this.module, list)
 
     return list
   }

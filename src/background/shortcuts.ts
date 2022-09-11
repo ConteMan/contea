@@ -1,5 +1,5 @@
 import type { message } from '@localTypes/message'
-import configState from '@models/keyValue/configState'
+import ConfigModel from '@models/config'
 
 /**
  * 快捷键切换标签页模式
@@ -24,7 +24,7 @@ export async function changeMode(extensionId: string) {
     return true
   })
 
-  const pagePath = (await configState.getItem('base'))?.[defaultPath] ?? defaultPath
+  const pagePath = (await ConfigModel.getItem('base'))?.[defaultPath] ?? defaultPath
   const pageUrl = `chrome-extension://${extensionId}/dist/newTab/index.html#${pagePath}`
 
   // 当前窗口存在新标签页

@@ -25,7 +25,7 @@ const list = [
   {
     name: 'movie',
     title: '影视',
-    component: modules.SettingItemMovie,
+    component: modules.Movie,
   },
   // {
   //   name: 'one',

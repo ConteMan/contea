@@ -1,22 +1,15 @@
-// import dayjs from 'dayjs'
-
-import configState from '@models/keyValue/configState'
 import ConfigModel from '@models/config'
-// import moduleState from '@models/keyValue/moduleState'
-// import requestState from '@models/keyValue/requestState'
 
-// import v2ex from '@services/v2ex'
-// import one from '@services/one'
 import sspai from '@services/sspai'
 import movie from '@services/movie'
 
-class AlarmSetting {
+class Alarm {
   /**
    * 设置定时任务
    * @param module - 模块名称
    */
   async setAlarm(module: string) {
-    const { enable, alarm } = await configState.getItem(module)
+    const { enable, alarm } = await ConfigModel.getItem(module)
 
     const exist = await browser.alarms.get(module)
     if (exist) {
@@ -43,44 +36,13 @@ class AlarmSetting {
    * @param module string - 模块名称
    */
   async dealAlarm(module: string) {
-    // eslint-disable-next-line no-console
-    console.log('>>> Services >> base alarm > dealAlarm - module: ', module)
-
     const configInfo = await ConfigModel.getItem(module)
-    // eslint-disable-next-line no-console
-    console.log('>>> Services >> base alarm > dealAlarm - configInfo: ', configInfo)
 
     const { enable } = configInfo
     if (!enable)
       return false
 
-    // const moduleInfo = await moduleState.storage.query().get(module)
-    // // eslint-disable-next-line no-console
-    // console.log('>>> Services >> base alarm > dealAlarm - moduleInfo: ', moduleInfo)
-
-    // if (module === 'base') {
-    //   const count = await requestState.clean()
-
-    //   // eslint-disable-next-line no-console
-    //   console.log('>>> Services >> base alarm > dealAlarm - requestState clean: ', count)
-    // }
-
     switch (module) {
-      // case 'v2ex': {
-      //   // const { enableTypes } = configInfo
-      //   // await v2ex.tabLists(enableTypes)
-
-      //   const { data } = moduleInfo
-      //   if (!data.mission || !data.mission?.date || dayjs().isAfter(dayjs(data.mission.date), 'day'))
-      //     await v2ex.mission()
-
-      //   await v2ex.updateModuleTypeData()
-      //   break
-      // }
-      // case 'one': {
-      //   await one.list(true)
-      //   break
-      // }
       case 'sspai': {
         const { enableTypes } = configInfo
         await sspai.lists(enableTypes)
@@ -98,4 +60,4 @@ class AlarmSetting {
   }
 }
 
-export default new AlarmSetting()
+export default new Alarm()

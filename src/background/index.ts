@@ -2,16 +2,13 @@ import type { Tabs } from 'webextension-polyfill'
 import type { message } from '@localTypes/message'
 
 import _ from 'lodash-es'
-import dayjs from 'dayjs'
 
-// import ConfigState from '@models/keyValue/configState'
 import { ConfigModel } from '@models/index'
 import AlarmService from '@services/base/alarm'
-import { toDesktop } from '@services/desktop'
 import { getVersion } from './version'
 import { changeMode } from './shortcuts'
 
-const EXTENSION_NAME = 'Contea'
+const EXTENSION_NAME = 'CONTEA'
 const EXTENSION_ID = browser.runtime.getURL('').replace(/chrome-extension:\/\/|\//g, '')
 const SERVICE_WORKER_NAME = `${EXTENSION_NAME}-${EXTENSION_ID}-${new Date().getTime()}-${_.random(10000, 99999)}`
 const DEV_VERSION_KEY = 'DEV_VERSION'
@@ -22,13 +19,10 @@ const DEV_ALARM_NAME = 'DEV_WATCH'
  */
 browser.runtime.onInstalled.addListener(async () => {
   try {
-    // eslint-disable-next-line no-console
-    console.log(`[${SERVICE_WORKER_NAME}] > [bg] > onInstalled`)
-
     const version = await getVersion()
 
     // eslint-disable-next-line no-console
-    console.log(`[${SERVICE_WORKER_NAME}] > [bg] > version > ${JSON.stringify(version)}`)
+    console.log(`[${SERVICE_WORKER_NAME}] >>> [bg] >> onInstalled / version ${JSON.stringify(version)}`)
 
     if (version.isDev) {
       await browser.storage.local.set({ [DEV_VERSION_KEY]: version })
@@ -39,12 +33,11 @@ browser.runtime.onInstalled.addListener(async () => {
         })
     }
 
-    // await ConfigState.init()
     await ConfigModel.init()
   }
   catch (e) {
     // eslint-disable-next-line no-console
-    console.log(`>>> [${SERVICE_WORKER_NAME}] >> [bg] > onInstalled error`, e)
+    console.log(`>>> [${SERVICE_WORKER_NAME}] >>> [bg] >> onInstalled error :`, e)
   }
 })
 
@@ -55,18 +48,18 @@ browser.runtime.onInstalled.addListener(async () => {
  */
 browser.alarms.onAlarm.addListener(async (alarm: { name: string }) => {
   try {
-    const { name } = alarm
-
     // eslint-disable-next-line no-console
-    console.log(`[${SERVICE_WORKER_NAME}] > [bg] > onAlarm > ${JSON.stringify(alarm)}`)
+    console.log(`[${SERVICE_WORKER_NAME}] >>> [bg] >> onAlarm > ${JSON.stringify(alarm)}`)
+
+    const DEAL_MODULES = ['sspai', 'movie']
+    const REDIRECT_MODULES = ['one', 'v2ex']
+    const { name } = alarm
 
     // 开发模式
     if (name === DEV_ALARM_NAME) {
       const currentVersion = await getVersion()
       const storage = await browser.storage.local.get([DEV_VERSION_KEY])
       const oldVersion = storage[DEV_VERSION_KEY]
-
-      toDesktop(DEV_ALARM_NAME, { now: dayjs().format('HH:mm:ss') }) // 发送给桌面端，判断活跃状态
 
       if (currentVersion.version === oldVersion.version)
         return
@@ -88,14 +81,16 @@ browser.alarms.onAlarm.addListener(async (alarm: { name: string }) => {
       return
     }
 
-    // 直接处理的模块
-    if (['sspai', 'movie'].includes(name))
+    // 直接处理
+    if (DEAL_MODULES.includes(name)) {
       await AlarmService.dealAlarm(name)
+      return
+    }
 
-    // 需前端页面处理的模块，发送消息到页面再进行处理
+    // 页面处理
     // 如果存在多个扩展页面，优先发送给激活状态页面，其他页面仅做同步
-    // 页面根据请求提交到后台，后台处理后返回结果，绕一圈主要是需要页面的 DOM 处理能力
-    if (['one', 'v2ex'].includes(name)) {
+    // 进一步操作：页面根据请求提交到后台，后台处理后返回结果，绕一圈主要是需要页面的 DOM 处理能力
+    if (REDIRECT_MODULES.includes(name)) {
       const extensionTabs: Tabs.Tab[] = []
       const tabs = await browser.tabs.query({})
 
@@ -112,23 +107,24 @@ browser.alarms.onAlarm.addListener(async (alarm: { name: string }) => {
       if (!extensionTabs.length)
         return
 
-      let message: message = { type: 'alarm', name }
+      let message: message = { type: 'alarm', name } // 直属消息，处理逻辑
       await browser.tabs.sendMessage(extensionTabs[0].id as number, message)
       extensionTabs.shift()
 
       if (!extensionTabs.length)
         return
 
-      message = { type: 'alarm-sync', name } // 同步消息
+      message = { type: 'alarm-sync', name } // 同步消息，同步处理结果
       extensionTabs.every((item: Tabs.Tab) => {
         browser.tabs.sendMessage(item.id as number, message)
         return true
       })
     }
+    return
   }
   catch (e) {
     // eslint-disable-next-line no-console
-    console.log(`[${SERVICE_WORKER_NAME}] > [bg] > onAlarm error`, e)
+    console.log(`[${SERVICE_WORKER_NAME}] >>> [bg] >> onAlarm error: `, e)
   }
 })
 
@@ -143,7 +139,7 @@ browser.commands.onCommand.addListener(async (command: string) => {
   }
   catch (e) {
     // eslint-disable-next-line no-console
-    console.log(`[${SERVICE_WORKER_NAME}] > [bg] > onCommand error`, e)
+    console.log(`[${SERVICE_WORKER_NAME}] >>> [bg] >> onCommand error: `, e)
   }
 })
 

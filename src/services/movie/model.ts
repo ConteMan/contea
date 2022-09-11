@@ -32,6 +32,8 @@ export const setting: Config = {
   },
 }
 
+export const configKeys = Object.keys(setting)
+
 export interface Item {
   title?: string
   [other: string]: any
