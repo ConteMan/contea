@@ -2,16 +2,16 @@
 import dayjs from 'dayjs'
 import 'dayjs/locale/zh-cn'
 import RelativeTime from 'dayjs/plugin/relativeTime'
-import ConfigModel from '@models/config'
+import { TypeEnum } from '@enums/sspaiEnum'
 import { enumToObj } from '@utils/index'
+import ConfigModel from '@models/config'
 import Base from '@services/base'
 import Alarm from '@services/base/alarm'
-import { TypeEnum } from '@enums/sspaiEnum'
-
-const module = 'sspai'
 
 dayjs.locale('zh-cn')
 dayjs.extend(RelativeTime)
+
+const module = 'sspai'
 
 const data = reactive({
   loading: false,
@@ -68,8 +68,8 @@ const transformAction = (action: string) => {
 </script>
 
 <template>
-  <div class="w-full flex flex-col">
-    <div class="w-full pt-2 pb-3 pl-2 flex items-center gap-2">
+  <div class="w-full flex">
+    <div class="flex-shrink-0 pt-[40px] pl-2 pr-6 flex flex-col items-center gap-4">
       <template v-for="item in data.moduleTypes" :key="item.key">
         <n-tag
           class="text-xs h-auto py-0.8"

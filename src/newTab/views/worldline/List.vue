@@ -97,7 +97,7 @@ watch(dealMenuOptions, (newValue) => {
 
 <template>
   <div ref="worldlineContainerRef" class="max-h-full flex">
-    <div class="worldline-menu h-full pt-8">
+    <div class="worldline-menu h-full pt-8 px-2">
       <n-menu
         v-model:value="activeKey"
         :options="dealMenuOptions"
