@@ -24,7 +24,7 @@ export const useNewTabState = defineStore('newTab',
       themeMode: false, // true => system, false => manual
       theme: 'light', // light, dark
 
-      layoutMode: 'clean', // clean, list
+      layoutMode: 'clean', // clean, list, card
     })
 
     const {
@@ -101,7 +101,12 @@ export const useNewTabState = defineStore('newTab',
     }
 
     function changeLayoutMode() {
-      data.layoutMode = data.layoutMode === 'clean' ? 'list' : 'clean'
+      if (data.layoutMode === 'clean')
+        data.layoutMode = 'list'
+      else if (data.layoutMode === 'list')
+        data.layoutMode = 'card'
+      else
+        data.layoutMode = 'clean'
     }
 
     function setLayoutMode(mode: 'clean' | 'list' | 'card') {

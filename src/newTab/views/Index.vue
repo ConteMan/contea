@@ -3,7 +3,8 @@ import { useElementBounding } from '@vueuse/core'
 import { useConfigState } from '@newTab/store/config'
 import { useNewTabState } from '@newTab/store/newTab'
 
-import WorldlineList from '@newTab/views/worldline/List.vue'
+import List from '@newTab/views/worldline/List.vue'
+import Card from '@newTab/views/card/Card.vue'
 import ActionBar from '@newTab/components/layout/ActionBar.vue'
 
 const data = reactive({
@@ -11,7 +12,6 @@ const data = reactive({
   wallpaperStyle: {} as any,
   config: {} as any,
   moduleContainerRef: null,
-  moduleTabRef: null,
   dealTabPaneHeight: '',
 })
 
@@ -19,13 +19,12 @@ const configState = useConfigState()
 const { all } = storeToRefs(configState)
 data.config = all
 
-const { moduleContainerRef, moduleTabRef } = toRefs(data)
+const { moduleContainerRef } = toRefs(data)
 const { height: containerHeight } = useElementBounding(moduleContainerRef)
-const { height: tabHeight } = useElementBounding(moduleTabRef)
-data.dealTabPaneHeight = `${containerHeight.value - tabHeight.value - 16}px`
+data.dealTabPaneHeight = `${containerHeight.value}px`
 
-watch([containerHeight, tabHeight], () => {
-  data.dealTabPaneHeight = `${containerHeight.value - tabHeight.value - 16}px`
+watch([containerHeight], () => {
+  data.dealTabPaneHeight = `${containerHeight.value}px`
 })
 
 const newTabState = useNewTabState()
@@ -54,17 +53,21 @@ watch(() => data.wallpaperInfo, (newWallpaperInfo) => {
     class="module-container fixed h-full w-full bg-cover"
     :style="data.wallpaperStyle"
   >
-    <div>
-      <div class="flex flex-grow" :style="{ 'max-height': data.dealTabPaneHeight }">
-        <div
-          v-if="newTabState.layoutMode !== 'clean'"
-          class="flex-grow max-h-full py-2"
-        >
-          <WorldlineList class="worldline-list h-full" />
-        </div>
+    <div class="flex flex-grow" :style="{ height: data.dealTabPaneHeight }">
+      <div
+        v-if="newTabState.layoutMode === 'list'"
+        class="flex-grow max-h-full py-2"
+      >
+        <List class="worldline-list h-full" />
       </div>
-
-      <ActionBar ref="moduleTabRef" />
+      <div
+        v-if="newTabState.layoutMode === 'card'"
+        class="w-full h-full flex justify-center items-center"
+      >
+        <Card />
+      </div>
     </div>
+
+    <ActionBar />
   </div>
 </template>

@@ -60,8 +60,8 @@ const handleChange = () => {
   <div>
     <div class="flex justify-end gap-2 zen-setting-container fixed bottom-4 right-8 text-[14px] rounded-md p-2 opacity-40 hover:(opacity-100)">
       <a class="icon-btn" title="布局模式" @click="newTabState.changeLayoutMode()">
-        <mdi-border-all-variant v-if="newTabState.layoutMode === 'clean'" />
-        <mdi-border-all v-else />
+        <mdi-apps v-if="newTabState.layoutMode === 'clean'" />
+        <mdi-apps-box v-else />
       </a>
 
       <a class="icon-btn" title="主题" @click="changeTheme()">
