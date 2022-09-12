@@ -1,14 +1,19 @@
 import { defineStore } from 'pinia'
 
-export const useModalState = defineStore('modal', {
-  state: () => {
-    return {
+export const useModalState = defineStore('modal',
+  () => {
+    const data = reactive({
       show: false,
+    })
+    const { show } = toRefs(data)
+
+    function change(status = false) {
+      data.show = status
+    }
+
+    return {
+      show,
+      change,
     }
   },
-  actions: {
-    change(status = false) {
-      this.show = status
-    },
-  },
-})
+)

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
 import { debouncedWatch, onKeyStroke, onStartTyping, useMouse } from '@vueuse/core'
-import { openSite } from '@utils/index'
+import { openSite as baseOpenSite } from '@utils/index'
 import { useModalState } from '@newTab/store/modal'
 
 const resultContainerHeight = 400 // 结果框的高度
@@ -32,10 +32,6 @@ const webSearch = [ // 搜索引擎列表
     name: 'Douban',
     url: 'https://www.douban.com/search?q=',
   },
-  {
-    name: 'Cupfox',
-    url: 'https://www.cupfox.com/search?key=',
-  },
 ]
 const defaultSearchIndex = 0
 
@@ -51,7 +47,14 @@ const { searchContent, result, divs } = toRefs(data)
 
 // 状态管理搜索状态
 const modalState = useModalState()
-const { show } = storeToRefs(modalState)
+const { show: modalShow } = storeToRefs(modalState)
+
+// 打开网址
+const openSite = async (url: string) => {
+  modalState.change(false)
+  await nextTick()
+  baseOpenSite(url, '_self')
+}
 
 // 清空搜索内容
 const clearSearch = () => {
@@ -89,7 +92,7 @@ const searchWeb = async () => {
 }
 
 // 初始化
-watch(show, (newValue) => {
+watch(modalShow, (newValue) => {
   if (newValue) {
     clearSearch()
     searchHistory()
@@ -109,7 +112,7 @@ debouncedWatch(searchContent, (newValue) => {
 // 输入框始终获取焦点
 const searchInputRef: any = ref(null)
 onStartTyping(() => {
-  if (show.value && !searchInputRef.value.active)
+  if (modalShow.value && !searchInputRef.value.active)
     searchInputRef.value.focus()
 })
 
@@ -172,7 +175,7 @@ onKeyStroke('Enter', (e) => {
     else {
       if (/^\w+[^\s]+(\.[^\s]+){1,}$/.test(data.searchContent)) {
         const realUrl = /^(http(s)?:\/\/)(.){1,}/.test(data.searchContent) ? data.searchContent : `https://${data.searchContent}`
-        browser.tabs.create({ active: true, url: realUrl })
+        openSite(realUrl)
       }
       else {
         openSite(`${webSearch[defaultSearchIndex].url}${data.searchContent}`)
@@ -187,6 +190,8 @@ onKeyStroke('Enter', (e) => {
   // 搜索引擎模式
   if ([3].includes(data.searchMode))
     openSite(`${data.result[data.index].url}${(data.searchContent).replace('s ', '')}`)
+
+  e.preventDefault()
 })
 
 onKeyStroke('Tab', (e) => {
@@ -225,7 +230,7 @@ watch(y, () => {
 
 <template>
   <n-modal
-    v-model:show="show"
+    v-model:show="modalShow"
     transform-origin="center"
     :auto-focus="true"
   >
