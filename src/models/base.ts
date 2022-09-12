@@ -1,4 +1,5 @@
 import type { Table } from 'dexie'
+import { modules } from '@setting/index'
 
 class Base {
   public currentTable: Table
@@ -15,8 +16,10 @@ class Base {
     return await this.currentTable.clear()
   }
 
-  async getAll(type: 'array' | 'obj' = 'array') {
-    const res = await this.currentTable.toArray()
+  async getAll(type: 'array' | 'obj' = 'array', keys = modules): Promise<(any[] | Record<string, any>)> {
+    const res = await this.currentTable
+      .filter(item => keys.includes(item.key))
+      .toArray()
 
     if (type === 'array')
       return res

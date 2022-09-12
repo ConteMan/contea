@@ -19,7 +19,7 @@ export const setting: Config = {
   liveApiUrl: 'https://api.live.bilibili.com',
   alarm: 60,
   expired: 3600,
-  showCard: true,
+  showCard: false,
   contentScript: {
     enable: true,
     url: 'https://www.bilibili.com',

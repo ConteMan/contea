@@ -61,13 +61,8 @@ export async function getManifest() {
       extension_pages: 'script-src \'self\'; object-src \'self\'',
     },
     commands: {
-      '_execute_browser_action': {
-        suggested_key: {
-          default: 'Alt+Q',
-          mac: 'Alt+Q',
-        },
-      },
       'change-mode': {
+        description: 'Change Mode',
         suggested_key: {
           default: 'Alt+W',
           mac: 'Alt+W',

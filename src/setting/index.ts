@@ -19,6 +19,7 @@ import { setting as bilibili } from '@services/bilibili/model'
 // import { setting as sync } from '@services/sync/model'
 
 export const modules = [
+  'base',
   'sspai',
   'movie',
   'bilibili',
