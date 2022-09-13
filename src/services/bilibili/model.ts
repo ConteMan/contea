@@ -13,7 +13,7 @@ export const setting: Config = {
   name: '哔哩哔哩',
   enable: false,
   site: 'https://www.bilibili.com', // 主站
-  tSite: 'https://t.bilibili.com/', // 动态
+  tSite: 'https://t.bilibili.com', // 动态
   spaceSite: 'https://space.bilibili.com', // 空间
   apiUrl: 'https://api.bilibili.com',
   liveApiUrl: 'https://api.live.bilibili.com',
@@ -28,3 +28,10 @@ export const setting: Config = {
 }
 
 export const configKeys = Object.keys(setting)
+
+export interface FeedParam {
+  type: 'all'
+  page: number
+  timezone_offset: number
+  offset?: string
+}

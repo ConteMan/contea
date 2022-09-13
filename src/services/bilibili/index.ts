@@ -1,5 +1,7 @@
 import { defHttp } from '@utils/http/axios'
 import ConfigModel from '@models/config'
+import type { FeedParam } from './model'
+
 class Bilibili {
   private module = 'bilibili'
   private MODULE_INFO_KEY = 'bilibili_module_info'
@@ -18,7 +20,7 @@ class Bilibili {
   }
 
   /**
-   * 个人信息
+   * 获取个人信息
    */
   async getProfile() {
     const { apiUrl } = await ConfigModel.getItem(this.module)
@@ -34,7 +36,7 @@ class Bilibili {
   }
 
   /**
-   * 个人信息 stat
+   * 获取个人信息 stat
    */
   async getStat() {
     const { apiUrl } = await ConfigModel.getItem(this.module)
@@ -50,7 +52,7 @@ class Bilibili {
   }
 
   /**
-   * 获取卡片信息，主要是头图
+   * 获取卡片信息
    * @param moduleInfo - 模块信息
    */
   async getCard(moduleInfo: any) {
@@ -72,7 +74,7 @@ class Bilibili {
   }
 
   /**
-   * 通过缓存获取模块信息
+   * 获取模块信息
    */
   async moduleInfo(refresh = false) {
     try {
@@ -117,6 +119,35 @@ class Bilibili {
     catch (e) {
       returnRes.success = false
       return returnRes
+    }
+  }
+
+  /**
+   * 动态信息流
+   * @param params - 参数
+   */
+  async feed(params: FeedParam = {
+    type: 'all',
+    page: 1,
+    timezone_offset: -480,
+  }) {
+    try {
+      const { apiUrl } = await ConfigModel.getItem(this.module)
+
+      const { type, page, timezone_offset, offset } = params
+      const res = await defHttp.get({
+        url: `${apiUrl}/x/polymer/web-dynamic/v1/feed/all`,
+        params: {
+          type,
+          page,
+          timezone_offset,
+          offset,
+        },
+      })
+      return res
+    }
+    catch (e) {
+      return false
     }
   }
 }
