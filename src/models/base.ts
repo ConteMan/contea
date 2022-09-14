@@ -41,13 +41,18 @@ class Base {
   }
 
   async putItem(key: string, data: any) {
-    return await this.currentTable.put(key, data)
+    const exist = await this.getItem(key)
+    if (exist) {
+      const dealData = { id: exist.id, ...data }
+      return await this.currentTable.put(dealData)
+    }
+    return false
   }
 
   async addOrUpdateItem(key: string, data: any) {
     const exist = await this.getItem(key)
     if (exist)
-      return await this.putItem(key, data)
+      return await this.currentTable.update(exist.id, data)
     else
       return await this.addItem(key, data)
   }

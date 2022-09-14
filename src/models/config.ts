@@ -43,7 +43,7 @@ export default new class ConfigModel extends Base {
       })
     }
     else {
-      await this.currentTable.put({ ...defaultSetting[module] })
+      await this.addOrUpdateItem(module, { ...defaultSetting[module] })
       await Alarm.setAlarm(module)
     }
   }
