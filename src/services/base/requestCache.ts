@@ -40,8 +40,8 @@ class RequestCache {
 
     data.ca_updated_at = now
     data.ca_expired_at = now + expired * 1000
-    await CacheModel.putItem(keyString, data)
 
+    await CacheModel.addOrUpdateItem(keyString, data)
     return data
   }
 }

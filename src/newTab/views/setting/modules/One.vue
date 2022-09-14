@@ -1,8 +1,8 @@
 <script setup lang="ts">
+import type { Ref } from 'vue'
 import type { SettingKeys } from '@setting/index'
 import type { ShowConfig } from '@services/one/model'
 import { configKeys } from '@services/one/model'
-import type { Ref } from 'vue'
 import Setting from '../index'
 
 const module: SettingKeys = 'one'
@@ -26,10 +26,6 @@ const { model }: { model: Ref<ShowConfig> } = setting
       <n-switch v-model:value="model.enable" size="small" :round="false" />
     </n-form-item>
 
-    <n-form-item label="卡片" path="showCard">
-      <n-switch v-model:value="model.showCard" size="small" :round="false" />
-    </n-form-item>
-
     <n-form-item label="定时" path="alarm">
       <n-input-number v-model:value="model.alarm" class="w-full">
         <template #suffix>
@@ -38,12 +34,8 @@ const { model }: { model: Ref<ShowConfig> } = setting
       </n-input-number>
     </n-form-item>
 
-    <n-form-item label="过期" path="expired">
-      <n-input-number v-model:value="model.expired" class="w-full">
-        <template #suffix>
-          分钟
-        </template>
-      </n-input-number>
+    <n-form-item label="卡片" path="showCard">
+      <n-switch v-model:value="model.showCard" size="small" :round="false" />
     </n-form-item>
 
     <n-form-item label="重置">

@@ -33,7 +33,7 @@ browser.runtime.onInstalled.addListener(async () => {
         })
     }
 
-    await ConfigModel.init()
+    await ConfigModel.init() // #1 安装时，初始化
   }
   catch (e) {
     // eslint-disable-next-line no-console
@@ -52,7 +52,7 @@ browser.alarms.onAlarm.addListener(async (alarm: { name: string }) => {
     console.log(`[${SERVICE_WORKER_NAME}] >>> [bg] >> onAlarm > ${JSON.stringify(alarm)}`)
 
     const DEAL_MODULES = ['sspai', 'movie', 'bilibili']
-    const REDIRECT_MODULES = ['one', 'v2ex']
+    const REDIRECT_MODULES = ['one']
     const { name } = alarm
 
     // 开发模式

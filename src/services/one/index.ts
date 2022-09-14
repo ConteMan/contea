@@ -1,8 +1,7 @@
 import _ from 'lodash-es'
-import ConfigState from '@models/keyValue/configState'
+import ConfigModel from '@models/config'
 import RequestCache from '@services/base/requestCache'
 import { defHttp } from '@utils/http/axios'
-import { toDesktop } from '@services/desktop'
 
 class One {
   private module = 'one'
@@ -20,12 +19,10 @@ class One {
           return cacheData
       }
 
-      const { site } = await ConfigState.getItem(this.module)
+      const { site } = await ConfigModel.getItem(this.module)
 
       const res = await defHttp.get({ url: site })
       const dealRes = this.domDeal(res.data)
-
-      toDesktop(this.module, dealRes)
 
       // eslint-disable-next-line no-console
       console.log('>>> Services >> one > list', dealRes)
@@ -33,6 +30,8 @@ class One {
       return await RequestCache.set(cacheKey, { data: dealRes })
     }
     catch (error) {
+      // eslint-disable-next-line no-console
+      console.log('>>> Services >> one > list error', error)
       return false
     }
   }

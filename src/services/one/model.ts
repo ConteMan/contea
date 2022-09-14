@@ -11,7 +11,7 @@ export const setting: Config = {
   key: 'one',
   name: '一个',
   enable: true,
-  site: 'http://wufazhuce.com/',
+  site: 'http://wufazhuce.com',
   apiUrl: '',
   expired: 86400,
   token: '',

@@ -31,14 +31,25 @@ class Base {
     return objRes
   }
 
-  async getItem(key: string) {
-    const res = await this.currentTable.where('key').equals(key).first()
-    return res
+  async getItem(key: string, index = 'key') {
+    return await this.currentTable.where(index).equals(key).first()
+  }
+
+  async addItem(key: string, data: any) {
+    const dealData = { ...data, key }
+    return await this.currentTable.add(dealData)
   }
 
   async putItem(key: string, data: any) {
-    const res = await this.currentTable.put(key, data)
-    return res
+    return await this.currentTable.put(key, data)
+  }
+
+  async addOrUpdateItem(key: string, data: any) {
+    const exist = await this.getItem(key)
+    if (exist)
+      return await this.putItem(key, data)
+    else
+      return await this.addItem(key, data)
   }
 }
 

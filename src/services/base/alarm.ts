@@ -3,6 +3,7 @@ import ConfigModel from '@models/config'
 import sspai from '@services/sspai'
 import movie from '@services/movie'
 import bilibili from '@services/bilibili'
+import one from '@services/one'
 
 class Alarm {
   /**
@@ -56,6 +57,10 @@ class Alarm {
       case 'bilibili': {
         await bilibili.moduleInfo(true)
         await bilibili.sign()
+        break
+      }
+      case 'one': {
+        await one.list(true)
         break
       }
       default: {

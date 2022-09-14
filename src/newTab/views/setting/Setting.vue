@@ -32,11 +32,11 @@ const list = [
     title: '哔哩哔哩',
     component: modules.Bilibili,
   },
-  // {
-  //   name: 'one',
-  //   title: '一个',
-  //   component: modules.One,
-  // },
+  {
+    name: 'one',
+    title: '一个',
+    component: modules.One,
+  },
   // {
   //   name: 'github',
   //   title: 'Github',

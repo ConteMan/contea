@@ -2,8 +2,8 @@ import { setting as base } from '@services/base/model'
 import { setting as sspai } from '@services/sspai/model'
 import { setting as movie } from '@services/movie/model'
 import { setting as bilibili } from '@services/bilibili/model'
+import { setting as one } from '@services/one/model'
 
-// import { setting as one } from '@services/one/model'
 // import { setting as v2ex } from '@services/v2ex/model'
 // import { setting as weread } from '@services/weread/model'
 // import { setting as bgm } from '@services/bgm/model'
@@ -23,9 +23,9 @@ export const modules = [
   'sspai',
   'movie',
   'bilibili',
+  'one',
 
   // 'v2ex',
-  // 'one',
   // 'weread',
   // 'github',
   // 'juejin',
@@ -45,9 +45,9 @@ export interface Setting {
   sspai: typeof sspai
   movie: typeof movie
   bilibili: typeof bilibili
+  one: typeof one
 
   // v2ex: typeof v2ex
-  // one: typeof one
   // weread: typeof weread
   // bgm: typeof bgm
   // github: typeof github
@@ -64,14 +64,15 @@ export interface Setting {
 
 export type SettingKeys = keyof Setting
 
+// #2 默认初始配置
 export default {
   base,
   sspai,
   movie,
   bilibili,
+  one,
 
   // v2ex,
-  // one,
   // weread,
   // bgm,
   // github,
