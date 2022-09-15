@@ -1,75 +1,39 @@
 import { defHttp } from '@utils/http/axios'
 import { sleep } from '@utils/index'
-import configState from '@models/keyValue/configState'
-import moduleState from '@models/keyValue/moduleState'
-import type { Config } from './model'
-import { ModuleType } from './model'
+import ConfigModel from '@models/config'
 
 class WeRead {
-  private module = 'weread'
+  private MODULE = 'weread'
+  private MODULE_INFO_KEY = 'weread_module_info'
 
   /**
    * 登录检测
    * @returns boolean
    */
   async loginCheck(): Promise<boolean> {
-    return !!(await this.getUserId()) && !!(this.me())
+    return !!(await this.getUserId()) && !!(this.getUser())
   }
 
   /**
-   * 获取模块类型数据
-   * @param moduleTypes 要更新模块类型，数组
+   * 刷新登录
    */
-  async moduleTypeData(moduleTypes: string[] = []) {
-    if (!moduleTypes.length) {
-      moduleTypes = [
-        this.module,
-        `${this.module}_${ModuleType.MEMBER_CARD}`,
-        `${this.module}_${ModuleType.READ_DETAIL}`,
-      ]
+  async refreshLogin() {
+    try {
+      const { site: url } = await ConfigModel.getItem(this.MODULE)
+      await defHttp.get({ url })
+      await sleep(1000)
+      return true
     }
-
-    const data = {} as any
-    await Promise.all(moduleTypes.map(async (item) => {
-      data[item] = await moduleState.storage.query().get(item) ?? {}
-    }))
-    return data
+    catch (e) {
+      return false
+    }
   }
 
   /**
-   * 更新模块类型数据
-   * @param moduleTypes 要更新模块类型，数组
-   */
-  async updateModuleTypeData(moduleTypes: string[] = []) {
-    if (!moduleTypes.length) {
-      moduleTypes = [
-        this.module,
-        `${this.module}_${ModuleType.MEMBER_CARD}`,
-        `${this.module}_${ModuleType.READ_DETAIL}`,
-      ]
-    }
-
-    const relations = {
-      [this.module]: this.me(),
-      [`${this.module}_${ModuleType.MEMBER_CARD}`]: this.memberCard(),
-      [`${this.module}_${ModuleType.READ_DETAIL}`]: this.readDetail(),
-    }
-
-    await this.refreshLogin()
-
-    const data = {} as any
-    await Promise.all(moduleTypes.map(async (item) => {
-      data.item = await relations[item] ?? {}
-    }))
-
-    return data
-  }
-
-  /**
-   * 获取用户ID
+   * 获取用户 ID
    */
   async getUserId(times = 2): Promise<boolean | string> {
-    const { site: url } = await configState.getItem(this.module)
+    const { site: url } = await ConfigModel.getItem(this.MODULE)
 
     const res = await browser.cookies.get({ url, name: 'wr_vid' })
     if (res)
@@ -84,20 +48,10 @@ class WeRead {
   }
 
   /**
-   * 刷新登录
+   * 获取用户信息
    */
-  async refreshLogin() {
-    const { site: url } = await configState.getItem(this.module)
-    await defHttp.get({ url })
-    await sleep(1000)
-    return true
-  }
-
-  /**
-   * 获取个人信息
-   */
-  async me() {
-    const { apiUrl } = await configState.getItem(this.module)
+  async getUser() {
+    const { apiUrl } = await ConfigModel.getItem(this.MODULE)
 
     const userVid = await this.getUserId()
     if (!userVid)
@@ -113,7 +67,7 @@ class WeRead {
       if (res.data?.errCode)
         return false
       else
-        return await moduleState.mergeSet(this.module, { data: res.data })
+        return await ConfigModel.mergeSet(this.MODULE_INFO_KEY, { user: res.data })
     }
     catch (e) {
       return false
@@ -123,9 +77,8 @@ class WeRead {
   /**
    * 获取无限卡信息
    */
-  async memberCard() {
-    const cacheKey = `${this.module}_${ModuleType.MEMBER_CARD}`
-    const { apiUrl } = await configState.getItem(this.module)
+  async getMemberCard() {
+    const { apiUrl } = await ConfigModel.getItem(this.MODULE)
 
     try {
       const res = await defHttp.get({
@@ -137,7 +90,7 @@ class WeRead {
       if (res.data?.errCode)
         return false
       else
-        return await moduleState.mergeSet(cacheKey, { data: res.data }, false)
+        return await ConfigModel.mergeSet(this.MODULE_INFO_KEY, { memberCard: res.data })
     }
     catch (e) {
       return false
@@ -146,12 +99,11 @@ class WeRead {
 
   /**
    * 获取阅读详情
-   * @param type number - 类型
+   * @param type number - 类型，0 周数据，1 月数据
    * @param count number - 请求数量
    */
   async readDetail(type: 0 | 1 = 0, count = 1) {
-    const cacheKey = `${this.module}_${ModuleType.READ_DETAIL}`
-    const { apiUrl_2 } = await configState.getItem(this.module)
+    const { apiUrl_2 } = await ConfigModel.getItem(this.MODULE)
 
     try {
       const res = await defHttp.get({
@@ -173,7 +125,7 @@ class WeRead {
 
           data.readDetail.datas[0].readMeta.books = showBooks
         }
-        return await moduleState.mergeSet(cacheKey, { data }, false)
+        return await ConfigModel.mergeSet(this.MODULE_INFO_KEY, { readDetail: data })
       }
     }
     catch (e) {
@@ -186,7 +138,7 @@ class WeRead {
    * @param bookId string - 书籍ID
    */
   async bookInfo(bookId: string) {
-    const { apiUrl_2 } = await configState.getItem(this.module)
+    const { apiUrl_2 } = await ConfigModel.getItem(this.MODULE)
 
     if (!await this.loginCheck())
       return false
@@ -209,10 +161,32 @@ class WeRead {
   }
 
   /**
+   * 获取模块信息
+   */
+  async moduleInfo(refresh = false) {
+    try {
+      if (!refresh) {
+        const cache = await ConfigModel.getItem(this.MODULE_INFO_KEY)
+        if (cache)
+          return cache
+      }
+
+      await this.getUser()
+      await this.getMemberCard()
+      await this.readDetail()
+
+      return await ConfigModel.getItem(this.MODULE_INFO_KEY)
+    }
+    catch (e) {
+      return {}
+    }
+  }
+
+  /**
    * 获取书架信息
    */
   async shelf() {
-    const { apiUrl } = await configState.getItem(this.module) as Config
+    const { apiUrl } = await ConfigModel.getItem(this.MODULE)
 
     if (!await this.loginCheck())
       return false
@@ -235,7 +209,7 @@ class WeRead {
    * 获取书籍的文章列表
    */
   async bookArticles(bookId: string, count = 10, offset = 0) {
-    const { apiUrl_2 } = await configState.getItem(this.module) as Config
+    const { apiUrl_2 } = await ConfigModel.getItem(this.MODULE)
 
     if (!await this.loginCheck())
       return false

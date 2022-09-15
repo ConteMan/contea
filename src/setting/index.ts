@@ -3,9 +3,9 @@ import { setting as sspai } from '@services/sspai/model'
 import { setting as movie } from '@services/movie/model'
 import { setting as bilibili } from '@services/bilibili/model'
 import { setting as one } from '@services/one/model'
+import { setting as weread } from '@services/weread/model'
 
 // import { setting as v2ex } from '@services/v2ex/model'
-// import { setting as weread } from '@services/weread/model'
 // import { setting as bgm } from '@services/bgm/model'
 // import { setting as github } from '@services/github/model'
 // import { setting as jike } from '@services/jike/model'
@@ -24,9 +24,9 @@ export const modules = [
   'movie',
   'bilibili',
   'one',
+  'weread',
 
   // 'v2ex',
-  // 'weread',
   // 'github',
   // 'juejin',
   // 'wakatime',
@@ -46,9 +46,9 @@ export interface Setting {
   movie: typeof movie
   bilibili: typeof bilibili
   one: typeof one
+  weread: typeof weread
 
   // v2ex: typeof v2ex
-  // weread: typeof weread
   // bgm: typeof bgm
   // github: typeof github
   // jike: typeof jike
@@ -71,9 +71,9 @@ export default {
   movie,
   bilibili,
   one,
+  weread,
 
   // v2ex,
-  // weread,
   // bgm,
   // github,
   // jike,

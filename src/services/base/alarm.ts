@@ -4,6 +4,7 @@ import sspai from '@services/sspai'
 import movie from '@services/movie'
 import bilibili from '@services/bilibili'
 import one from '@services/one'
+import weread from '@services/weread'
 
 class Alarm {
   /**
@@ -61,6 +62,10 @@ class Alarm {
       }
       case 'one': {
         await one.list(true)
+        break
+      }
+      case 'weread': {
+        await weread.moduleInfo()
         break
       }
       default: {

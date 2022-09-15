@@ -37,6 +37,11 @@ const list = [
     title: '一个',
     component: modules.One,
   },
+  {
+    name: 'weread',
+    title: '微信读书',
+    component: modules.Weread,
+  },
   // {
   //   name: 'github',
   //   title: 'Github',
@@ -71,11 +76,6 @@ const list = [
   //   name: 'weather',
   //   title: '天气',
   //   component: modules.SettingItemWeather,
-  // },
-  // {
-  //   name: 'weread',
-  //   title: '微信读书',
-  //   component: modules.SettingItemWeread,
   // },
   // {
   //   name: 'zhihu',

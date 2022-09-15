@@ -15,7 +15,7 @@ export const setting: Config = {
   apiUrl_2: 'https://i.weread.qq.com',
   expired: 3600,
   alarm: 60,
-  showCard: true,
+  showCard: false,
 }
 
 export interface BaseUser {
@@ -34,10 +34,4 @@ export type User = BaseUser & {
   location?: string
 }
 
-/**
- * 模块类型
- */
-export enum ModuleType {
-  MEMBER_CARD = 'memberCard',
-  READ_DETAIL = 'readDetail',
-}
+export const configKeys = Object.keys(setting)

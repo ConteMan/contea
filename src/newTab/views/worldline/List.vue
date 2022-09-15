@@ -5,7 +5,9 @@ import { useConfigState } from '@newTab/store/config'
 import Sspai from './modules/Sspai.vue'
 import Bilibili from './modules/Bilibili.vue'
 import One from './modules/One.vue'
+import Weread from './modules/Weread.vue'
 import Status from './modules/Status.vue'
+
 // import V2ex from './modules/V2ex.vue'
 // import Jike from './modules/Jike.vue'
 // import Zhihu from './modules/Zhihu.vue'
@@ -34,6 +36,10 @@ const menuOptions = [
   {
     label: '哔哩哔哩',
     key: 'bilibili',
+  },
+  {
+    label: '微信读书',
+    key: 'weread',
   },
   {
     label: '一个',
@@ -119,6 +125,7 @@ watch(dealMenuOptions, (newValue) => {
       <Sspai v-if="activeKey === 'sspai'" class="h-full" />
       <Bilibili v-if="activeKey === 'bilibili'" class="h-full" />
       <One v-if="activeKey === 'one'" class="h-full" />
+      <Weread v-if="activeKey === 'weread'" class="h-full" />
       <Status v-if="activeKey === 'status'" class="h-full" />
       <!-- <V2ex v-if="activeKey === 'v2ex'" class="h-full" /> -->
       <!-- <Jike v-if="activeKey === 'jike'" class="h-full" />
