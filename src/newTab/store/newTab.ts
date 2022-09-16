@@ -113,6 +113,17 @@ export const useNewTabState = defineStore('newTab',
       data.layoutMode = mode
     }
 
+    const getDarkClass = () => {
+      if (data.theme === 'dark') {
+        document.querySelector('html')?.setAttribute('class', 'dark')
+        return true
+      }
+      else {
+        document.querySelector('html')?.removeAttribute('class')
+        return false
+      }
+    }
+
     return {
       tabSelected,
 
@@ -125,6 +136,7 @@ export const useNewTabState = defineStore('newTab',
       theme,
       themeMode,
       layoutMode,
+      getDarkClass,
 
       changeTab,
 

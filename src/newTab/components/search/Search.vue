@@ -305,7 +305,7 @@ watch(y, () => {
   </n-modal>
 </template>
 
-<style lang="less">
+<style lang="less" scoped>
 .search-input {
   border: none !important;
 }

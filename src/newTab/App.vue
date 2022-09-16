@@ -26,9 +26,15 @@ newTabState.changeIsPreferredDark(isPreferredDark.value)
 watch(isPreferredDark, (isDark) => {
   newTabState.changeIsPreferredDark(isDark)
 })
-data.theme = newTabState.theme === 'dark' ? darkTheme : null
+
+const themeDeal = (theme: string) => {
+  newTabState.getDarkClass()
+  return theme === 'dark' ? darkTheme : null
+}
+
+data.theme = themeDeal(newTabState.theme)
 watch(() => newTabState.theme, (newVal) => {
-  data.theme = newVal === 'dark' ? darkTheme : null
+  data.theme = themeDeal(newVal)
 })
 
 const themeOverrides: GlobalThemeOverrides = {
