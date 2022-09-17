@@ -81,7 +81,7 @@ const recentBooks = computed(() => {
               <a :href="`${config.site}/web/reader/${puzzling(item.bookId)}`"><img class="w-full h-full rounded-sm duration-300" :src="item.cover"></a>
             </div>
             <div class="mb-2">
-              <a :href="`${config.site}/web/reader/${puzzling(item.bookId)}`">《{{ item.title }}》</a>
+              <a :href="`${config.site}/web/reader/${puzzling(item.bookId)}`">{{ item.title }}</a>
             </div>
             <div>
               {{ item.author }}

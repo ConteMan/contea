@@ -39,11 +39,14 @@ export const useNewTabState = defineStore('newTab',
       layoutMode,
     } = toRefs(data)
 
+    // Tab
     const tabSelected = ref('worldline')
+
     function changeTab(name: string) {
       tabSelected.value = name
     }
 
+    // 背景
     async function changeWallpaper() {
       const info = await wallpaperService.random(data.wallpaper.source)
       if (info.url) {
@@ -66,6 +69,7 @@ export const useNewTabState = defineStore('newTab',
       data.wallpaper = { ...data.wallpaper, url, mode: 'local' }
     }
 
+    // 「设置」抽屉
     function changeSettingDrawer() {
       data.settingDrawer = !data.settingDrawer
     }
@@ -74,6 +78,7 @@ export const useNewTabState = defineStore('newTab',
       data.settingDrawerPosition = position
     }
 
+    // 日志
     function setLog(log: any) {
       data.log = log
     }

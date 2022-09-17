@@ -1,22 +1,21 @@
 <script setup lang="ts">
 import _ from 'lodash-es'
 
-import { useConfigState } from '@newTab/store/config'
+import { useConfigState, useNewTabState } from '@newTab/store/index'
+
 import Sspai from './modules/Sspai.vue'
 import Bilibili from './modules/Bilibili.vue'
 import One from './modules/One.vue'
 import Weread from './modules/Weread.vue'
 import Status from './modules/Status.vue'
 
-// import V2ex from './modules/V2ex.vue'
-// import Jike from './modules/Jike.vue'
-// import Zhihu from './modules/Zhihu.vue'
-// import Movie from './modules/Movie.vue'
-// import Sport from './modules/Sport.vue'
+const NewTabStore = useNewTabState()
+const { tabSelected } = storeToRefs(NewTabStore)
 
 const activeKey = ref('')
 const changeActiveKey = (key: string) => {
   activeKey.value = key
+  NewTabStore.changeTab(key)
 }
 
 const data = reactive({
@@ -24,6 +23,7 @@ const data = reactive({
   worldlineContainerRef: null,
   worldlineTabRef: null,
 })
+
 const configState = useConfigState()
 const { all } = storeToRefs(configState)
 data.config = all
@@ -49,24 +49,9 @@ const menuOptions = [
     label: '定时',
     key: 'status',
   },
-  // {
-  //   label: 'V2EX',
-  //   key: 'v2ex',
-  // },
-  // {
-  //   label: '即刻',
-  //   key: 'jike',
-  // },
-  // {
-  //   label: '知乎',
-  //   key: 'zhihu',
-  // },
-  // {
-  //   label: '体育',
-  //   key: 'sport',
-  // },
 ]
 
+// 处理菜单
 const dealMenuOptions = computed(() => {
   const specialKeys: string[] = []
 
@@ -76,15 +61,30 @@ const dealMenuOptions = computed(() => {
   return menuOptions.filter((item: any) => {
     if (specialKeys.length && specialKeys.includes(item.key))
       return true
-    if (item?.type && ['divider', 'system'].includes(item.type))
-      return true
     return _.findIndex(Object.values(data.config), (configItem: any) => {
       return toRaw(configItem.key) === item.key && toRaw(configItem.enable)
     }) > 0
   })
 })
 
-const getDefaultKey = (options: any[]) => {
+const dealMenuKeys = computed(() => {
+  const keys: string[] = []
+  dealMenuOptions.value.forEach((item) => {
+    keys.push(item.key)
+  })
+  return keys
+})
+
+// 处理默认选择 Tab
+const getDefaultKey = (options: any[], key = '') => {
+  if (key) {
+    const index = _.findIndex(options, (item: any) => {
+      return item.key === key
+    })
+    if (index)
+      return key
+  }
+
   const index = _.findIndex(options, (item: any) => {
     return item.type !== 'divider' && !item.disabled
   })
@@ -95,19 +95,22 @@ const getDefaultKey = (options: any[]) => {
 }
 
 const init = () => {
-  if (Object.values(dealMenuOptions.value).length)
-    activeKey.value = getDefaultKey(Object.values(dealMenuOptions.value))
+  if (dealMenuOptions.value.length)
+    activeKey.value = getDefaultKey(Object.values(dealMenuOptions.value), tabSelected.value)
 }
 init()
 
 watch(dealMenuOptions, (newValue) => {
-  if (!Object.values(newValue).length) {
+  if (!newValue.length) {
     activeKey.value = ''
+    NewTabStore.changeTab('')
     return
   }
 
-  if (!activeKey.value && Object.values(newValue).length)
+  if (!activeKey.value || !dealMenuKeys.value.includes(tabSelected.value)) {
     activeKey.value = getDefaultKey(Object.values(newValue))
+    NewTabStore.changeTab(activeKey.value)
+  }
 })
 </script>
 
@@ -127,11 +130,6 @@ watch(dealMenuOptions, (newValue) => {
       <One v-if="activeKey === 'one'" class="h-full" />
       <Weread v-if="activeKey === 'weread'" class="h-full" />
       <Status v-if="activeKey === 'status'" class="h-full" />
-      <!-- <V2ex v-if="activeKey === 'v2ex'" class="h-full" /> -->
-      <!-- <Jike v-if="activeKey === 'jike'" class="h-full" />
-      <Zhihu v-if="activeKey === 'zhihu'" class="h-full" />
-      <Movie v-if="activeKey === 'movie'" class="h-full" />
-      <Sport v-if="activeKey === 'sport'" class="h-full" /> -->
     </div>
   </div>
 </template>
