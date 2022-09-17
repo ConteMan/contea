@@ -5,7 +5,7 @@ import '@styles/index.less'
 import { createApp } from 'vue'
 import { createHead } from '@vueuse/head'
 import App from './App.vue'
-import store from './store'
+import store from './store/default'
 import router from './router'
 
 import { init } from './core'

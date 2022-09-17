@@ -1,6 +1,11 @@
-import { createPinia } from 'pinia'
-import piniaPluginPersist from 'pinia-plugin-persistedstate'
+import { useConfigState } from './config'
+import { useNewTabState } from './newTab'
+import { useModalState } from './modal'
+import { useAlarmState } from './alarm'
 
-const store = createPinia().use(piniaPluginPersist)
-
-export default store
+export {
+  useConfigState,
+  useNewTabState,
+  useModalState,
+  useAlarmState,
+}

@@ -19,7 +19,7 @@ export const useConfigState = defineStore('config',
     // 初始化
     async function setAll() {
       data.all = await ConfigModel.getAll('obj')
-      await dealSortList()
+      // await dealSortList()
     }
 
     // 排序，优先按照传入排序，没有的放在最后

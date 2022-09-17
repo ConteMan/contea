@@ -15,7 +15,10 @@ export default new class ConfigModel extends Base {
     this.currentTable = db.config
   }
 
-  // 对象转数组
+  /**
+   * 对象转数组
+   * @param data - 对象数据
+   */
   objToArr(data: Record<string, any>) {
     const keys = Object.keys(data)
     if (!keys.length)
@@ -36,7 +39,7 @@ export default new class ConfigModel extends Base {
       await this.reset()
 
       const setting = this.objToArr(defaultSetting)
-      await this.currentTable.bulkPut(setting)
+      await this.currentTable.bulkAdd(setting)
 
       Object.keys(defaultSetting).forEach((item) => {
         Alarm.setAlarm(item)

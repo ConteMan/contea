@@ -1,8 +1,8 @@
 import type { SettingKeys } from '@setting/index'
 import { useMessage } from 'naive-ui'
 import { useTimeoutFn, watchDebounced } from '@vueuse/core'
-import ConfigModel from '@models/config'
-import { useConfigState } from '@newTab/store/config'
+import { ConfigModel } from '@models/index'
+import { useConfigState } from '@newTab/store/index'
 
 export default (module: SettingKeys, configKeys: string[]) => {
   const message = useMessage()
@@ -22,17 +22,9 @@ export default (module: SettingKeys, configKeys: string[]) => {
     initConfigLoading,
   } = toRefs(data)
 
-  const ConfigStateStore = useConfigState()
+  const ConfigStore = useConfigState()
 
-  // 保存设置
-  const modelSet = async (module: SettingKeys, data: any) => {
-    // eslint-disable-next-line no-console
-    console.log(`${module} setting save`, data)
-    await ConfigModel.mergeSet(module, data)
-    await ConfigStateStore.setAll()
-  }
-
-  // 初始化
+  // 初始化，获取设置
   const init = async (module: SettingKeys) => {
     const showModel = {} as any
     const model = await ConfigModel.getItem(module)
@@ -40,33 +32,27 @@ export default (module: SettingKeys, configKeys: string[]) => {
       if (model?.[key])
         showModel[key] = model[key]
     })
-    // eslint-disable-next-line no-console
-    console.log(`${module} setting init >`, showModel)
     data.model = showModel
   }
+  init(module)
 
-  // 重置模块设置
+  // 保存设置
+  const modelSet = async (module: SettingKeys, data: any) => {
+    await ConfigModel.mergeSet(module, data)
+    await ConfigStore.setAll()
+  }
+
+  // 重置设置
   const reset = async (module: SettingKeys) => {
     data.resetLoading = true
     useTimeoutFn(async () => {
       await ConfigModel.init(module)
+      await ConfigStore.setAll()
+
       data.resetLoading = false
-      message.success('重置成功!')
+      message.success('#reset success!')
     }, 1000)
   }
-
-  // 初始化扩展设置
-  const initConfig = async () => {
-    data.initConfigLoading = true
-
-    useTimeoutFn(async () => {
-      await ConfigModel.init('all')
-      data.initConfigLoading = false
-      message.success('应用恢复默认成功!')
-    }, 1000)
-  }
-
-  init(module)
 
   // 自动保存
   watchDebounced(model, (newValue) => {
@@ -74,14 +60,25 @@ export default (module: SettingKeys, configKeys: string[]) => {
       hasInit.value = true
       return
     }
-    // eslint-disable-next-line no-console
-    console.log(`${module} setting watch model >`, toRaw(newValue))
     modelSet(module, toRaw(newValue))
   }, {
     deep: true,
     flush: 'post',
     debounce: 500,
   })
+
+  // 初始化 **全局** 设置
+  const initConfig = async () => {
+    data.initConfigLoading = true
+
+    useTimeoutFn(async () => {
+      await ConfigModel.init('all')
+      await ConfigStore.setAll()
+
+      data.initConfigLoading = false
+      message.success('#reset-all success!')
+    }, 1000)
+  }
 
   return {
     model,
@@ -90,6 +87,7 @@ export default (module: SettingKeys, configKeys: string[]) => {
     resetLoading,
     initConfigLoading,
     message,
+
     modelSet,
     init,
     reset,
