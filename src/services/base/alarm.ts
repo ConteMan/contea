@@ -45,34 +45,37 @@ class Alarm {
     if (!enable)
       return false
 
+    let result
+
     switch (module) {
       case 'sspai': {
         const { enableTypes } = configInfo
-        await sspai.lists(enableTypes)
+        result = await sspai.lists(enableTypes)
         break
       }
       case 'movie': {
-        await movie.sync()
+        result = await movie.sync()
         break
       }
       case 'bilibili': {
-        await bilibili.moduleInfo(true)
-        await bilibili.sign()
+        const moduleInfo = await bilibili.moduleInfo(true)
+        const sign = await bilibili.sign()
+        result = { moduleInfo, sign }
         break
       }
       case 'one': {
-        await one.list(true)
+        result = await one.list(true)
         break
       }
       case 'weread': {
-        await weread.moduleInfo()
+        result = await weread.moduleInfo(true)
         break
       }
       default: {
         break
       }
     }
-    return true
+    return result
   }
 }
 

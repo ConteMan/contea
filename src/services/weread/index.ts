@@ -1,6 +1,6 @@
 import { defHttp } from '@utils/http/axios'
 import { sleep } from '@utils/index'
-import ConfigModel from '@models/config'
+import { ConfigModel } from '@models/index'
 
 class WeRead {
   private MODULE = 'weread'
@@ -11,7 +11,16 @@ class WeRead {
    * @returns boolean
    */
   async loginCheck(): Promise<boolean> {
-    return !!(await this.getUserId()) && !!(this.getUser())
+    try {
+      const userId = await this.getUserId()
+      const user = await this.getUser()
+      if (userId && user)
+        return true
+      return await this.refreshLogin()
+    }
+    catch (e) {
+      return false
+    }
   }
 
   /**
@@ -20,9 +29,12 @@ class WeRead {
   async refreshLogin() {
     try {
       const { site: url } = await ConfigModel.getItem(this.MODULE)
-      await defHttp.get({ url })
+      const res = await defHttp.get({ url })
       await sleep(1000)
-      return true
+      if ([200].includes(res.status))
+        return true
+      else
+        return false
     }
     catch (e) {
       return false
@@ -32,18 +44,12 @@ class WeRead {
   /**
    * 获取用户 ID
    */
-  async getUserId(times = 2): Promise<boolean | string> {
+  async getUserId(): Promise<boolean | string> {
     const { site: url } = await ConfigModel.getItem(this.MODULE)
 
     const res = await browser.cookies.get({ url, name: 'wr_vid' })
     if (res)
       return res.value
-
-    if (times > 1) {
-      await this.refreshLogin()
-      return this.getUserId(--times)
-    }
-
     return false
   }
 
@@ -64,7 +70,7 @@ class WeRead {
           userVid,
         },
       })
-      if (res.data?.errCode)
+      if (res.status !== 200 || res.data?.errCode)
         return false
       else
         return await ConfigModel.mergeSet(this.MODULE_INFO_KEY, { user: res.data })
@@ -87,7 +93,7 @@ class WeRead {
           pf: 'ios',
         },
       })
-      if (res.data?.errCode)
+      if (res.status !== 200 || res.data?.errCode)
         return false
       else
         return await ConfigModel.mergeSet(this.MODULE_INFO_KEY, { memberCard: res.data })
@@ -113,7 +119,7 @@ class WeRead {
           count,
         },
       })
-      if (res.data?.errCode) {
+      if (res.status !== 200 || res.data?.errCode) {
         return false
       }
       else {
@@ -150,7 +156,7 @@ class WeRead {
           bookId,
         },
       })
-      if (res.data?.errCode)
+      if (res.status !== 200 || res.data?.errCode)
         return false
       else
         return res.data
@@ -171,14 +177,35 @@ class WeRead {
           return cache
       }
 
-      await this.getUser()
-      await this.getMemberCard()
-      await this.readDetail()
+      if (!await this.loginCheck()) {
+        return {
+          result: {
+            error: 'loginCheck fail',
+          },
+        }
+      }
 
-      return await ConfigModel.getItem(this.MODULE_INFO_KEY)
+      const user = await this.getUser()
+      const memberCard = await this.getMemberCard()
+      const readDetail = await this.readDetail()
+
+      const module = await ConfigModel.getItem(this.MODULE_INFO_KEY)
+
+      return {
+        ...module,
+        result: {
+          user,
+          memberCard,
+          readDetail,
+        },
+      }
     }
     catch (e) {
-      return {}
+      return {
+        result: {
+          error: e,
+        },
+      }
     }
   }
 
@@ -195,7 +222,7 @@ class WeRead {
       const res = await defHttp.get({
         url: `${apiUrl}/shelf/sync`,
       })
-      if (res.data?.errCode)
+      if (res.status !== 200 || res.data?.errCode)
         return false
       else
         return res.data
@@ -223,7 +250,7 @@ class WeRead {
           offset,
         },
       })
-      if (res.data?.errCode)
+      if (res.status !== 200 || res.data?.errCode)
         return false
       else
         return res.data

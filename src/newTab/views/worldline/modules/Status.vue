@@ -7,6 +7,7 @@ import SettingItem from '@newTab/components/template/SettingItem.vue'
 
 const alarms = ref({} as any)
 const loading = ref(false)
+const activeLoading = ref('')
 
 const getAlarms = async (refresh = false) => {
   if (refresh)
@@ -31,6 +32,14 @@ const deleteAlarm = async (name: string) => {
   console.log(res)
   await getAlarms()
 }
+
+const activeAlarm = async (name: string) => {
+  activeLoading.value = name
+  const res = await AlarmService.dealAlarm(name)
+  // eslint-disable-next-line no-console
+  console.log('>>> active alarm >> ', res)
+  activeLoading.value = ''
+}
 </script>
 
 <template>
@@ -51,7 +60,7 @@ const deleteAlarm = async (name: string) => {
           <div v-if="item.periodInMinutes" class="border-l-1 mx-2 w-[1px] h-[80%]" />
           <span v-if="item.periodInMinutes">{{ item.periodInMinutes }} min</span>
           <span class="border-l-1 mx-2 w-[1px] h-[80%]" />
-          <mdi-access-point class="cursor-pointer hover:(text-red-400)" @click="AlarmService.dealAlarm(item.name)" />
+          <mdi-access-point class="cursor-pointer hover:(text-red-400)" :class="{ 'animate-spin': activeLoading === item.name }" @click="activeAlarm(item.name)" />
           <mdi-delete class="cursor-pointer hover:(text-red-400)" @click="deleteAlarm(item.name)" />
         </template>
       </SettingItem>
