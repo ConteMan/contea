@@ -44,15 +44,21 @@ const refresh = async () => {
 
     <n-scrollbar class="sspai-content-container pt-8 pr-4">
       <template v-for="item in list" :key="item.vol">
-        <div class="p-4 mb-6 rounded-md hover:(bg-opacity-40)" :style="{ 'background-image': `linear-gradient(-45deg, rgb(229, 231, 231, 0.6), rgb(116, 115, 115, 70%)), url(${item.pic})` }">
-          <div>
-            <a :href="item.picTextLink">{{ item.date }} / {{ item.vol }} / {{ item.text }}</a>
-          </div>
-          <div>
-            <a :href="item.articleLink" class="cursor-pointer">《{{ item.articleTitle }}》 - {{ item.articleAuthor }}</a>
-          </div>
-          <div>
-            <a :href="item.questionLink" class="cursor-pointer">{{ item.questionTitle }}</a>
+        <div class="p-4 mb-6 rounded-md flex gap-4">
+          <a :href="item.picTextLink"><img :src="item.pic" class="h-full max-h-[160px] rounded-md"></a>
+          <div class="max-w-[720px] flex flex-col justify-start items-start gap-2">
+            <div class="mb-2">
+              <a :href="item.picTextLink">{{ item.date }} / {{ item.vol }}</a>
+            </div>
+            <div>
+              <a :href="item.picTextLink">{{ item.text }}</a>
+            </div>
+            <div>
+              <a :href="item.articleLink" class="cursor-pointer">《{{ item.articleTitle }}》<template v-if="item.articleAuthor"> - {{ item.articleAuthor }}</template></a>
+            </div>
+            <div>
+              <a :href="item.questionLink" class="cursor-pointer">{{ item.questionTitle }}</a>
+            </div>
           </div>
         </div>
       </template>
