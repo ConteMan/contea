@@ -169,7 +169,7 @@ const contentDeal = (content: string) => {
             <template v-if="item.type === 'DYNAMIC_TYPE_LIVE_RCMD'">
               <a :href="liveInfo(item.modules.module_dynamic.major.live_rcmd.content).live_play_info.link">{{ liveInfo(item.modules.module_dynamic.major.live_rcmd.content).live_play_info.title }}</a>
             </template>
-            <template v-if="['DYNAMIC_TYPE_DRAW', 'DYNAMIC_TYPE_FORWARD'].includes(item.type)">
+            <template v-if="['DYNAMIC_TYPE_DRAW', 'DYNAMIC_TYPE_FORWARD'].includes(item.type) && item.modules.module_dynamic.desc?.text">
               <a :href="`${config.tSite}/${item.id_str}`"><div v-html="contentDeal(item.modules.module_dynamic.desc.text)" /></a>
             </template>
             <template v-if="['DYNAMIC_TYPE_AV'].includes(item.type)">

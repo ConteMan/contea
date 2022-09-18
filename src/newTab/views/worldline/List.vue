@@ -14,9 +14,12 @@ const { tabSelected } = storeToRefs(NewTabStore)
 
 const activeKey = ref('')
 const changeActiveKey = (key: string) => {
-  activeKey.value = key
   NewTabStore.changeTab(key)
 }
+
+watch(tabSelected, (newValue) => {
+  activeKey.value = newValue
+})
 
 const data = reactive({
   config: {} as any,
@@ -51,7 +54,7 @@ const menuOptions = [
   },
 ]
 
-// 处理菜单
+// 处理后的菜单数组
 const dealMenuOptions = computed(() => {
   const specialKeys: string[] = []
 
@@ -61,17 +64,20 @@ const dealMenuOptions = computed(() => {
   return menuOptions.filter((item: any) => {
     if (specialKeys.length && specialKeys.includes(item.key))
       return true
-    return _.findIndex(Object.values(data.config), (configItem: any) => {
-      return toRaw(configItem.key) === item.key && toRaw(configItem.enable)
-    }) > 0
+    return _.findIndex(Object.values(data.config),
+      (configItem: any) => {
+        return toRaw(configItem.key) === item.key && toRaw(configItem.enable)
+      }) > 0
   })
 })
 
+// 处理后的菜单键数组
 const dealMenuKeys = computed(() => {
   const keys: string[] = []
   dealMenuOptions.value.forEach((item) => {
     keys.push(item.key)
   })
+  NewTabStore.setDealMenuKeys(keys)
   return keys
 })
 

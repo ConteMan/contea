@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia'
+import _ from 'lodash-es'
 import { reactive } from 'vue'
 import wallpaperService from '@services/wallpaper'
-import { useConfigState } from '@newTab/store/config'
+import { useConfigState } from '@newTab/store/index'
 
 export const useNewTabState = defineStore('newTab',
   () => {
@@ -40,10 +41,35 @@ export const useNewTabState = defineStore('newTab',
     } = toRefs(data)
 
     // Tab
-    const tabSelected = ref('worldline')
+    const tabSelected = ref('')
 
     function changeTab(name: string) {
       tabSelected.value = name
+    }
+
+    // Menu Keys
+    const dealMenuKeys = ref([] as string[])
+
+    function setDealMenuKeys(data: string[]) {
+      dealMenuKeys.value = data
+    }
+
+    // 切换下一个 Tab
+    function changeNextTab() {
+      const keyArr = dealMenuKeys.value
+      const length = keyArr.length
+
+      if (!length)
+        return false
+
+      const currentTab = tabSelected.value
+      const index = _.findIndex(keyArr, (item) => {
+        return item === currentTab
+      })
+      if (index < length - 1)
+        changeTab(keyArr[index + 1])
+      else
+        changeTab(keyArr[0])
     }
 
     // 背景
@@ -131,6 +157,7 @@ export const useNewTabState = defineStore('newTab',
 
     return {
       tabSelected,
+      dealMenuKeys,
 
       wallpaper,
       settingDrawer,
@@ -141,9 +168,11 @@ export const useNewTabState = defineStore('newTab',
       theme,
       themeMode,
       layoutMode,
-      getDarkClass,
 
+      getDarkClass,
+      setDealMenuKeys,
       changeTab,
+      changeNextTab,
 
       changeWallpaper,
       changeWallpaperMode,

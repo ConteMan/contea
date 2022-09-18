@@ -15,6 +15,7 @@ import { useAlarmState } from '@newTab/store/alarm'
 const SEARCH_KEY = 'q'
 const ZEN_KEY = 'z'
 const SETTING_KEY = 's'
+const TAB_CHANGE_KEY = 'Tab'
 
 const newTabState = useNewTabState()
 const alarmState = useAlarmState()
@@ -59,8 +60,30 @@ const notUsingInput = computed(() =>
   && activeElement.value?.tagName !== 'TEXTAREA',
 )
 
-// 监听按键事件（非输入模式下）
-useEventListener(window, 'keyup', (e: any) => {
+// 监听按键 按下 事件（非输入模式下）
+useEventListener(window, 'keydown', (e: KeyboardEvent) => {
+  // eslint-disable-next-line no-console
+  console.log('>>> AppContent >> useEventListener > window keydown event', e.key)
+
+  if (e.key === 'Enter' && notUsingInput.value) {
+    e.preventDefault()
+    e.stopPropagation()
+    e.stopImmediatePropagation()
+    return false
+  }
+})
+
+// 监听按键 完成 事件（非输入模式下）
+useEventListener(window, 'keyup', (e: KeyboardEvent) => {
+  // eslint-disable-next-line no-console
+  console.log('>>> AppContent >> useEventListener > window keyup event', e.key)
+
+  if (e.key === 'Enter' && notUsingInput.value) {
+    e.preventDefault()
+    e.stopPropagation()
+    return
+  }
+
   // 搜索
   if (e.key === SEARCH_KEY && notUsingInput.value)
     modalState.change(true)
@@ -72,6 +95,10 @@ useEventListener(window, 'keyup', (e: any) => {
   // 显示/隐藏设置
   if (e.key === SETTING_KEY && notUsingInput.value)
     newTabState.changeSettingDrawer()
+
+  // 切换 Tab
+  if (e.key === TAB_CHANGE_KEY && notUsingInput.value)
+    newTabState.changeNextTab()
 })
 </script>
 
