@@ -76,14 +76,14 @@ const recentBooks = computed(() => {
 
       <div class="flex flex-wrap gap-4">
         <template v-for="item in recentBooks" :key="item.bookId">
-          <div class="py-4 flex flex-col justify-start items-start w-[200px]">
+          <div class="py-4 flex flex-col justify-start items-start w-[160px]">
             <div class="mb-4">
               <a :href="`${config.site}/web/reader/${puzzling(item.bookId)}`"><img class="w-full h-full rounded-sm duration-300" :src="item.cover"></a>
             </div>
             <div class="mb-2">
               <a :href="`${config.site}/web/reader/${puzzling(item.bookId)}`">{{ item.title }}</a>
             </div>
-            <div>
+            <div class="text-[12px]">
               {{ item.author }}
             </div>
           </div>

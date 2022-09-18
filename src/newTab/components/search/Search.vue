@@ -2,9 +2,8 @@
 import dayjs from 'dayjs'
 import { debouncedWatch, onKeyStroke, onStartTyping, useMouse } from '@vueuse/core'
 import { openSite as baseOpenSite } from '@utils/index'
-import { useModalState } from '@newTab/store/modal'
+import { useModalState } from '@newTab/store/index'
 
-const resultContainerHeight = 400 // 结果框的高度
 const historyStart = 30 // 历史记录搜索开始，距离目前的天数
 const bookmarkRecent = 20 // 最近书签数量
 const webSearch = [ // 搜索引擎列表
@@ -147,7 +146,7 @@ const downAction = () => {
     return
 
   // 当前元素顶部距父元素顶部距离 + 元素高度 > 父元素滚动距离 + 父元素可视高度
-  if (data.divs[data.index].offsetTop - resultRef.value.offsetTop + data.divs[data.index].clientHeight > resultRef.value.scrollTop + resultContainerHeight) {
+  if (data.divs[data.index].offsetTop - resultRef.value.offsetTop + data.divs[data.index].clientHeight > resultRef.value.scrollTop + resultRef.value.clientHeight) {
     data.divs[data.index].scrollIntoView({
       behavior: 'smooth', // 平滑过渡
       block: 'end', // 下边框与视窗顶部平齐
@@ -234,13 +233,13 @@ watch(y, () => {
     transform-origin="center"
     :auto-focus="true"
   >
-    <div class="w-1/2">
+    <div class="absolute w-[40%] h-[80%] max-h-[400px] ml-[30%] rounded-md dark:(bg-dark-800 bg-opacity-60) flex flex-col">
       <n-input
         ref="searchInputRef"
         v-model:value="searchContent"
-        placeholder="Search"
+        class="search-input rounded-none border-none flex-shrink-0 flex-grow-0"
+        placeholder=" Search"
         size="large"
-        class="search-input"
       >
         <template #prefix>
           <transition
@@ -248,16 +247,16 @@ watch(y, () => {
             enter-active-class="animate__animated animate__faster animate__flipInX"
             leave-active-class="animate__animated animate__faster animate__flipOutX"
           >
-            <mdi-history v-if="data.searchMode === 1" class="mr-1" />
-            <mdi-book-outline v-else-if="data.searchMode === 2" class="mr-1" />
-            <icon-park-outline-search v-else class="mr-1" />
+            <mdi-history v-if="data.searchMode === 1" />
+            <mdi-book-outline v-else-if="data.searchMode === 2" />
+            <icon-park-outline-search v-else />
           </transition>
         </template>
       </n-input>
+      <div class="bg-light-400 h-[1px] flex-shrink-0 flex-grow-0 dark:(bg-gray-600)" />
       <div
         ref="resultRef"
-        :style="{ height: `${resultContainerHeight}px` }"
-        class="mt-2 rounded-sm bg-gray-400 overflow-y-auto"
+        class="overflow-y-auto flex-shrink flex-grow"
       >
         <!-- 书签、历史记录搜索模式  -->
         <template v-if="[1, 2].includes(data.searchMode)">
@@ -266,14 +265,14 @@ watch(y, () => {
             :key="hItem.lastVisitTime ?? hItem?.dateAdded"
             :ref="el => { if (el) divs[hIndex] = el }"
             class="py-2 px-4 cursor-pointer"
-            :class="{ 'bg-gray-200': active(hIndex) }"
+            :class="{ 'bg-hover': active(hIndex) }"
             @click="openSite(hItem.url)"
             @mouseover="setIndex(hIndex)"
           >
             <div class="truncate" :title="hItem.title">
               {{ hItem.title }}
             </div>
-            <div class="text-gray-400 text-xs italic truncate" :title="hItem.url">
+            <div class="text-xs text-opacity-60 italic truncate" :title="hItem.url">
               <span v-if="hItem?.lastVisitTime">{{ dayjs(hItem.lastVisitTime).format('MM-DD HH:mm') }}</span>
               <span v-if="hItem?.dateAdded">{{ dayjs(hItem.dateAdded).format('YYYY-MM-DD HH:mm') }}</span>
               / {{ hItem.url }}
@@ -288,14 +287,14 @@ watch(y, () => {
             :key="item.name"
             :ref="el => { if (el) divs[index] = el }"
             class="py-2 px-4 cursor-pointer"
-            :class="{ 'bg-gray-200': active(index) }"
+            :class="{ 'bg-hover': active(index) }"
             @click="openSite(`${item.url}${data.searchContent}`)"
             @mouseover="setIndex(index)"
           >
             <div class="truncate" :title="item.name">
               {{ item.name }}
             </div>
-            <div class="text-gray-400 text-xs italic truncate" :title="item.url">
+            <div class="text-xs text-opacity-60 italic truncate" :title="item.url">
               {{ item.url }}
             </div>
           </div>
@@ -308,5 +307,37 @@ watch(y, () => {
 <style lang="less" scoped>
 .search-input {
   border: none !important;
+  height: 60px;
+  border-top-left-radius: 0.375rem;
+  border-top-right-radius: 0.375rem;
+}
+.dark .search-input {
+  background-color: unset !important;
+}
+:deep(.n-input__border), :deep( .n-input__state-border) {
+  border: none;
+  box-shadow: none;
+  transition: none;
+}
+:deep(.n-input__prefix) {
+  font-size: 18px;
+  margin-right: 14px;
+}
+:deep(.n-input__placeholder) {
+  left: 4px;
+}
+:global(.n-input .n-input__input-el) {
+  height: 60px;
+  font-size: 20px;
+  caret-color: black;
+}
+:global(.dark .n-input .n-input__input-el) {
+  caret-color: red !important;
+}
+.bg-hover {
+  background-color: #EDECE9;
+}
+.dark .bg-hover {
+  background-color: #6b6b6bb5;
 }
 </style>
