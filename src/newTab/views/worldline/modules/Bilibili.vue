@@ -176,7 +176,7 @@ const contentDeal = (content: string) => {
               <a :href="`https:${item.modules.module_dynamic.major.archive.jump_url}`">{{ item.modules.module_dynamic.major.archive.title }}</a>
             </template>
           </div>
-          <div class="text-[12px] text-light-600 text-opacity-60">
+          <div class="text-[12px]">
             {{ item.modules.module_author.name }} {{ actionText(item.type, item.modules.module_author.pub_action) }} / {{ timeText(item.type, item.modules.module_author.pub_time, item.type === 'DYNAMIC_TYPE_LIVE_RCMD' ? item.modules.module_dynamic.major.live_rcmd.content : undefined) }}
           </div>
         </div>

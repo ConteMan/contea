@@ -326,13 +326,13 @@ watch(y, () => {
 :deep(.n-input__placeholder) {
   left: 4px;
 }
-:global(.n-input .n-input__input-el) {
+:global(.search-input.n-input .n-input__input-el) {
   height: 60px;
   font-size: 20px;
   caret-color: black;
 }
-:global(.dark .n-input .n-input__input-el) {
-  caret-color: red !important;
+:global(.dark .search-input.n-input .n-input__input-el) {
+  caret-color: white !important;
 }
 .bg-hover {
   background-color: #EDECE9;

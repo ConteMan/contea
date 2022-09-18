@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { SourceTypes } from '@services/wallpaper/model'
-import { useNewTabState } from '@newTab/store/newTab'
+import { useNewTabState } from '@newTab/store/index'
 
 const newTabState = useNewTabState()
 
@@ -58,7 +58,7 @@ const handleChange = () => {
 
 <template>
   <div>
-    <div class="flex justify-end gap-2 zen-setting-container fixed bottom-4 right-8 text-[14px] rounded-md p-2 opacity-40 hover:(opacity-100)">
+    <div class="action-container flex justify-end gap-2 fixed bottom-4 right-8 text-[14px] rounded-md p-2 hover:(opacity-100)">
       <a class="icon-btn" title="布局模式" @click="newTabState.changeLayoutMode()">
         <mdi-apps v-if="newTabState.layoutMode === 'clean'" />
         <mdi-apps-box v-else />
@@ -78,6 +78,8 @@ const handleChange = () => {
         :show-arrow="false"
         :overlap="false"
         :duration="100"
+        :to="false"
+        class="opacity-popover"
       >
         <template #trigger>
           <a class="icon-btn" title="背景透明度">
@@ -85,7 +87,7 @@ const handleChange = () => {
           </a>
         </template>
         <div
-          class="h-[200px] mb-[10px]"
+          class="h-[200px]"
         >
           <n-slider
             v-model:value="data.backgroundOpacity"
@@ -109,7 +111,7 @@ const handleChange = () => {
         <mdi-wallpaper />
       </a>
 
-      <a class="icon-btn" title="应用设置" @click="newTabState.changeSettingDrawer()">
+      <a class="icon-btn !opacity-40 hover:(!opacity-100)" title="应用设置" @click="newTabState.changeSettingDrawer()">
         <mdi-cog />
       </a>
     </div>
@@ -161,11 +163,32 @@ const handleChange = () => {
   </div>
 </template>
 
-<style>
+<style lang="less" scoped>
+:deep(.n-popover) {
+  border-radius: 1.5rem;
+  background: none;
+}
 .zen-opacity-slider {
   border-radius: 1.5rem;
 }
 .icon-btn {
   cursor: pointer;
+  opacity: 0;
+  &:hover {
+    opacity: 1;
+  }
+}
+.action-container {
+  &:hover {
+    background-color: #EDECE9;
+    .icon-btn {
+      opacity: 1 !important;
+    }
+  }
+}
+.dark .action-container {
+  &:hover {
+    background-color: #6b6b6bb5;
+  }
 }
 </style>

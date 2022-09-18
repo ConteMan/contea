@@ -4,7 +4,7 @@ import type { ShowConfig } from '@services/base/model'
 import type { Ref } from 'vue'
 
 import { configKeys } from '@services/base/model'
-import { useNewTabState } from '@newTab/store/newTab'
+import { useNewTabState } from '@newTab/store/index'
 import { checkConnect } from '@services/desktop'
 import Setting from '../index'
 
@@ -55,8 +55,8 @@ const newTabState = useNewTabState()
     </n-form-item>
     <n-form-item label="桌面端接口">
       <n-input v-model:value="model.desktopInterface" class="w-[80%]" />
-      <div v-if="model.desktopInterface" class="flex items-center px-2">
-        <mdi-wifi class="cursor-pointer" :style="{ color: model.desktopInterfaceStatus ? 'green' : 'red' }" @click="checkConnect()" />
+      <div v-if="model.desktopInterface" class="flex items-center px-2" :title="model.desktopInterfaceStatus ? 'success' : 'fail'">
+        <mdi-wifi class="cursor-pointer" :style="{ color: model.desktopInterfaceStatus ? 'green !important' : 'red !important' }" @click="checkConnect()" />
       </div>
     </n-form-item>
 
