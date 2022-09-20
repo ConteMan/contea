@@ -77,7 +77,9 @@ export const sharedConfig: UserConfig = {
         '@vueuse/core',
         '@vueuse/head',
         {
-          'webextension-polyfill': [['default', 'browser']],
+          'webextension-polyfill': [
+            ['*', 'browser'],
+          ],
           'naive-ui': ['useNotification'],
           'pinia': ['storeToRefs'],
           'dayjs': [['default', 'dayjs']],

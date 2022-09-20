@@ -1,5 +1,5 @@
-import ConfigModel from '@models/config'
 import { defHttp } from '@utils/http/axios'
+import { ConfigModel } from '@models/index'
 
 /**
  * 获取桌面端接口是否可用

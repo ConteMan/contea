@@ -3,8 +3,8 @@ import type { message } from '@localTypes/message'
 
 import _ from 'lodash-es'
 
-import { ConfigModel } from '@models/index'
 import AlarmService from '@services/base/alarm'
+import { ConfigModel } from '@models/index'
 import { getVersion } from './version'
 import { changeMode } from './shortcuts'
 

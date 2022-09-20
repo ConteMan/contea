@@ -7,20 +7,6 @@ class Movie {
   private URL_DDRK = 'https://ddys.tv'
 
   /**
-   * 同步到桌面端
-   */
-  async sync() {
-    try {
-      await this.syncLibvio()
-      await this.syncDdrk()
-      return true
-    }
-    catch (e) {
-      return false
-    }
-  }
-
-  /**
    * 同步 Libvio 到桌面端
    */
   async syncLibvio() {
@@ -77,6 +63,23 @@ class Movie {
         }
       }
 
+      return true
+    }
+    catch (e) {
+      return false
+    }
+  }
+
+  /**
+   * 同步到桌面端
+   */
+  async sync() {
+    try {
+      const DomParser = new DOMParser()
+      // eslint-disable-next-line no-console
+      console.log('>>> movie >> sync > DOMParser', DomParser)
+      // await this.syncLibvio()
+      // await this.syncDdrk()
       return true
     }
     catch (e) {

@@ -46,8 +46,6 @@ browser.runtime.onMessage.addListener(async (message: message, sender: any) => {
     default:
       break
   }
-
-  return { from: 'response from AppContent' }
 })
 
 const ModalStore = useModalState()
