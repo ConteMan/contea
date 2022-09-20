@@ -8,27 +8,25 @@ import AlarmService from '@services/base/alarm'
 import SearchModal from '@newTab/components/search/Search.vue'
 import SettingDrawer from '@newTab/views/setting/SettingDrawer.vue'
 
-import { useModalState } from '@newTab/store/modal'
-import { useNewTabState } from '@newTab/store/newTab'
-import { useAlarmState } from '@newTab/store/alarm'
+import { useAlarmState, useModalState, useNewTabState } from '@newTab/store/index'
 
 const SEARCH_KEY = 'q'
 const ZEN_KEY = 'z'
 const SETTING_KEY = 's'
 const TAB_CHANGE_KEY = 'Tab'
 
-const newTabState = useNewTabState()
-const alarmState = useAlarmState()
+const NewTabStore = useNewTabState()
+const AlarmStore = useAlarmState()
 
 const changeMode = () => {
-  newTabState.changeLayoutMode()
+  NewTabStore.changeLayoutMode()
 }
 
 // 监听消息
 browser.runtime.onMessage.addListener(async (message: message, sender: any) => {
   const { type, name } = message
 
-  newTabState.setLog(`${new Date()} [NewTab AppContent] 收到 [${sender.id}] 发来的信息：${JSON.stringify(message)}`)
+  NewTabStore.setLog(`${new Date()} [NewTab AppContent] 收到 [${sender.id}] 发来的信息：${JSON.stringify(message)}`)
 
   switch (type) {
     case 'change-mode':
@@ -42,7 +40,7 @@ browser.runtime.onMessage.addListener(async (message: message, sender: any) => {
         await AlarmService.dealAlarm(name)
         await sleep(1000) // 处理后等待 1 秒再继续
       }
-      alarmState.addAlarm(name as alarmName, 1) // 通过状态通知组件更新数据
+      AlarmStore.addAlarm(name as alarmName, 1) // 通过状态通知组件更新数据
       break
     }
     default:
@@ -52,7 +50,7 @@ browser.runtime.onMessage.addListener(async (message: message, sender: any) => {
   return { from: 'response from AppContent' }
 })
 
-const modalState = useModalState()
+const ModalStore = useModalState()
 
 const activeElement = useActiveElement()
 const notUsingInput = computed(() =>
@@ -86,7 +84,7 @@ useEventListener(window, 'keyup', (e: KeyboardEvent) => {
 
   // 搜索
   if (e.key === SEARCH_KEY && notUsingInput.value)
-    modalState.change(true)
+    ModalStore.change(true)
 
   // 模式切换
   if (e.key === ZEN_KEY && notUsingInput.value)
@@ -94,11 +92,15 @@ useEventListener(window, 'keyup', (e: KeyboardEvent) => {
 
   // 显示/隐藏设置
   if (e.key === SETTING_KEY && notUsingInput.value)
-    newTabState.changeSettingDrawer()
+    NewTabStore.changeSettingDrawer()
 
   // 切换 Tab
-  if (e.key === TAB_CHANGE_KEY && notUsingInput.value)
-    newTabState.changeNextTab()
+  if (e.key === TAB_CHANGE_KEY && notUsingInput.value) {
+    if (e.shiftKey)
+      NewTabStore.changePreTab()
+    else
+      NewTabStore.changeNextTab()
+  }
 })
 </script>
 

@@ -72,6 +72,24 @@ export const useNewTabState = defineStore('newTab',
         changeTab(keyArr[0])
     }
 
+    // 切换上一个 Tab
+    function changePreTab() {
+      const keyArr = dealMenuKeys.value
+      const length = keyArr.length
+
+      if (!length)
+        return false
+
+      const currentTab = tabSelected.value
+      const index = _.findIndex(keyArr, (item) => {
+        return item === currentTab
+      })
+      if (index > 0)
+        changeTab(keyArr[index - 1])
+      else
+        changeTab(keyArr[length - 1])
+    }
+
     // 背景
     async function changeWallpaper() {
       const info = await wallpaperService.random(data.wallpaper.source)
@@ -173,6 +191,7 @@ export const useNewTabState = defineStore('newTab',
       setDealMenuKeys,
       changeTab,
       changeNextTab,
+      changePreTab,
 
       changeWallpaper,
       changeWallpaperMode,
