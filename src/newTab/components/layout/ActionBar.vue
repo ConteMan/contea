@@ -5,31 +5,24 @@ import { useNewTabState } from '@newTab/store/index'
 const newTabState = useNewTabState()
 
 const data = reactive({
-  wallpaperInfo: {} as any,
-  wallpaperStyle: {} as any,
-  backgroundOpacity: 0,
   showDrawer: false, // 抽屉显隐
-  wallpaperSourceOptions: [] as any,
+  wallpaper: {} as any,
+  backgroundOpacity: 0,
   uploadRef: null as any,
 })
-const { wallpaperInfo, backgroundOpacity, showDrawer, wallpaperSourceOptions, uploadRef } = toRefs(data)
+const { showDrawer, wallpaper, backgroundOpacity, uploadRef } = toRefs(data)
 
-const { wallpaper } = storeToRefs(newTabState)
-data.wallpaperInfo = wallpaper
+const { wallpaper: wallpaperStore } = storeToRefs(newTabState)
+data.wallpaper = wallpaperStore
 
 const init = async () => {
-  if (data.wallpaperInfo.mode === 'random') {
+  if (data.wallpaper.mode === 'random') {
     await newTabState.changeWallpaper()
   }
   else {
-    if (data.wallpaperInfo.url) {
-      data.backgroundOpacity = data.wallpaperInfo.opacity
-      data.wallpaperStyle = {
-        'background-image': `-webkit-cross-fade(url(data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==), url(${data.wallpaperInfo.url}), ${data.wallpaperInfo.opacity}%)`,
-      }
-    }
+    if (data.wallpaper.url)
+      data.backgroundOpacity = data.wallpaper.opacity
   }
-  data.wallpaperSourceOptions = SourceTypes
 }
 init()
 
@@ -45,7 +38,7 @@ const uploadClick = () => {
   uploadRef.value.click()
 }
 
-const handleChange = () => {
+const uploadHandleChange = () => {
   const file = uploadRef.value.files[0]
   const reader = new FileReader()
   reader.onload = (e) => {
@@ -58,7 +51,7 @@ const handleChange = () => {
 
 <template>
   <div>
-    <div class="action-container flex justify-end gap-2 fixed bottom-4 right-8 text-[14px] rounded-md p-2 hover:(opacity-100)">
+    <div class="action-bar-container fixed bottom-0 left-0 px-4 py-4 text-[14px] rounded-tr-md flex flex-col justify-end gap-2 hover:(opacity-100)">
       <a class="icon-btn" title="布局模式" @click="newTabState.changeLayoutMode()">
         <mdi-apps v-if="newTabState.layoutMode === 'clean'" />
         <mdi-apps-box v-else />
@@ -86,9 +79,7 @@ const handleChange = () => {
             <mdi-opacity />
           </a>
         </template>
-        <div
-          class="h-[200px]"
-        >
+        <div class="h-[200px]">
           <n-slider
             v-model:value="data.backgroundOpacity"
             class="zen-opacity-slider bg-light-400"
@@ -98,12 +89,12 @@ const handleChange = () => {
         </div>
       </n-popover>
 
-      <a v-if="wallpaperInfo.mode === 'random'" class="icon-btn" title="切换背景" @click="newTabState.changeWallpaper()">
+      <a v-if="wallpaper.mode === 'random'" class="icon-btn" title="切换背景" @click="newTabState.changeWallpaper()">
         <la-random />
       </a>
 
       <a class="icon-btn" title="固定背景" @click="newTabState.changeWallpaperMode()">
-        <mdi-pin-off-outline v-if="wallpaperInfo.mode === 'random'" />
+        <mdi-pin-off-outline v-if="wallpaper.mode === 'random'" />
         <mdi-pin v-else />
       </a>
 
@@ -122,12 +113,12 @@ const handleChange = () => {
       placement="bottom"
       :auto-focus="false"
     >
-      <div v-if="['fixed', 'random'].includes(wallpaperInfo.mode) && wallpaperInfo.url.length < 500" class="pb-2">
+      <div v-if="['fixed', 'random'].includes(wallpaper.mode) && wallpaper.url.length < 500" class="pb-2">
         <div class="mb-1">
           当前
         </div>
         <div>
-          <a :href="wallpaperInfo.url">{{ wallpaperInfo.url }}</a>
+          <a :href="wallpaper.url">{{ wallpaper.url }}</a>
         </div>
       </div>
       <div class="pb-2">
@@ -135,10 +126,10 @@ const handleChange = () => {
           线上
         </div>
         <n-cascader
-          v-model:value="wallpaperInfo.source"
+          v-model:value="wallpaper.source"
+          :options="SourceTypes"
           multiple
           check-strategy="child"
-          :options="wallpaperSourceOptions"
           label-field="name"
           value-field="key"
           children-field="category"
@@ -155,7 +146,7 @@ const handleChange = () => {
           <input
             ref="uploadRef"
             type="file"
-            @change="handleChange"
+            @change="uploadHandleChange"
           >
         </div>
       </div>
@@ -178,17 +169,17 @@ const handleChange = () => {
     opacity: 1;
   }
 }
-.action-container {
+.action-bar-container {
   &:hover {
-    background-color: #EDECE9;
+    background-color: rgba(156, 163, 175, .2);
     .icon-btn {
       opacity: 1 !important;
     }
   }
 }
-.dark .action-container {
+.dark .action-bar-container {
   &:hover {
-    background-color: #6b6b6bb5;
+    background-color: rgba(156, 163, 175, .2);
   }
 }
 </style>

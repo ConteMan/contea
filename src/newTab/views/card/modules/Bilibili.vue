@@ -14,12 +14,8 @@ const data: any = reactive({
   stat: {},
   card: {},
   sign: {},
-
-  bgStyle: {
-    'background-image': '',
-  },
 })
-const { loading, config, profile, stat, sign, bgStyle } = toRefs(data)
+const { loading, config, profile, stat, sign } = toRefs(data)
 
 const getConfig = async () => {
   const res = await ConfigModel.getItem(module)
@@ -38,9 +34,6 @@ const getData = async () => {
   data.card = card
   data.sign = sign
 
-  data.bgStyle = {
-    'background-image': card.l_img ? `linear-gradient(-45deg, rgb(229, 231, 231, 0.6), rgb(116, 115, 115, 70%)), url(${card.l_img})` : '',
-  }
   data.loading = false
 }
 getData()
@@ -49,8 +42,7 @@ getData()
 <template>
   <div
     v-if="!loading"
-    class="p-4 max-w-[320px] overflow-auto rounded-md flex flex-col"
-    :style="bgStyle"
+    class="p-4 max-w-[320px] overflow-auto rounded-md bg-gray-400 bg-opacity-20 flex flex-col hover:(bg-opacity-40)"
   >
     <div class="text-xl font-bold mb-2">
       {{ title }}
