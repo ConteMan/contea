@@ -49,7 +49,7 @@ getData()
 <template>
   <div
     v-if="!loading"
-    class="p-4 max-w-[320px] max-h-[200px] overflow-scroll rounded-md flex flex-col"
+    class="p-4 max-w-[320px] overflow-auto rounded-md flex flex-col"
     :style="bgStyle"
   >
     <div class="text-xl font-bold mb-2">

@@ -122,15 +122,18 @@ watch(dealMenuOptions, (newValue) => {
 
 <template>
   <div ref="worldlineContainerRef" class="max-h-full flex">
-    <div class="worldline-menu h-full pt-8 px-2">
-      <n-menu
-        v-model:value="activeKey"
-        :options="dealMenuOptions"
-        :indent="18"
-        @update:value="changeActiveKey"
-      />
+    <div class="worldline-menu h-full pt-10 pb-4 pl-6 pr-2 bg-gray-400 bg-opacity-20 flex flex-col items-start gap-2">
+      <div
+        v-for="item in dealMenuOptions" :key="item.key"
+        class="py-2 px-4 cursor-pointer hover:(text-red-600)"
+        :class="{ 'menu-active text-red-600 font-bold': activeKey === item.key }"
+        @click="changeActiveKey(item.key)"
+      >
+        {{ item.label }}
+      </div>
     </div>
-    <div class="worldline-tab-pane-container flex-1 w-0 h-full">
+    <div class="h-full w-[1px] bg-gray-400 bg-opacity-10 flex-shrink-0 flex-grow-0" />
+    <div class="worldline-content flex-1 w-0 h-full">
       <Sspai v-if="activeKey === 'sspai'" class="h-full" />
       <Bilibili v-if="activeKey === 'bilibili'" class="h-full" />
       <One v-if="activeKey === 'one'" class="h-full" />
@@ -140,9 +143,17 @@ watch(dealMenuOptions, (newValue) => {
   </div>
 </template>
 
-<style scoped>
-.worldline-menu {
-  min-width: fit-content;
-  max-width: fit-content;
+<style lang="less" scoped>
+.menu-active {
+  position: relative;
+  &::before {
+    content: "";
+    position: absolute;
+    left: -8px;
+    top: 4px;
+    z-index: 1;
+    border-left: 4px solid red;
+    height: 2em;
+  }
 }
 </style>

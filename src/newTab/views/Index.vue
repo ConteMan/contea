@@ -1,71 +1,50 @@
 <script setup lang="ts">
 import { useElementBounding } from '@vueuse/core'
-import { useConfigState } from '@newTab/store/config'
-import { useNewTabState } from '@newTab/store/newTab'
+import { useNewTabState } from '@newTab/store/index'
 
 import List from '@newTab/views/worldline/List.vue'
 import Card from '@newTab/views/card/Card.vue'
 import ActionBar from '@newTab/components/layout/ActionBar.vue'
 
-const data = reactive({
-  wallpaperInfo: {} as any,
-  wallpaperStyle: {} as any,
-  config: {} as any,
-  moduleContainerRef: null,
-  dealTabPaneHeight: '',
-})
+// 容器样式：背景
+const NewTabStore = useNewTabState()
+const { wallpaper } = storeToRefs(NewTabStore)
+const containerStyle = computed(() => {
+  if (!wallpaper.value.url)
+    return {}
 
-const configState = useConfigState()
-const { all } = storeToRefs(configState)
-data.config = all
-
-const { moduleContainerRef } = toRefs(data)
-const { height: containerHeight } = useElementBounding(moduleContainerRef)
-data.dealTabPaneHeight = `${containerHeight.value}px`
-
-watch([containerHeight], () => {
-  data.dealTabPaneHeight = `${containerHeight.value}px`
-})
-
-const newTabState = useNewTabState()
-const { wallpaper } = storeToRefs(newTabState)
-data.wallpaperInfo = wallpaper
-
-const init = async () => {
-  if (data.wallpaperInfo.url) {
-    data.wallpaperStyle = {
-      'background-image': `-webkit-cross-fade(url(data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==), url(${data.wallpaperInfo.url}), ${data.wallpaperInfo.opacity}%)`,
-    }
+  return {
+    'background-image':
+      `-webkit-cross-fade(url(data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==),
+      url(${wallpaper.value.url}),
+      ${wallpaper.value.opacity ?? 100}%)`,
   }
+})
+
+// 内容样式：高度
+const containerRef = ref(null)
+const { height } = useElementBounding(containerRef)
+const contentStyle = computed(() => {
+  return {
+    height: `${height.value}px`,
+  }
+})
+
+// 判断布局模式
+const layoutMode = (mode: 'list' | 'card') => {
+  return mode === NewTabStore.layoutMode
 }
-init()
-
-watch(() => data.wallpaperInfo, (newWallpaperInfo) => {
-  data.wallpaperStyle = {
-    'background-image': `-webkit-cross-fade(url(data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==), url(${newWallpaperInfo.url}), ${newWallpaperInfo.opacity}%)`,
-  }
-}, { deep: true })
 </script>
 
 <template>
   <div
-    ref="moduleContainerRef"
-    class="module-container fixed h-full w-full bg-cover"
-    :style="data.wallpaperStyle"
+    ref="containerRef"
+    class="index-container w-full h-full fixed bg-cover"
+    :style="containerStyle"
   >
-    <div class="flex flex-grow" :style="{ height: data.dealTabPaneHeight }">
-      <div
-        v-if="newTabState.layoutMode === 'list'"
-        class="flex-grow max-h-full py-2"
-      >
-        <List class="worldline-list h-full" />
-      </div>
-      <div
-        v-if="newTabState.layoutMode === 'card'"
-        class="w-full h-full flex justify-center items-center"
-      >
-        <Card />
-      </div>
+    <div class="w-full" :style="contentStyle">
+      <List v-if="layoutMode('list')" class="h-full w-full" />
+      <Card v-if="layoutMode('card')" class="w-full h-full flex justify-center items-center" />
     </div>
 
     <ActionBar />

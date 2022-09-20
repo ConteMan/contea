@@ -58,14 +58,17 @@ const recentBooks = computed(() => {
 
 <template>
   <div class="w-full flex">
-    <div class="flex-shrink-0 pt-[48px] pl-2 pr-6 flex flex-col items-center gap-4">
-      <a class="cursor-pointer flex items-center hover:(cursor-pointer)" @click="refresh()">
+    <div class="flex-shrink-0 flex-grow-0 pt-10 pb-4 px-2 flex flex-col items-start gap-2">
+      <a class="cursor-pointer py-2 px-4 flex items-center" @click="refresh()">
         <mdi-refresh :class="{ 'animate-spin': loading }" />
       </a>
     </div>
 
-    <n-scrollbar v-if="!loading && Object.keys(moduleInfo)" class="sspai-content-container pt-[48px] px-4">
-      <div class="mb-12 flex flex-col gap-2">
+    <div
+      v-if="!loading && Object.keys(moduleInfo)"
+      class="hover-scroll flex-grow overflow-y-auto mt-10 mb-4 px-6 flex flex-col gap-8"
+    >
+      <div class="p-6 rounded-md bg-gray-400 bg-opacity-20 flex flex-col gap-2">
         <div>
           体验会员：{{ dayjs(moduleInfo.memberCard?.expiredTime * 1000).format('YYYY-MM-DD') }}
         </div>
@@ -74,7 +77,7 @@ const recentBooks = computed(() => {
         </div>
       </div>
 
-      <div class="flex flex-wrap gap-4">
+      <div class="p-6 rounded-md bg-gray-400 bg-opacity-20 flex flex-wrap gap-4">
         <template v-for="item in recentBooks" :key="item.bookId">
           <div class="py-4 flex flex-col justify-start items-start w-[160px]">
             <div class="mb-4">
@@ -89,6 +92,6 @@ const recentBooks = computed(() => {
           </div>
         </template>
       </div>
-    </n-scrollbar>
+    </div>
   </div>
 </template>

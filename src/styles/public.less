@@ -10,7 +10,10 @@ body,
 }
 
 ::-webkit-scrollbar {
-  display: none;
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: gray;
 }
 
 .fade-enter-active,
@@ -29,4 +32,12 @@ body,
 }
 .dark .n-modal-mask {
   background: rgba(47, 47, 47, 1)!important;
+}
+
+// Hover 显示滚动条
+.hover-scroll::-webkit-scrollbar {
+  display: none;
+}
+.hover-scroll:hover::-webkit-scrollbar {
+  display: block;
 }

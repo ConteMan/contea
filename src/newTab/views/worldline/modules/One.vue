@@ -36,16 +36,18 @@ const refresh = async () => {
 
 <template>
   <div class="w-full flex">
-    <div class="flex-shrink-0 pt-[48px] pl-2 pr-6 flex flex-col items-center gap-4">
-      <a class="cursor-pointer flex items-center hover:(cursor-pointer)" @click="refresh()">
+    <div class="flex-shrink-0 flex-grow-0 pt-10 pb-4 px-2 flex flex-col items-start gap-2">
+      <a class="cursor-pointer py-2 px-4 flex items-center" @click="refresh()">
         <mdi-refresh :class="{ 'animate-spin': loading }" />
       </a>
     </div>
 
-    <n-scrollbar class="sspai-content-container pt-8 pr-4">
+    <div class="hover-scroll flex-grow overflow-y-auto mt-10 mb-4 px-6 flex flex-col gap-4">
       <template v-for="item in list" :key="item.vol">
-        <div class="p-4 mb-6 rounded-md flex gap-4">
-          <a :href="item.picTextLink"><img :src="item.pic" class="h-full max-h-[160px] rounded-md"></a>
+        <div class="p-4 rounded-md shadow-current bg-gray-400 bg-opacity-20 flex gap-8 hover:(bg-opacity-40)">
+          <a :href="item.picTextLink">
+            <img :src="item.pic" class="h-full max-h-[160px] rounded-md">
+          </a>
           <div class="max-w-[720px] flex flex-col justify-start items-start gap-2">
             <div class="mb-2">
               <a :href="item.picTextLink">{{ item.date }} / {{ item.vol }}</a>
@@ -62,6 +64,6 @@ const refresh = async () => {
           </div>
         </div>
       </template>
-    </n-scrollbar>
+    </div>
   </div>
 </template>

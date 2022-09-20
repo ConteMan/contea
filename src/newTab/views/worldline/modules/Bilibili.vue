@@ -146,25 +146,24 @@ const contentDeal = (content: string) => {
 
 <template>
   <div class="w-full flex">
-    <div class="flex-shrink-0 pt-[48px] pl-2 pr-6 flex flex-col items-center gap-4">
+    <div class="flex-shrink-0 flex-grow-0 pt-10 pb-4 px-2 flex flex-col items-start gap-2">
       <template v-for="item in data.moduleTypes" :key="item.key">
         <div
-          class="h-auto cursor-pointer"
+          class="py-2 px-4 cursor-pointer"
           :class="[selectedType === item.value ? 'text-red-500 font-bold' : '']"
           @click="selectModuleType(item.value)"
         >
           {{ item.key }}
         </div>
       </template>
-      <div class="w-[80%] h-[1px] my-2 bg-light-400 bg-opacity-40" />
-      <a class="cursor-pointer flex items-center hover:(cursor-pointer)" @click="refresh()">
+      <a class="cursor-pointer py-2 px-4 flex items-center" @click="refresh()">
         <mdi-refresh :class="{ 'animate-spin': loading }" />
       </a>
     </div>
 
-    <n-scrollbar class="sspai-content-container pt-8 pr-4">
+    <div class="sspai-content hover-scroll flex-grow overflow-y-auto mt-10 mb-4 px-6 flex flex-col gap-4">
       <template v-for="item in list" :key="item.id_str">
-        <div class="py-4 pb-6 px-4 rounded-md hover:(bg-red-400 bg-opacity-40)">
+        <div class="p-4 rounded-md shadow-current bg-gray-400 bg-opacity-20 flex flex-col hover:(bg-opacity-40)">
           <div class="pb-3">
             <template v-if="item.type === 'DYNAMIC_TYPE_LIVE_RCMD'">
               <a :href="liveInfo(item.modules.module_dynamic.major.live_rcmd.content).live_play_info.link">{{ liveInfo(item.modules.module_dynamic.major.live_rcmd.content).live_play_info.title }}</a>
@@ -181,6 +180,6 @@ const contentDeal = (content: string) => {
           </div>
         </div>
       </template>
-    </n-scrollbar>
+    </div>
   </div>
 </template>

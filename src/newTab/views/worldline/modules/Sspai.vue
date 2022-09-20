@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import dayjs from 'dayjs'
-import 'dayjs/locale/zh-cn'
-import RelativeTime from 'dayjs/plugin/relativeTime'
 import { TypeEnum } from '@enums/sspaiEnum'
 import { enumToObj } from '@utils/index'
-import ConfigModel from '@models/config'
+import { ConfigModel } from '@models/index'
 import Base from '@services/base'
 import Alarm from '@services/base/alarm'
 
+import dayjs from 'dayjs'
+import 'dayjs/locale/zh-cn'
+import RelativeTime from 'dayjs/plugin/relativeTime'
 dayjs.locale('zh-cn')
 dayjs.extend(RelativeTime)
 
@@ -41,12 +41,14 @@ const init = async () => {
 init()
 
 // 选择标签
-const handleChange = async (tag: string, checked: boolean) => {
+const clickTab = async (tag: string) => {
   const { selectedTags } = data
-  const nextSelectedTags = checked
-    ? [...selectedTags, tag]
-    : selectedTags.filter(t => t !== tag)
+  const nextSelectedTags = selectedTags.includes(tag)
+    ? selectedTags.filter(t => t !== tag)
+    : [...selectedTags, tag]
   data.selectedTags = nextSelectedTags
+  // eslint-disable-next-line no-console
+  console.log(tag, nextSelectedTags)
   await getData()
 }
 
@@ -65,59 +67,83 @@ const transformAction = (action: string) => {
   if (action === 'release_article')
     return '发布'
 }
+
+// 图片处理
+const banner = (type: string, item: Record<string, any>) => {
+  let bannerUrl = ''
+  if (type === 'followActivity' && item.data.data.banner)
+    bannerUrl = item.data.data.banner
+  if (['index', 'matrix'].includes(type) && item.data.banner)
+    bannerUrl = item.data.banner
+  if (!bannerUrl)
+    return ''
+  return `https://cdn.sspai.com/${bannerUrl}?imageMogr2/auto-orient/quality/95/thumbnail/!400x200r/gravity/Center/crop/800x400/interlace/1`
+}
 </script>
 
 <template>
   <div class="w-full flex">
-    <div class="flex-shrink-0 pt-[40px] pl-2 pr-6 flex flex-col items-center gap-4">
-      <template v-for="item in data.moduleTypes" :key="item.key">
-        <n-tag
-          class="text-xs h-auto py-0.8"
-          checkable
-          :checked="selectedTags.indexOf(item.value) > -1"
-          @update:checked="(checked: boolean) => handleChange(item.value, checked)"
-        >
-          {{ item.key }}
-        </n-tag>
-      </template>
-      <a class="cursor-pointer flex items-center hover:(cursor-pointer)" @click="refresh()">
+    <div class="flex-shrink-0 flex-grow-0 pt-10 pb-4 px-2 flex flex-col items-start gap-2">
+      <div
+        v-for="item in data.moduleTypes" :key="item.value"
+        class="py-2 px-4 cursor-pointer"
+        :class="{ 'text-red-500 font-bold': selectedTags.includes(item.value) }"
+        @click="clickTab(item.value)"
+      >
+        {{ item.key }}
+      </div>
+      <a class="cursor-pointer py-2 px-4 flex items-center" @click="refresh()">
         <mdi-refresh :class="{ 'animate-spin': loading }" />
       </a>
     </div>
 
-    <n-scrollbar class="sspai-content-container">
-      <template v-for="item in list" :key="item.title">
-        <div class="p-2 rounded-sm">
-          <template v-if="item.ca_module_type === 'followActivity'">
-            <template v-if="['like_article', 'release_article'].includes(item.data.key)">
+    <div class="sspai-content hover-scroll flex-grow overflow-y-auto mt-10 mb-4 px-6 flex flex-col gap-4">
+      <div
+        v-for="item in list" :key="item.title"
+        class="max-w-[800px] min-h-[132px] p-4 rounded-md shadow-current bg-gray-400 bg-opacity-20 flex gap-6 hover:(bg-opacity-40)"
+      >
+        <div class="flex-grow flex flex-col justify-center items-start gap-6">
+          <div class="text-[15px] font-bold">
+            <template v-if="['index', 'matrix'].includes(item.ca_module_type)">
               <a :href="`${config.site}/post/${item.ca_data_id}`">
-                {{ item.data.data.title }}
+                {{ item.data.title }}
               </a>
             </template>
-          </template>
-          <template v-if="['index', 'matrix'].includes(item.ca_module_type)">
-            <a :href="`${config.site}/post/${item.ca_data_id}`">
-              {{ item.data.title }}
-            </a>
-          </template>
-          <div class="text-xs py-1">
-            <span v-if="item.ca_module_type === 'followActivity'">
-              <a :href="`${config.site}/u/${item.data.author.slug}/updates`">{{ item.data.author.nickname }}</a> {{ transformAction(item.data.key) }} / <a :href="`${config.site}/u/${item.data.author.slug}/updates`">{{ item.data.author.nickname }}</a> /
-            </span>
-            <template v-if="['index', 'matrix'].includes(item.ca_module_type)">
-              <span>
-                <a :href="`${config.site}/u/${item.data.author.slug}/updates`">{{ item.data.author.nickname }}</a> /
-              </span>
-              <span v-if="item.data.is_matrix">
-                MATRIX /
-              </span>
+            <template v-if="['followActivity'].includes(item.ca_module_type)">
+              <template v-if="['like_article', 'release_article'].includes(item.data.key)">
+                <a :href="`${config.site}/post/${item.ca_data_id}`">
+                  {{ item.data.data.title }}
+                </a>
+              </template>
             </template>
-            <span class="pl-1">
+          </div>
+
+          <div class="text-[13px] flex gap-2">
+            <template v-if="['index', 'matrix'].includes(item.ca_module_type)">
+              <a :href="`${config.site}/u/${item.data.author.slug}/updates`">{{ item.data.author.nickname }}</a>
+              <template v-if="item.data.is_matrix">
+                <span>/</span>
+                <span>
+                  MATRIX
+                </span>
+              </template>
+            </template>
+            <template v-if="['followActivity'].includes(item.ca_module_type)">
+              <a :href="`${config.site}/u/${item.data.author.slug}/updates`">{{ item.data.author.nickname }}</a> {{ transformAction(item.data.key) }}
+              <span>/</span>
+              <a :href="`${config.site}/u/${item.data.author.slug}/updates`">{{ item.data.author.nickname }}</a>
+            </template>
+            <span>/</span>
+            <span>
               {{ dayjs(item.ca_sort_at).fromNow() }}
             </span>
           </div>
         </div>
-      </template>
-    </n-scrollbar>
+
+        <div class="flex-grow-0 flex items-center">
+          <img v-if="banner(item.ca_module_type, item)" class=" w-[160px] h-[100px] rounded-md" :src="banner(item.ca_module_type, item)">
+        </div>
+      </div>
+    </div>
   </div>
 </template>

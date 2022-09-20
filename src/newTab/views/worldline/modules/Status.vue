@@ -28,28 +28,29 @@ getAlarms()
 
 const deleteAlarm = async (name: string) => {
   const res = await Alarm.clear(name)
-  // eslint-disable-next-line no-console
-  console.log(res)
   await getAlarms()
 }
 
 const activeAlarm = async (name: string) => {
   activeLoading.value = name
   const res = await AlarmService.dealAlarm(name)
-  // eslint-disable-next-line no-console
-  console.log('>>> active alarm >> ', res)
   activeLoading.value = ''
 }
 </script>
 
 <template>
-  <div class="px-4 max-w-[640px]">
-    <div class="rounded-md p-4 w-full">
-      <div class="pb-4 flex items-center">
-        <span class="">定时任务 / Alarms</span>
-        <mdi-refresh class="ml-4 opacity-40 cursor-pointer hover:(opacity-100)" :class="{ 'animate-spin': loading }" @click="getAlarms(true)" />
-      </div>
-      <SettingItem v-for="item in alarms" :key="item.name" class="py-1 mb-2">
+  <div class="w-full flex">
+    <div class="flex-shrink-0 flex-grow-0 pt-10 pb-4 px-2 flex flex-col items-start gap-2">
+      <a class="cursor-pointer py-2 px-4 flex items-center" @click="getAlarms(true)">
+        <mdi-refresh :class="{ 'animate-spin': loading }" />
+      </a>
+    </div>
+
+    <div class="hover-scroll flex-grow overflow-y-auto mt-10 mb-4 px-6 flex flex-col gap-4">
+      <SettingItem
+        v-for="item in alarms" :key="item.name"
+        class="max-w-[800px] p-4 rounded-md bg-gray-400 bg-opacity-20 hover:(bg-opacity-40)"
+      >
         <template #left>
           <div class="ml-4 uppercase">
             {{ item.name }}
@@ -57,10 +58,10 @@ const activeAlarm = async (name: string) => {
         </template>
         <template #right>
           <span>{{ dayjs(item.scheduledTime).format('YYYY-MM-DD HH:mm:ss SSS') }}</span>
-          <div v-if="item.periodInMinutes" class="border-l-1 mx-2 w-[1px] h-[80%]" />
+          <span v-if="item.periodInMinutes" class="border-l-1 mx-2 w-[1px] h-[80%]" />
           <span v-if="item.periodInMinutes">{{ item.periodInMinutes }} min</span>
           <span class="border-l-1 mx-2 w-[1px] h-[80%]" />
-          <mdi-access-point class="cursor-pointer hover:(text-red-400)" :class="{ 'animate-spin': activeLoading === item.name }" @click="activeAlarm(item.name)" />
+          <mdi-access-point class="cursor-pointer mr-1 hover:(text-red-400)" :class="{ 'animate-spin': activeLoading === item.name }" @click="activeAlarm(item.name)" />
           <mdi-delete class="cursor-pointer hover:(text-red-400)" @click="deleteAlarm(item.name)" />
         </template>
       </SettingItem>
