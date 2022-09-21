@@ -4,8 +4,8 @@ import type { SettingKeys } from '@setting/index'
 import type { Table } from 'dexie'
 import defaultSetting from '@setting/index'
 import Alarm from '@services/base/alarm'
-import Base from './base'
-import db from './migration'
+import Base from '../base'
+import db from '../db'
 
 export default new class ConfigModel extends Base {
   public currentTable: Table

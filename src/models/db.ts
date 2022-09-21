@@ -2,10 +2,11 @@ import type { Table } from 'dexie'
 import Dexie from 'dexie'
 
 import type { Config } from './migrations/config'
-import { config } from './migrations/config'
 import type { Cache } from './migrations/cache'
-import { cache } from './migrations/cache'
 import type { Info } from './migrations/info'
+
+import { config } from './migrations/config'
+import { cache } from './migrations/cache'
 import { info } from './migrations/info'
 
 export class ModelDexie extends Dexie {

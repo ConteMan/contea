@@ -1,7 +1,7 @@
 import type { Table } from 'dexie'
 import MD5 from 'crypto-js/md5'
-import Base from './base'
-import db from './migration'
+import Base from '../base'
+import db from '../db'
 
 interface InfoItem {
   ca_module: string
