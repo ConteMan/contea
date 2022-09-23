@@ -11,15 +11,15 @@ export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiU
 export const setting: Config = {
   key: 'sspai',
   name: '少数派',
-  enable: true,
+  enable: false,
   site: 'https://sspai.com',
   url: 'https://sspai.com',
   apiUrl: 'https://sspai.com/api/v1',
   cdnUrl: 'https://cdn.sspai.com',
   enableTypes: [
     'index',
-    'followActivity',
-    'matrix',
+    // 'followActivity',
+    // 'matrix',
   ],
   expired: 3600,
   alarm: 30,

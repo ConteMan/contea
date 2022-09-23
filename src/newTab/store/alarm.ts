@@ -1,36 +1,27 @@
 import { defineStore } from 'pinia'
-import type { alarmName } from '@localTypes/message'
 
-type updateSign = 0 | 1 | 2
+type AlarmsData = Record<Alarm.StoreAlarms, Alarm.UpdateSign>
 
-interface alarmsType {
-  alarms: {
-    weread: updateSign
-    v2ex: updateSign
-    wakatime: updateSign
-    one: updateSign
+export const useAlarmState = defineStore('alarm', () => {
+  const data: AlarmsData = reactive({
+    weread: 0,
+    one: 0,
+  })
+  const { weread, one } = toRefs(data)
+
+  const addAlarm = (name: Alarm.StoreAlarms, update: Alarm.UpdateSign = 1) => {
+    data[name] = update
   }
-}
 
-export const useAlarmState = defineStore('alarm', {
-  state: () => {
-    return {
-      alarms: {
-        weread: 0,
-        v2ex: 0,
-        wakatime: 0,
-        one: 0,
-      },
-    } as alarmsType
-  },
-  actions: {
-    addAlarm(name: alarmName, update: 0 | 1 | 2 = 1) {
-      this.alarms[name] = update
-      this.alarms = { ...this.alarms }
-    },
-    removeAlarm(name: alarmName) {
-      this.alarms[name] = 0
-      this.alarms = { ...this.alarms }
-    },
-  },
+  const removeAlarm = (name: Alarm.StoreAlarms) => {
+    data[name] = 0
+  }
+
+  return {
+    weread,
+    one,
+
+    addAlarm,
+    removeAlarm,
+  }
 })

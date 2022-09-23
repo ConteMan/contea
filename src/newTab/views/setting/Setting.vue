@@ -97,7 +97,11 @@ const list = [
 
 <template>
   <div class="setting-container w-full max-w-[700px] mb-4">
-    <n-collapse v-model:expanded-names="expandedNames" class="max-w-full">
+    <n-collapse
+      v-model:expanded-names="expandedNames"
+      class="max-w-full"
+      accordion
+    >
       <template v-for="item in list" :key="item.name">
         <n-collapse-item :name="item.name" :title="item.title">
           <Component :is="item.component" />

@@ -1,4 +1,4 @@
-import type { message } from '@localTypes/message'
+import type { Tabs } from 'webextension-polyfill'
 import { ConfigModel } from '@models/index'
 
 /**
@@ -6,16 +6,16 @@ import { ConfigModel } from '@models/index'
  */
 export async function changeMode(extensionId: string) {
   const defaultPath = '/'
-  const tabs = await browser.tabs.query({ currentWindow: true })
+  const tabs = await browser.tabs.query({ currentWindow: true }) // 当前窗口全部标签页
 
-  // 判断页面是否为扩展页面
+  // 判断是否为「显式链接」的扩展页面
   function isExtensionPage(url: string) {
     const regex = new RegExp(extensionId)
     return regex.test(url)
   }
 
   // 查询新标签页
-  let targetTab = {} as any
+  let targetTab: Tabs.Tab | undefined
   tabs.every((item: any) => {
     if (item.url && (item.url === 'chrome://newtab/' || isExtensionPage(item.url))) {
       targetTab = item
@@ -27,25 +27,29 @@ export async function changeMode(extensionId: string) {
   const pagePath = (await ConfigModel.getItem('base'))?.[defaultPath] ?? defaultPath
   const pageUrl = `chrome-extension://${extensionId}/dist/newTab/index.html#${pagePath}`
 
-  // 当前窗口存在新标签页
-  if (Object.keys(targetTab).length) {
-    if (!isExtensionPage(targetTab.url)) {
-      // 移除旧标签页
-      browser.tabs.remove(targetTab.id)
-      browser.tabs.create({ active: true, url: pageUrl })
-    }
-    else {
-      // 激活标签页
-      if (!targetTab.active) {
-        await browser.tabs.update(targetTab.id, { active: true })
-      }
-      else {
-        const message: message = { type: 'change-mode' }
-        await browser.tabs.sendMessage(targetTab.id as number, message)
-      }
-    }
+  // 不存在扩展标签页
+  if (!targetTab || !targetTab.url) {
+    browser.tabs.create({ active: true, url: pageUrl })
+    return true
+  }
+
+  // 存在扩展标签页
+  // 非「显式链接」
+  if (!isExtensionPage(targetTab.url)) {
+    if (targetTab.id)
+      browser.tabs.remove(targetTab.id) // 移除旧标签页
+
+    browser.tabs.create({ active: true, url: pageUrl })
   }
   else {
-    await browser.tabs.create({ active: true, url: pageUrl })
+    if (!targetTab.active) { // 非活跃状态
+      browser.tabs.update(targetTab.id, { active: true })
+      return true
+    }
+
+    if (targetTab.id) { // 活跃状态，向标签页发消息，切换展示模式
+      const message: Message.BaseMessage = { type: 'change-mode' }
+      browser.tabs.sendMessage(targetTab.id, message)
+    }
   }
 }

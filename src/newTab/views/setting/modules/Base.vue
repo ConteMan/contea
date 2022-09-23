@@ -27,7 +27,7 @@ const newTabState = useNewTabState()
     label-width="auto"
     label-align="left"
   >
-    <n-form-item label="定时">
+    <n-form-item label="任务定时">
       <n-input-number v-model:value="model.alarm" class="w-full">
         <template #suffix>
           分钟
@@ -35,8 +35,15 @@ const newTabState = useNewTabState()
       </n-input-number>
     </n-form-item>
 
-    <n-form-item label="定时任务列表">
-      <n-switch v-model:value="model.statusList" size="small" :round="false" />
+    <n-form-item label="任务列表">
+      <n-switch v-model:value="model.statusList" size="small" :round="false">
+        <template #checked>
+          展示
+        </template>
+        <template #unchecked>
+          隐藏
+        </template>
+      </n-switch>
     </n-form-item>
 
     <n-form-item label="主题模式">
@@ -50,7 +57,13 @@ const newTabState = useNewTabState()
       </n-switch>
     </n-form-item>
 
-    <n-form-item label="启用桌面端通讯">
+    <n-form-item label="重置">
+      <n-switch v-model:value="resetLoading" :loading="resetLoading" size="small" :round="false" @update:value="reset(module)" />
+    </n-form-item>
+
+    <n-divider />
+
+    <n-form-item label="桌面端通讯">
       <n-switch v-model:value="model.enableDesktop" size="small" :round="false" />
     </n-form-item>
     <n-form-item label="桌面端接口">
@@ -60,13 +73,9 @@ const newTabState = useNewTabState()
       </div>
     </n-form-item>
 
-    <n-form-item label="重置">
-      <n-switch v-model:value="resetLoading" :loading="resetLoading" size="small" :round="false" @update:value="reset(module)" />
-    </n-form-item>
-
     <n-divider />
 
-    <n-form-item label="# 恢复默认配置">
+    <n-form-item label="# 初始化扩展配置">
       <n-switch v-model:value="initConfigLoading" :loading="initConfigLoading" size="small" :round="false" @update:value="initConfig()" />
     </n-form-item>
   </n-form>

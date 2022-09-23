@@ -1,7 +1,6 @@
-import { deepMerge } from '@utils/index'
-
 import type { SettingKeys } from '@setting/index'
 import type { Table } from 'dexie'
+import { deepMerge } from '@utils/index'
 import defaultSetting, { modules } from '@setting/index'
 import Alarm from '@services/base/alarm'
 import Base from '../base'

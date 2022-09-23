@@ -48,6 +48,7 @@ export default (module: SettingKeys, configKeys: string[]) => {
     useTimeoutFn(async () => {
       await ConfigModel.init(module)
       await ConfigStore.setAll()
+      await init(module)
 
       data.resetLoading = false
       message.success('#reset success!')
@@ -74,6 +75,7 @@ export default (module: SettingKeys, configKeys: string[]) => {
     useTimeoutFn(async () => {
       await ConfigModel.init('all')
       await ConfigStore.setAll()
+      await init(module)
 
       data.initConfigLoading = false
       message.success('#reset-all success!')

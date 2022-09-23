@@ -1,5 +1,4 @@
 import type { Tabs } from 'webextension-polyfill'
-import type { message } from '@localTypes/message'
 
 import _ from 'lodash-es'
 
@@ -68,7 +67,7 @@ browser.alarms.onAlarm.addListener(async (alarm: { name: string }) => {
 
       await browser.storage.local.set({ [DEV_VERSION_KEY]: currentVersion })
 
-      // if (currentVersion.type === 'background') // 暂不处理 background 更新
+      // if (currentVersion.type === 'background') // 不处理 background 更新
       //   return
 
       const tabs = await browser.tabs.query({ }) // 查询所有标签页，处理扩展相关页面
@@ -98,9 +97,9 @@ browser.alarms.onAlarm.addListener(async (alarm: { name: string }) => {
         return
 
       const idReg = new RegExp(`/.*${EXTENSION_ID}.*/`)
-      tabs.filter((item: Tabs.Tab) => {
+      tabs.filter((item) => {
         return item?.url && (idReg.test(item.url) || /chrome:\/\/newtab.*/.test(item.url))
-      }).forEach((item: Tabs.Tab) => {
+      }).forEach((item) => {
         item.active ? extensionTabs.splice(0, 0, item) : extensionTabs.push(item) // 激活的标签页放在最前面
       })
 
@@ -110,8 +109,9 @@ browser.alarms.onAlarm.addListener(async (alarm: { name: string }) => {
         return
       }
 
-      let message: message = { type: 'alarm', name } // 直属消息，处理逻辑
-      await browser.tabs.sendMessage(extensionTabs[0].id as number, message)
+      let message: Message.TabMessage = { type: 'alarm', name } // 直属消息，处理逻辑
+      if (extensionTabs[0].id)
+        await browser.tabs.sendMessage(extensionTabs[0].id, message)
 
       extensionTabs.shift()
 
@@ -119,8 +119,9 @@ browser.alarms.onAlarm.addListener(async (alarm: { name: string }) => {
         return
 
       message = { type: 'alarm-sync', name } // 同步消息，同步处理结果
-      extensionTabs.every((item: Tabs.Tab) => {
-        browser.tabs.sendMessage(item.id as number, message)
+      extensionTabs.every((item) => {
+        if (item.id)
+          browser.tabs.sendMessage(item.id, message)
         return true
       })
     }
@@ -153,11 +154,8 @@ browser.commands.onCommand.addListener(async (command: string) => {
  * @param message - 消息体
  * @param sender - 发送者信息
  */
-browser.runtime.onMessage.addListener(async (message: { type: string; [other: string]: string }, sender) => {
+browser.runtime.onMessage.addListener(async (message: Message.RuntimeMessage) => {
   try {
-    // eslint-disable-next-line no-console
-    console.log(`[${SERVICE_WORKER_NAME}] >>> [bg] >> onMessage >`, message, sender)
-
     const { type, name = '' } = message
     switch (type) {
       case MESSAGE_TYPES.DEAL_ALARM: { // 前端请求，在后端执行定时任务

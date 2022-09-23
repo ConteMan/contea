@@ -2,10 +2,10 @@
 import dayjs from 'dayjs'
 import { useTimeoutFn } from '@vueuse/core'
 import { Alarm } from '@services/browser'
-import AlarmService from '@services/base/alarm'
-import SettingItem from '@newTab/components/template/SettingItem.vue'
 import { MESSAGE_TYPES } from '@enums/index'
 import { sendToBackground } from '@utils/index'
+import AlarmService from '@services/base/alarm'
+import SettingItem from '@newTab/components/template/SettingItem.vue'
 
 const alarms = ref({} as any)
 const loading = ref(false)

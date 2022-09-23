@@ -42,9 +42,9 @@ export const setting: Config = {
   statusList: true,
   themeMode: true,
 
-  enableDesktop: true,
+  enableDesktop: false,
   desktopInterface: 'http://127.0.0.1:7788/extension',
-  desktopInterfaceStatus: true,
+  desktopInterfaceStatus: false,
 }
 
 export const configKeys = Object.keys(setting)

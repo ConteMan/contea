@@ -22,7 +22,8 @@ export const useConfigState = defineStore('config',
       // await dealSortList()
     }
 
-    // 排序，优先按照传入排序，没有的放在最后
+    // 排序，用于模块展示
+    // 优先按照传入排序，没有的放在最后
     async function dealSortList(dealData: any[] = []) {
       if (dealData.length) {
         data.sortList = dealData

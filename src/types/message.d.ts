@@ -1,7 +1,13 @@
-export interface message {
-  type: string
-  name?: string
-  data?: any
+namespace Message {
+  export interface BaseMessage {
+    type: string
+    [other: string]: string
+  }
+  
+  export type TabMessage = BaseMessage & {
+    name?: string
+    data?: any
+  }
+  
+  export type RuntimeMessage = BaseMessage
 }
-
-export type alarmName = 'weread' | 'v2ex' | 'wakatime'

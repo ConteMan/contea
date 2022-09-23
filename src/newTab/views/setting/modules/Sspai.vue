@@ -34,7 +34,7 @@ const { model }: { model: Ref<ShowConfig> } = setting
       <n-switch v-model:value="model.enable" size="small" :round="false" />
     </n-form-item>
 
-    <n-form-item label="定时" path="alarm">
+    <n-form-item label="任务定时" path="alarm">
       <n-input-number v-model:value="model.alarm" class="w-full">
         <template #suffix>
           分钟
@@ -42,7 +42,7 @@ const { model }: { model: Ref<ShowConfig> } = setting
       </n-input-number>
     </n-form-item>
 
-    <n-form-item label="类型" path="enableTypes">
+    <n-form-item label="信息类型" path="enableTypes">
       <n-checkbox-group v-model:value="model.enableTypes">
         <n-space item-style="display: flex;">
           <n-checkbox v-for="item in baseTypes" :key="item.value" :value="item.value" :label="item.label" />
