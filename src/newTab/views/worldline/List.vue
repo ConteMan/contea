@@ -3,6 +3,7 @@ import _ from 'lodash-es'
 
 import { useConfigState, useNewTabState } from '@newTab/store/index'
 
+import Movie from './modules/Movie.vue'
 import Sspai from './modules/Sspai.vue'
 import Bilibili from './modules/Bilibili.vue'
 import One from './modules/One.vue'
@@ -32,6 +33,10 @@ const { all } = storeToRefs(configState)
 data.config = all
 
 const menuOptions = [
+  {
+    label: '影视',
+    key: 'movie',
+  },
   {
     label: '少数派',
     key: 'sspai',
@@ -134,6 +139,7 @@ watch(dealMenuOptions, (newValue) => {
     </div>
     <div class="h-full w-[1px] bg-gray-400 bg-opacity-10 flex-shrink-0 flex-grow-0" />
     <div class="worldline-content flex-1 w-0 h-full">
+      <Movie v-if="activeKey === 'movie'" class="h-full" />
       <Sspai v-if="activeKey === 'sspai'" class="h-full" />
       <Bilibili v-if="activeKey === 'bilibili'" class="h-full" />
       <One v-if="activeKey === 'one'" class="h-full" />

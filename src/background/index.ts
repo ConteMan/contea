@@ -3,8 +3,9 @@ import type { message } from '@localTypes/message'
 
 import _ from 'lodash-es'
 
+import { MESSAGE_TYPES } from '@enums/index'
 import AlarmService from '@services/base/alarm'
-import { ConfigModel } from '@models/index'
+import { AlarmTaskModel, ConfigModel } from '@models/index'
 import { getVersion } from './version'
 import { changeMode } from './shortcuts'
 
@@ -48,12 +49,13 @@ browser.runtime.onInstalled.addListener(async () => {
  */
 browser.alarms.onAlarm.addListener(async (alarm: { name: string }) => {
   try {
-    // eslint-disable-next-line no-console
-    console.log(`[${SERVICE_WORKER_NAME}] >>> [bg] >> onAlarm > ${JSON.stringify(alarm)}`)
-
     const DEAL_MODULES = ['sspai', 'movie', 'bilibili', 'weread']
-    const REDIRECT_MODULES = ['one']
+    const REDIRECT_MODULES = ['one', 'movie']
     const { name } = alarm
+
+    if (![DEV_ALARM_NAME].includes(name))
+      // eslint-disable-next-line no-console
+      console.log(`[${SERVICE_WORKER_NAME}] >>> [bg] >> onAlarm > ${JSON.stringify(alarm)}`)
 
     // 开发模式
     if (name === DEV_ALARM_NAME) {
@@ -66,8 +68,8 @@ browser.alarms.onAlarm.addListener(async (alarm: { name: string }) => {
 
       await browser.storage.local.set({ [DEV_VERSION_KEY]: currentVersion })
 
-      if (currentVersion.type === 'background') // 暂不处理 background 更新
-        return
+      // if (currentVersion.type === 'background') // 暂不处理 background 更新
+      //   return
 
       const tabs = await browser.tabs.query({ }) // 查询所有标签页，处理扩展相关页面
       if (!Object.keys(tabs).length)
@@ -82,10 +84,8 @@ browser.alarms.onAlarm.addListener(async (alarm: { name: string }) => {
     }
 
     // 直接处理
-    if (DEAL_MODULES.includes(name)) {
+    if (DEAL_MODULES.includes(name))
       await AlarmService.dealAlarm(name)
-      return
-    }
 
     // 页面处理
     // 如果存在多个扩展页面，优先发送给激活状态页面，其他页面仅做同步
@@ -104,11 +104,15 @@ browser.alarms.onAlarm.addListener(async (alarm: { name: string }) => {
         item.active ? extensionTabs.splice(0, 0, item) : extensionTabs.push(item) // 激活的标签页放在最前面
       })
 
-      if (!extensionTabs.length)
+      if (!extensionTabs.length) {
+        // 写入任务表
+        await AlarmTaskModel.alarmAction(name, 'set')
         return
+      }
 
       let message: message = { type: 'alarm', name } // 直属消息，处理逻辑
       await browser.tabs.sendMessage(extensionTabs[0].id as number, message)
+
       extensionTabs.shift()
 
       if (!extensionTabs.length)
@@ -120,6 +124,7 @@ browser.alarms.onAlarm.addListener(async (alarm: { name: string }) => {
         return true
       })
     }
+
     return
   }
   catch (e) {
@@ -140,6 +145,41 @@ browser.commands.onCommand.addListener(async (command: string) => {
   catch (e) {
     // eslint-disable-next-line no-console
     console.log(`[${SERVICE_WORKER_NAME}] >>> [bg] >> onCommand error: `, e)
+  }
+})
+
+/**
+ * 监听消息
+ * @param message - 消息体
+ * @param sender - 发送者信息
+ */
+browser.runtime.onMessage.addListener(async (message: { type: string; [other: string]: string }, sender) => {
+  try {
+    // eslint-disable-next-line no-console
+    console.log(`[${SERVICE_WORKER_NAME}] >>> [bg] >> onMessage >`, message, sender)
+
+    const { type, name = '' } = message
+    switch (type) {
+      case MESSAGE_TYPES.DEAL_ALARM: { // 前端请求，在后端执行定时任务
+        await AlarmService.dealAlarm(name)
+        return true
+      }
+      case MESSAGE_TYPES.GET_PAGE_ALARM: { // 获取需要页面执行的定时任务
+        return await AlarmTaskModel.query()
+          .filter((item) => {
+            return !item.deal_at || item.set_at > item.deal_at
+          })
+          .toArray()
+      }
+      case MESSAGE_TYPES.DEAL_PAGE_ALARM: { // 标记处理完成的定时任务
+        return await AlarmTaskModel.alarmAction(name, 'deal')
+      }
+      default:
+    }
+  }
+  catch (e) {
+    // eslint-disable-next-line no-console
+    console.log(`[${SERVICE_WORKER_NAME}] >>> [bg] >> onMessage error: `, e)
   }
 })
 

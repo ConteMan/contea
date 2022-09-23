@@ -1,102 +1,65 @@
 <script setup lang="ts">
-import configState from '@models/keyValue/configState'
-import { enumToObj } from '@utils/index'
-
-import type { Config } from '@services/movie/model'
-import Base from '@services/movie'
-import { LibvioTypeEnum } from '@enums/movieEnum'
+import BaseService from '@services/movie'
+import { ConfigModel } from '@models/index'
 
 const module = 'movie'
-const defaultType = 'latest'
 
-const data = reactive({
-  loading: true,
-  config: {} as Config,
-  error: false,
-  moduleTypes: {} as any,
-  selectedTag: defaultType,
-  list: [] as any[],
-  extendInfo: {} as any,
-})
-const { loading, config, error, moduleTypes, selectedTag, list, extendInfo } = toRefs(data)
-
-// 列表数据
-const getList = async (refresh = false) => {
-  const res = await Base.libvio(refresh, selectedTag.value)
-  if (Object.keys(res).length) {
-    const { ca_updated_at, ca_expired_at, data: listData } = res
-    data.list = listData
-    data.extendInfo = { ca_updated_at, ca_expired_at }
-    data.loading = false
-  }
-  else {
-    data.error = true
-  }
+interface Data {
+  loading: boolean
+  list: any[]
+  config: Record<string, any>
 }
 
+const data: Data = reactive({
+  loading: true,
+  list: [],
+  config: {},
+})
+const { loading, list } = toRefs(data)
+
+// 获取展示数据
+const getData = async (refresh = false) => {
+  const res = await BaseService.getList('libvio', refresh)
+  if (res)
+    data.list = res.data
+  data.loading = false
+}
+
+// 初始化
 const init = async () => {
-  data.config = await configState.getItem(module)
-  getList()
+  data.config = await ConfigModel.getItem(module)
+  await getData()
 }
 init()
-
-// 获取栏目类型
-const getTypes = () => {
-  data.moduleTypes = enumToObj(LibvioTypeEnum, ['value', 'key'])
-}
-getTypes()
-
-// 选择标签
-const handleChange = (tag: string, checked: boolean) => {
-  data.selectedTag = checked ? tag : defaultType
-  getList()
-}
 
 // 刷新数据
 const refresh = async () => {
   data.loading = true
-  await getList(true)
+  await getData(true)
   data.loading = false
-}
-
-const itemStyle = (data: any) => {
-  return {
-    'background-image': data.pic_url ? `linear-gradient(45deg, rgb(229, 231, 231, 0.9), rgb(116, 115, 115, 70%)), url(${data.pic_url}` : '',
-  }
 }
 </script>
 
 <template>
-  <div class="max-w-[600px] relative">
-    <div class="tags sticky top-0 w-full max-w-[600px] pb-2 pl-2 pr-2 flex items-center">
-      <a class="cursor-pointer leading-none align-middle mr-4" @click="refresh()">
+  <div class="w-full flex">
+    <div class="flex-shrink-0 flex-grow-0 pt-10 pb-4 px-2 flex flex-col items-start gap-2">
+      <a class="cursor-pointer py-2 px-4 flex items-center" @click="refresh()">
         <mdi-refresh :class="{ 'animate-spin': loading }" />
       </a>
-      <template v-for="item in moduleTypes" :key="item.key">
-        <n-tag
-          class="mr-2 text-xs h-auto py-0.8"
-          checkable
-          :checked="selectedTag === item.value"
-          @update:checked="checked => handleChange(item.value, checked)"
-        >
-          {{ item.key }}
-        </n-tag>
-      </template>
-      <n-time v-if="extendInfo.ca_updated_at" class="flex-grow text-right text-light-800 italic text-xs cursor-default hover:(text-gray-400)" :time="0" :to="new Date().getTime() - extendInfo.ca_updated_at" type="relative" />
     </div>
 
-    <div class="mt-2 mb-4">
-      <div v-if="error" class="text-red-600 font-medium hover:(duration-200 animate-pulse)">
-        Error
-      </div>
-      <template v-else>
-        <div v-for="item in list" :key="item.url" class="item-container p-2 pl-4 mb-2 rounded-sm bg-origin-padding bg-center bg-cover cursor-default hover:(bg-blend-lighten)" :style="itemStyle(item)">
-          <div class="item-content duration-500">
+    <div class="hover-scroll flex-grow overflow-y-auto mt-10 mb-4 px-6 flex flex-col gap-4">
+      <template v-for="item in list" :key="item.vol">
+        <div class="p-4 rounded-md shadow-current bg-gray-400 bg-opacity-20 flex gap-8 hover:(bg-opacity-40)">
+          <a :href="item.url">
+            <img :src="item.pic_url" class="h-full max-h-[160px] rounded-md">
+          </a>
+          <div class="max-w-[720px] flex flex-col justify-start items-start gap-2">
             <div>
-              <a class="hover:(underline underline-offset-2 duration-200 animate-pulse)" :href="`${config.module.libvio.site}/${item.url}`">{{ item.title }}</a>
+              <a :href="item.url" class="cursor-pointer">《{{ item.title }}》</a>
             </div>
             <div>
-              {{ item.des }} {{ item.tag }}
+              <span v-if="item.desc">{{ item.tag }} / </span> {{ item.desc }}
             </div>
           </div>
         </div>
@@ -105,10 +68,3 @@ const itemStyle = (data: any) => {
   </div>
 </template>
 
-<style lang="less" scoped>
-.item-container:hover {
-  .item-content {
-    transform: translateX(0.8rem);
-  }
-}
-</style>

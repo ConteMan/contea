@@ -1,5 +1,4 @@
 import type { Table } from 'dexie'
-import { modules } from '@setting/index'
 
 class Base {
   public currentTable: Table
@@ -16,10 +15,8 @@ class Base {
     return await this.currentTable.clear()
   }
 
-  async getAll(type: 'array' | 'obj' = 'array', keys = modules): Promise<(any[] | Record<string, any>)> {
-    const res = await this.currentTable
-      .filter(item => keys.includes(item.key))
-      .toArray()
+  async getAll(type: 'array' | 'obj' = 'array'): Promise<(any[] | Record<string, any>)> {
+    const res = await this.currentTable.toArray()
 
     if (type === 'array')
       return res
@@ -35,8 +32,8 @@ class Base {
     return await this.currentTable.where(index).equals(key).first()
   }
 
-  async addItem(key: string, data: any) {
-    const dealData = { ...data, key }
+  async addItem(key: string, data: any, index = 'key') {
+    const dealData = { ...data, [index]: key }
     return await this.currentTable.add(dealData)
   }
 
@@ -49,12 +46,12 @@ class Base {
     return false
   }
 
-  async addOrUpdateItem(key: string, data: any) {
-    const exist = await this.getItem(key)
+  async addOrUpdateItem(key: string, data: any, index = 'key') {
+    const exist = await this.getItem(key, index)
     if (exist)
       return await this.currentTable.update(exist.id, data)
     else
-      return await this.addItem(key, data)
+      return await this.addItem(key, data, index)
   }
 }
 

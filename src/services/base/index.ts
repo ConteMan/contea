@@ -1,4 +1,4 @@
-import InfoModel from '@models/info'
+import { InfoModel } from '@models/index'
 
 interface Paginate {
   currentPage: number

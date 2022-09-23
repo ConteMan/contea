@@ -1,5 +1,5 @@
 import { defHttp } from '@utils/http/axios'
-import ConfigModel from '@models/config'
+import { ConfigModel } from '@models/index'
 import type { FeedParam } from './model'
 
 class Bilibili {

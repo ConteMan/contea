@@ -4,7 +4,7 @@ import 'dayjs/locale/zh-cn'
 import RelativeTime from 'dayjs/plugin/relativeTime'
 import { TypeEnum } from '@enums/bilibiliEnum'
 import { enumToObj } from '@utils/index'
-import ConfigModel from '@models/config'
+import { ConfigModel } from '@models/index'
 import Bilibili from '@services/bilibili'
 import type { FeedParam } from '@services/bilibili/model'
 

@@ -24,7 +24,7 @@ export const setting: Config = {
   showCard: false,
   module: {
     libvio: {
-      site: 'https://www.libvio.com',
+      site: 'https://www.libvio.me',
     },
     ddrk: {
       site: 'https://ddys.tv',

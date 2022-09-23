@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Config } from '@services/bilibili/model'
-import ConfigModel from '@models/config'
+import { ConfigModel } from '@models/index'
 import { openSite } from '@utils/index'
 import BilibiliService from '@services/bilibili'
 

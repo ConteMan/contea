@@ -117,3 +117,15 @@ export function sleep(time: number): Promise<void> {
     }, time)
   })
 }
+
+interface Message {
+  type: string
+  [other: string]: any
+}
+/**
+ * 向 Background 发送信息
+ * @param message - 信息体
+ */
+export async function sendToBackground(message: Message) {
+  return await browser.runtime.sendMessage(message)
+}

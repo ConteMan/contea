@@ -1,6 +1,6 @@
 import _ from 'lodash-es'
 import { defineStore } from 'pinia'
-import ConfigModel from '@models/config'
+import { ConfigModel } from '@models/index'
 
 interface DataType {
   all: any

@@ -1,4 +1,4 @@
-import ConfigModel from '@models/config'
+import { ConfigModel } from '@models/index'
 
 import sspai from '@services/sspai'
 import movie from '@services/movie'
@@ -38,7 +38,7 @@ class Alarm {
    * 处理定时任务
    * @param module string - 模块名称
    */
-  async dealAlarm(module: string) {
+  async dealAlarm(module: string, source: 'service_worker' | 'page' = 'service_worker') {
     const configInfo = await ConfigModel.getItem(module)
 
     const { enable } = configInfo
@@ -54,7 +54,12 @@ class Alarm {
         break
       }
       case 'movie': {
-        result = await movie.sync()
+        if (source === 'service_worker')
+          // result = await movie.sync()
+          result = 'service_worker'
+        if (source === 'page')
+          result = await movie.getList('libvio', true)
+          // result = 'page'
         break
       }
       case 'bilibili': {

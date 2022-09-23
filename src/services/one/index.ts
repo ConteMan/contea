@@ -1,7 +1,7 @@
 import _ from 'lodash-es'
-import ConfigModel from '@models/config'
-import RequestCache from '@services/base/requestCache'
 import { defHttp } from '@utils/http/axios'
+import RequestCache from '@services/base/requestCache'
+import { ConfigModel } from '@models/index'
 
 class One {
   private module = 'one'
@@ -23,9 +23,6 @@ class One {
 
       const res = await defHttp.get({ url: site })
       const dealRes = this.domDeal(res.data)
-
-      // eslint-disable-next-line no-console
-      console.log('>>> Services >> one > list', dealRes)
 
       return await RequestCache.set(cacheKey, { data: dealRes })
     }

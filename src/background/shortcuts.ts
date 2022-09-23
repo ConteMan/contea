@@ -1,5 +1,5 @@
 import type { message } from '@localTypes/message'
-import ConfigModel from '@models/config'
+import { ConfigModel } from '@models/index'
 
 /**
  * 快捷键切换标签页模式

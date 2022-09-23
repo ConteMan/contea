@@ -2,7 +2,7 @@ import { deepMerge } from '@utils/index'
 
 import type { SettingKeys } from '@setting/index'
 import type { Table } from 'dexie'
-import defaultSetting from '@setting/index'
+import defaultSetting, { modules } from '@setting/index'
 import Alarm from '@services/base/alarm'
 import Base from '../base'
 import db from '../db'
@@ -71,6 +71,26 @@ export default new class ConfigModel extends Base {
       await Alarm.setAlarm(module)
 
     return true
+  }
+
+  /**
+   * 获取全部模块配置
+   * @param type - 返回数据类型
+   * @param keys - 模块名称数组
+   */
+  async getAll(type: 'array' | 'obj' = 'array', keys = modules): Promise<(any[] | Record<string, any>)> {
+    const res = await this.currentTable
+      .filter(item => keys.includes(item.key))
+      .toArray()
+
+    if (type === 'array')
+      return res
+
+    const objRes: Record<string, any> = {}
+    res.forEach((item) => {
+      objRes[item.key] = item
+    })
+    return objRes
   }
 
   /**

@@ -1,7 +1,6 @@
 import type { SettingKeys } from '@setting/index'
 
-import ConfigModel from '@models/config'
-import CacheModel from '@models/cache'
+import { CacheModel, ConfigModel } from '@models/index'
 
 class RequestCache {
   /**

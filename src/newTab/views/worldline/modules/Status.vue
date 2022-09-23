@@ -4,6 +4,8 @@ import { useTimeoutFn } from '@vueuse/core'
 import { Alarm } from '@services/browser'
 import AlarmService from '@services/base/alarm'
 import SettingItem from '@newTab/components/template/SettingItem.vue'
+import { MESSAGE_TYPES } from '@enums/index'
+import { sendToBackground } from '@utils/index'
 
 const alarms = ref({} as any)
 const loading = ref(false)
@@ -27,13 +29,22 @@ const getAlarms = async (refresh = false) => {
 getAlarms()
 
 const deleteAlarm = async (name: string) => {
-  const res = await Alarm.clear(name)
+  await Alarm.clear(name)
   await getAlarms()
 }
 
 const activeAlarm = async (name: string) => {
   activeLoading.value = name
-  const res = await AlarmService.dealAlarm(name)
+  await AlarmService.dealAlarm(name, 'page')
+  activeLoading.value = ''
+}
+
+const sendBackgroundActiveAlarm = async (name: string) => {
+  activeLoading.value = `${name}_background`
+  await sendToBackground({
+    type: MESSAGE_TYPES.DEAL_ALARM,
+    name,
+  })
   activeLoading.value = ''
 }
 </script>
@@ -62,6 +73,7 @@ const activeAlarm = async (name: string) => {
           <span v-if="item.periodInMinutes">{{ item.periodInMinutes }} min</span>
           <span class="border-l-1 mx-2 w-[1px] h-[80%]" />
           <mdi-access-point class="cursor-pointer mr-1 hover:(text-red-400)" :class="{ 'animate-spin': activeLoading === item.name }" @click="activeAlarm(item.name)" />
+          <mdi-access-point-network class="cursor-pointer mr-1 hover:(text-red-400)" :class="{ 'animate-spin': activeLoading === `${item.name}_background` }" @click="sendBackgroundActiveAlarm(item.name)" />
           <mdi-delete class="cursor-pointer hover:(text-red-400)" @click="deleteAlarm(item.name)" />
         </template>
       </SettingItem>
