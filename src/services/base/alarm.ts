@@ -55,11 +55,9 @@ class Alarm {
       }
       case 'movie': {
         if (source === 'service_worker')
-          // result = await movie.sync()
-          result = 'service_worker'
+          result = await movie.sync()
         if (source === 'page')
           result = await movie.getList('libvio', true)
-          // result = 'page'
         break
       }
       case 'bilibili': {
@@ -70,6 +68,8 @@ class Alarm {
       }
       case 'one': {
         result = await one.list(true)
+        if (result)
+          await one.sync(result.data)
         break
       }
       case 'weread': {

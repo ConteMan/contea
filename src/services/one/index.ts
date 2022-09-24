@@ -2,6 +2,7 @@ import _ from 'lodash-es'
 import { defHttp } from '@utils/http/axios'
 import RequestCache from '@services/base/requestCache'
 import { ConfigModel } from '@models/index'
+import { getEnable, toDesktop } from '@services/desktop'
 
 class One {
   private module = 'one'
@@ -99,6 +100,16 @@ class One {
     list = _.orderBy(list, ['vol'], ['desc'])
 
     return list
+  }
+
+  /**
+   * 同步数据
+   * @param data - 数据
+   */
+  async sync(data: Record<string, any>) {
+    const enableDesktop = await getEnable()
+    if (enableDesktop)
+      await toDesktop(this.module, data)
   }
 }
 
