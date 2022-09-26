@@ -25,7 +25,7 @@ class One {
       const res = await defHttp.get({ url: site })
       const dealRes = this.domDeal(res.data)
 
-      return await RequestCache.set(cacheKey, { data: dealRes })
+      return await RequestCache.set(cacheKey, { data: dealRes }, undefined, -1)
     }
     catch (error) {
       // eslint-disable-next-line no-console

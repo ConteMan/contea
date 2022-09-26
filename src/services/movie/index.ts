@@ -90,7 +90,7 @@ class Movie {
         case 'libvio':
         default: {
           const { type } = extend
-          return await Libvio.getList(type ?? undefined, refresh)
+          return await Libvio.getListWithDetail(type ?? undefined, refresh)
         }
       }
     }
