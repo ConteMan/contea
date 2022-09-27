@@ -35,7 +35,9 @@ const deleteAlarm = async (name: string) => {
 
 const activeAlarm = async (name: string) => {
   activeLoading.value = name
-  await AlarmService.dealAlarm(name, 'page')
+  const res = await AlarmService.dealAlarm(name, 'page')
+  // eslint-disable-next-line no-console
+  console.log('activeAlarm: ', res)
   activeLoading.value = ''
 }
 

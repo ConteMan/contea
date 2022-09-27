@@ -24,7 +24,7 @@ export class ModelDexie extends Dexie {
 
   constructor() {
     super('contea_main')
-    this.version(6).stores({ // !!! 修改表后，记得更新版本
+    this.version(8).stores({ // !!! 修改表后，记得更新版本
       config,
       cache,
       info,

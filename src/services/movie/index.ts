@@ -1,6 +1,7 @@
 import { defHttp } from '@utils/http/axios'
 import { getEnable, toDesktop } from '@services/desktop'
 import Libvio from './modules/libvio'
+import { MovieModel } from '~/models'
 
 type Module = 'libvio' | 'ddrk'
 
@@ -13,9 +14,9 @@ class Movie {
    */
   async syncLibvio() {
     try {
-      const res = await Libvio.getPage()
+      const res = await Libvio.getList()
 
-      if (res.data) {
+      if (res && res.data) {
         const enableDesktop = await getEnable()
         if (enableDesktop) {
           await toDesktop('libvio', {
@@ -95,6 +96,33 @@ class Movie {
       }
     }
     catch (e) {
+      return false
+    }
+  }
+
+  /**
+   * 从表查询影视数据
+   * @param params - 参数
+   */
+  async movieList(params: {
+    page?: number
+    pageSize?: number
+  } = {}) {
+    try {
+      const { page = 1, pageSize = 10 } = params
+      const res = await MovieModel.query()
+        .orderBy('info_at')
+        .reverse()
+        .offset((page - 1) * pageSize)
+        .limit(pageSize)
+        .toArray()
+      // eslint-disable-next-line no-console
+      console.log(res)
+      return res
+    }
+    catch (e) {
+      // eslint-disable-next-line no-console
+      console.log(e)
       return false
     }
   }

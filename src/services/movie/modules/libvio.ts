@@ -1,8 +1,9 @@
 import MD5 from 'crypto-js/md5'
 import { defHttp } from '@utils/http/axios'
-import { ConfigModel } from '@models/index'
+import { ConfigModel, MovieModel } from '@models/index'
 import RequestCache from '@services/base/requestCache'
 import { getRandomIntInclusive, sleep } from '@utils/index'
+import type { Movie } from '@models/migrations/movie'
 
 type Types = 'latest' | 'film' | 'tv' | 'anime' | 'kj' | 'om'
 interface Rule {
@@ -10,26 +11,27 @@ interface Rule {
   allSelector: string
 }
 type TypeRule = Record<Types, Rule>
-interface ListItem {
+interface Base {
+  libvio_id: number
   title: string
   url: string
   pic_url: string
   desc: string
   tag: string
 }
-type List = ListItem[]
+type List = Base[]
 interface CacheList {
   ca_updated_at: number
   ca_expired_at: number
   data: List
 }
 interface Detail {
-  doubanId: string
-  doubanUrl: string
-  detailStr: string
-  updatedAt: string
-  detailArr: string[]
-  [other: string]: string | string[]
+  douban_id: string
+  douban_url: string
+  detail_str: string
+  updated_at: string
+  detail_arr: string[]
+  [other: string]: number | string | string[]
 }
 interface CacheDetail {
   ca_updated_at: number
@@ -37,6 +39,7 @@ interface CacheDetail {
   cache_sign?: 'get' | 'set'
   data: Detail
 }
+type Item = Base & Detail
 
 export default new class Libvio {
   private MODULE = 'movie'
@@ -89,7 +92,7 @@ export default new class Libvio {
    * 获取页面
    * @param type - 请求类型
    */
-  async getPage(type: Types | false = 'latest', url = '') {
+  async getPage(type: Types | false = 'latest', url = ''): Promise<false | string> {
     try {
       const { module } = await ConfigModel.getItem(this.MODULE)
       const { site } = module[this.MODULE_TYPE]
@@ -138,10 +141,12 @@ export default new class Libvio {
         const title = item.querySelector('a')?.getAttribute('title') ?? ''
         const oriUrl = item.querySelector('a')?.getAttribute('href') ?? ''
         const url = oriUrl ? `${site}${oriUrl}` : ''
+        const libvio_id = parseInt(oriUrl.replaceAll(/detail|\.html|\//g, '')) ?? 0
         const pic_url = item.querySelector('a')?.getAttribute('data-original') ?? ''
         const desc = item.querySelector('a span.pic-text')?.innerHTML ?? ''
         const tag = item.querySelector('a span.pic-tag')?.innerHTML ?? ''
         list.push({
+          libvio_id,
           title,
           url,
           pic_url,
@@ -171,6 +176,9 @@ export default new class Libvio {
       }
 
       const html = await this.getPage(type)
+      if (!html)
+        return false
+
       const formatRes = await this.formatPage(html)
 
       if (!formatRes)
@@ -187,30 +195,30 @@ export default new class Libvio {
    * 格式化详情页面数据
    * @param html - 页面 HTML 数据
    */
-  async formatDetailPage(html: string): Promise<false | Detail> {
+  async formatDetailPage(html: string) {
     try {
       const domParser = new DOMParser()
       const dom = domParser.parseFromString(html, 'text/html')
 
-      const doubanUrl = dom.querySelector('.stui-content .stui-content__detail p a[href*=douban]')?.getAttribute('href') ?? ''
-      const doubanId = doubanUrl ? doubanUrl.replace('https://movie.douban.com/subject/', '').replace('/', '') : '0'
+      const douban_url = dom.querySelector('.stui-content .stui-content__detail p a[href*=douban]')?.getAttribute('href') ?? ''
+      const douban_id = douban_url ? parseInt(douban_url.replace('https://movie.douban.com/subject/', '').replaceAll('/', '')) : 0
       const details = dom.querySelectorAll('.stui-content .stui-content__detail p.data')
-      const detailStr = dom.querySelector('.stui-content .stui-content__detail .desc.detail .detail-content')?.innerHTML ?? ''
-      let updatedAt = ''
+      const detail_str = dom.querySelector('.stui-content .stui-content__detail .desc.detail .detail-content')?.innerHTML ?? ''
+      let updated_at = ''
       if (details.length > 0)
-        updatedAt = `${details[details.length - 1].querySelector('a')?.innerHTML}`
-      const detailArr: string[] = []
+        updated_at = `${details[details.length - 1].querySelector('a')?.innerHTML}`
+      const detail_arr: string[] = []
       if (details.length > 2) {
         for (let i = 0; i < details.length - 2; i++)
-          detailArr.push(details[i]?.innerHTML)
+          detail_arr.push(details[i]?.innerHTML)
       }
 
       const data = {
-        doubanId,
-        doubanUrl,
-        detailStr,
-        updatedAt,
-        detailArr,
+        douban_id,
+        douban_url,
+        detail_str,
+        updated_at,
+        detail_arr,
       }
 
       return data
@@ -231,7 +239,7 @@ export default new class Libvio {
       const cacheKey = [this.MODULE, this.MODULE_TYPE, 'item', urlId]
       if (!refresh) {
         const cacheRes = await RequestCache.get(cacheKey)
-        if (cacheRes)
+        if (cacheRes && cacheRes.data.douban_id)
           return { ...cacheRes, cache_sign: true }
       }
 
@@ -252,6 +260,8 @@ export default new class Libvio {
 
   /**
    * 获取带详情的列表
+   * @param type - 请求类型
+   * @param refresh - 是否刷新数据
    */
   async getListWithDetail(type: Types = 'latest', refresh = false) {
     try {
@@ -269,9 +279,40 @@ export default new class Libvio {
             await sleep(getRandomIntInclusive(100, 3000))
         }
       }
+      await this.save(detailList)
       return detailList
     }
     catch (e) {
+      // eslint-disable-next-line no-console
+      console.log(e)
+      return false
+    }
+  }
+
+  /**
+   * 保存数据到 Movie 表
+   * @param data - 数据
+   */
+  async save(data: Item[]) {
+    try {
+      const formatData: Movie[] = []
+      data.forEach((item) => {
+        formatData.push({
+          douban_id: item.douban_id,
+          source: this.MODULE_TYPE,
+          info_at: dayjs(item.updated_at).unix(),
+
+          libvio_id: item.libvio_id,
+          libvio_data: item,
+        })
+      })
+      // eslint-disable-next-line no-console
+      console.log('>>> movie >> libvio > save ', formatData)
+      return await MovieModel.bulkSet(formatData)
+    }
+    catch (e) {
+      // eslint-disable-next-line no-console
+      console.log(e)
       return false
     }
   }
