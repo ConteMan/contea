@@ -44,6 +44,7 @@ type Item = Base & Detail
 export default new class Libvio {
   private MODULE = 'movie'
   private MODULE_TYPE = 'libvio'
+  private DETAIL_CACHE_EXPIRED = 1800
 
   private typeAllSelector = '.stui-pannel .stui-vodlist li .stui-vodlist__box'
   private TYPE_RULES: TypeRule = {
@@ -251,7 +252,7 @@ export default new class Libvio {
       if (!formatRes)
         return false
 
-      return await RequestCache.set(cacheKey, { data: formatRes }, undefined, -1)
+      return await RequestCache.set(cacheKey, { data: formatRes }, undefined, this.DETAIL_CACHE_EXPIRED)
     }
     catch (e) {
       return false
