@@ -68,7 +68,7 @@ const recentBooks = computed(() => {
       v-if="!loading && Object.keys(moduleInfo)"
       class="hover-scroll flex-grow overflow-y-auto mt-10 mb-4 px-6 flex flex-col gap-8"
     >
-      <div class="p-6 rounded-md bg-gray-400 bg-opacity-20 flex flex-col gap-2">
+      <div class="max-w-[1080px] p-6 rounded-md bg-gray-400 bg-opacity-20 flex flex-col gap-2">
         <div>
           体验会员：{{ dayjs(moduleInfo.memberCard?.expiredTime * 1000).format('YYYY-MM-DD') }}
         </div>
@@ -77,7 +77,7 @@ const recentBooks = computed(() => {
         </div>
       </div>
 
-      <div class="p-6 rounded-md bg-gray-400 bg-opacity-20 flex flex-wrap gap-4">
+      <div class="max-w-[1080px] p-6 rounded-md bg-gray-400 bg-opacity-20 flex flex-wrap gap-4">
         <template v-for="item in recentBooks" :key="item.bookId">
           <div class="py-4 flex flex-col justify-start items-start w-[160px]">
             <div class="mb-4">

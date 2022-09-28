@@ -44,7 +44,7 @@ const refresh = async () => {
 
     <div class="hover-scroll flex-grow overflow-y-auto mt-10 mb-4 px-6 flex flex-col gap-4">
       <template v-for="item in list" :key="item.vol">
-        <div class="p-4 rounded-md shadow-current bg-gray-400 bg-opacity-20 flex gap-8 hover:(bg-opacity-40)">
+        <div class="max-w-[1080px] p-4 rounded-md shadow-current bg-gray-400 bg-opacity-20 flex gap-8 hover:(bg-opacity-40)">
           <a :href="item.picTextLink">
             <img :src="item.pic" class="h-full max-h-[160px] rounded-md">
           </a>

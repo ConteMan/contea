@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { vInfiniteScroll } from '@vueuse/components'
 import { TypeEnum } from '@enums/sspaiEnum'
 import { enumToObj } from '@utils/index'
 import { ConfigModel } from '@models/index'
@@ -19,12 +20,25 @@ const data = reactive({
   moduleTypes: {} as any,
   selectedTags: [] as string[],
   list: [] as any[],
+
+  hasMore: true,
+  page: 1,
+  pageSize: 10,
 })
 const { config, loading, selectedTags, list } = toRefs(data)
 
 // 列表数据
 const getData = async () => {
-  data.list = await Base.listByModule({ currentPage: 1, num: 100 }, module, toRaw(selectedTags.value))
+  const res = await Base.listByModule({ currentPage: data.page, num: data.pageSize }, module, toRaw(data.selectedTags))
+  if (!res) {
+    data.loading = false
+    return
+  }
+
+  data.hasMore = res.length === data.pageSize
+  data.list = [...data.list, ...res]
+
+  data.loading = false
 }
 
 // 获取栏目类型
@@ -49,15 +63,30 @@ const clickTab = async (tag: string) => {
   data.selectedTags = nextSelectedTags
   // eslint-disable-next-line no-console
   console.log(tag, nextSelectedTags)
+
+  data.hasMore = true
+  data.page = 1
+  data.list = []
   await getData()
 }
 
 // 刷新数据
 const refresh = async () => {
   data.loading = true
+
+  data.page = 1
+  data.list = []
+
   await Alarm.dealAlarm(module)
   await getData()
   data.loading = false
+}
+
+const loadMore = async () => {
+  if (data.hasMore) {
+    data.page++
+    await getData()
+  }
 }
 
 // 动作描述转换
@@ -97,10 +126,13 @@ const banner = (type: string, item: Record<string, any>) => {
       </a>
     </div>
 
-    <div class="sspai-content hover-scroll flex-grow overflow-y-auto mt-10 mb-4 px-6 flex flex-col gap-4">
+    <div
+      v-infinite-scroll="[loadMore, { distance: 10 }]"
+      class="hover-scroll flex-grow overflow-y-auto mt-10 mb-4 px-6 flex flex-col gap-4"
+    >
       <div
         v-for="item in list" :key="item.title"
-        class="max-w-[800px] min-h-[132px] p-4 rounded-md shadow-current bg-gray-400 bg-opacity-20 flex gap-6 hover:(bg-opacity-40)"
+        class="max-w-[1080px] min-h-[132px] p-4 rounded-md shadow-current bg-gray-400 bg-opacity-20 flex gap-6 hover:(bg-opacity-40)"
       >
         <div class="flex-grow flex flex-col justify-center items-start gap-6">
           <div class="text-[15px] font-bold">

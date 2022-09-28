@@ -62,7 +62,7 @@ const sendBackgroundActiveAlarm = async (name: string) => {
     <div class="hover-scroll flex-grow overflow-y-auto mt-10 mb-4 px-6 flex flex-col gap-4">
       <SettingItem
         v-for="item in alarms" :key="item.name"
-        class="max-w-[800px] p-4 rounded-md bg-gray-400 bg-opacity-20 hover:(bg-opacity-40)"
+        class="max-w-[1080px] p-4 rounded-md bg-gray-400 bg-opacity-20 hover:(bg-opacity-40)"
       >
         <template #left>
           <div class="ml-4 uppercase">

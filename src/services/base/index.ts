@@ -15,29 +15,27 @@ class Base {
    * @returns []
    */
   async listByModule(paginate: Paginate, module: 'sspai' = 'sspai', moduleType: string[] = []) {
-    const { currentPage = 1, num = 10 } = paginate
-    const res = await InfoModel.query()
-      .orderBy('ca_sort_at')
-      .filter((item) => {
-        if (moduleType.length) {
-          if (!moduleType.includes(item.ca_module_type))
-            return false
-        }
-        return item.ca_module === module
-      })
-      .limit(num).offset((currentPage - 1) * num).reverse()
-      .toArray()
-    return res
-  }
-
-  /**
-   * 获取列表
-   * @param paginate 分页
-   * @returns []
-   */
-  async list(paginate: Paginate) {
-    const sspai = await this.listByModule(paginate, 'sspai')
-    return [...sspai]
+    try {
+      const { currentPage = 1, num = 10 } = paginate
+      return await InfoModel.query()
+        .orderBy('ca_sort_at')
+        .reverse()
+        .filter((item) => {
+          if (moduleType.length) {
+            if (!moduleType.includes(item.ca_module_type))
+              return false
+          }
+          return item.ca_module === module
+        })
+        .offset((currentPage - 1) * num)
+        .limit(num)
+        .toArray()
+    }
+    catch (e) {
+      // eslint-disable-next-line no-console
+      console.log(e)
+      return false
+    }
   }
 }
 
