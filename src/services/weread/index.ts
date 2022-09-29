@@ -12,9 +12,8 @@ class WeRead {
    */
   async loginCheck(): Promise<boolean> {
     try {
-      const userId = await this.getUserId()
       const user = await this.getUser()
-      if (userId && user)
+      if (user)
         return true
       return await this.refreshLogin()
     }
@@ -42,6 +41,45 @@ class WeRead {
   }
 
   /**
+   * 通过首页脚本获取整体信息
+   */
+  async total() {
+    try {
+      const loginStatus = await this.loginCheck()
+      if (!loginStatus)
+        return false
+
+      const { site: url } = await ConfigModel.getItem(this.MODULE)
+      const res = await defHttp.get({ url })
+
+      if (![200].includes(res.status))
+        return false
+
+      const body = res.data
+      const regexRes = body.match(/(\{.*\})\;/)
+      if (!regexRes[1])
+        return false
+      const data = JSON.parse(regexRes[1])
+      const {
+        user,
+        homeStoreModule: rankList,
+        shelfStoreModule: shelf,
+      } = data
+
+      return {
+        user,
+        rankList,
+        shelf,
+      }
+    }
+    catch (e) {
+      // eslint-disable-next-line no-console
+      console.log(e)
+      return false
+    }
+  }
+
+  /**
    * 获取用户 ID
    */
   async getUserId(): Promise<boolean | string> {
@@ -57,13 +95,13 @@ class WeRead {
    * 获取用户信息
    */
   async getUser() {
-    const { apiUrl } = await ConfigModel.getItem(this.MODULE)
-
-    const userVid = await this.getUserId()
-    if (!userVid)
-      return false
-
     try {
+      const { apiUrl } = await ConfigModel.getItem(this.MODULE)
+
+      const userVid = await this.getUserId()
+      if (!userVid)
+        return false
+
       const res = await defHttp.get({
         url: `${apiUrl}/user`,
         params: {
@@ -73,7 +111,7 @@ class WeRead {
       if (res.status !== 200 || res.data?.errCode)
         return false
       else
-        return await ConfigModel.mergeSet(this.MODULE_INFO_KEY, { user: res.data })
+        return res.data
     }
     catch (e) {
       return false
@@ -84,9 +122,9 @@ class WeRead {
    * 获取无限卡信息
    */
   async getMemberCard() {
-    const { apiUrl } = await ConfigModel.getItem(this.MODULE)
-
     try {
+      const { apiUrl } = await ConfigModel.getItem(this.MODULE)
+
       const res = await defHttp.get({
         url: `${apiUrl}/pay/memberCardSummary`,
         params: {
@@ -96,7 +134,7 @@ class WeRead {
       if (res.status !== 200 || res.data?.errCode)
         return false
       else
-        return await ConfigModel.mergeSet(this.MODULE_INFO_KEY, { memberCard: res.data })
+        return res.data
     }
     catch (e) {
       return false
@@ -131,7 +169,7 @@ class WeRead {
 
           data.readDetail.datas[0].readMeta.books = showBooks
         }
-        return await ConfigModel.mergeSet(this.MODULE_INFO_KEY, { readDetail: data })
+        return data
       }
     }
     catch (e) {
@@ -177,35 +215,33 @@ class WeRead {
           return cache
       }
 
-      if (!await this.loginCheck()) {
-        return {
-          result: {
-            error: 'loginCheck fail',
-          },
-        }
-      }
+      if (!await this.loginCheck())
+        return false
 
-      const user = await this.getUser()
+      const totalRes = await this.total()
+      if (!totalRes)
+        return false
+      const { user, rankList, shelf } = totalRes
+
       const memberCard = await this.getMemberCard()
       const readDetail = await this.readDetail()
 
-      const module = await ConfigModel.getItem(this.MODULE_INFO_KEY)
-
-      return {
-        ...module,
-        result: {
-          user,
-          memberCard,
-          readDetail,
-        },
+      const data = {
+        user,
+        shelf,
+        memberCard,
+        readDetail,
+        rankList,
       }
+
+      await ConfigModel.mergeSet(this.MODULE_INFO_KEY, data)
+
+      return data
     }
     catch (e) {
-      return {
-        result: {
-          error: e,
-        },
-      }
+      // eslint-disable-next-line no-console
+      console.log(e)
+      return false
     }
   }
 
