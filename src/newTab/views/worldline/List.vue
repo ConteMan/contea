@@ -127,7 +127,7 @@ watch(dealMenuOptions, (newValue) => {
 
 <template>
   <div ref="worldlineContainerRef" class="max-h-full flex">
-    <div class="worldline-menu h-full pt-10 pb-4 pl-6 pr-2 bg-gray-400 bg-opacity-20 flex flex-col items-start gap-2">
+    <div class="h-full pt-10 pb-4 pl-6 pr-2 bg-gray-400 bg-opacity-20 flex flex-col items-start gap-2">
       <div
         v-for="item in dealMenuOptions" :key="item.key"
         class="py-2 px-4 cursor-pointer hover:(text-red-600)"
@@ -138,7 +138,7 @@ watch(dealMenuOptions, (newValue) => {
       </div>
     </div>
     <div class="h-full w-[1px] bg-gray-400 bg-opacity-10 flex-shrink-0 flex-grow-0" />
-    <div class="worldline-content flex-1 w-0 h-full">
+    <div class="flex-1 w-0 h-full">
       <Movie v-if="activeKey === 'movie'" class="h-full" />
       <Sspai v-if="activeKey === 'sspai'" class="h-full" />
       <Bilibili v-if="activeKey === 'bilibili'" class="h-full" />

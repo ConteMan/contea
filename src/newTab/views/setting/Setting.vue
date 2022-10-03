@@ -1,98 +1,33 @@
 <script setup lang="ts">
 import type { Component } from 'vue'
+import { useConfigState } from '@newTab/store/index'
 
-const modules: Record<string, Component> = {}
+interface ModuleItem {
+  name: string
+  component: Component
+  title?: string
+  config?: Record<string, any>
+}
+
+const ConfitStore = useConfigState()
+const { all: moduleConfigs } = ConfitStore
+const modules: Record<string, ModuleItem> = {}
 const file: Record<string, Component> = import.meta.glob('./modules/*.vue', { import: 'default', eager: true })
 const paths = Object.keys(file)
 paths.forEach((path) => {
   const key = path.replace('\.\/modules\/', '').replace('.vue', '')
-  modules[key] = file[path]
+  const name = key.toLowerCase()
+  if (moduleConfigs?.[name]) {
+    modules[key] = {
+      name,
+      title: moduleConfigs[name].name,
+      config: moduleConfigs[name],
+      component: file[path],
+    }
+  }
 })
 
 const expandedNames = ref([])
-
-const list = [
-  {
-    name: 'base',
-    title: '基础',
-    component: modules.Base,
-  },
-  {
-    name: 'sspai',
-    title: '少数派',
-    component: modules.Sspai,
-  },
-  {
-    name: 'movie',
-    title: '影视',
-    component: modules.Movie,
-  },
-  {
-    name: 'bilibili',
-    title: '哔哩哔哩',
-    component: modules.Bilibili,
-  },
-  {
-    name: 'one',
-    title: '一个',
-    component: modules.One,
-  },
-  {
-    name: 'weread',
-    title: '微信读书',
-    component: modules.Weread,
-  },
-  // {
-  //   name: 'github',
-  //   title: 'Github',
-  //   component: modules.SettingItemGithub,
-  // },
-  // {
-  //   name: 'jike',
-  //   title: '即刻',
-  //   component: modules.SettingItemJike,
-  // },
-  // {
-  //   name: 'juejin',
-  //   title: '掘金',
-  //   component: modules.SettingItemJuejin,
-  // },
-  // {
-  //   name: 'sport',
-  //   title: '体育',
-  //   component: modules.SettingItemSport,
-  // },
-  // {
-  //   name: 'v2ex',
-  //   title: 'V2EX',
-  //   component: modules.SettingItemV2ex,
-  // },
-  // {
-  //   name: 'wakatime',
-  //   title: 'WakaTime',
-  //   component: modules.SettingItemWakaTime,
-  // },
-  // {
-  //   name: 'weather',
-  //   title: '天气',
-  //   component: modules.SettingItemWeather,
-  // },
-  // {
-  //   name: 'zhihu',
-  //   title: '知乎',
-  //   component: modules.SettingItemZhihu,
-  // },
-  // {
-  //   name: 'yuque',
-  //   title: '语雀',
-  //   component: modules.SettingItemYuque,
-  // },
-  // {
-  //   name: 'test',
-  //   title: '测试',
-  //   component: modules.SettingItemTest,
-  // },
-]
 </script>
 
 <template>
@@ -102,7 +37,7 @@ const list = [
       class="max-w-full"
       accordion
     >
-      <template v-for="item in list" :key="item.name">
+      <template v-for="item in modules" :key="item.name">
         <n-collapse-item :name="item.name" :title="item.title">
           <Component :is="item.component" />
         </n-collapse-item>

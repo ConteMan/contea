@@ -108,7 +108,7 @@ const loadMore = async () => {
               <template v-if="item.libvio_data.detail_arr">
                 <div v-for="dItem, dIndex in item.libvio_data.detail_arr" :key="dIndex" v-html="dItem.replace('/', '<br>')" />
               </template>
-              <div v-if="item.libvio_data.detail_str" v-html="item.libvio_data.detail_str" />
+              <div v-if="item.libvio_data.detail_str" class="break-all" v-html="item.libvio_data.detail_str" />
               <div v-if="item.libvio_data.updated_at">
                 更新于：{{ item.libvio_data.updated_at }}
               </div>
