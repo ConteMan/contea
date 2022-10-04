@@ -49,6 +49,7 @@ specifiers:
   vue: ^3.2.38
   vue-demi: ^0.13.11
   vue-router: ^4.1.5
+  vuedraggable: ^4.1.0
   webextension-polyfill: 0.10.0
   windicss: ^3.5.6
 
@@ -103,6 +104,7 @@ devDependencies:
   vite-plugin-windicss: 1.8.7_vite@3.1.0
   vue: 3.2.38
   vue-demi: 0.13.11_vue@3.2.38
+  vuedraggable: 4.1.0_vue@3.2.38
   webextension-polyfill: 0.10.0
   windicss: 3.5.6
 
@@ -3886,6 +3888,10 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
+  /sortablejs/1.14.0:
+    resolution: {integrity: sha512-pBXvQCs5/33fdN1/39pPL0NZF20LeRbLQ5jtnheIPN9JQAaufGjKdWduZn4U7wCtVuzKhmRkI0DFYHYRbB2H1w==}
+    dev: true
+
   /source-map-js/1.0.2:
     resolution: {integrity: sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==}
     engines: {node: '>=0.10.0'}
@@ -4418,6 +4424,15 @@ packages:
       '@vue/runtime-dom': 3.2.38
       '@vue/server-renderer': 3.2.38_vue@3.2.38
       '@vue/shared': 3.2.38
+
+  /vuedraggable/4.1.0_vue@3.2.38:
+    resolution: {integrity: sha512-FU5HCWBmsf20GpP3eudURW3WdWTKIbEIQxh9/8GE806hydR9qZqRRxRE3RjqX7PkuLuMQG/A7n3cfj9rCEchww==}
+    peerDependencies:
+      vue: ^3.0.1
+    dependencies:
+      sortablejs: 1.14.0
+      vue: 3.2.38
+    dev: true
 
   /vueuc/0.4.48_vue@3.2.38:
     resolution: {integrity: sha512-dQTBLxCzfaPuzD3c4/dIxAULtnyY+xwdotCRFUDgf0DJiwuR3tI+txJ9K8uJKmaHwc1JDUVqhRAj9Jd/pvInWg==}

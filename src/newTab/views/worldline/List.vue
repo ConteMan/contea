@@ -1,89 +1,137 @@
 <script setup lang="ts">
+import type { Component, Ref } from 'vue'
 import _ from 'lodash-es'
-
+import draggable from 'vuedraggable'
 import { useConfigState, useNewTabState } from '@newTab/store/index'
 
-import Movie from './modules/Movie.vue'
-import Sspai from './modules/Sspai.vue'
-import Bilibili from './modules/Bilibili.vue'
-import One from './modules/One.vue'
-import Weread from './modules/Weread.vue'
-import Status from './modules/Status.vue'
-
-const NewTabStore = useNewTabState()
-const { tabSelected } = storeToRefs(NewTabStore)
-
-const activeKey = ref('')
-const changeActiveKey = (key: string) => {
-  NewTabStore.changeTab(key)
+type ModuleItem = Store.MenuItem & {
+  component?: Component
+  title?: string
+  config?: Record<string, any>
 }
 
+const NewTabStore = useNewTabState()
+const { tabSelected, worldlineMenu } = storeToRefs(NewTabStore)
+
+const activeMenu = ref('')
+const changeMenu = (key: string) => {
+  NewTabStore.changeTab(key)
+}
 watch(tabSelected, (newValue) => {
-  activeKey.value = newValue
+  activeMenu.value = newValue
 })
 
-const data = reactive({
-  config: {} as any,
-  worldlineContainerRef: null,
-  worldlineTabRef: null,
-})
+const ConfigStore = useConfigState()
+const { all } = storeToRefs(ConfigStore)
 
-const configState = useConfigState()
-const { all } = storeToRefs(configState)
-data.config = all
+const file: Record<string, Component> = import.meta.glob('./modules/*.vue', { import: 'default', eager: true })
+const paths = Object.keys(file)
 
-const menuOptions = [
-  {
-    label: '影视',
-    key: 'movie',
-  },
-  {
-    label: '少数派',
-    key: 'sspai',
-  },
-  {
-    label: '哔哩哔哩',
-    key: 'bilibili',
-  },
-  {
-    label: '微信读书',
-    key: 'weread',
-  },
-  {
-    label: '一个',
-    key: 'one',
-  },
-  {
-    label: '定时',
-    key: 'status',
-  },
-]
-
-// 处理后的菜单数组
-const dealMenuOptions = computed(() => {
-  const specialKeys: string[] = []
-
-  if (data.config?.base?.statusList)
-    specialKeys.push('status')
-
-  return menuOptions.filter((item: any) => {
-    if (specialKeys.length && specialKeys.includes(item.key))
-      return true
-    return _.findIndex(Object.values(data.config),
-      (configItem: any) => {
-        return toRaw(configItem.key) === item.key && toRaw(configItem.enable)
-      }) > 0
+// 已开启模块
+const modules = computed(() => {
+  const res: Record<string, ModuleItem> = {}
+  paths.forEach((path) => {
+    const key = path.replace('\.\/modules\/', '').replace('.vue', '').toLowerCase()
+    if (key === 'status' && all.value.base.statusList) {
+      res[key] = {
+        key,
+        type: 'module',
+        title: '定时任务',
+        component: file[path],
+      }
+      return
+    }
+    if (all.value?.[key] && all.value?.[key].enable) {
+      res[key] = {
+        key,
+        type: 'module',
+        title: all.value[key].name,
+        config: all.value?.[key],
+        component: file[path],
+      }
+    }
   })
+  return res
 })
+
+// 处理菜单数据
+const dealModule = (data: Store.MenuItem[]) => {
+  const currentModules = { ...modules.value }
+  const currentModuleKeys = Object.keys(currentModules)
+  const dealModules: Store.MenuItem[] = []
+  if (data.length) { // Store 存在数据
+    data.forEach((wItem) => {
+      if (wItem.type !== 'module') { // 不是模块数据，通过
+        dealModules.push(wItem)
+      }
+      else {
+        if (currentModules?.[wItem.key]) { // 是模块数据，且存在组件，通过
+          dealModules.push(wItem)
+          _.pull(currentModuleKeys, wItem.key)
+        }
+      }
+    })
+    if (currentModuleKeys.length) { // 加载的组件中存在未配置，通过
+      currentModuleKeys.forEach((cItem) => {
+        dealModules.push({
+          key: currentModules[cItem].key,
+          type: currentModules[cItem].type,
+        })
+      })
+    }
+  }
+  else {
+    currentModuleKeys.forEach((cItem) => {
+      dealModules.push({
+        key: currentModules[cItem].key,
+        type: currentModules[cItem].type,
+      })
+    })
+  }
+  NewTabStore.setWorldlineMenu(dealModules)
+}
+dealModule(worldlineMenu.value)
+
+const menu: Ref<ModuleItem[]> = ref([])
+
+// 处理后的菜单数组，主要是关联组件和配置
+const dealMenu = (data: ModuleItem[]) => {
+  const res: ModuleItem[] = []
+  data.forEach((item) => {
+    if (item.type !== 'module') {
+      res.push(item)
+    }
+    else {
+      if (modules.value[item.key]) {
+        res.push({
+          key: item.key,
+          type: item.type,
+          component: modules.value[item.key].component,
+          config: modules.value[item.key].config,
+          title: modules.value[item.key].title,
+        })
+      }
+    }
+  })
+  menu.value = res
+  return res
+}
 
 // 处理后的菜单键数组
 const dealMenuKeys = computed(() => {
   const keys: string[] = []
-  dealMenuOptions.value.forEach((item) => {
+  menu.value.forEach((item) => {
     keys.push(item.key)
   })
   NewTabStore.setDealMenuKeys(keys)
   return keys
+})
+
+// 模块类型数据（含有组件）
+const dealModuleComponents = computed(() => {
+  return menu.value.filter((item) => {
+    return item.type === 'module'
+  })
 })
 
 // 处理默认选择 Tab
@@ -97,7 +145,7 @@ const getDefaultKey = (options: any[], key = '') => {
   }
 
   const index = _.findIndex(options, (item: any) => {
-    return item.type !== 'divider' && !item.disabled
+    return item.type !== 'other'
   })
   if (index < 0)
     return ''
@@ -106,45 +154,64 @@ const getDefaultKey = (options: any[], key = '') => {
 }
 
 const init = () => {
-  if (dealMenuOptions.value.length)
-    activeKey.value = getDefaultKey(Object.values(dealMenuOptions.value), tabSelected.value)
+  dealMenu(worldlineMenu.value)
+  activeMenu.value = getDefaultKey(Object.values(menu.value), tabSelected.value)
 }
 init()
 
-watch(dealMenuOptions, (newValue) => {
-  if (!newValue.length) {
-    activeKey.value = ''
+watch(() => all.value, (newValue) => {
+  dealModule(worldlineMenu.value)
+  dealMenu(worldlineMenu.value)
+})
+watch(() => menu, (newValue) => {
+  // eslint-disable-next-line no-console
+  console.log('menu newValue', newValue)
+  dealModule(newValue.value)
+
+  if (!newValue.value.length) {
+    activeMenu.value = ''
     NewTabStore.changeTab('')
     return
   }
 
-  if (!activeKey.value || !dealMenuKeys.value.includes(tabSelected.value)) {
-    activeKey.value = getDefaultKey(Object.values(newValue))
-    NewTabStore.changeTab(activeKey.value)
+  if (!activeMenu.value || !dealMenuKeys.value.includes(tabSelected.value)) {
+    activeMenu.value = getDefaultKey(Object.values(newValue.value))
+    NewTabStore.changeTab(activeMenu.value)
   }
+}, {
+  deep: true,
 })
 </script>
 
 <template>
-  <div ref="worldlineContainerRef" class="max-h-full flex">
+  <div class="max-h-full flex">
     <div class="h-full pt-10 pb-4 pl-6 pr-2 bg-gray-400 bg-opacity-20 flex flex-col items-start gap-2">
-      <div
-        v-for="item in dealMenuOptions" :key="item.key"
-        class="py-2 px-4 cursor-pointer hover:(text-red-600)"
-        :class="{ 'menu-active text-red-600 font-bold': activeKey === item.key }"
-        @click="changeActiveKey(item.key)"
+      <draggable
+        tag="div"
+        item-key="key"
+        handle=".handle"
+        :list="menu"
+        class="overflow-y-auto flex flex-col px-2"
       >
-        {{ item.label }}
-      </div>
+        <template #item="{ element }">
+          <div
+            v-if="element.type === 'module'"
+            class="py-2 pr-4 flex items-center cursor-pointer hover:(text-red-600)"
+            :class="{ 'menu-active text-red-600 font-bold': activeMenu === element.key }"
+          >
+            <span class="handle flex items-center opacity-0 hover:(opacity-100)">
+              <mdi-format-align-justify />
+            </span>
+            <span class="pl-4" @click="changeMenu(element.key)">{{ element.title }}</span>
+          </div>
+        </template>
+      </draggable>
     </div>
     <div class="h-full w-[1px] bg-gray-400 bg-opacity-10 flex-shrink-0 flex-grow-0" />
     <div class="flex-1 w-0 h-full">
-      <Movie v-if="activeKey === 'movie'" class="h-full" />
-      <Sspai v-if="activeKey === 'sspai'" class="h-full" />
-      <Bilibili v-if="activeKey === 'bilibili'" class="h-full" />
-      <One v-if="activeKey === 'one'" class="h-full" />
-      <Weread v-if="activeKey === 'weread'" class="h-full" />
-      <Status v-if="activeKey === 'status'" class="h-full" />
+      <template v-for="item in dealModuleComponents" :key="item.key">
+        <Component :is="item.component" v-if="activeMenu === item.key" class="h-full" />
+      </template>
     </div>
   </div>
 </template>

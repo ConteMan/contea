@@ -11,6 +11,7 @@ interface ModuleItem {
 
 const ConfitStore = useConfigState()
 const { all: moduleConfigs } = ConfitStore
+
 const modules: Record<string, ModuleItem> = {}
 const file: Record<string, Component> = import.meta.glob('./modules/*.vue', { import: 'default', eager: true })
 const paths = Object.keys(file)

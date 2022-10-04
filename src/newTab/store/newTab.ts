@@ -26,6 +26,8 @@ export const useNewTabState = defineStore('newTab',
       theme: 'light', // light, dark
 
       layoutMode: 'clean', // clean, list, card
+
+      worldlineMenu: [] as Store.MenuItem[],
     })
 
     const {
@@ -38,6 +40,7 @@ export const useNewTabState = defineStore('newTab',
       theme,
       themeMode,
       layoutMode,
+      worldlineMenu,
     } = toRefs(data)
 
     // Tab
@@ -173,6 +176,15 @@ export const useNewTabState = defineStore('newTab',
       }
     }
 
+    // Worldline Menu
+    const getWorldlineMenu = () => {
+      return data.worldlineMenu
+    }
+
+    const setWorldlineMenu = (menu: Store.MenuItem[]) => {
+      data.worldlineMenu = menu
+    }
+
     return {
       tabSelected,
       dealMenuKeys,
@@ -186,6 +198,8 @@ export const useNewTabState = defineStore('newTab',
       theme,
       themeMode,
       layoutMode,
+
+      worldlineMenu,
 
       getDarkClass,
       setDealMenuKeys,
@@ -210,6 +224,9 @@ export const useNewTabState = defineStore('newTab',
 
       changeLayoutMode,
       setLayoutMode,
+
+      getWorldlineMenu,
+      setWorldlineMenu,
     }
   },
   {
