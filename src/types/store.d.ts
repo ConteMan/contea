@@ -1,7 +1,8 @@
 
 namespace Store {
+  export type MenuItemType = 'module' | 'divider' | 'other'
   export interface MenuItem {
     key: string
-    type: 'module' | 'other'
+    type: MenuItemType
   }
 }

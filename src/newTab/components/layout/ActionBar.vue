@@ -164,6 +164,9 @@ const uploadHandleChange = () => {
 }
 .icon-btn {
   cursor: pointer;
+  display: inline-flex;
+  justify-items: center;
+  align-items: center;
   opacity: 0;
   &:hover {
     opacity: 1;
@@ -171,7 +174,7 @@ const uploadHandleChange = () => {
 }
 .action-bar-container {
   &:hover {
-    background-color: rgba(156, 163, 175, .2);
+    // background-color: rgba(156, 163, 175, .2);
     .icon-btn {
       opacity: 1 !important;
     }

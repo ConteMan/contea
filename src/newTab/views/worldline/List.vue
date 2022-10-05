@@ -121,7 +121,8 @@ const dealMenu = (data: ModuleItem[]) => {
 const dealMenuKeys = computed(() => {
   const keys: string[] = []
   menu.value.forEach((item) => {
-    keys.push(item.key)
+    if (item.type === 'module')
+      keys.push(item.key)
   })
   NewTabStore.setDealMenuKeys(keys)
   return keys
@@ -159,13 +160,11 @@ const init = () => {
 }
 init()
 
-watch(() => all.value, (newValue) => {
+watch(() => all.value, () => {
   dealModule(worldlineMenu.value)
   dealMenu(worldlineMenu.value)
 })
 watch(() => menu, (newValue) => {
-  // eslint-disable-next-line no-console
-  console.log('menu newValue', newValue)
   dealModule(newValue.value)
 
   if (!newValue.value.length) {
@@ -181,31 +180,77 @@ watch(() => menu, (newValue) => {
 }, {
   deep: true,
 })
+
+// 菜单模式
+const menuMode = ref('')
+const changeMenuMode = () => {
+  menuMode.value = !menuMode.value ? 'edit' : ''
+}
+
+// 添加菜单内容
+const addMenuItem = (type: Store.MenuItemType = 'divider') => {
+  if (type === 'divider') {
+    menu.value = [
+      ...menu.value,
+      {
+        key: `divider-${new Date().getTime()}`,
+        type,
+      }]
+  }
+}
+// 移除菜单内容
+const removeMenuItem = (key: string, type: Store.MenuItemType = 'divider') => {
+  if (type === 'divider') {
+    menu.value = menu.value.filter((item) => {
+      return item.key !== key
+    })
+  }
+}
 </script>
 
 <template>
   <div class="max-h-full flex">
-    <div class="h-full pt-10 pb-4 pl-6 pr-2 bg-gray-400 bg-opacity-20 flex flex-col items-start gap-2">
+    <div class="h-full pt-10 pb-4 bg-gray-400 bg-opacity-20 relative flex flex-col items-start gap-2">
       <draggable
         tag="div"
         item-key="key"
         handle=".handle"
         :list="menu"
-        class="overflow-y-auto flex flex-col px-2"
+        class="overflow-y-auto flex flex-col"
       >
         <template #item="{ element }">
           <div
-            v-if="element.type === 'module'"
-            class="py-2 pr-4 flex items-center cursor-pointer hover:(text-red-600)"
+            class="menu-item select-none flex items-center"
             :class="{ 'menu-active text-red-600 font-bold': activeMenu === element.key }"
           >
-            <span class="handle flex items-center opacity-0 hover:(opacity-100)">
-              <mdi-format-align-justify />
+            <span
+              class="pl-2 flex items-center"
+              :class="{ 'handle cursor-move opacity-100': menuMode, 'opacity-0': !menuMode }"
+            >
+              <mdi-drag />
             </span>
-            <span class="pl-4" @click="changeMenu(element.key)">{{ element.title }}</span>
+            <span
+              v-if="element.type === 'divider' && menuMode"
+              class="px-1 cursor-pointer flex items-center"
+              @click="removeMenuItem(element.key)"
+            >
+              <mdi-delete />
+            </span>
+            <span v-if="element.type === 'module'" class="py-2 pl-2 pr-6 cursor-pointer " @click="changeMenu(element.key)">{{ element.title }}</span>
+            <span v-if="element.type === 'divider'" class="pr-2 inline-block w-full border-b border-b-light-500" />
           </div>
         </template>
       </draggable>
+      <div
+        class="absolute bottom-0 left-11 py-4 opacity-40 flex justify-start items-center gap-2 hover:(opacity-100)"
+      >
+        <span class="flex items-center" :class="{ 'text-red-400': menuMode }" @click="changeMenuMode()">
+          <mdi-sort class="cursor-pointer" />
+        </span>
+        <span v-if="menuMode" class="flex items-center" @click="addMenuItem()">
+          <mdi-plus class="cursor-pointer" />
+        </span>
+      </div>
     </div>
     <div class="h-full w-[1px] bg-gray-400 bg-opacity-10 flex-shrink-0 flex-grow-0" />
     <div class="flex-1 w-0 h-full">
@@ -222,7 +267,7 @@ watch(() => menu, (newValue) => {
   &::before {
     content: "";
     position: absolute;
-    left: -8px;
+    left: 0px;
     top: 4px;
     z-index: 1;
     border-left: 4px solid red;
