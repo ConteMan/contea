@@ -218,7 +218,7 @@ export default new class Libvio {
         douban_id,
         douban_url,
         detail_str,
-        updated_at,
+        updated_at: dayjs(updated_at).isValid() ? updated_at : new Date().getTime(),
         detail_arr,
       }
 

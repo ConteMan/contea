@@ -210,7 +210,7 @@ const removeMenuItem = (key: string, type: Store.MenuItemType = 'divider') => {
 
 <template>
   <div class="max-h-full flex">
-    <div class="h-full pt-10 pb-4 bg-gray-400 bg-opacity-20 relative flex flex-col items-start gap-2">
+    <div class="h-full pt-10 bg-gray-400 bg-opacity-20 relative flex flex-col items-start gap-2">
       <draggable
         tag="div"
         item-key="key"
@@ -220,24 +220,30 @@ const removeMenuItem = (key: string, type: Store.MenuItemType = 'divider') => {
       >
         <template #item="{ element }">
           <div
-            class="menu-item select-none flex items-center"
+            class="menu-item min-w-[160px] select-none flex justify-start items-center"
             :class="{ 'menu-active text-red-600 font-bold': activeMenu === element.key }"
           >
-            <span
-              class="pl-2 flex items-center"
-              :class="{ 'handle cursor-move opacity-100': menuMode, 'opacity-0': !menuMode }"
-            >
-              <mdi-drag />
-            </span>
-            <span
-              v-if="element.type === 'divider' && menuMode"
-              class="px-1 cursor-pointer flex items-center"
-              @click="removeMenuItem(element.key)"
-            >
-              <mdi-delete />
-            </span>
-            <span v-if="element.type === 'module'" class="py-2 pl-2 pr-6 cursor-pointer " @click="changeMenu(element.key)">{{ element.title }}</span>
-            <span v-if="element.type === 'divider'" class="pr-2 inline-block w-full border-b border-b-light-500" />
+            <div v-if="element.type === 'module'" class="pl-8 py-2 cursor-pointer" @click="changeMenu(element.key)">
+              {{ element.title }}
+            </div>
+            <div v-if="element.type === 'divider'" class="w-full ml-8 py-2 flex items-center ">
+              <div class="w-full inline-block border-b border-b-light-500" />
+            </div>
+            <div class="flex-grow flex items-center justify-end">
+              <span
+                v-if="menuMode"
+                class="px-1 cursor-pointer flex items-center"
+                @click="removeMenuItem(element.key)"
+              >
+                <mdi-delete />
+              </span>
+              <span
+                v-if="menuMode"
+                class="handle cursor-move flex items-center"
+              >
+                <mdi-drag />
+              </span>
+            </div>
           </div>
         </template>
       </draggable>
