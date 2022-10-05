@@ -164,7 +164,7 @@ const contentDeal = (content: string) => {
       <a class="cursor-pointer py-2 px-4 flex items-center" @click="refresh()">
         <mdi-refresh :class="{ 'animate-spin': loading }" />
       </a>
-      <div class=" h-[30%] mx-4 border-l border-l-gray-400 opacity-20" />
+      <div class="h-[30%] mx-4 border-l border-l-gray-400 opacity-20" />
       <template v-for="item in data.moduleTypes" :key="item.key">
         <div
           class="py-2 px-2 cursor-pointer opacity-60"
@@ -179,7 +179,7 @@ const contentDeal = (content: string) => {
     <template #content>
       <div
         v-infinite-scroll="[loadMore, { distance: 10 }]"
-        class="h-full overflow-y-auto hover-scroll pr-8 flex flex-col gap-4"
+        class="h-full overflow-y-auto hover-scroll pr-8 pb-8 flex flex-col gap-4"
       >
         <template v-for="item in list" :key="item.id_str">
           <div class="p-4 rounded-md bg-gray-400 bg-opacity-20 hover:(bg-opacity-40)">

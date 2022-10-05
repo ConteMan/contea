@@ -6,6 +6,7 @@ import { MESSAGE_TYPES } from '@enums/index'
 import { sendToBackground } from '@utils/index'
 import AlarmService from '@services/base/alarm'
 import SettingItem from '@newTab/components/template/SettingItem.vue'
+import WorldlineContent from '@newTab/layout/WorldlineContent.vue'
 
 const alarms = ref({} as any)
 const loading = ref(false)
@@ -52,33 +53,35 @@ const sendBackgroundActiveAlarm = async (name: string) => {
 </script>
 
 <template>
-  <div class="w-full flex">
-    <div class="flex-shrink-0 flex-grow-0 pt-10 pb-4 px-2 flex flex-col items-start gap-2">
+  <WorldlineContent>
+    <template #bar>
       <a class="cursor-pointer py-2 px-4 flex items-center" @click="getAlarms(true)">
         <mdi-refresh :class="{ 'animate-spin': loading }" />
       </a>
-    </div>
+    </template>
 
-    <div class="hover-scroll flex-grow overflow-y-auto mt-10 mb-4 px-6 flex flex-col gap-4">
-      <SettingItem
-        v-for="item in alarms" :key="item.name"
-        class="max-w-[1080px] p-4 rounded-md bg-gray-400 bg-opacity-20 hover:(bg-opacity-40)"
-      >
-        <template #left>
-          <div class="ml-4 uppercase">
-            {{ item.name }}
-          </div>
-        </template>
-        <template #right>
-          <span>{{ dayjs(item.scheduledTime).format('YYYY-MM-DD HH:mm:ss SSS') }}</span>
-          <span v-if="item.periodInMinutes" class="border-l-1 mx-2 w-[1px] h-[80%]" />
-          <span v-if="item.periodInMinutes">{{ item.periodInMinutes }} min</span>
-          <span class="border-l-1 mx-2 w-[1px] h-[80%]" />
-          <mdi-access-point class="cursor-pointer mr-1 hover:(text-red-400)" :class="{ 'animate-spin': activeLoading === item.name }" @click="activeAlarm(item.name)" />
-          <mdi-access-point-network class="cursor-pointer mr-1 hover:(text-red-400)" :class="{ 'animate-spin': activeLoading === `${item.name}_background` }" @click="sendBackgroundActiveAlarm(item.name)" />
-          <mdi-delete class="cursor-pointer hover:(text-red-400)" @click="deleteAlarm(item.name)" />
-        </template>
-      </SettingItem>
-    </div>
-  </div>
+    <template #content>
+      <div class="h-full overflow-y-auto hover-scroll pr-8 pb-8 flex flex-col gap-4">
+        <SettingItem
+          v-for="item in alarms" :key="item.name"
+          class="max-w-[1080px] p-4 rounded-md bg-gray-400 bg-opacity-20 hover:(bg-opacity-40)"
+        >
+          <template #left>
+            <div class="ml-4 uppercase">
+              {{ item.name }}
+            </div>
+          </template>
+          <template #right>
+            <span>{{ dayjs(item.scheduledTime).format('YYYY-MM-DD HH:mm:ss SSS') }}</span>
+            <span v-if="item.periodInMinutes" class="h-[30%] mx-4 border-l border-l-gray-400 opacity-20" />
+            <span v-if="item.periodInMinutes">{{ item.periodInMinutes }} min</span>
+            <span class="h-[30%] mx-4 border-l border-l-gray-400 opacity-20" />
+            <mdi-access-point class="cursor-pointer mr-2 hover:(text-red-400)" :class="{ 'animate-spin': activeLoading === item.name }" @click="activeAlarm(item.name)" />
+            <mdi-access-point-network class="cursor-pointer mr-2 hover:(text-red-400)" :class="{ 'animate-spin': activeLoading === `${item.name}_background` }" @click="sendBackgroundActiveAlarm(item.name)" />
+            <mdi-delete class="cursor-pointer hover:(text-red-400)" @click="deleteAlarm(item.name)" />
+          </template>
+        </SettingItem>
+      </div>
+    </template>
+  </WorldlineContent>
 </template>

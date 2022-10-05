@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import BaseService from '@services/one'
+import WorldlineContent from '@newTab/layout/WorldlineContent.vue'
 
 interface Data {
   loading: boolean
@@ -35,35 +36,39 @@ const refresh = async () => {
 </script>
 
 <template>
-  <div class="w-full flex">
-    <div class="flex-shrink-0 flex-grow-0 pt-10 pb-4 px-2 flex flex-col items-start gap-2">
+  <WorldlineContent>
+    <template #bar>
       <a class="cursor-pointer py-2 px-4 flex items-center" @click="refresh()">
         <mdi-refresh :class="{ 'animate-spin': loading }" />
       </a>
-    </div>
+    </template>
 
-    <div class="hover-scroll flex-grow overflow-y-auto mt-10 mb-4 px-6 flex flex-col gap-4">
-      <template v-for="item in list" :key="item.vol">
-        <div class="max-w-[1080px] p-4 rounded-md shadow-current bg-gray-400 bg-opacity-20 flex gap-8 hover:(bg-opacity-40)">
-          <a :href="item.picTextLink">
-            <img :src="item.pic" class="h-full max-h-[160px] rounded-md">
-          </a>
-          <div class="max-w-[720px] flex flex-col justify-start items-start gap-2">
-            <div class="mb-2">
-              <a :href="item.picTextLink">{{ item.date }} / {{ item.vol }}</a>
-            </div>
-            <div>
-              <a :href="item.picTextLink">{{ item.text }}</a>
-            </div>
-            <div>
-              <a :href="item.articleLink" class="cursor-pointer">《{{ item.articleTitle }}》<template v-if="item.articleAuthor"> - {{ item.articleAuthor }}</template></a>
-            </div>
-            <div>
-              <a :href="item.questionLink" class="cursor-pointer">{{ item.questionTitle }}</a>
+    <template #content>
+      <div class="h-full overflow-y-auto hover-scroll pr-8 pb-8 flex flex-col gap-4">
+        <template v-for="item in list" :key="item.vol">
+          <div class="p-4 rounded-md bg-gray-400 bg-opacity-20 hover:(bg-opacity-40)">
+            <div class="max-w-[1080px] flex gap-8">
+              <a :href="item.picTextLink">
+                <img :src="item.pic" class="h-full max-h-[160px] rounded-md">
+              </a>
+              <div class="flex-grow pt-2 flex flex-col justify-start items-start gap-2">
+                <div class="mb-2">
+                  <a :href="item.picTextLink">{{ item.date }} / {{ item.vol }}</a>
+                </div>
+                <div>
+                  <a :href="item.picTextLink">{{ item.text }}</a>
+                </div>
+                <div>
+                  <a :href="item.articleLink" class="cursor-pointer">{{ item.articleTitle }}<template v-if="item.articleAuthor"> - {{ item.articleAuthor }}</template></a>
+                </div>
+                <div>
+                  <a :href="item.questionLink" class="cursor-pointer">{{ item.questionTitle }}</a>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </template>
-    </div>
-  </div>
+        </template>
+      </div>
+    </template>
+  </WorldlineContent>
 </template>
