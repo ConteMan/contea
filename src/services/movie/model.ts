@@ -40,3 +40,5 @@ export interface Item {
 }
 
 export type List = Item []
+
+export type MovieModules = 'libvio' | 'ddrk'

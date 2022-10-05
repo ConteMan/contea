@@ -1,8 +1,11 @@
 <script setup lang="ts">
+import type { MovieModules } from '@services/movie/model'
 import { vInfiniteScroll } from '@vueuse/components'
 import { ConfigModel } from '@models/index'
 import BaseService from '@services/movie'
 import WorldlineContent from '@newTab/layout/WorldlineContent.vue'
+import { MovieModuleEnum } from '@enums/movieEnum'
+import { enumToObj } from '@utils/index'
 
 const module = 'movie'
 
@@ -11,6 +14,8 @@ interface Data {
   list: any[]
   config: Record<string, any>
 
+  moduleTypes: Record<string, any>[]
+  selectedType: MovieModules | ''
   page: number
   pageSize: number
   hasMore: boolean
@@ -21,15 +26,24 @@ const data: Data = reactive({
   list: [],
   config: {},
 
+  moduleTypes: [],
+  selectedType: '',
   page: 1,
   pageSize: 10,
   hasMore: true,
 })
-const { loading, list, page, pageSize, hasMore } = toRefs(data)
+const { loading, list, selectedType, page, pageSize, hasMore } = toRefs(data)
+
+// 获取栏目类型
+const getTypes = () => {
+  data.moduleTypes = enumToObj(MovieModuleEnum, ['value', 'key'])
+}
+getTypes()
 
 // 获取展示数据
 const getData = async () => {
   const res = await BaseService.movieList({
+    type: selectedType.value,
     page: page.value,
     pageSize: pageSize.value,
   })
@@ -55,6 +69,7 @@ init()
 const resetList = async () => {
   data.page = 1
   data.hasMore = true
+  data.list = []
 }
 
 // 刷新数据
@@ -73,6 +88,15 @@ const loadMore = async () => {
     await getData()
   }
 }
+
+// 选择类别
+const selectModuleType = async (moduleType: Data['selectedType']) => {
+  data.selectedType = data.selectedType === moduleType ? '' : moduleType
+  data.loading = 'get-data'
+  resetList()
+  await getData()
+  data.loading = false
+}
 </script>
 
 <template>
@@ -81,6 +105,15 @@ const loadMore = async () => {
       <a class="cursor-pointer flex items-center" @click="refresh()">
         <mdi-refresh :class="{ 'animate-spin': loading === 'get-data' }" />
       </a>
+      <div class=" h-[30%] mx-4 border-l border-l-gray-400 opacity-20" />
+      <div
+        v-for="item in data.moduleTypes" :key="item.value"
+        class="py-2 px-2 cursor-pointer opacity-60"
+        :class="{ '!opacity-100 text-red-500': selectedType === item.value }"
+        @click="selectModuleType(item.value)"
+      >
+        {{ item.key }}
+      </div>
     </template>
 
     <template #content>

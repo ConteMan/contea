@@ -6,3 +6,8 @@ export enum LibvioTypeEnum {
   kj = '日韩剧',
   om = '欧美剧',
 }
+
+export enum MovieModuleEnum {
+  libvio = 'Libvio',
+  ddrk = '低端影视',
+}

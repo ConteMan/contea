@@ -1,9 +1,8 @@
 import { defHttp } from '@utils/http/axios'
 import { getEnable, toDesktop } from '@services/desktop'
+import { MovieModel } from '@models/index'
+import type { MovieModules } from './model'
 import Libvio from './modules/libvio'
-import { MovieModel } from '~/models'
-
-type Module = 'libvio' | 'ddrk'
 
 class Movie {
   private module = 'movie'
@@ -85,7 +84,7 @@ class Movie {
    * @param refresh - 是否刷新数据
    * @param extend - 扩展参数，如具体类型、页码等
    */
-  async getList(module: Module = 'libvio', refresh = false, extend: Record<string, any> = {}) {
+  async getList(module: MovieModules = 'libvio', refresh = false, extend: Record<string, any> = {}) {
     try {
       switch (module) {
         case 'libvio':
@@ -105,14 +104,18 @@ class Movie {
    * @param params - 参数
    */
   async movieList(params: {
+    type?: string | null
     page?: number
     pageSize?: number
   } = {}) {
     try {
-      const { page = 1, pageSize = 10 } = params
+      const { type = null, page = 1, pageSize = 10 } = params
       const res = await MovieModel.query()
         .orderBy('info_at')
         .reverse()
+        .filter((item) => {
+          return !type ? true : item.source === type
+        })
         .offset((page - 1) * pageSize)
         .limit(pageSize)
         .toArray()
