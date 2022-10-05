@@ -102,7 +102,7 @@ const selectModuleType = async (moduleType: Data['selectedType']) => {
 <template>
   <WorldlineContent>
     <template #bar>
-      <a class="cursor-pointer flex items-center" @click="refresh()">
+      <a class=" py-2 px-4 cursor-pointer flex items-center" @click="refresh()">
         <mdi-refresh :class="{ 'animate-spin': loading === 'get-data' }" />
       </a>
       <div class=" h-[30%] mx-4 border-l border-l-gray-400 opacity-20" />

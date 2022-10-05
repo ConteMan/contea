@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import dayjs from 'dayjs'
 import 'dayjs/locale/zh-cn'
 import RelativeTime from 'dayjs/plugin/relativeTime'
 import { vInfiniteScroll } from '@vueuse/components'
@@ -8,6 +7,7 @@ import { enumToObj } from '@utils/index'
 import { ConfigModel } from '@models/index'
 import Bilibili from '@services/bilibili'
 import type { FeedParam } from '@services/bilibili/model'
+import WorldlineContent from '@newTab/layout/WorldlineContent.vue'
 
 dayjs.locale('zh-cn')
 dayjs.extend(RelativeTime)
@@ -44,7 +44,7 @@ const data: Data = reactive({
 
   list: [],
 })
-const { loading, config, selectedType, list, hasMore } = toRefs(data)
+const { loading, config, selectedType, list } = toRefs(data)
 
 // 动态数据
 const getDynamic = async (refresh = false) => {
@@ -159,84 +159,89 @@ const contentDeal = (content: string) => {
 </script>
 
 <template>
-  <div class="w-full flex">
-    <div class="flex-shrink-0 flex-grow-0 pt-10 pb-4 px-2 flex flex-col items-start gap-2">
+  <WorldlineContent>
+    <template #bar>
+      <a class="cursor-pointer py-2 px-4 flex items-center" @click="refresh()">
+        <mdi-refresh :class="{ 'animate-spin': loading }" />
+      </a>
+      <div class=" h-[30%] mx-4 border-l border-l-gray-400 opacity-20" />
       <template v-for="item in data.moduleTypes" :key="item.key">
         <div
-          class="py-2 px-4 cursor-pointer"
-          :class="[selectedType === item.value ? 'text-red-500 font-bold' : '']"
+          class="py-2 px-2 cursor-pointer opacity-60"
+          :class="[selectedType === item.value ? 'text-red-500 !opacity-100' : '']"
           @click="selectModuleType(item.value)"
         >
           {{ item.key }}
         </div>
       </template>
-      <a class="cursor-pointer py-2 px-4 flex items-center" @click="refresh()">
-        <mdi-refresh :class="{ 'animate-spin': loading }" />
-      </a>
-    </div>
+    </template>
 
-    <div
-      v-infinite-scroll="[loadMore, { distance: 10 }]"
-      class="hover-scroll flex-grow overflow-y-auto mt-10 mb-4 px-6 flex flex-col gap-4"
-    >
-      <template v-for="item in list" :key="item.id_str">
-        <div class="max-w-[1080px] p-4 rounded-md shadow-current bg-gray-400 bg-opacity-20 flex flex-col hover:(bg-opacity-40)">
-          <div class="pb-3">
-            <template v-if="item.type === 'DYNAMIC_TYPE_LIVE_RCMD'">
-              <a :href="liveInfo(item.modules.module_dynamic.major.live_rcmd.content).live_play_info.link">{{ liveInfo(item.modules.module_dynamic.major.live_rcmd.content).live_play_info.title }}</a>
-            </template>
-            <template v-if="['DYNAMIC_TYPE_DRAW', 'DYNAMIC_TYPE_FORWARD'].includes(item.type) && item.modules.module_dynamic.desc?.text">
-              <a :href="`${config.tSite}/${item.id_str}`"><div v-html="contentDeal(item.modules.module_dynamic.desc.text)" /></a>
-            </template>
-            <template v-if="['DYNAMIC_TYPE_AV'].includes(item.type)">
-              <a :href="`https:${item.modules.module_dynamic.major.archive.jump_url}`">{{ item.modules.module_dynamic.major.archive.title }}</a>
-            </template>
-          </div>
-          <div
-            v-if="item.modules.module_dynamic.major?.draw?.items"
-            class="pb-6 max-w-[600px] flex justify-start items-center flex-wrap gap-2"
-          >
-            <div
-              v-for="drawItem in item.modules.module_dynamic.major.draw.items" :key="drawItem.src"
-              :style="{ backgroundImage: `url(${drawItem.src})` }"
-              class="w-[180px] h-[180px] rounded-md bg-cover"
-            />
-          </div>
-          <!-- 转发原文 -->
-          <div
-            v-if="['DYNAMIC_TYPE_FORWARD'].includes(item.type)"
-            class="border-l border-l-8 border-gray-800 border-opacity-60 p-4 mb-6"
-          >
-            <div class="pb-3 max-w-[1080px]">
-              <template v-if="item.orig.type === 'DYNAMIC_TYPE_LIVE_RCMD'">
-                <a :href="liveInfo(item.orig.modules.module_dynamic.major.live_rcmd.content).live_play_info.link">{{ liveInfo(item.orig.modules.module_dynamic.major.live_rcmd.content).live_play_info.title }}</a>
-              </template>
-              <template v-if="['DYNAMIC_TYPE_DRAW', 'DYNAMIC_TYPE_FORWARD'].includes(item.orig.type) && item.orig.modules.module_dynamic.desc?.text">
-                <a :href="`${config.tSite}/${item.orig.id_str}`"><div v-html="contentDeal(item.orig.modules.module_dynamic.desc.text)" /></a>
-              </template>
-              <template v-if="['DYNAMIC_TYPE_AV'].includes(item.orig.type)">
-                <a :href="`https:${item.orig.modules.module_dynamic.major.archive.jump_url}`">{{ item.orig.modules.module_dynamic.major.archive.title }}</a>
-              </template>
-            </div>
-            <div
-              v-if="item.orig.modules.module_dynamic.major?.draw?.items"
-              class="pb-6 flex justify-start items-center flex-wrap gap-2"
-            >
+    <template #content>
+      <div
+        v-infinite-scroll="[loadMore, { distance: 10 }]"
+        class="h-full overflow-y-auto hover-scroll pr-8 flex flex-col gap-4"
+      >
+        <template v-for="item in list" :key="item.id_str">
+          <div class="p-4 rounded-md bg-gray-400 bg-opacity-20 hover:(bg-opacity-40)">
+            <div class="max-w-[1080px] flex flex-col">
+              <div class="pb-3">
+                <template v-if="item.type === 'DYNAMIC_TYPE_LIVE_RCMD'">
+                  <a :href="liveInfo(item.modules.module_dynamic.major.live_rcmd.content).live_play_info.link">{{ liveInfo(item.modules.module_dynamic.major.live_rcmd.content).live_play_info.title }}</a>
+                </template>
+                <template v-if="['DYNAMIC_TYPE_DRAW', 'DYNAMIC_TYPE_FORWARD'].includes(item.type) && item.modules.module_dynamic.desc?.text">
+                  <a :href="`${config.tSite}/${item.id_str}`"><div v-html="contentDeal(item.modules.module_dynamic.desc.text)" /></a>
+                </template>
+                <template v-if="['DYNAMIC_TYPE_AV'].includes(item.type)">
+                  <a :href="`https:${item.modules.module_dynamic.major.archive.jump_url}`">{{ item.modules.module_dynamic.major.archive.title }}</a>
+                </template>
+              </div>
               <div
-                v-for="drawItem in item.orig.modules.module_dynamic.major.draw.items" :key="drawItem.src"
-                :style="{ backgroundImage: `url(${drawItem.src})` }"
-                class="w-[180px] h-[180px] rounded-md bg-cover"
-              />
-            </div>
-            <div class="text-[12px]">
-              {{ item.orig.modules.module_author.name }}
+                v-if="item.modules.module_dynamic.major?.draw?.items"
+                class="pb-6 max-w-[600px] flex justify-start items-center flex-wrap gap-2"
+              >
+                <div
+                  v-for="drawItem in item.modules.module_dynamic.major.draw.items" :key="drawItem.src"
+                  :style="{ backgroundImage: `url(${drawItem.src})` }"
+                  class="w-[180px] h-[180px] rounded-md bg-cover"
+                />
+              </div>
+              <!-- 转发原文 -->
+              <div
+                v-if="['DYNAMIC_TYPE_FORWARD'].includes(item.type)"
+                class="border-l border-l-8 border-gray-800 border-opacity-60 p-4 mb-6"
+              >
+                <div class="pb-3 max-w-[1080px]">
+                  <template v-if="item.orig.type === 'DYNAMIC_TYPE_LIVE_RCMD'">
+                    <a :href="liveInfo(item.orig.modules.module_dynamic.major.live_rcmd.content).live_play_info.link">{{ liveInfo(item.orig.modules.module_dynamic.major.live_rcmd.content).live_play_info.title }}</a>
+                  </template>
+                  <template v-if="['DYNAMIC_TYPE_DRAW', 'DYNAMIC_TYPE_FORWARD'].includes(item.orig.type) && item.orig.modules.module_dynamic.desc?.text">
+                    <a :href="`${config.tSite}/${item.orig.id_str}`"><div v-html="contentDeal(item.orig.modules.module_dynamic.desc.text)" /></a>
+                  </template>
+                  <template v-if="['DYNAMIC_TYPE_AV'].includes(item.orig.type)">
+                    <a :href="`https:${item.orig.modules.module_dynamic.major.archive.jump_url}`">{{ item.orig.modules.module_dynamic.major.archive.title }}</a>
+                  </template>
+                </div>
+                <div
+                  v-if="item.orig.modules.module_dynamic.major?.draw?.items"
+                  class="pb-6 flex justify-start items-center flex-wrap gap-2"
+                >
+                  <div
+                    v-for="drawItem in item.orig.modules.module_dynamic.major.draw.items" :key="drawItem.src"
+                    :style="{ backgroundImage: `url(${drawItem.src})` }"
+                    class="w-[180px] h-[180px] rounded-md bg-cover"
+                  />
+                </div>
+                <div class="text-[12px]">
+                  {{ item.orig.modules.module_author.name }}
+                </div>
+              </div>
+              <div class="text-[12px]">
+                {{ item.modules.module_author.name }} {{ actionText(item.type, item.modules.module_author.pub_action) }} / {{ timeText(item.type, item.modules.module_author.pub_time, item.type === 'DYNAMIC_TYPE_LIVE_RCMD' ? item.modules.module_dynamic.major.live_rcmd.content : undefined) }}
+              </div>
             </div>
           </div>
-          <div class="text-[12px]">
-            {{ item.modules.module_author.name }} {{ actionText(item.type, item.modules.module_author.pub_action) }} / {{ timeText(item.type, item.modules.module_author.pub_time, item.type === 'DYNAMIC_TYPE_LIVE_RCMD' ? item.modules.module_dynamic.major.live_rcmd.content : undefined) }}
-          </div>
-        </div>
-      </template>
-    </div>
-  </div>
+        </template>
+      </div>
+    </template>
+  </WorldlineContent>
 </template>
