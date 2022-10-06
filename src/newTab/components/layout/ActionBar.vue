@@ -180,9 +180,9 @@ const uploadHandleChange = () => {
     }
   }
 }
-.dark .action-bar-container {
-  &:hover {
-    background-color: rgba(156, 163, 175, .2);
-  }
-}
+// .dark .action-bar-container {
+//   &:hover {
+//     background-color: rgba(156, 163, 175, .2);
+//   }
+// }
 </style>

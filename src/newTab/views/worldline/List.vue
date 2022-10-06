@@ -239,7 +239,7 @@ const removeMenuItem = (key: string, type: Store.MenuItemType = 'divider') => {
               </span>
               <span
                 v-if="menuMode"
-                class="handle cursor-move flex items-center"
+                class="mr-2 handle cursor-move flex items-center"
               >
                 <mdi-drag />
               </span>
