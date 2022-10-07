@@ -35,6 +35,17 @@ const newTabState = useNewTabState()
       </n-input-number>
     </n-form-item>
 
+    <n-form-item label="主题模式">
+      <n-switch v-model:value="model.themeMode" size="small" :round="false" @update:value="newTabState.setThemeMode()">
+        <template #checked>
+          手动
+        </template>
+        <template #unchecked>
+          系统
+        </template>
+      </n-switch>
+    </n-form-item>
+
     <n-form-item label="任务列表">
       <n-switch v-model:value="model.statusList" size="small" :round="false">
         <template #checked>
@@ -46,13 +57,13 @@ const newTabState = useNewTabState()
       </n-switch>
     </n-form-item>
 
-    <n-form-item label="主题模式">
-      <n-switch v-model:value="model.themeMode" size="small" :round="false" @update:value="newTabState.setThemeMode()">
+    <n-form-item label="测试页面">
+      <n-switch v-model:value="model.testPage" size="small" :round="false">
         <template #checked>
-          手动
+          展示
         </template>
         <template #unchecked>
-          系统
+          隐藏
         </template>
       </n-switch>
     </n-form-item>

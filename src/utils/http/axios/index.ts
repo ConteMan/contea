@@ -1,5 +1,3 @@
-// axios 配置
-
 import type { AxiosResponse } from 'axios'
 import type { RequestOptions, Result } from '@localTypes/axios'
 

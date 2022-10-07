@@ -19,15 +19,22 @@ export interface BaseConfig {
 export type Config = BaseConfig & {
   showCards: string[]
   defaultPath: string
-  statusList: boolean // 状态列表
   themeMode: boolean // true => system, false => manual
+
+  statusList: boolean // 状态列表
+  testPage: boolean
 
   enableDesktop: boolean // 是否启用与桌面端的通讯
   desktopInterface: string // 桌面端接口地址
   desktopInterfaceStatus: boolean // 桌面端接口状态，true 连通，false 未连通
 }
 
-export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'expired' | 'alarm' | 'statusList' | 'themeMode' | 'enableDesktop' | 'desktopInterface' | 'desktopInterfaceStatus'>
+export type ShowConfig = Pick<
+  Config,
+  'key' | 'name' | 'enable' | 'expired'
+  | 'alarm' | 'statusList' | 'themeMode' | 'enableDesktop'
+  | 'desktopInterface' | 'desktopInterfaceStatus' | 'testPage'
+  >
 
 export const setting: Config = {
   key: 'base',
@@ -39,8 +46,10 @@ export const setting: Config = {
   expired: 3600,
   showCards: [],
   defaultPath: '/index',
-  statusList: true,
   themeMode: true,
+
+  statusList: true,
+  testPage: false,
 
   enableDesktop: false,
   desktopInterface: 'http://127.0.0.1:7788/extension',

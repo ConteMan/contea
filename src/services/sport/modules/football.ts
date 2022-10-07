@@ -1,4 +1,4 @@
-import KBS from './kbs'
+import KBS from '../kbs'
 
 class Football {
   /**

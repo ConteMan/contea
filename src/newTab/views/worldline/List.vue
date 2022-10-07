@@ -36,7 +36,16 @@ const modules = computed(() => {
       res[key] = {
         key,
         type: 'module',
-        title: '定时任务',
+        title: '任务',
+        component: file[path],
+      }
+      return
+    }
+    if (key === 'test' && all.value.base.testPage) {
+      res[key] = {
+        key,
+        type: 'module',
+        title: '测试',
         component: file[path],
       }
       return
