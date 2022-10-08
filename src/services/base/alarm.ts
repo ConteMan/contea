@@ -5,6 +5,7 @@ import movie from '@services/movie'
 import bilibili from '@services/bilibili'
 import one from '@services/one'
 import weread from '@services/weread'
+import { football } from '@services/sport'
 
 class Alarm {
   /**
@@ -74,6 +75,24 @@ class Alarm {
       }
       case 'weread': {
         result = await weread.moduleInfo(true)
+        break
+      }
+      case 'sport' : {
+        if (source === 'page') {
+          const competitionRankRes: { id: number; res: any }[] = []
+          const competitionIds = Object.keys(football.COMPETITIONS)
+          competitionIds.forEach(async (competitionId) => {
+            const id = parseInt(competitionId)
+            const res = await football.getCompetitionRank(id, true)
+            competitionRankRes.push({
+              id,
+              res,
+            })
+          })
+          result = {
+            competitionRank: competitionRankRes,
+          }
+        }
         break
       }
       default: {

@@ -16,6 +16,8 @@ const testConsole = async (type: string, params: any) => {
     res = await Football.saveTeams(params)
   else if (type === 'rankList')
     res = await Football.getCompetitionRank(params)
+  else if (type === 'footballInit')
+    res = await Football.init()
 
   // eslint-disable-next-line no-console
   console.log(res)
@@ -31,6 +33,11 @@ const testConsole = async (type: string, params: any) => {
         <div class="p-4 rounded-md bg-gray-400 bg-opacity-20">
           <div>体育 / 足球</div>
           <div class="mt-6 flex flex-wrap gap-4">
+            <n-button
+              size="small" @click="testConsole('footballInit', undefined)"
+            >
+              初始化
+            </n-button>
             <n-button
               size="small" @click="testConsole('rankList', 1)"
             >

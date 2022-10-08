@@ -16,10 +16,11 @@ export interface CompetitionItem {
   w: number // 网易体育联赛 ID
 }
 export type CompetitionType = Record<number, CompetitionItem>
-export type CompetitionCatType = {
+export interface CompetitionCatTypeItem {
   key: string
   name: string
-}[]
+}
+export type CompetitionCatType = CompetitionCatTypeItem[]
 
 class Football {
   public MODULE = 'sport'
@@ -27,11 +28,35 @@ class Football {
 
   // 联赛 ID 关系
   public COMPETITIONS: CompetitionType = {
-    1: { // 英超
+    1: {
       id: 1,
       name: '英超',
       g: 4,
       w: 82,
+    },
+    2: {
+      id: 2,
+      name: '法甲',
+      g: 5,
+      w: 142,
+    },
+    3: {
+      id: 3,
+      name: '西甲',
+      g: 2,
+      w: 120,
+    },
+    4: {
+      id: 4,
+      name: '德甲',
+      g: 3,
+      w: 129,
+    },
+    5: {
+      id: 5,
+      name: '意甲',
+      g: 1,
+      w: 108,
     },
   }
 
@@ -42,6 +67,19 @@ class Football {
       name: '积分排名',
     },
   ]
+
+  /**
+   * 初始化
+   */
+  async init() {
+    const competitionIds = Object.keys(this.COMPETITIONS)
+    competitionIds.forEach(async (competitionId) => {
+      const id = parseInt(competitionId)
+      await this.saveTeams(id)
+      await this.getCompetitionRank(id)
+    })
+    return true
+  }
 
   /**
    * 获取联赛队伍列表
@@ -74,6 +112,19 @@ class Football {
       console.log(e)
       return false
     }
+  }
+
+  /**
+   * 根据联赛获取队伍列表
+   * @param competitionId - 联赛 ID
+   */
+  async getTeams(competitionId = 1) {
+    const res = await FootballTeam.query()
+      .filter((item) => {
+        return item.competition_id === competitionId
+      })
+      .toArray()
+    return res ?? false
   }
 
   /**

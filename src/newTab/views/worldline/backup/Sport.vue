@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
-import KBS from '@services/sport/kbs'
+import KBS from '@services/sport/modules/kbs'
 
 const matches = ref({})
 

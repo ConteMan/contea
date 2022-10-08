@@ -138,7 +138,7 @@ export default defineConfig(({
     outDir: r('extension/dist'),
     emptyOutDir: false,
     sourcemap: isDev ? 'inline' : false,
-    chunkSizeWarningLimit: 1024 * 1,
+    chunkSizeWarningLimit: 1024 * 4,
     rollupOptions: {
       input: {
         options: r('src/options/index.html'),

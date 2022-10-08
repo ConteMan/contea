@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { CompetitionCatType, CompetitionItem } from '@services/sport/modules/football'
+import type { CompetitionCatType, CompetitionItem, TeamItem } from '@services/sport/modules/football'
 import type { RankItem } from '@services/sport/modules/football/gooooal'
 import Football from '@services/sport/modules/football'
 import WorldlineContent from '@newTab/layout/WorldlineContent.vue'
@@ -8,12 +8,14 @@ import type { VNodeChild } from 'vue'
 
 interface Data {
   loading: string
+  moduleType: string
   mode: 'team' | 'competition'
   competitions: CompetitionItem[]
   competition: number
   competitionCats: CompetitionCatType
-  competitionCat: string
+  competitionCat: typeof Football.COMPETITION_CATS[number]['key']
   competitionRankList: RankItem[]
+  teams: TeamItem[]
 }
 type ModeType = {
   name: string
@@ -22,17 +24,27 @@ type ModeType = {
 
 const MODES: ModeType = [
   {
+    name: '联赛',
+    value: 'competition',
+  },
+  {
     name: '球队',
     value: 'team',
   },
+]
+const MODULE_TYPES: {
+  key: string
+  name: string
+}[] = [
   {
-    name: '联赛',
-    value: 'competition',
+    name: '足球',
+    key: 'football',
   },
 ]
 
 const data: Data = reactive({
   loading: '',
+  moduleType: 'football',
   mode: 'competition',
 
   competitions: [],
@@ -41,9 +53,14 @@ const data: Data = reactive({
   competitionCats: [],
   competitionCat: 'rankList',
   competitionRankList: [],
+
+  teams: [],
 })
 
-const { loading, mode, competitions, competition, competitionCats, competitionCat, competitionRankList } = toRefs(data)
+const {
+  loading, moduleType, mode, competitions, competition, competitionCats, competitionCat, competitionRankList,
+  teams,
+} = toRefs(data)
 
 const getConst = () => {
   data.competitions = Object.values(Football.COMPETITIONS)
@@ -125,11 +142,11 @@ const competitionRankColumn: DataTableColumns<RankItem> = [
       const content: VNodeChild[] = []
       rowData.recent_result.forEach((item) => {
         if (item === 'win')
-          content.push(h('span', { class: 'text-red-500' }, 'W'))
+          content.push(h('span', { class: 'text-red-500 w-[15px]' }, '胜'))
         if (item === 'draw')
-          content.push(h('span', { class: 'text-gray-500' }, 'D'))
+          content.push(h('span', { class: 'text-gray-500 w-[15px]' }, '平'))
         if (item === 'loss')
-          content.push(h('span', { class: 'text-green-500' }, 'L'))
+          content.push(h('span', { class: 'text-green-500 w-[15px]' }, '负'))
       })
       return h('div', { class: 'flex gap-2' }, content)
     },
@@ -139,6 +156,41 @@ const competitionRankColumn: DataTableColumns<RankItem> = [
     key: 'next_match_team_name',
   },
 ]
+
+const getTeams = async () => {
+  const res = await Football.getTeams(data.competition)
+  if (!res)
+    return false
+  data.teams = res
+}
+
+const dealRankList = async () => {
+  await getCompetitionRankList()
+}
+
+const dealChange = async () => {
+  if (data.mode === 'team')
+    await getTeams()
+
+  if (data.mode === 'competition') {
+    if (data.competitionCat === 'rankList')
+      await dealRankList()
+  }
+}
+
+const changeMode = async (mode: Data['mode']) => {
+  data.mode = mode
+  await dealChange()
+}
+
+const changeCompetition = async (competitionId: number) => {
+  data.competition = competitionId
+  await dealChange()
+}
+
+const changeModuleType = (moduleType: string) => {
+  data.moduleType = moduleType
+}
 </script>
 
 <template>
@@ -147,6 +199,16 @@ const competitionRankColumn: DataTableColumns<RankItem> = [
       <a class="cursor-pointer py-2 px-4 flex items-center">
         <mdi-refresh :class="{ 'animate-spin': loading }" />
       </a>
+      <div class="h-[30%] mx-4 border-l border-l-gray-400 opacity-20" />
+      <template v-for="item in MODULE_TYPES" :key="item.key">
+        <div
+          class="py-2 px-2 cursor-pointer opacity-60"
+          :class="[moduleType === item.key ? 'text-red-500 !opacity-100' : '']"
+          @click="changeModuleType(item.key)"
+        >
+          {{ item.name }}
+        </div>
+      </template>
     </template>
 
     <template #content>
@@ -156,24 +218,25 @@ const competitionRankColumn: DataTableColumns<RankItem> = [
             v-for="item in MODES" :key="item.value"
             class="cursor-pointer"
             :class="{ 'underline decoration-gray-500/50 decoration-2 underline-offset-6': mode === item.value }"
-            @click="() => data.mode = item.value"
+            @click="changeMode(item.value)"
           >
             {{ item.name }}
           </div>
         </div>
+
         <div
-          v-if="mode === 'competition'"
           class="p-4 rounded-md bg-gray-400 bg-opacity-20 flex justify-start items-center gap-4"
         >
           <div
             v-for="item in competitions" :key="item.id"
             class="cursor-pointer"
             :class="{ 'underline decoration-gray-500/50 decoration-2 underline-offset-6': competition === item.id }"
-            @click="() => data.competition = item.id"
+            @click="changeCompetition(item.id)"
           >
             {{ item.name }}
           </div>
         </div>
+
         <div
           v-if="mode === 'competition'"
           class="p-4 rounded-md bg-gray-400 bg-opacity-20 flex flex-col gap-4"
@@ -196,6 +259,17 @@ const competitionRankColumn: DataTableColumns<RankItem> = [
               size="medium"
               striped
             />
+          </div>
+        </div>
+
+        <div
+          v-if="mode === 'team' && data.teams.length"
+          class="p-4 rounded-md bg-gray-400 bg-opacity-20 flex justify-start items-center flex-wrap gap-4"
+        >
+          <div
+            v-for="item in teams" :key="item.g_id"
+          >
+            {{ item.name }}
           </div>
         </div>
       </div>

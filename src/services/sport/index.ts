@@ -1,3 +1,3 @@
-import KBS from './kbs'
+import football from './modules/football'
 
-export { KBS }
+export { football }
