@@ -7,14 +7,24 @@ class Base {
     this.currentTable = db
   }
 
+  /**
+   * 使用 dexie 查询
+   */
   query() {
     return this.currentTable
   }
 
+  /**
+   * 重置数据
+   */
   async reset() {
     return await this.currentTable.clear()
   }
 
+  /**
+   * 获取全部数据
+   * @param type - 返回数据类型， array 数组，obj 对象
+   */
   async getAll(type: 'array' | 'obj' = 'array'): Promise<(any[] | Record<string, any>)> {
     const res = await this.currentTable.toArray()
 
@@ -28,17 +38,34 @@ class Base {
     return objRes
   }
 
-  async getItem(key: string, index = 'key') {
+  /**
+   * 根据键获取内容
+   * @param key - 键值
+   * @param index - 键对应字段
+   */
+  async getItem(key: string | number, index = 'key') {
     return await this.currentTable.where(index).equals(key).first()
   }
 
-  async addItem(key: string, data: any, index = 'key') {
+  /**
+   * 添加数据
+   * @param key - 键值
+   * @param data - 数据
+   * @param index - 键对应字段
+   */
+  async addItem(key: string | number, data: any, index = 'key') {
     const dealData = { ...data, [index]: key }
     return await this.currentTable.add(dealData)
   }
 
-  async putItem(key: string, data: any) {
-    const exist = await this.getItem(key)
+  /**
+   * 更新数据
+   * @param key - 键值
+   * @param data - 数据
+   * @param index - 键对应字段
+   */
+  async putItem(key: string | number, data: any, index = 'key') {
+    const exist = await this.getItem(key, index)
     if (exist) {
       const dealData = { id: exist.id, ...data }
       return await this.currentTable.put(dealData)
@@ -46,12 +73,27 @@ class Base {
     return false
   }
 
-  async addOrUpdateItem(key: string, data: any, index = 'key') {
+  /**
+   * 新增或更新数据
+   * @param key - 键值
+   * @param data - 数据
+   * @param index - 键对应字段
+   */
+  async addOrUpdateItem(key: string | number, data: any, index = 'key') {
     const exist = await this.getItem(key, index)
     if (exist)
       return await this.currentTable.update(exist.id, data)
     else
       return await this.addItem(key, data, index)
+  }
+
+  /**
+   * 判断是否存在数据
+   * @param key - 键值
+   * @param index - 键对应字段
+   */
+  async has(key: string | number, index = 'key') {
+    return !!await this.getItem(key, index)
   }
 }
 

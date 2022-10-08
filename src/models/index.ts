@@ -3,6 +3,7 @@ import CacheModel from './modules/cache'
 import InfoModel from './modules/info'
 import AlarmTaskModel from './modules/alarmTask'
 import MovieModel from './modules/movie'
+import FootballTeam from './modules/footballTeam'
 
 export {
   ConfigModel,
@@ -10,4 +11,5 @@ export {
   InfoModel,
   AlarmTaskModel,
   MovieModel,
+  FootballTeam,
 }

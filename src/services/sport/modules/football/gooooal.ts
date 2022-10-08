@@ -54,7 +54,7 @@ export default new class Gooooal {
   formatCompetitionRank(dom: Document) {
     try {
       const items = dom.querySelectorAll('#tb_data_1 tr')
-      const rankList: Partial<RankItem>[] = []
+      const rankList: RankItem[] = []
       items.forEach((item, index) => {
         if (index > 0) {
           const detail = item.querySelectorAll('td')
@@ -79,7 +79,7 @@ export default new class Gooooal {
               trend_des += '，'
             trend_des += str
           })
-          const team_name = detail[2].querySelector('a')?.innerText.trim()
+          const team_name = detail[2].querySelector('a')?.innerText.trim() ?? ''
           const team_id_str = detail[2].querySelector('a')?.getAttribute('href')
           const team_id = team_id_str ? parseInt(team_id_str.replaceAll(/javascript\:toTeam\(|\)/g, '').split(',')[0]) : 0
           const points = detail[3].innerText ? parseInt(detail[3].innerText) : 0
