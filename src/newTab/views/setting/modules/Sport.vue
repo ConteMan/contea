@@ -5,7 +5,7 @@ import type { ShowConfig } from '@services/one/model'
 import { configKeys } from '@services/one/model'
 import Setting from '../index'
 
-const module: SettingKeys = 'one'
+const module: SettingKeys = 'sport'
 
 const setting = Setting(module, configKeys)
 const { rules, resetLoading, reset } = setting

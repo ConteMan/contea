@@ -4,6 +4,7 @@ import { setting as movie } from '@services/movie/model'
 import { setting as bilibili } from '@services/bilibili/model'
 import { setting as one } from '@services/one/model'
 import { setting as weread } from '@services/weread/model'
+import { setting as sport } from '@services/sport/model'
 
 // import { setting as v2ex } from '@services/v2ex/model'
 // import { setting as bgm } from '@services/bgm/model'
@@ -14,7 +15,6 @@ import { setting as weread } from '@services/weread/model'
 // import { setting as weather } from '@services/weather/model'
 // import { setting as zhihu } from '@services/zhihu/model'
 // import { setting as wallpaper } from '@services/wallpaper/model'
-// import { setting as sport } from '@services/sport/model'
 // import { setting as yuque } from '@services/yuque/model'
 // import { setting as sync } from '@services/sync/model'
 
@@ -25,6 +25,7 @@ export const modules = [
   'bilibili',
   'one',
   'weread',
+  'sport',
 
   // 'v2ex',
   // 'github',
@@ -34,7 +35,6 @@ export const modules = [
   // 'bgm',
   // 'weather',
   // 'zhihu',
-  // 'sport',
   // 'wallpaper',
   // 'yuque',
   // 'sync',
@@ -47,6 +47,7 @@ export interface Setting {
   bilibili: typeof bilibili
   one: typeof one
   weread: typeof weread
+  sport: typeof sport
 
   // v2ex: typeof v2ex
   // bgm: typeof bgm
@@ -57,7 +58,6 @@ export interface Setting {
   // weather: typeof weather
   // zhihu: typeof zhihu
   // wallpaper: typeof wallpaper
-  // sport: typeof sport
   // yuque: typeof yuque
   // sync: typeof sync
 }
@@ -72,6 +72,7 @@ export default {
   bilibili,
   one,
   weread,
+  sport,
 
   // v2ex,
   // bgm,
@@ -82,7 +83,6 @@ export default {
   // weather,
   // zhihu,
   // wallpaper,
-  // sport,
   // yuque,
   // sync,
 }

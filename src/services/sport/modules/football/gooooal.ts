@@ -1,11 +1,11 @@
 import DomDeal from '@services/base/dom'
 
-interface RankParams {
+export interface RankParams {
   lid: number
   sid?: number
 }
 
-interface RankItem {
+export interface RankItem {
   sort: number
   trend: string
   trend_des: string

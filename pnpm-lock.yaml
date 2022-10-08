@@ -28,9 +28,6 @@ specifiers:
   highlight.js: ^11.6.0
   isomorphic-fetch: ^3.0.0
   kolorist: ^1.5.1
-  kurimudb: ^5.6.1
-  kurimudb-driver-dexie: ^5.2.3
-  kurimudb-driver-localstorage: ^5.1.1
   less: ^4.1.3
   lodash-es: ^4.17.21
   naive-ui: ^2.33.2
@@ -61,9 +58,6 @@ dependencies:
   dexie: 3.2.2
   highlight.js: 11.6.0
   isomorphic-fetch: 3.0.0
-  kurimudb: 5.6.1
-  kurimudb-driver-dexie: 5.2.3_dexie@3.2.2
-  kurimudb-driver-localstorage: 5.1.1
   lodash-es: 4.17.21
   naive-ui: 2.33.2_vue@3.2.38
   octokit: 2.0.7
@@ -2918,22 +2912,6 @@ packages:
   /kolorist/1.5.1:
     resolution: {integrity: sha512-lxpCM3HTvquGxKGzHeknB/sUjuVoUElLlfYnXZT73K8geR9jQbroGlSCFBax9/0mpGoD3kzcMLnOlGQPJJNyqQ==}
     dev: true
-
-  /kurimudb-driver-dexie/5.2.3_dexie@3.2.2:
-    resolution: {integrity: sha512-RpKq03I6ZDJSB76HqpPpzXS5HLCdlDvKyNfR8iZJIWjrVZB/HcIPvnVqCmiAEgP7D2Ywe28Lc7Zar1BOyotjIA==}
-    peerDependencies:
-      dexie: '>=3'
-    dependencies:
-      dexie: 3.2.2
-    dev: false
-
-  /kurimudb-driver-localstorage/5.1.1:
-    resolution: {integrity: sha512-A1Nde7lQ6llWRTpH//pk08yeUXoFVBRj9shRkqBkQxQKaipcaQW+tocM33HRDfzDhOika4x9FmWiXTZl65nG3w==}
-    dev: false
-
-  /kurimudb/5.6.1:
-    resolution: {integrity: sha512-moEgaW/m2yexAzXD3s6DfN4QMJIf/nDOQgEV+rG4rIp51zdwSjxvW+ppLRrxEBhcbdX+9SUiTX+DcK+6+Nw1CA==}
-    dev: false
 
   /less/4.1.3:
     resolution: {integrity: sha512-w16Xk/Ta9Hhyei0Gpz9m7VS8F28nieJaL/VyShID7cYvP6IL5oHeL6p4TXSDJqZE/lNv0oJ2pGVjJsRkfwm5FA==}

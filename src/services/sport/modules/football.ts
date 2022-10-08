@@ -3,26 +3,30 @@ import RequestCache from '@services/base/requestCache'
 import Gooooal from './football/gooooal'
 import Netease from './football/netease'
 
-interface TeamItem {
+export interface TeamItem {
   name: string
   competition_id: number // 联赛 ID
   g_id: number
   w_id: number
 }
-
-interface CompetitionItem {
+export interface CompetitionItem {
   id: number
   name: string // 联赛名称
   g: number // gooooal 联赛 ID
   w: number // 网易体育联赛 ID
 }
+export type CompetitionType = Record<number, CompetitionItem>
+export type CompetitionCatType = {
+  key: string
+  name: string
+}[]
 
 class Football {
   public MODULE = 'sport'
   public MODULE_TYPE = 'football'
 
   // 联赛 ID 关系
-  public COMPETITIONS: Record<number, CompetitionItem> = {
+  public COMPETITIONS: CompetitionType = {
     1: { // 英超
       id: 1,
       name: '英超',
@@ -30,6 +34,14 @@ class Football {
       w: 82,
     },
   }
+
+  // 积分排名
+  public COMPETITION_CATS: CompetitionCatType = [
+    {
+      key: 'rankList',
+      name: '积分排名',
+    },
+  ]
 
   /**
    * 获取联赛队伍列表
@@ -119,7 +131,7 @@ class Football {
         return item
       })
 
-      return await RequestCache.set(cacheKey, { data: list }, undefined, 3600)
+      return await RequestCache.set(cacheKey, { data: list }, undefined, -1)
     }
     catch (e) {
       return false

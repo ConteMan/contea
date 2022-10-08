@@ -4,7 +4,7 @@ import { useConfigState } from '@newTab/store/index'
 
 interface ModuleItem {
   name: string
-  component: Component
+  component: string
   title?: string
   config?: Record<string, any>
 }
@@ -13,7 +13,7 @@ const ConfitStore = useConfigState()
 const { all: moduleConfigs } = ConfitStore
 
 const modules: Record<string, ModuleItem> = {}
-const file: Record<string, Component> = import.meta.glob('./modules/*.vue', { import: 'default', eager: true })
+const file: Record<string, string> = import.meta.glob('./modules/*.vue', { import: 'default', eager: true })
 const paths = Object.keys(file)
 paths.forEach((path) => {
   const key = path.replace('\.\/modules\/', '').replace('.vue', '')

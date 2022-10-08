@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import type { Component, Ref } from 'vue'
+import type { Ref } from 'vue'
 import _ from 'lodash-es'
 import draggable from 'vuedraggable'
 import { useConfigState, useNewTabState } from '@newTab/store/index'
 
 type ModuleItem = Store.MenuItem & {
-  component?: Component
+  component?: string
   title?: string
   config?: Record<string, any>
 }
@@ -24,7 +24,7 @@ watch(tabSelected, (newValue) => {
 const ConfigStore = useConfigState()
 const { all } = storeToRefs(ConfigStore)
 
-const file: Record<string, Component> = import.meta.glob('./modules/*.vue', { import: 'default', eager: true })
+const file: Record<string, string> = import.meta.glob('./modules/*.vue', { import: 'default', eager: true })
 const paths = Object.keys(file)
 
 // 已开启模块
