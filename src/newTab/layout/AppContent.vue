@@ -16,6 +16,7 @@ const SETTING_KEY = 's'
 const TAB_CHANGE_KEY = 'Tab'
 
 const NewTabStore = useNewTabState()
+const { layoutMode } = storeToRefs(NewTabStore)
 
 const changeMode = () => {
   NewTabStore.changeLayoutMode()
@@ -92,7 +93,7 @@ useEventListener(window, 'keydown', (e: KeyboardEvent) => {
 })
 
 // 监听按键 完成 事件（非输入模式下）
-useEventListener(window, 'keyup', (e: KeyboardEvent) => {
+useEventListener(window, 'keyup', async (e: KeyboardEvent) => {
   if (e.key === 'Enter' && notUsingInput.value) {
     e.preventDefault()
     e.stopPropagation()
@@ -100,23 +101,41 @@ useEventListener(window, 'keyup', (e: KeyboardEvent) => {
   }
 
   // 搜索
-  if (e.key === SEARCH_KEY && notUsingInput.value)
+  if (e.key === SEARCH_KEY && notUsingInput.value) {
     ModalStore.change(true)
+    return
+  }
 
   // 模式切换
-  if (e.key === ZEN_KEY && notUsingInput.value)
+  if (e.key === ZEN_KEY && notUsingInput.value) {
     changeMode()
+    return
+  }
 
   // 显示/隐藏设置
-  if (e.key === SETTING_KEY && notUsingInput.value)
+  if (e.key === SETTING_KEY && notUsingInput.value) {
     NewTabStore.changeSettingDrawer()
+    return
+  }
 
-  // 切换 Tab
+  // 世界线模式，切换 Tab
   if (e.key === TAB_CHANGE_KEY && notUsingInput.value) {
-    if (e.shiftKey)
-      NewTabStore.changePreTab()
-    else
-      NewTabStore.changeNextTab()
+    if (e.ctrlKey) {
+      const currentTab = await browser.tabs.getCurrent()
+      if (currentTab.id) {
+        await sendToBackground({
+          type: MESSAGE_TYPES.NEXT_TAB,
+          tabId: currentTab.id,
+        })
+      }
+      return
+    }
+    if (layoutMode.value === 'list') {
+      if (e.shiftKey)
+        NewTabStore.changePreTab()
+      else
+        NewTabStore.changeNextTab()
+    }
   }
 })
 </script>

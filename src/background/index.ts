@@ -6,7 +6,7 @@ import { MESSAGE_TYPES } from '@enums/index'
 import AlarmService from '@services/base/alarm'
 import { AlarmTaskModel, ConfigModel } from '@models/index'
 import { getVersion } from './version'
-import { changeMode } from './shortcuts'
+import { changeMode, nextTab } from './shortcuts'
 
 const EXTENSION_NAME = 'CONTEA'
 const EXTENSION_ID = browser.runtime.getURL('').replace(/chrome-extension:\/\/|\//g, '')
@@ -156,7 +156,7 @@ browser.commands.onCommand.addListener(async (command: string) => {
  */
 browser.runtime.onMessage.addListener(async (message: Message.RuntimeMessage) => {
   try {
-    const { type, name = '' } = message
+    const { type, name = '', tabId = '' } = message
     switch (type) {
       case MESSAGE_TYPES.DEAL_ALARM: { // 前端请求，在后端执行定时任务
         await AlarmService.dealAlarm(name)
@@ -172,7 +172,11 @@ browser.runtime.onMessage.addListener(async (message: Message.RuntimeMessage) =>
       case MESSAGE_TYPES.DEAL_PAGE_ALARM: { // 标记处理完成的定时任务
         return await AlarmTaskModel.alarmAction(name, 'deal')
       }
+      case MESSAGE_TYPES.NEXT_TAB: {
+        return await nextTab(parseInt(tabId))
+      }
       default:
+        return true
     }
   }
   catch (e) {

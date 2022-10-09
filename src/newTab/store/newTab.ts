@@ -1,8 +1,11 @@
 import { defineStore } from 'pinia'
 import _ from 'lodash-es'
 import { reactive } from 'vue'
+import type { Ref } from 'vue'
 import wallpaperService from '@services/wallpaper'
 import { useConfigState } from '@newTab/store/index'
+
+type LayoutMode = 'clean' | 'list' | 'card'
 
 export const useNewTabState = defineStore('newTab',
   () => {
@@ -25,8 +28,6 @@ export const useNewTabState = defineStore('newTab',
       themeMode: false, // true => system, false => manual
       theme: 'light', // light, dark
 
-      layoutMode: 'clean', // clean, list, card
-
       worldlineMenu: [] as Store.MenuItem[],
     })
 
@@ -39,9 +40,10 @@ export const useNewTabState = defineStore('newTab',
       isPreferredDark,
       theme,
       themeMode,
-      layoutMode,
       worldlineMenu,
     } = toRefs(data)
+
+    const layoutMode = ref('clean') as Ref<LayoutMode>
 
     // Tab
     const tabSelected = ref('')
@@ -153,16 +155,16 @@ export const useNewTabState = defineStore('newTab',
     }
 
     function changeLayoutMode() {
-      if (data.layoutMode === 'clean')
-        data.layoutMode = 'list'
-      else if (data.layoutMode === 'list')
-        data.layoutMode = 'card'
+      if (layoutMode.value === 'clean')
+        layoutMode.value = 'list'
+      else if (layoutMode.value === 'list')
+        layoutMode.value = 'card'
       else
-        data.layoutMode = 'clean'
+        layoutMode.value = 'clean'
     }
 
-    function setLayoutMode(mode: 'clean' | 'list' | 'card') {
-      data.layoutMode = mode
+    function setLayoutMode(mode: LayoutMode) {
+      layoutMode.value = mode
     }
 
     const getDarkClass = () => {
