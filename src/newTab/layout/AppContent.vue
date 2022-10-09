@@ -15,6 +15,8 @@ const ZEN_KEY = 'z'
 const SETTING_KEY = 's'
 const TAB_CHANGE_KEY = 'Tab'
 
+const ModalStore = useModalState()
+
 const NewTabStore = useNewTabState()
 const { layoutMode } = storeToRefs(NewTabStore)
 
@@ -56,9 +58,14 @@ browser.runtime.onMessage.addListener(async (message: Message.TabMessage, sender
   NewTabStore.setLog(`${new Date()} [NewTab AppContent] 收到 [${sender.id}] 发来的信息：${JSON.stringify(message)}`)
 
   switch (type) {
-    case 'change-mode':
+    case 'change-mode': {
       changeMode()
       break
+    }
+    case 'search': {
+      ModalStore.change(true)
+      break
+    }
     case 'alarm':
     case 'alarm-sync': {
       if (!name)
@@ -73,8 +80,6 @@ browser.runtime.onMessage.addListener(async (message: Message.TabMessage, sender
       break
   }
 })
-
-const ModalStore = useModalState()
 
 const activeElement = useActiveElement()
 const notUsingInput = computed(() =>
@@ -118,9 +123,9 @@ useEventListener(window, 'keyup', async (e: KeyboardEvent) => {
     return
   }
 
-  // 世界线模式，切换 Tab
+  // 切换 Tab
   if (e.key === TAB_CHANGE_KEY && notUsingInput.value) {
-    if (e.ctrlKey) {
+    if (e.ctrlKey) { // 兼容 `Ctrl + Tab` 切换网页 Tab
       const currentTab = await browser.tabs.getCurrent()
       if (currentTab.id) {
         await sendToBackground({
@@ -130,7 +135,7 @@ useEventListener(window, 'keyup', async (e: KeyboardEvent) => {
       }
       return
     }
-    if (layoutMode.value === 'list') {
+    if (layoutMode.value === 'list') { // 世界线模式，侧边菜单切换
       if (e.shiftKey)
         NewTabStore.changePreTab()
       else

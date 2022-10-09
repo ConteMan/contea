@@ -49,7 +49,7 @@ browser.runtime.onInstalled.addListener(async () => {
 browser.alarms.onAlarm.addListener(async (alarm: { name: string }) => {
   try {
     const DEAL_MODULES = ['sspai', 'movie', 'bilibili', 'weread']
-    const REDIRECT_MODULES = ['one', 'movie']
+    const REDIRECT_MODULES = ['one', 'movie', 'sport']
     const { name } = alarm
 
     if (![DEV_ALARM_NAME].includes(name))
@@ -142,6 +142,8 @@ browser.commands.onCommand.addListener(async (command: string) => {
   try {
     if (command === 'change-mode')
       changeMode(EXTENSION_ID)
+    if (command === 'search')
+      changeMode(EXTENSION_ID, { type: 'search' })
   }
   catch (e) {
     // eslint-disable-next-line no-console

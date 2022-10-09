@@ -68,6 +68,13 @@ export async function getManifest() {
           mac: 'Alt+W',
         },
       },
+      'search': {
+        description: 'Search',
+        suggested_key: {
+          default: 'Alt+Q',
+          mac: 'Alt+Q',
+        },
+      },
     },
   }
 

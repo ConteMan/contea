@@ -5,7 +5,8 @@ import { ConfigModel } from '@models/index'
 /**
  * 快捷键切换标签页模式
  */
-export async function changeMode(extensionId: string) {
+export async function changeMode(extensionId: string, params: { type: 'search' | 'change-mode' } = { type: 'change-mode' }) {
+  const { type } = params
   const defaultPath = '/'
   const tabs = await browser.tabs.query({ currentWindow: true }) // 当前窗口全部标签页
 
@@ -13,6 +14,11 @@ export async function changeMode(extensionId: string) {
   function isExtensionPage(url: string) {
     const regex = new RegExp(extensionId)
     return regex.test(url)
+  }
+
+  async function sendToPage(tabId: number, type: string) {
+    const message: Message.BaseMessage = { type }
+    await browser.tabs.sendMessage(tabId, message)
   }
 
   // 查询新标签页
@@ -30,7 +36,9 @@ export async function changeMode(extensionId: string) {
 
   // 不存在扩展标签页
   if (!targetTab || !targetTab.id || !targetTab.url) {
-    browser.tabs.create({ active: true, url: pageUrl, index: tabs.length })
+    if (type === 'search')
+      await ConfigModel.addOrUpdateItem('BACKGROUND_SHORTCUT_SEARCH', { show: true }) // 新建标签页有加载过程，直接通讯会报错，所以采用 hack 方法，存储标识进行沟通
+    await browser.tabs.create({ active: true, url: pageUrl, index: tabs.length })
     return true
   }
 
@@ -40,20 +48,26 @@ export async function changeMode(extensionId: string) {
     if (targetTab.id)
       browser.tabs.remove(targetTab.id) // 移除旧标签页
 
-    const tab = await browser.tabs.create({ active: true, url: pageUrl, index: tabs.length })
-    // eslint-disable-next-line no-console
-    console.log('[ tab ] >', tab)
+    if (type === 'search')
+      await ConfigModel.addOrUpdateItem('BACKGROUND_SHORTCUT_SEARCH', { show: true })
+    await browser.tabs.create({ active: true, url: pageUrl, index: tabs.length })
   }
   else {
+    await browser.tabs.move(targetTab.id, { index: -1 })
+
     if (!targetTab.active) { // 非活跃状态
-      browser.tabs.move(targetTab.id, { index: -1 })
-      browser.tabs.update(targetTab.id, { active: true })
+      await browser.tabs.update(targetTab.id, { active: true })
+      if (targetTab.id && type === 'search')
+        await sendToPage(targetTab.id, type)
       return true
     }
 
+    if (targetTab.id && type === 'search')
+      await sendToPage(targetTab.id, type)
+
     // 活跃状态，向标签页发消息，切换展示模式
-    const message: Message.BaseMessage = { type: 'change-mode' }
-    browser.tabs.sendMessage(targetTab.id, message)
+    if (targetTab.id && type === 'change-mode')
+      await sendToPage(targetTab.id, type)
   }
 }
 
