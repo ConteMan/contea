@@ -15,6 +15,9 @@ class Alarm {
   async setAlarm(module: string) {
     const { enable, alarm } = await ConfigModel.getItem(module)
 
+    if (enable)
+      this.dealAlarm(module, 'page')
+
     const exist = await browser.alarms.get(module)
     if (exist) {
       if (enable && alarm === exist.periodInMinutes)

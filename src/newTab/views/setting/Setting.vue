@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { Component } from 'vue'
 import { useConfigState } from '@newTab/store/index'
 
 interface ModuleItem {
