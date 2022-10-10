@@ -56,9 +56,9 @@ export async function changeMode(extensionId: string, params: { type: 'search' |
     await browser.tabs.move(targetTab.id, { index: -1 })
 
     if (!targetTab.active) { // 非活跃状态
-      await browser.tabs.update(targetTab.id, { active: true })
       if (targetTab.id && type === 'search')
         await sendToPage(targetTab.id, type)
+      await browser.tabs.update(targetTab.id, { active: true })
       return true
     }
 

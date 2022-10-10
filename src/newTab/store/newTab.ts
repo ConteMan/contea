@@ -29,6 +29,8 @@ export const useNewTabState = defineStore('newTab',
       theme: 'light', // light, dark
 
       worldlineMenu: [] as Store.MenuItem[],
+
+      hasInit: false,
     })
 
     const {
@@ -41,6 +43,7 @@ export const useNewTabState = defineStore('newTab',
       theme,
       themeMode,
       worldlineMenu,
+      hasInit,
     } = toRefs(data)
 
     const layoutMode = ref('clean') as Ref<LayoutMode>
@@ -187,6 +190,11 @@ export const useNewTabState = defineStore('newTab',
       data.worldlineMenu = menu
     }
 
+    // init
+    const setInit = () => {
+      data.hasInit = true
+    }
+
     return {
       tabSelected,
       dealMenuKeys,
@@ -202,6 +210,8 @@ export const useNewTabState = defineStore('newTab',
       layoutMode,
 
       worldlineMenu,
+
+      hasInit, // 临时标识，不持久化
 
       getDarkClass,
       setDealMenuKeys,
@@ -229,12 +239,29 @@ export const useNewTabState = defineStore('newTab',
 
       getWorldlineMenu,
       setWorldlineMenu,
+
+      setInit,
     }
   },
   {
     persist: {
       key: 'newTabStore',
-      paths: undefined,
+      paths: [ // 指定持久化的内容
+        'tabSelected',
+        'dealMenuKeys',
+
+        'wallpaper',
+        'settingDrawer',
+        'settingDrawerPosition',
+        'log',
+        'showLogWindow',
+        'isPreferredDark',
+        'theme',
+        'themeMode',
+        'layoutMode',
+
+        'worldlineMenu',
+      ],
     },
   },
 )

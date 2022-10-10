@@ -2,7 +2,7 @@
 import { MESSAGE_TYPES } from '@enums/index'
 
 import { useActiveElement, useEventListener } from '@vueuse/core'
-import { sendToBackground, sleep } from '@utils/index'
+import { nextTab, sendToBackground, sleep } from '@utils/index'
 
 import SearchModal from '@newTab/components/search/Search.vue'
 import SettingDrawer from '@newTab/views/setting/SettingDrawer.vue'
@@ -16,9 +16,10 @@ const SETTING_KEY = 's'
 const TAB_CHANGE_KEY = 'Tab'
 
 const ModalStore = useModalState()
+const { show: SearchModalShow } = storeToRefs(ModalStore)
 
 const NewTabStore = useNewTabState()
-const { layoutMode } = storeToRefs(NewTabStore)
+const { layoutMode, hasInit } = storeToRefs(NewTabStore)
 
 const changeMode = () => {
   NewTabStore.changeLayoutMode()
@@ -126,13 +127,7 @@ useEventListener(window, 'keyup', async (e: KeyboardEvent) => {
   // 切换 Tab
   if (e.key === TAB_CHANGE_KEY && notUsingInput.value) {
     if (e.ctrlKey) { // 兼容 `Ctrl + Tab` 切换网页 Tab
-      const currentTab = await browser.tabs.getCurrent()
-      if (currentTab.id) {
-        await sendToBackground({
-          type: MESSAGE_TYPES.NEXT_TAB,
-          tabId: currentTab.id,
-        })
-      }
+      await nextTab()
       return
     }
     if (layoutMode.value === 'list') { // 世界线模式，侧边菜单切换
@@ -146,7 +141,10 @@ useEventListener(window, 'keyup', async (e: KeyboardEvent) => {
 </script>
 
 <template>
-  <router-view />
+  <!-- 通过隐藏背景内容，使切换到此页面时体验更好 -->
+  <template v-if="!SearchModalShow && hasInit">
+    <router-view />
+  </template>
   <SearchModal />
   <SettingDrawer />
 </template>

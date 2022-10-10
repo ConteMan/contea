@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
 import { debouncedWatch, onKeyStroke, onStartTyping, useMouse } from '@vueuse/core'
-import { openSite as baseOpenSite } from '@utils/index'
+import { openSite as baseOpenSite, nextTab } from '@utils/index'
 import { useModalState } from '@newTab/store/index'
 
 const historyStart = 30 // 历史记录搜索开始，距离目前的天数
@@ -45,14 +45,19 @@ const data = reactive({
 const { searchContent, result, divs } = toRefs(data)
 
 // 状态管理搜索状态
-const modalState = useModalState()
-const { show: modalShow } = storeToRefs(modalState)
+const ModalStore = useModalState()
+const { show: modalShow } = storeToRefs(ModalStore)
 
 // 打开网址
-const openSite = async (url: string) => {
-  modalState.change(false)
-  await nextTick()
-  baseOpenSite(url, '_self')
+const openSite = async (url: string, newTab = false) => {
+  if (newTab) {
+    baseOpenSite(url, '_blank')
+    ModalStore.change(false)
+    nextTab()
+  }
+  else {
+    baseOpenSite(url, '_self')
+  }
 }
 
 // 清空搜索内容
@@ -95,6 +100,9 @@ watch(modalShow, (newValue) => {
   if (newValue) {
     clearSearch()
     searchHistory()
+  }
+  else {
+    ModalStore.change(false)
   }
 })
 
@@ -169,26 +177,26 @@ onKeyStroke('Enter', (e) => {
   // 如果没有结果，是网址则打开新标签页，不是网址则默认搜索
   if ([1].includes(data.searchMode)) {
     if (data.result?.[data.index]) {
-      openSite(data.result[data.index].url)
+      openSite(data.result[data.index].url, e.metaKey)
     }
     else {
       if (/^\w+[^\s]+(\.[^\s]+){1,}$/.test(data.searchContent)) {
         const realUrl = /^(http(s)?:\/\/)(.){1,}/.test(data.searchContent) ? data.searchContent : `https://${data.searchContent}`
-        openSite(realUrl)
+        openSite(realUrl, e.metaKey)
       }
       else {
-        openSite(`${webSearch[defaultSearchIndex].url}${data.searchContent}`)
+        openSite(`${webSearch[defaultSearchIndex].url}${data.searchContent}`, e.metaKey)
       }
     }
   }
   // 书签模式
   if ([2].includes(data.searchMode)) {
     if (data.result?.[data.index])
-      openSite(data.result[data.index].url)
+      openSite(data.result[data.index].url, e.metaKey)
   }
   // 搜索引擎模式
   if ([3].includes(data.searchMode))
-    openSite(`${data.result[data.index].url}${(data.searchContent).replace('s ', '')}`)
+    openSite(`${data.result[data.index].url}${(data.searchContent).replace('s ', '')}`, e.metaKey)
 
   e.preventDefault()
 })
@@ -232,6 +240,7 @@ watch(y, () => {
     v-model:show="modalShow"
     transform-origin="center"
     :auto-focus="true"
+    :mask-closable="false"
   >
     <div class="absolute w-[40%] h-[80%] max-h-[400px] ml-[30%] rounded-md dark:(bg-dark-800 bg-opacity-60) flex flex-col">
       <n-input

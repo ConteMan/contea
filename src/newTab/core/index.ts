@@ -1,6 +1,8 @@
-import { useConfigState, useModalState } from '@newTab/store/index'
+import { useConfigState, useModalState, useNewTabState } from '@newTab/store/index'
 
-export function init() {
-  useConfigState().setAll()
-  useModalState().dealModal()
+export async function init() {
+  await useConfigState().setAll()
+  const dealRes = await useModalState().dealModal()
+  if (!dealRes) // 没有搜索标记，初始化结束
+    useNewTabState().setInit()
 }
