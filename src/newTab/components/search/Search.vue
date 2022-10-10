@@ -233,6 +233,12 @@ watch(x, () => {
 watch(y, () => {
   data.mode = 1
 })
+
+const metaKey = useKeyModifier('Meta')
+// 鼠标点击打开地址
+const clickOpenSite = (url: string) => {
+  openSite(url, !!metaKey.value)
+}
 </script>
 
 <template>
@@ -275,7 +281,7 @@ watch(y, () => {
             :ref="el => { if (el) divs[hIndex] = el }"
             class="py-2 px-4 cursor-pointer"
             :class="{ 'bg-hover': active(hIndex) }"
-            @click="openSite(hItem.url)"
+            @click="clickOpenSite(hItem.url)"
             @mouseover="setIndex(hIndex)"
           >
             <div class="truncate" :title="hItem.title">
@@ -297,7 +303,7 @@ watch(y, () => {
             :ref="el => { if (el) divs[index] = el }"
             class="py-2 px-4 cursor-pointer"
             :class="{ 'bg-hover': active(index) }"
-            @click="openSite(`${item.url}${data.searchContent}`)"
+            @click="clickOpenSite(`${item.url}${data.searchContent}`)"
             @mouseover="setIndex(index)"
           >
             <div class="truncate" :title="item.name">
