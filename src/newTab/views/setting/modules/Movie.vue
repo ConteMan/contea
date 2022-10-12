@@ -26,7 +26,7 @@ const { model }: { model: Ref<ShowConfig> } = setting
       <n-switch v-model:value="model.enable" size="small" :round="false" />
     </n-form-item>
 
-    <n-form-item label="任务定时" path="alarm">
+    <n-form-item label="定时" path="alarm">
       <n-input-number v-model:value="model.alarm" class="w-full">
         <template #suffix>
           分钟
