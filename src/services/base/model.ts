@@ -21,9 +21,12 @@ export type Config = BaseConfig & {
   defaultPath: string
   themeMode: boolean // true => system, false => manual
 
-  statusList: boolean // 状态列表
-  testPage: boolean
+  // 世界线
+  statusList: boolean // 任务
+  testPage: boolean // 测试
+  dashboardPage?: boolean // 面板页面
 
+  // 桌面端
   enableDesktop: boolean // 是否启用与桌面端的通讯
   desktopInterface: string // 桌面端接口地址
   desktopInterfaceStatus: boolean // 桌面端接口状态，true 连通，false 未连通
@@ -34,6 +37,7 @@ export type ShowConfig = Pick<
   'key' | 'name' | 'enable' | 'expired'
   | 'alarm' | 'statusList' | 'themeMode' | 'enableDesktop'
   | 'desktopInterface' | 'desktopInterfaceStatus' | 'testPage'
+  | 'dashboardPage'
   >
 
 export const setting: Config = {

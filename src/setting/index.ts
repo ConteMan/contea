@@ -5,6 +5,7 @@ import { setting as bilibili } from '@services/bilibili/model'
 import { setting as one } from '@services/one/model'
 import { setting as weread } from '@services/weread/model'
 import { setting as sport } from '@services/sport/model'
+import { setting as weather } from '@services/weather/model'
 
 // import { setting as v2ex } from '@services/v2ex/model'
 // import { setting as bgm } from '@services/bgm/model'
@@ -12,7 +13,6 @@ import { setting as sport } from '@services/sport/model'
 // import { setting as jike } from '@services/jike/model'
 // import { setting as juejin } from '@services/juejin/model'
 // import { setting as wakatime } from '@services/wakatime/model'
-// import { setting as weather } from '@services/weather/model'
 // import { setting as zhihu } from '@services/zhihu/model'
 // import { setting as wallpaper } from '@services/wallpaper/model'
 // import { setting as yuque } from '@services/yuque/model'
@@ -26,6 +26,7 @@ export const modules = [
   'one',
   'weread',
   'sport',
+  'weather',
 
   // 'v2ex',
   // 'github',
@@ -33,7 +34,6 @@ export const modules = [
   // 'wakatime',
   // 'jike',
   // 'bgm',
-  // 'weather',
   // 'zhihu',
   // 'wallpaper',
   // 'yuque',
@@ -48,6 +48,7 @@ export interface Setting {
   one: typeof one
   weread: typeof weread
   sport: typeof sport
+  weather: typeof weather
 
   // v2ex: typeof v2ex
   // bgm: typeof bgm
@@ -55,7 +56,6 @@ export interface Setting {
   // jike: typeof jike
   // juejin: typeof juejin
   // wakatime: typeof wakatime
-  // weather: typeof weather
   // zhihu: typeof zhihu
   // wallpaper: typeof wallpaper
   // yuque: typeof yuque
@@ -73,6 +73,7 @@ export default {
   one,
   weread,
   sport,
+  weather,
 
   // v2ex,
   // bgm,
@@ -80,7 +81,6 @@ export default {
   // jike,
   // juejin,
   // wakatime,
-  // weather,
   // zhihu,
   // wallpaper,
   // yuque,

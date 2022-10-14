@@ -5,6 +5,7 @@ import movie from '@services/movie'
 import bilibili from '@services/bilibili'
 import one from '@services/one'
 import weread from '@services/weread'
+import weather from '@services/weather'
 import { football } from '@services/sport'
 
 class Alarm {
@@ -96,6 +97,10 @@ class Alarm {
             competitionRank: competitionRankRes,
           }
         }
+        break
+      }
+      case 'weather': {
+        weather.data('cma', undefined, true)
         break
       }
       default: {

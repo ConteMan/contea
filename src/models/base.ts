@@ -82,7 +82,7 @@ class Base {
   async addOrUpdateItem(key: string | number, data: any, index = 'key') {
     const exist = await this.getItem(key, index)
     if (exist)
-      return await this.currentTable.update(exist.id, data)
+      return await this.currentTable.update(exist.id, { ...exist, ...data })
     else
       return await this.addItem(key, data, index)
   }

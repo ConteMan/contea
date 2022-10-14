@@ -9,6 +9,13 @@ type ModuleItem = Store.MenuItem & {
   title?: string
   config?: Record<string, any>
 }
+type SpecialModule = Record<string, {
+  key: string
+  configModule: string
+  configKey: string
+  type: 'module'
+  title: string
+}>
 
 const NewTabStore = useNewTabState()
 const { tabSelected, worldlineMenu } = storeToRefs(NewTabStore)
@@ -27,28 +34,47 @@ const { all } = storeToRefs(ConfigStore)
 const file: Record<string, string> = import.meta.glob('./modules/*.vue', { import: 'default', eager: true })
 const paths = Object.keys(file)
 
+const specialModules: SpecialModule = {
+  status: {
+    key: 'status',
+    configModule: 'base',
+    configKey: 'statusList',
+    type: 'module',
+    title: '任务',
+  },
+  test: {
+    key: 'test',
+    configModule: 'base',
+    configKey: 'testPage',
+    type: 'module',
+    title: '测试',
+  },
+  dashboard: {
+    key: 'dashboard',
+    configModule: 'base',
+    configKey: 'dashboardPage',
+    type: 'module',
+    title: '主页',
+  },
+}
+
 // 已开启模块
 const modules = computed(() => {
   const res: Record<string, ModuleItem> = {}
   paths.forEach((path) => {
     const key = path.replace('\.\/modules\/', '').replace('.vue', '').toLowerCase()
-    if (key === 'status' && all.value.base.statusList) {
-      res[key] = {
-        key,
-        type: 'module',
-        title: '任务',
-        component: file[path],
+    const specialModuleKeys = Object.keys(specialModules)
+    if (specialModuleKeys.includes(key)) {
+      const { configModule, configKey, type, title } = specialModules[key]
+      if (all.value[configModule][configKey]) {
+        res[key] = {
+          key,
+          type,
+          title,
+          component: file[path],
+        }
+        return
       }
-      return
-    }
-    if (key === 'test' && all.value.base.testPage) {
-      res[key] = {
-        key,
-        type: 'module',
-        title: '测试',
-        component: file[path],
-      }
-      return
     }
     if (all.value?.[key] && all.value?.[key].enable) {
       res[key] = {

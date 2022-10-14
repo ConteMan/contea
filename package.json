@@ -22,6 +22,8 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
+    "@interactjs/core": "1.10.17",
+    "@interactjs/utils": "1.10.17",
     "@vespaiach/axios-fetch-adapter": "^0.3.0",
     "axios": "^0.27.2",
     "crypto-js": "^4.1.1",
@@ -35,7 +37,8 @@
     "pinia": "2.0.21",
     "pinia-plugin-persistedstate": "2.1.1",
     "qs": "^6.11.0",
-    "vue-router": "^4.1.5"
+    "vue-router": "^4.1.5",
+    "vue3-drr-grid-layout": "^1.9.1"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.26.3",

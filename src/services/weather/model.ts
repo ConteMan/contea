@@ -7,11 +7,13 @@ export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiU
 
 export const setting: Config = {
   key: 'weather',
-  name: 'Weather',
-  enable: false,
+  name: '天气',
+  enable: true,
   site: 'https://weather.cma.cn',
   apiUrl: 'https://weather.cma.cn/api',
   expired: 3600,
   alarm: 60,
   showCard: false,
 }
+
+export const configKeys = Object.keys(setting)

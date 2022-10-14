@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
-import configState from '@models/keyValue/configState'
+import { ConfigModel } from '@models/index'
 import type { Config } from '@services/weather/model'
 import Weather from '@services/weather'
-import Card from '@newTab/components/template/TemplateCard.vue'
 
 const module = 'weather'
 
@@ -15,12 +14,12 @@ const data = reactive({
 const { base, config } = toRefs(data)
 
 const getData = async () => {
-  data.config = await configState.getItem(module)
+  data.config = await ConfigModel.getItem(module)
   const res = await Weather.data()
   if (!res)
     data.error = true
   else
-    data.base = res
+    data.base = res.data
 }
 getData()
 
@@ -41,7 +40,7 @@ const dayShow = (date: string) => {
 </script>
 
 <template>
-  <Card class="flex flex-col justify-center cursor-default">
+  <div class="p-4 flex flex-col justify-center cursor-default">
     <div v-if="!Object.keys(base).length" class="duration-200 animate-pulse">
       <span v-if="data.error">Weather Request Error</span>
       <span v-else>...</span>
@@ -76,5 +75,5 @@ const dayShow = (date: string) => {
         </template>
       </div>
     </div>
-  </Card>
+  </div>
 </template>

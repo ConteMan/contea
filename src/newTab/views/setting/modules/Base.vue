@@ -54,6 +54,17 @@ const newTabState = useNewTabState()
       <span class="text-[12px]">世界线</span>
     </n-divider>
 
+    <n-form-item label="主页">
+      <n-switch v-model:value="model.dashboardPage" size="small" :round="false">
+        <template #checked>
+          展示
+        </template>
+        <template #unchecked>
+          隐藏
+        </template>
+      </n-switch>
+    </n-form-item>
+
     <n-form-item label="任务">
       <n-switch v-model:value="model.statusList" size="small" :round="false">
         <template #checked>

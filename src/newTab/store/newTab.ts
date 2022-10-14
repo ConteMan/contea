@@ -4,6 +4,7 @@ import { reactive } from 'vue'
 import type { Ref } from 'vue'
 import wallpaperService from '@services/wallpaper'
 import { useConfigState } from '@newTab/store/index'
+import type { DashboardLayout } from '@localTypes/newTab'
 
 type LayoutMode = 'clean' | 'list' | 'card'
 
@@ -29,6 +30,7 @@ export const useNewTabState = defineStore('newTab',
       theme: 'light', // light, dark
 
       worldlineMenu: [] as Store.MenuItem[],
+      worldlineDashboardLayout: [] as DashboardLayout,
 
       hasInit: false,
     })
@@ -43,6 +45,7 @@ export const useNewTabState = defineStore('newTab',
       theme,
       themeMode,
       worldlineMenu,
+      worldlineDashboardLayout,
       hasInit,
     } = toRefs(data)
 
@@ -190,6 +193,14 @@ export const useNewTabState = defineStore('newTab',
       data.worldlineMenu = menu
     }
 
+    const getWorldlineDashboardLayout = () => {
+      return data.worldlineDashboardLayout
+    }
+
+    const setWorldlineDashboardLayout = (info: DashboardLayout) => {
+      data.worldlineDashboardLayout = info
+    }
+
     // init
     const setInit = () => {
       data.hasInit = true
@@ -210,6 +221,7 @@ export const useNewTabState = defineStore('newTab',
       layoutMode,
 
       worldlineMenu,
+      worldlineDashboardLayout,
 
       hasInit, // 临时标识，不持久化
 
@@ -239,6 +251,8 @@ export const useNewTabState = defineStore('newTab',
 
       getWorldlineMenu,
       setWorldlineMenu,
+      getWorldlineDashboardLayout,
+      setWorldlineDashboardLayout,
 
       setInit,
     }
@@ -261,6 +275,7 @@ export const useNewTabState = defineStore('newTab',
         'layoutMode',
 
         'worldlineMenu',
+        'worldlineDashboardLayout',
       ],
     },
   },

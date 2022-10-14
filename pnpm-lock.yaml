@@ -3,6 +3,8 @@ lockfileVersion: 5.4
 specifiers:
   '@antfu/eslint-config': ^0.26.3
   '@iconify/json': ^2.1.103
+  '@interactjs/core': 1.10.17
+  '@interactjs/utils': 1.10.17
   '@types/crypto-js': ^4.1.1
   '@types/fs-extra': ^9.0.13
   '@types/lodash-es': ^4.17.6
@@ -46,11 +48,14 @@ specifiers:
   vue: ^3.2.38
   vue-demi: ^0.13.11
   vue-router: ^4.1.5
+  vue3-drr-grid-layout: ^1.9.1
   vuedraggable: ^4.1.0
   webextension-polyfill: 0.10.0
   windicss: ^3.5.6
 
 dependencies:
+  '@interactjs/core': 1.10.17_@interactjs+utils@1.10.17
+  '@interactjs/utils': 1.10.17
   '@vespaiach/axios-fetch-adapter': 0.3.0_axios@0.27.2
   axios: 0.27.2
   crypto-js: 4.1.1
@@ -65,6 +70,7 @@ dependencies:
   pinia-plugin-persistedstate: 2.1.1_pinia@2.0.21
   qs: 6.11.0
   vue-router: 4.1.5_vue@3.2.38
+  vue3-drr-grid-layout: 1.9.1_2lek73ccj4iishyto5jmisixt4
 
 devDependencies:
   '@antfu/eslint-config': 0.26.3_yqf6kl63nyoq5megxukfnom5rm
@@ -364,6 +370,167 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /@interactjs/actions/1.10.17_farzh4kmmmdsqeu7trbjloi3zi:
+    resolution: {integrity: sha512-wyB1ZqpaZy5gmz6VDqK9KWh98xKnFgL7VyLvxHODFi9V0IYX4HJAAOBlhtfze0D1R1f1cY+gqPDK+dLaHMlE+w==}
+    peerDependencies:
+      '@interactjs/core': 1.10.17
+      '@interactjs/utils': 1.10.17
+    dependencies:
+      '@interactjs/core': 1.10.17_@interactjs+utils@1.10.17
+      '@interactjs/utils': 1.10.17
+    optionalDependencies:
+      '@interactjs/interact': 1.10.17
+    dev: false
+
+  /@interactjs/auto-scroll/1.10.17_@interactjs+utils@1.10.17:
+    resolution: {integrity: sha512-IQcW7N3xOaoL8RnAGOGMk0Y2gue7L4S3BT6Id4VBBu8so163DtLiZVW6jXu9rKVntzbluaAeqNZlfAVyu3kIWg==}
+    peerDependencies:
+      '@interactjs/utils': 1.10.17
+    dependencies:
+      '@interactjs/utils': 1.10.17
+    optionalDependencies:
+      '@interactjs/interact': 1.10.17
+    dev: false
+
+  /@interactjs/auto-start/1.10.17_farzh4kmmmdsqeu7trbjloi3zi:
+    resolution: {integrity: sha512-qYVxhAbYnwxjD/NLEegUoAST7WASJ4VmWNjsyWRx/js5Op+I4E2zteARIeZGgrutcGIXMCcQzhCMgE3PjOpbpw==}
+    peerDependencies:
+      '@interactjs/core': 1.10.17
+      '@interactjs/utils': 1.10.17
+    dependencies:
+      '@interactjs/core': 1.10.17_@interactjs+utils@1.10.17
+      '@interactjs/utils': 1.10.17
+    optionalDependencies:
+      '@interactjs/interact': 1.10.17
+    dev: false
+
+  /@interactjs/core/1.10.17_@interactjs+utils@1.10.17:
+    resolution: {integrity: sha512-rL9w+83HDRuXub8Ezqs+97CYLl/ne7bLT/sAeduUWaxYhsW9iOqBoob9JnkkCZOaOsYizWI1EWy0+fNc5ibtLQ==}
+    peerDependencies:
+      '@interactjs/utils': 1.10.17
+    dependencies:
+      '@interactjs/utils': 1.10.17
+    dev: false
+
+  /@interactjs/dev-tools/1.10.17_xbmse7bb75tf4dexy2xpppeyve:
+    resolution: {integrity: sha512-Oi9nEw3FfSwkNmW+V0WwdHqvzEkVHc24mH1v5EjRn60sqgrGLK9nTQ+NSuqcnUY8GxC3TkyuxnsOodxiadIRmA==}
+    peerDependencies:
+      '@interactjs/modifiers': 1.10.17
+      '@interactjs/utils': 1.10.17
+    dependencies:
+      '@interactjs/modifiers': 1.10.17_farzh4kmmmdsqeu7trbjloi3zi
+      '@interactjs/utils': 1.10.17
+    optionalDependencies:
+      '@interactjs/interact': 1.10.17
+    dev: false
+
+  /@interactjs/inertia/1.10.17_orxel6eubagr4ggpgjxuetzvmi:
+    resolution: {integrity: sha512-41vbYUjZIDCKt2/yhmjPrEW5+0uoL/hldFsll9pkvnLhmm12Xk0VXOlmR2zXKAmsTK3fJlKMyBYUX92qHLkyVQ==}
+    peerDependencies:
+      '@interactjs/core': 1.10.17
+      '@interactjs/modifiers': 1.10.17
+      '@interactjs/utils': 1.10.17
+    dependencies:
+      '@interactjs/core': 1.10.17_@interactjs+utils@1.10.17
+      '@interactjs/modifiers': 1.10.17_farzh4kmmmdsqeu7trbjloi3zi
+      '@interactjs/offset': 1.10.17_farzh4kmmmdsqeu7trbjloi3zi
+      '@interactjs/utils': 1.10.17
+    optionalDependencies:
+      '@interactjs/interact': 1.10.17
+    dev: false
+
+  /@interactjs/interact/1.10.17:
+    resolution: {integrity: sha512-NyKsf8EFudvdahBjPz1Gt5QnynVwa/2LUfBc2/w8QOnOBiyzUm0HLloJSaB8a50QbQkSWN243/Lgpd8GTMQvuQ==}
+    dependencies:
+      '@interactjs/core': 1.10.17_@interactjs+utils@1.10.17
+      '@interactjs/types': 1.10.17
+      '@interactjs/utils': 1.10.17
+    dev: false
+
+  /@interactjs/interactjs/1.10.17:
+    resolution: {integrity: sha512-hHmiukARbZhiM12zNKx0yQlFVl4C+NMeYNAYh6Mf9U3ZziQ47C+JEW8Gr7Zr/MxfNZyPu5nLKCpVQjh/JvBO9g==}
+    dependencies:
+      '@interactjs/actions': 1.10.17_farzh4kmmmdsqeu7trbjloi3zi
+      '@interactjs/auto-scroll': 1.10.17_@interactjs+utils@1.10.17
+      '@interactjs/auto-start': 1.10.17_farzh4kmmmdsqeu7trbjloi3zi
+      '@interactjs/core': 1.10.17_@interactjs+utils@1.10.17
+      '@interactjs/dev-tools': 1.10.17_xbmse7bb75tf4dexy2xpppeyve
+      '@interactjs/inertia': 1.10.17_orxel6eubagr4ggpgjxuetzvmi
+      '@interactjs/interact': 1.10.17
+      '@interactjs/modifiers': 1.10.17_farzh4kmmmdsqeu7trbjloi3zi
+      '@interactjs/offset': 1.10.17_farzh4kmmmdsqeu7trbjloi3zi
+      '@interactjs/pointer-events': 1.10.17_farzh4kmmmdsqeu7trbjloi3zi
+      '@interactjs/reflow': 1.10.17_farzh4kmmmdsqeu7trbjloi3zi
+      '@interactjs/utils': 1.10.17
+    dev: false
+
+  /@interactjs/modifiers/1.10.17_farzh4kmmmdsqeu7trbjloi3zi:
+    resolution: {integrity: sha512-Dxw8kv9VBIxnhNvQncR6CKAGMzKXczLvuAUIdSPFYtyerX/XiDulJUqhR+jVKNp/WjF1DvdBxWo0kGGLbM84LQ==}
+    peerDependencies:
+      '@interactjs/core': 1.10.17
+      '@interactjs/utils': 1.10.17
+    dependencies:
+      '@interactjs/core': 1.10.17_@interactjs+utils@1.10.17
+      '@interactjs/snappers': 1.10.17_@interactjs+utils@1.10.17
+      '@interactjs/utils': 1.10.17
+    optionalDependencies:
+      '@interactjs/interact': 1.10.17
+    dev: false
+
+  /@interactjs/offset/1.10.17_farzh4kmmmdsqeu7trbjloi3zi:
+    resolution: {integrity: sha512-wWBnIQWgLrmJNTBbd/FdxHxAJjiXl/5ND8Jbw2DuP9gIGDxhFSdEt62Fgqimn9ICb8v8ycvSLObEmcvJF/8hQQ==}
+    peerDependencies:
+      '@interactjs/core': 1.10.17
+      '@interactjs/utils': 1.10.17
+    dependencies:
+      '@interactjs/core': 1.10.17_@interactjs+utils@1.10.17
+      '@interactjs/utils': 1.10.17
+    optionalDependencies:
+      '@interactjs/interact': 1.10.17
+    dev: false
+
+  /@interactjs/pointer-events/1.10.17_farzh4kmmmdsqeu7trbjloi3zi:
+    resolution: {integrity: sha512-VsfluouEKb8QRGyH6jQATCW+QdAd/3dkENS7rj2m+EcVUhz2Ob5mpMRopjALi4pwltMowqTfuJ4LtwMSX2G29A==}
+    peerDependencies:
+      '@interactjs/core': 1.10.17
+      '@interactjs/utils': 1.10.17
+    dependencies:
+      '@interactjs/core': 1.10.17_@interactjs+utils@1.10.17
+      '@interactjs/utils': 1.10.17
+    optionalDependencies:
+      '@interactjs/interact': 1.10.17
+    dev: false
+
+  /@interactjs/reflow/1.10.17_farzh4kmmmdsqeu7trbjloi3zi:
+    resolution: {integrity: sha512-ncpWP5k93FRQptEhjzPZsbuRRajd4rkW17lDavCrEjrDi/LHnYekWGqZTaFzfJ80n1x8xUm9ujDjxCTylNqEIA==}
+    peerDependencies:
+      '@interactjs/core': 1.10.17
+      '@interactjs/utils': 1.10.17
+    dependencies:
+      '@interactjs/core': 1.10.17_@interactjs+utils@1.10.17
+      '@interactjs/utils': 1.10.17
+    optionalDependencies:
+      '@interactjs/interact': 1.10.17
+    dev: false
+
+  /@interactjs/snappers/1.10.17_@interactjs+utils@1.10.17:
+    resolution: {integrity: sha512-m753DGsNOts797e3zDT6wqELoc+BlpIC1w+TyMyISRxU6n1RlS8Q6LHBGgwAgV79LHLaahv/a5haFF9H1VG0FQ==}
+    peerDependencies:
+      '@interactjs/utils': 1.10.17
+    dependencies:
+      '@interactjs/utils': 1.10.17
+    optionalDependencies:
+      '@interactjs/interact': 1.10.17
+    dev: false
+
+  /@interactjs/types/1.10.17:
+    resolution: {integrity: sha512-X2JpoM7xUw0p9Me0tMaI0HNfcF/Hd07ZZlzpnpEMpGerUZOLoyeThrV9P+CrBHxZrluWJrigJbcdqXliFd0YMA==}
+    dev: false
+
+  /@interactjs/utils/1.10.17:
+    resolution: {integrity: sha512-sZAW08CkqgvqRjUIaLRjScjObcCzN9D75yekLA21EClYAZIhi4A+GEt2z/WqOCOksTaEPLYmQyhkpXcboc0LhQ==}
+    dev: false
 
   /@juggle/resize-observer/3.4.0:
     resolution: {integrity: sha512-dfLbk+PwWvFzSxwk3n5ySL0hfBog779o8h68wK/7/APo/7cgyWp5jcXockbxdk5kFRkbeXWm4Fbi9FrdN381sA==}
@@ -698,6 +865,10 @@ packages:
   /@types/crypto-js/4.1.1:
     resolution: {integrity: sha512-BG7fQKZ689HIoc5h+6D2Dgq1fABRa0RbBWKBd9SP/MVRVXROflpm5fhwyATX5duFmbStzyzyycPB8qUYKDH3NA==}
     dev: true
+
+  /@types/element-resize-detector/1.1.3:
+    resolution: {integrity: sha512-rqmeHxzNMPar/3IbdQRm+mydv8KlEXUtcp5M47rbZUEjslTjg+bT5+OXCknTCIy1AfvNR0Kio44iMY2zUH65CQ==}
+    dev: false
 
   /@types/fs-extra/9.0.13:
     resolution: {integrity: sha512-nEnwB++1u5lVDM2UI4c1+5R+FYaKfaAzS4OococimjVm3nQw3TuzH5UNsocrcTBbhnerblyHj4A49qXbIiZdpA==}
@@ -1221,6 +1392,10 @@ packages:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
     dev: true
 
+  /batch-processor/1.0.0:
+    resolution: {integrity: sha512-xoLQD8gmmR32MeuBHgH0Tzd5PuSZx71ZsbhVxOCRbgktZEPe4SQy7s9Z50uPp0F/f7iw2XmkHN2xkgbMfckMDA==}
+    dev: false
+
   /before-after-hook/2.2.2:
     resolution: {integrity: sha512-3pZEU3NT5BFUo/AD5ERPWOgQOCZITni6iavr5AUw5AUwQjMlI0kzu5btnyD39AF0gUEsDPwJT+oY1ORBJijPjQ==}
     dev: false
@@ -1579,6 +1754,12 @@ packages:
     resolution: {integrity: sha512-nagl3RYrbNv6kQkeJIpt6NJZy8twLB/2vtz6yN9Z4vRKHN4/QZJIEbqohALSgwKdnksuY3k5Addp5lg8sVoVcQ==}
     dependencies:
       safe-buffer: 5.2.1
+    dev: false
+
+  /element-resize-detector/1.2.4:
+    resolution: {integrity: sha512-Fl5Ftk6WwXE0wqCgNoseKWndjzZlDCwuPTcoVZfCP9R3EHQF8qUtr3YUPNETegRBOKqQKPW3n4kiIWngGi8tKg==}
+    dependencies:
+      batch-processor: 1.0.0
     dev: false
 
   /entities/4.4.0:
@@ -3158,6 +3339,10 @@ packages:
     resolution: {integrity: sha512-Jsjnk4bw3YJqYzbdyBiNsPWHPfO++UGG749Cxs6peCu5Xg4nrena6OVxOYxrQTqww0Jmwt+Ref8rggumkTLz9Q==}
     dev: true
 
+  /mitt/3.0.0:
+    resolution: {integrity: sha512-7dX2/10ITVyqh4aOSVI9gdape+t9l2/8QxHrFmUXu4EEUpdlxl6RudZUPZoc+zuY2hk1j7XxVroIVIan/pD/SQ==}
+    dev: false
+
   /mlly/0.5.14:
     resolution: {integrity: sha512-DgRgNUSX9NIxxCxygX4Xeg9C7GX7OUx1wuQ8cXx9o9LE0e9wrH+OZ9fcnrlEedsC/rtqry3ZhUddC759XD/L0w==}
     dependencies:
@@ -4402,6 +4587,25 @@ packages:
       '@vue/runtime-dom': 3.2.38
       '@vue/server-renderer': 3.2.38_vue@3.2.38
       '@vue/shared': 3.2.38
+
+  /vue3-drr-grid-layout/1.9.1_2lek73ccj4iishyto5jmisixt4:
+    resolution: {integrity: sha512-G2tI+O03Pj+9tnRcTqMipx9ixBGFqE1OM+46r245NyZKzPeLqgWvArvIPLsqOhX5cBE22vh6bm+U8kUM1wt7eA==}
+    peerDependencies:
+      vue: ^3.2.0
+    dependencies:
+      '@interactjs/actions': 1.10.17_farzh4kmmmdsqeu7trbjloi3zi
+      '@interactjs/auto-start': 1.10.17_farzh4kmmmdsqeu7trbjloi3zi
+      '@interactjs/dev-tools': 1.10.17_xbmse7bb75tf4dexy2xpppeyve
+      '@interactjs/interactjs': 1.10.17
+      '@interactjs/modifiers': 1.10.17_farzh4kmmmdsqeu7trbjloi3zi
+      '@types/element-resize-detector': 1.1.3
+      element-resize-detector: 1.2.4
+      mitt: 3.0.0
+      vue: 3.2.38
+    transitivePeerDependencies:
+      - '@interactjs/core'
+      - '@interactjs/utils'
+    dev: false
 
   /vuedraggable/4.1.0_vue@3.2.38:
     resolution: {integrity: sha512-FU5HCWBmsf20GpP3eudURW3WdWTKIbEIQxh9/8GE806hydR9qZqRRxRE3RjqX7PkuLuMQG/A7n3cfj9rCEchww==}
