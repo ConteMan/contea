@@ -1,115 +1,107 @@
-import { Octokit } from 'octokit'
 import type { Octokit as OctokitType } from 'octokit'
-import configState from '@models/keyValue/configState'
+import { Octokit } from 'octokit'
+import { ConfigModel } from '@models/index'
 import RequestCache from '@services/base/requestCache'
-import ModuleState from '@models/keyValue/moduleState'
-import type { StarredParams } from './model'
+
+export interface StarredParams {
+  sort: string
+  direction: string
+  page: number
+  per_page: number
+}
 
 class Github {
   private module = 'github'
   private octokit!: OctokitType
 
-  constructor() {
-    this.init()
+  constructor(token = '') {
+    this.init(token)
   }
 
   /**
    * 初始化
    */
-  async init() {
-    const { token, apiUrl } = await configState.getItem(this.module)
-    if (!token)
-      return false
+  async init(token = '') {
+    let authToken = token
+    const { token: moduleToken, apiUrl } = await ConfigModel.getItem(this.module)
+    if (!authToken) {
+      if (!moduleToken)
+        return false
+      else
+        authToken = moduleToken
+    }
 
     const client = new Octokit({
-      auth: token,
+      auth: authToken,
       baseUrl: apiUrl,
     })
     this.octokit = client
   }
 
   /**
-   * 个人信息
+   * 通用缓存请求
+   * @param route string - 请求地址
+   * @param params {} - 请求参数
    */
-  async me() {
-    const cacheKey = [this.module, 'me']
-    const cacheData = await RequestCache.get(cacheKey)
-    if (cacheData)
-      return cacheData
+  async cacheRequest(route: string, params: Record<string, any> = {}, refresh = false) {
+    try {
+      const routeStr = route.replaceAll(/\s/g, '').replaceAll(/\//g, '_')
+      const cacheKey = [this.module, routeStr, ...Object.values(params)]
+      if (!refresh) {
+        const cacheData = await RequestCache.get(cacheKey)
+        if (cacheData)
+          return cacheData
+      }
 
-    const res = await this.octokit.request('GET /user')
+      const res = await this.octokit.request(route, params)
 
-    if (res)
-      await RequestCache.set(cacheKey, res)
+      if (res)
+        return await RequestCache.set(cacheKey, { data: res })
 
-    return res
+      return res
+    }
+    catch (e) {
+      // eslint-disable-next-line no-console
+      console.log('[ e ] >', e)
+      return false
+    }
   }
 
   /**
-   * 通用缓存请求
-   * @param cacheParams [] - 缓存键
-   * @param request string - 请求地址
-   * @param requestParams {} - 请求参数
+   * 用户信息
    */
-  async cacheQuery(cacheParams: any[], request: string, requestParams: {}) {
-    const cacheKey = [this.module, ...cacheParams]
-    const cacheData = await RequestCache.get(cacheKey)
-    if (cacheData)
-      return cacheData
-
-    const res = await this.octokit.request(request, requestParams)
-
-    if (res)
-      await RequestCache.set(cacheKey, res)
-
-    return res
+  async user(refresh = false) {
+    return await this.cacheRequest('GET /user', undefined, refresh)
   }
 
   /**
    * 获取星标项目列表
    * @param params StarredParams - 参数
    */
-  async starred(params: StarredParams = { sort: '', direction: '', page: 1, per_page: 20 }) {
-    return await this.cacheQuery(['starred', ...Object.values(params)], 'GET /user/starred', params)
+  async starred(params: StarredParams = { sort: '', direction: '', page: 1, per_page: 20 }, refresh = false) {
+    return await this.cacheRequest('GET /user/starred', params, refresh)
   }
 
   /**
    * 获取星标项目总数量
    */
-  async starredCount() {
-    const data = await this.starred()
+  async starredCount(refresh = false) {
+    const data = await this.starred(undefined, refresh)
+    if (!data)
+      return false
+
     const link = data.headers.link
-
     const pageMeta: any = String(link).match(/page\=(?<page>[\d]+)\&per_page\=(?<per_page>[\d]+)(?=>;\srel\=\"last\")/)
-
     const page = parseInt(pageMeta?.groups.page)
     const per_page = parseInt(pageMeta?.groups.per_page)
 
     const params = { page, per_page, sort: '', direction: '' }
-    const lastPage = await this.starred(params)
+    const lastPage = await this.starred(params, refresh)
+
+    if (!lastPage)
+      return false
 
     return lastPage.data.length + per_page * (page - 1)
-  }
-
-  /**
-   * 获取用户信息
-   */
-  async user(force = false) {
-    if (!force) {
-      const cache = await ModuleState.getValidItem(this.module)
-      if (cache)
-        return cache
-    }
-
-    const meRes = await this.me()
-    const starredCount = await this.starredCount()
-
-    const moduleData = {
-      ...meRes.data,
-      starred: starredCount,
-    }
-
-    return await ModuleState.mergeSet(this.module, { data: moduleData })
   }
 }
 

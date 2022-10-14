@@ -6,10 +6,10 @@ import { setting as one } from '@services/one/model'
 import { setting as weread } from '@services/weread/model'
 import { setting as sport } from '@services/sport/model'
 import { setting as weather } from '@services/weather/model'
+import { setting as github } from '@services/github/model'
 
 // import { setting as v2ex } from '@services/v2ex/model'
 // import { setting as bgm } from '@services/bgm/model'
-// import { setting as github } from '@services/github/model'
 // import { setting as jike } from '@services/jike/model'
 // import { setting as juejin } from '@services/juejin/model'
 // import { setting as wakatime } from '@services/wakatime/model'
@@ -27,9 +27,9 @@ export const modules = [
   'weread',
   'sport',
   'weather',
+  'github',
 
   // 'v2ex',
-  // 'github',
   // 'juejin',
   // 'wakatime',
   // 'jike',
@@ -49,10 +49,10 @@ export interface Setting {
   weread: typeof weread
   sport: typeof sport
   weather: typeof weather
+  github: typeof github
 
   // v2ex: typeof v2ex
   // bgm: typeof bgm
-  // github: typeof github
   // jike: typeof jike
   // juejin: typeof juejin
   // wakatime: typeof wakatime
@@ -74,10 +74,10 @@ export default {
   weread,
   sport,
   weather,
+  github,
 
   // v2ex,
   // bgm,
-  // github,
   // jike,
   // juejin,
   // wakatime,

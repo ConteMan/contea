@@ -9,8 +9,8 @@ export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiU
 
 export const setting: Config = {
   key: 'github',
-  name: 'Github',
-  enable: false,
+  name: 'GitHub',
+  enable: true,
   site: 'https://github.com',
   apiUrl: 'https://api.github.com',
   gistUrl: 'https://gist.github.com',
@@ -20,9 +20,4 @@ export const setting: Config = {
   showCard: true,
 }
 
-export interface StarredParams {
-  sort: string
-  direction: string
-  page: number
-  per_page: number
-}
+export const configKeys = Object.keys(setting)

@@ -32,8 +32,11 @@ export default new class ConfigModel extends Base {
     return array
   }
 
-  // 初始化
-  async init(module: SettingKeys | 'all' = 'all') {
+  /**
+   * 设置初始化
+   * @param module - 设置模块或模式，all 重置初始化，increase 增量初始化（不覆盖已有设置，只增加新字段）
+   */
+  async init(module: SettingKeys | 'all' | 'increase' = 'all') {
     if (module === 'all') {
       await this.reset()
 
@@ -42,6 +45,14 @@ export default new class ConfigModel extends Base {
 
       Object.keys(defaultSetting).forEach((item) => {
         Alarm.setAlarm(item)
+      })
+    }
+    else if (module === 'increase') {
+      const setting = this.objToArr(defaultSetting)
+      setting.forEach(async (item) => {
+        const res = await this.addOrIncreaseItem(item.key, item)
+        if (res.type === 'add')
+          await Alarm.setAlarm(item.key)
       })
     }
     else {

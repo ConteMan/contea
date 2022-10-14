@@ -105,8 +105,12 @@ const newTabState = useNewTabState()
       <span class="text-[12px]">全局</span>
     </n-divider>
 
-    <n-form-item label="初始化">
-      <n-switch v-model:value="initConfigLoading" :loading="initConfigLoading" size="small" :round="false" @update:value="initConfig()" />
+    <n-form-item label="增量初始化">
+      <n-switch :value="initConfigLoading === 'increase'" :loading="initConfigLoading === 'increase'" size="small" :round="false" @update:value="initConfig('increase')" />
+    </n-form-item>
+
+    <n-form-item label="重置初始化">
+      <n-switch :value="initConfigLoading === 'all'" :loading="initConfigLoading === 'all'" size="small" :round="false" @update:value="initConfig('all')" />
     </n-form-item>
   </n-form>
 </template>

@@ -33,7 +33,7 @@ browser.runtime.onInstalled.addListener(async () => {
         })
     }
 
-    await ConfigModel.init() // #1 安装时，初始化
+    await ConfigModel.init('increase') // #1 安装时，增量初始化
   }
   catch (e) {
     // eslint-disable-next-line no-console

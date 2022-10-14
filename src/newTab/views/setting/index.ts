@@ -10,7 +10,7 @@ export default (module: SettingKeys, configKeys: string[]) => {
   const data = reactive({
     hasInit: false,
     resetLoading: false,
-    initConfigLoading: false,
+    initConfigLoading: '',
     model: {} as any,
     rules: {} as any,
   })
@@ -69,15 +69,15 @@ export default (module: SettingKeys, configKeys: string[]) => {
   })
 
   // 初始化 **全局** 设置
-  const initConfig = async () => {
-    data.initConfigLoading = true
+  const initConfig = async (type: 'all' | 'increase' = 'increase') => {
+    data.initConfigLoading = type
 
     useTimeoutFn(async () => {
-      await ConfigModel.init('all')
+      await ConfigModel.init(type)
       await ConfigStore.setAll()
       await init(module)
 
-      data.initConfigLoading = false
+      data.initConfigLoading = ''
       message.success('#reset-all success!')
     }, 1000)
   }

@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { Ref } from 'vue'
 import type { SettingKeys } from '@setting/index'
-import type { ShowConfig } from '@services/weread/model'
-import { configKeys } from '@services/weread/model'
+import type { ShowConfig } from '@services/github/model'
+import { configKeys } from '@services/github/model'
 import Setting from '../index'
 
-const module: SettingKeys = 'weread'
+const module: SettingKeys = 'github'
 
 const setting = Setting(module, configKeys)
 const { rules, resetLoading, reset } = setting
@@ -32,6 +32,10 @@ const { model }: { model: Ref<ShowConfig> } = setting
           分钟
         </template>
       </n-input-number>
+    </n-form-item>
+
+    <n-form-item label="Token">
+      <n-input v-model:value="model.token" />
     </n-form-item>
 
     <n-form-item label="重置">

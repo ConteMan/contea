@@ -74,7 +74,7 @@ class Base {
   }
 
   /**
-   * 新增或更新数据
+   * 全量，新增或更新数据
    * @param key - 键值
    * @param data - 数据
    * @param index - 键对应字段
@@ -85,6 +85,30 @@ class Base {
       return await this.currentTable.update(exist.id, { ...exist, ...data })
     else
       return await this.addItem(key, data, index)
+  }
+
+  /**
+   * 增量，新增整体 或 增加新字段数据（如果字段已存在，则不更新）
+   * @param key - 键值
+   * @param data - 数据
+   * @param index - 键对应字段
+   */
+  async addOrIncreaseItem(key: string | number, data: any, index = 'key') {
+    const exist = await this.getItem(key, index)
+    if (exist) {
+      const res = await this.currentTable.update(exist.id, { ...data, ...exist })
+      return {
+        type: 'increase',
+        res,
+      }
+    }
+    else {
+      const res = await this.addItem(key, data, index)
+      return {
+        type: 'add',
+        res,
+      }
+    }
   }
 
   /**

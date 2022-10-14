@@ -3,6 +3,7 @@ import WorldlineContent from '@newTab/layout/WorldlineContent.vue'
 import Gooooal from '@services/sport/modules/football/gooooal'
 import Netease from '@services/sport/modules/football/netease'
 import Football from '@services/sport/modules/football'
+import GitHub from '@services/github/index'
 
 const testConsole = async (type: string, params: any) => {
   let res
@@ -18,7 +19,8 @@ const testConsole = async (type: string, params: any) => {
     res = await Football.getCompetitionRank(params)
   else if (type === 'footballInit')
     res = await Football.init()
-
+  else if (type === 'githubUser')
+    res = await GitHub.user()
   // eslint-disable-next-line no-console
   console.log(res)
 }
@@ -64,6 +66,17 @@ const testConsole = async (type: string, params: any) => {
               size="small" @click="testConsole('saveTeams', 1)"
             >
               保存 - 英超队伍列表
+            </n-button>
+          </div>
+        </div>
+
+        <div class="p-4 rounded-md bg-gray-400 bg-opacity-20">
+          <div>GitHub</div>
+          <div class="mt-6 flex flex-wrap gap-4">
+            <n-button
+              size="small" @click="testConsole('githubUser', undefined)"
+            >
+              User
             </n-button>
           </div>
         </div>
