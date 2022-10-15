@@ -93,6 +93,7 @@ watch(worldlineDashboardLayout, (newValue) => {
               :w="item.w"
               :h="item.h"
               :i="item.i"
+              class="bg-opacity-0"
             >
               <div class="no-drag h-full flex flex-col">
                 <div class="bar pt-2 pb-1 px-4 flex justify-end flex-nowrap items-center">
@@ -122,5 +123,17 @@ watch(worldlineDashboardLayout, (newValue) => {
   .action-btn {
     opacity: 100;
   }
+}
+:deep(.vue-grid-item) {
+  background-color: unset;
+}
+:deep(.vue-grid-item.vue-grid-placeholder) {
+  background: unset;
+}
+:deep(.vue-resizable-handle) {
+  opacity: 0;
+}
+:deep(.vue-grid-item:hover > .vue-resizable-handle) {
+  opacity: 1;
 }
 </style>

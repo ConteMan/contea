@@ -262,7 +262,7 @@ const removeMenuItem = (key: string, type: Store.MenuItemType = 'divider') => {
               {{ element.title }}
             </div>
             <div v-if="element.type === 'divider'" class="w-full ml-8 py-2 flex items-center ">
-              <div class="w-full inline-block border-b border-b-light-500" />
+              <div class="w-full h-[1px] inline-block bg-white bg-opacity-80" />
             </div>
             <div class="flex-grow flex items-center justify-end">
               <span
