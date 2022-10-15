@@ -52,8 +52,9 @@ export const setting: Config = {
   defaultPath: '/index',
   themeMode: true,
 
-  statusList: true,
+  statusList: false,
   testPage: false,
+  dashboardPage: true,
 
   enableDesktop: false,
   desktopInterface: 'http://127.0.0.1:7788/extension',
