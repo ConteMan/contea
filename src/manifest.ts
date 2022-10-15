@@ -1,6 +1,7 @@
 import fs from 'fs-extra'
 import type { Manifest } from 'webextension-polyfill'
 import { r } from '@utils/script'
+import { COMMANDS } from '@enums/index'
 import type PkgType from '../package.json'
 
 export async function getManifest() {
@@ -57,22 +58,37 @@ export async function getManifest() {
         matches: ['<all_urls>'],
       },
     ],
+    content_scripts: [
+      {
+        js: [
+          './dist/contentScripts/index.global.js',
+        ],
+        matches: ['<all_urls>'],
+      },
+    ],
     content_security_policy: {
       extension_pages: 'script-src \'self\'; object-src \'self\'',
     },
     commands: {
-      'change-mode': {
+      [COMMANDS.CHANGE_MODE]: {
         description: 'Change Mode',
         suggested_key: {
           default: 'Alt+W',
           mac: 'Alt+W',
         },
       },
-      'search': {
+      [COMMANDS.SEARCH]: {
         description: 'Search',
         suggested_key: {
           default: 'Alt+Q',
           mac: 'Alt+Q',
+        },
+      },
+      [COMMANDS.CONTENT_SCRIPT]: {
+        description: 'Show Page Content',
+        suggested_key: {
+          default: 'Alt+E',
+          mac: 'Alt+E',
         },
       },
     },

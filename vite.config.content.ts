@@ -1,4 +1,6 @@
 import { defineConfig } from 'vite'
+import WindiCSS from 'vite-plugin-windicss'
+import windiConfig from './windi.config'
 import { isDev, r } from './src/utils/script'
 import { sharedConfig } from './vite.config'
 import packageJson from './package.json'
@@ -6,6 +8,10 @@ import packageJson from './package.json'
 // bundling the content script using Vite
 export default defineConfig({
   ...sharedConfig,
+  define: {
+    '__DEV__': isDev,
+    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+  },
   base: '/dist/',
   build: {
     watch: isDev
@@ -33,5 +39,8 @@ export default defineConfig({
   },
   plugins: [
     ...sharedConfig.plugins!,
+    WindiCSS({
+      config: windiConfig,
+    }),
   ],
 })

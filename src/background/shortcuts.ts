@@ -1,5 +1,6 @@
 import type { Tabs } from 'webextension-polyfill'
 import _ from 'lodash-es'
+import { CONTENT_SCRIPT_COMMANDS } from '@enums/index'
 import { ConfigModel } from '@models/index'
 
 /**
@@ -90,4 +91,27 @@ export async function nextTab(tabId = 0) {
   if (nextId)
     browser.tabs.update(nextId, { active: true })
   return true
+}
+
+/**
+ * 处理内容脚本
+ */
+export async function dealContentScript() {
+  try {
+    const tabs = await browser.tabs.query({ currentWindow: true, active: true })
+    const activeTab = tabs[0]
+    // eslint-disable-next-line no-console
+    console.log('[ activeTab ] >', activeTab)
+
+    if (!activeTab.id)
+      return false
+
+    const message: Message.BaseMessage = { type: CONTENT_SCRIPT_COMMANDS.SHOW } // 直属消息，处理逻辑
+
+    return await browser.tabs.sendMessage(activeTab.id, message)
+  }
+  catch (e) {
+    // eslint-disable-next-line no-console
+    console.log('>>> background >> shortcuts > deal-content-script error', e)
+  }
 }

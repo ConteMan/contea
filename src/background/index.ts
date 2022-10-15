@@ -2,11 +2,11 @@ import type { Tabs } from 'webextension-polyfill'
 
 import _ from 'lodash-es'
 
-import { MESSAGE_TYPES } from '@enums/index'
+import { COMMANDS, MESSAGE_TYPES } from '@enums/index'
 import AlarmService from '@services/base/alarm'
 import { AlarmTaskModel, ConfigModel } from '@models/index'
 import { getVersion } from './version'
-import { changeMode, nextTab } from './shortcuts'
+import { changeMode, dealContentScript, nextTab } from './shortcuts'
 
 const EXTENSION_NAME = 'CONTEA'
 const EXTENSION_ID = browser.runtime.getURL('').replace(/chrome-extension:\/\/|\//g, '')
@@ -140,10 +140,12 @@ browser.alarms.onAlarm.addListener(async (alarm: { name: string }) => {
  */
 browser.commands.onCommand.addListener(async (command: string) => {
   try {
-    if (command === 'change-mode')
+    if (command === COMMANDS.CHANGE_MODE)
       changeMode(EXTENSION_ID)
-    if (command === 'search')
+    if (command === COMMANDS.SEARCH)
       changeMode(EXTENSION_ID, { type: 'search' })
+    if (command === COMMANDS.CONTENT_SCRIPT)
+      dealContentScript()
   }
   catch (e) {
     // eslint-disable-next-line no-console
@@ -176,6 +178,9 @@ browser.runtime.onMessage.addListener(async (message: Message.RuntimeMessage) =>
       }
       case MESSAGE_TYPES.NEXT_TAB: {
         return await nextTab(parseInt(tabId))
+      }
+      case MESSAGE_TYPES.DEAL_CONTENT_SCRIPT: {
+        return true
       }
       default:
         return true

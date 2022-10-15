@@ -3,4 +3,5 @@ export enum MESSAGE_TYPES {
   GET_PAGE_ALARM = 'get-page-alarm',
   DEAL_PAGE_ALARM = 'deal-page-alarm',
   NEXT_TAB = 'next-tab',
+  DEAL_CONTENT_SCRIPT = 'deal-content-script',
 }
