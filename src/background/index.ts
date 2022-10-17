@@ -1,4 +1,4 @@
-import type { Tabs } from 'webextension-polyfill'
+import type { Runtime, Tabs } from 'webextension-polyfill'
 
 import _ from 'lodash-es'
 
@@ -158,9 +158,11 @@ browser.commands.onCommand.addListener(async (command: string) => {
  * @param message - 消息体
  * @param sender - 发送者信息
  */
-browser.runtime.onMessage.addListener(async (message: Message.RuntimeMessage) => {
+browser.runtime.onMessage.addListener(async (message: Message.RuntimeMessage, sender: Runtime.MessageSender) => {
   try {
-    const { type, name = '', tabId = '' } = message
+    const { type, name = '', tabId = '', data } = message
+    // eslint-disable-next-line no-console
+    console.log(`[${SERVICE_WORKER_NAME}] >>> [bg] >> onMessage > ${type}`, sender)
     switch (type) {
       case MESSAGE_TYPES.DEAL_ALARM: { // 前端请求，在后端执行定时任务
         await AlarmService.dealAlarm(name)
@@ -177,10 +179,35 @@ browser.runtime.onMessage.addListener(async (message: Message.RuntimeMessage) =>
         return await AlarmTaskModel.alarmAction(name, 'deal')
       }
       case MESSAGE_TYPES.NEXT_TAB: {
-        return await nextTab(parseInt(tabId))
+        let dealTabId = parseInt(tabId)
+        if (!dealTabId && sender.tab?.id)
+          dealTabId = sender.tab.id
+        return await nextTab(dealTabId)
       }
       case MESSAGE_TYPES.DEAL_CONTENT_SCRIPT: {
         return true
+      }
+      case MESSAGE_TYPES.SEARCH_HISTORY: {
+        const { text, startTime } = data
+        // eslint-disable-next-line no-console
+        console.log('[ data ] >', text, startTime, data)
+        const searchRes = await browser.history.search({
+          text,
+          startTime,
+        })
+        // eslint-disable-next-line no-console
+        console.log('[ searchRes ] >', searchRes)
+        return searchRes
+      }
+      case MESSAGE_TYPES.RECENT_BOOKMARKS: {
+        const { count = 20 } = data
+        return await browser.bookmarks.getRecent(count)
+      }
+      case MESSAGE_TYPES.SEARCH_BOOKMARKS: {
+        const { query } = data
+        return await browser.bookmarks.search({
+          query,
+        })
       }
       default:
         return true

@@ -4,4 +4,7 @@ export enum MESSAGE_TYPES {
   DEAL_PAGE_ALARM = 'deal-page-alarm',
   NEXT_TAB = 'next-tab',
   DEAL_CONTENT_SCRIPT = 'deal-content-script',
+  SEARCH_HISTORY = 'search-history',
+  RECENT_BOOKMARKS = 'recent-bookmarks',
+  SEARCH_BOOKMARKS = 'search-bookmarks',
 }

@@ -1,6 +1,5 @@
 import { defineConfig } from 'vite'
-import WindiCSS from 'vite-plugin-windicss'
-import windiConfig from './windi.config'
+import Unocss from 'unocss/vite'
 import { isDev, r } from './src/utils/script'
 import { sharedConfig } from './vite.config'
 import packageJson from './package.json'
@@ -39,8 +38,6 @@ export default defineConfig({
   },
   plugins: [
     ...sharedConfig.plugins!,
-    WindiCSS({
-      config: windiConfig,
-    }),
+    Unocss({ /* options */ }),
   ],
 })

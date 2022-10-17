@@ -1,7 +1,7 @@
 namespace Message {
   export interface BaseMessage {
     type: string
-    [other: string]: string
+    [other: string]: any
   }
   
   export type TabMessage = BaseMessage & {

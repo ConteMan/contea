@@ -12,7 +12,7 @@ export async function getManifest() {
     host_permissions: string[]
   } = {
     manifest_version: 3,
-    name: pkg.name,
+    name: `${pkg.name[0].toUpperCase()}${pkg.name.slice(1)}`,
     version: pkg.version,
     description: pkg.description,
     action: {
@@ -54,7 +54,10 @@ export async function getManifest() {
     },
     web_accessible_resources: [
       {
-        resources: ['dist/contentScripts/style.css'],
+        resources: [
+          'dist/contentScripts/style.css',
+          'dist/contentScripts/index.global.js',
+        ],
         matches: ['<all_urls>'],
       },
     ],

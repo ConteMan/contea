@@ -135,21 +135,26 @@ export async function sendToBackground(message: Message) {
  * 激活下一个标签页
  */
 export async function nextTab() {
-  const currentTab = await browser.tabs.getCurrent()
-  const tabId = currentTab.id
-  if (!tabId)
+  try {
+    const currentTab = await browser.tabs.getCurrent()
+    const tabId = currentTab.id
+    if (!tabId)
+      return false
+
+    const tabs = await browser.tabs.query({ currentWindow: true }) // 当前窗口全部标签页
+    const index = _.findIndex(tabs, (item) => {
+      return item.id === tabId
+    })
+
+    if (index < 0)
+      return false
+
+    const nextId = index < tabs.length - 1 ? tabs[index + 1].id : tabs[0].id
+    if (nextId)
+      browser.tabs.update(nextId, { active: true })
+    return true
+  }
+  catch (e) {
     return false
-
-  const tabs = await browser.tabs.query({ currentWindow: true }) // 当前窗口全部标签页
-  const index = _.findIndex(tabs, (item) => {
-    return item.id === tabId
-  })
-
-  if (index < 0)
-    return false
-
-  const nextId = index < tabs.length - 1 ? tabs[index + 1].id : tabs[0].id
-  if (nextId)
-    browser.tabs.update(nextId, { active: true })
-  return true
+  }
 }
