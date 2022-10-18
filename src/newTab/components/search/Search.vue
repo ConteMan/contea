@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { Bookmarks, History, Tabs } from 'webextension-polyfill'
 import dayjs from 'dayjs'
 import { debouncedWatch, onKeyStroke, onStartTyping, useMouse } from '@vueuse/core'
 import { openSite as baseOpenSite, nextTab } from '@utils/index'
@@ -35,14 +36,18 @@ const webSearch = [ // 搜索引擎列表
 const defaultSearchIndex = 0
 
 const data = reactive({
+  currentTabId: 0,
   searchContent: '',
-  result: [] as any,
+  result: [] as any[],
+  historyResult: [] as History.HistoryItem[],
+  tabResult: [] as Tabs.Tab[],
+  bookmarkResult: [] as Bookmarks.BookmarkTreeNode[],
   index: 0, // 选中结果索引
   divs: {} as any, // 搜索结果引用
   mode: 1, // 1 鼠标，2 键盘
   searchMode: 1, // 1 历史记录， 2 书签, 3 搜索引擎
 })
-const { searchContent, result, divs } = toRefs(data)
+const { currentTabId, searchContent, result, divs } = toRefs(data)
 
 // 状态管理搜索状态
 const ModalStore = useModalState()
@@ -60,46 +65,100 @@ const openSite = async (url: string, newTab = false) => {
   }
 }
 
-// 清空搜索内容
-const clearSearch = () => {
-  data.searchContent = ''
+// 获取当前标签页 ID
+const getCurrentTabId = async () => {
+  const current = await browser.tabs.getCurrent()
+  if (current.id)
+    data.currentTabId = current.id
+}
+getCurrentTabId()
+
+// 搜索打开的标签页
+const searchTab = async () => {
+  const res = await browser.tabs.query({})
+  if (res) {
+    const dealStr = searchContent.value.toLowerCase()
+    const regex = new RegExp(`.*?${dealStr}.*?`)
+    data.tabResult = res.filter((item) => {
+      if (item.id === currentTabId.value) {
+        return false
+      }
+      else {
+        if (!searchContent.value) {
+          return true
+        }
+        else {
+          if (item.title && regex.test(item.title.toLowerCase()))
+            return true
+          if (item.url && regex.test(item.url.toLowerCase()))
+            return true
+          return false
+        }
+      }
+    })
+
+    data.tabResult = data.tabResult.map((item) => {
+      return {
+        searchResType: 'tab',
+        ...item,
+      }
+    })
+  }
 }
 
 // 搜索历史记录
 const searchHistory = async () => {
-  data.searchMode = 1
-  data.result = await browser.history.search({
+  data.historyResult = await browser.history.search({
     text: searchContent.value,
     startTime: dayjs().subtract(historyStart, 'day').valueOf(),
+    maxResults: 20,
   })
-  data.index = 0
+  data.historyResult = data.historyResult.map((item) => {
+    return {
+      searchResType: 'history',
+      ...item,
+    }
+  })
 }
 
 // 搜索书签
 const searchBookmark = async (content = '') => {
-  data.searchMode = 2
   if (!content) { // 没有搜索内容，加载最近书签
-    data.result = await browser.bookmarks.getRecent(bookmarkRecent)
+    data.bookmarkResult = await browser.bookmarks.getRecent(bookmarkRecent)
   }
   else {
-    data.result = await browser.bookmarks.search({
+    data.bookmarkResult = await browser.bookmarks.search({
       query: content,
     })
   }
+}
+
+// 搜索处理
+const dealSearch = async (content: string) => {
+  if (/^b\s(.)*/.test(content)) {
+    data.searchMode = 2
+    await searchBookmark(content.replace('b ', ''))
+    data.result = [...data.bookmarkResult]
+  }
+  else if (/^s\s(.)*/.test(content)) {
+    data.searchMode = 3
+    data.result = [...webSearch]
+  }
+  else {
+    data.searchMode = 1
+    await searchTab()
+    await searchHistory()
+    data.result = [...data.tabResult, ...data.historyResult]
+  }
   data.index = 0
 }
+dealSearch('')
 
-// 搜索引擎搜索
-const searchWeb = async () => {
-  data.searchMode = 3
-  data.result = webSearch
-}
-
-// 初始化
 watch(modalShow, (newValue) => {
   if (newValue) {
-    clearSearch()
-    searchHistory()
+    data.tabResult = []
+    data.historyResult = []
+    dealSearch('')
   }
   else {
     ModalStore.change(false)
@@ -107,13 +166,8 @@ watch(modalShow, (newValue) => {
 })
 
 // 带防抖的搜索请求处理
-debouncedWatch(searchContent, (newValue) => {
-  if (/^b\s(.)*/.test(newValue))
-    searchBookmark(newValue.replace('b ', ''))
-  else if (/^s\s(.)*/.test(newValue))
-    searchWeb()
-  else
-    searchHistory()
+debouncedWatch(searchContent, async (newValue) => {
+  await dealSearch(newValue)
 }, { debounce: 300 })
 
 // 输入框始终获取焦点
@@ -177,11 +231,26 @@ onKeyStroke('Enter', (e) => {
   // 如果没有结果，是网址则打开新标签页，不是网址则默认搜索
   if ([1].includes(data.searchMode)) {
     if (data.result?.[data.index]) {
-      openSite(data.result[data.index].url, e.metaKey)
+      if (data.result?.[data.index].searchResType === 'history') {
+        openSite(data.result[data.index].url, e.metaKey)
+      }
+      else {
+        if (data.result?.[data.index].id) {
+          const tabId = data.result?.[data.index].id
+          ModalStore.change(false)
+          browser.tabs.update(tabId, { active: true }).catch(() => {
+            data.result.filter((rItem) => {
+              if (rItem?.id && rItem.id === tabId)
+                return false
+              return true
+            })
+          })
+        }
+      }
     }
     else {
       if (/^\w+[^\s]+(\.[^\s]+){1,}$/.test(data.searchContent)) {
-        const realUrl = /^(http(s)?:\/\/)(.){1,}/.test(data.searchContent) ? data.searchContent : `https://${data.searchContent}`
+        const realUrl = /^(http(s)?:\/\/)(.){1,}/.test(data.searchContent) ? data.searchContent : `http://${data.searchContent}`
         openSite(realUrl, e.metaKey)
       }
       else {
@@ -235,9 +304,29 @@ watch(y, () => {
 })
 
 const metaKey = useKeyModifier('Meta')
+
 // 鼠标点击打开地址
 const clickOpenSite = (url: string) => {
   openSite(url, !!metaKey.value)
+}
+
+// 点击打开
+const clickOpen = (item: any) => {
+  if (item.searchResType === 'history') {
+    clickOpenSite(item.url)
+  }
+  else {
+    if (item.id) {
+      ModalStore.change(false)
+      browser.tabs.update(item.id, { active: true }).catch(() => {
+        data.result.filter((rItem) => {
+          if (rItem?.id && rItem.id === item.id)
+            return false
+          return true
+        })
+      })
+    }
+  }
 }
 </script>
 
@@ -262,7 +351,7 @@ const clickOpenSite = (url: string) => {
             enter-active-class="animate__animated animate__faster animate__flipInX"
             leave-active-class="animate__animated animate__faster animate__flipOutX"
           >
-            <mdi-history v-if="data.searchMode === 1" />
+            <mdi-router v-if="data.searchMode === 1" />
             <mdi-book-outline v-else-if="data.searchMode === 2" />
             <icon-park-outline-search v-else />
           </transition>
@@ -273,11 +362,35 @@ const clickOpenSite = (url: string) => {
         ref="resultRef"
         class="overflow-y-auto flex-shrink flex-grow"
       >
-        <!-- 书签、历史记录搜索模式  -->
-        <template v-if="[1, 2].includes(data.searchMode)">
+        <!-- Tab、历史记录搜索模式  -->
+        <template v-if="[1].includes(data.searchMode)">
           <div
             v-for="(hItem, hIndex) in result"
             :key="hItem.lastVisitTime ?? hItem?.dateAdded"
+            :ref="el => { if (el) divs[hIndex] = el }"
+            class="py-2 px-4 cursor-pointer"
+            :class="{ 'bg-hover': active(hIndex) }"
+            @click="clickOpen(hItem)"
+            @mouseover="setIndex(hIndex)"
+          >
+            <div class="truncate" :title="hItem.title">
+              {{ hItem.title }}
+            </div>
+            <div class="text-xs text-opacity-60 italic truncate flex justify-start items-center" :title="hItem.url">
+              <span class="flex justify-center items-center mr-2">
+                <mdi-tab v-if="hItem.searchResType === 'tab'" />
+                <mdi-history v-else />
+              </span>
+              <span v-if="hItem?.lastVisitTime" class="mr-2">{{ dayjs(hItem.lastVisitTime).format('MM-DD HH:mm') }}</span>
+              <span>{{ hItem.url }}</span>
+            </div>
+          </div>
+        </template>
+        <!-- 书签搜索模式  -->
+        <template v-if="[2].includes(data.searchMode)">
+          <div
+            v-for="(hItem, hIndex) in result"
+            :key="hItem?.dateAdded"
             :ref="el => { if (el) divs[hIndex] = el }"
             class="py-2 px-4 cursor-pointer"
             :class="{ 'bg-hover': active(hIndex) }"
@@ -288,7 +401,6 @@ const clickOpenSite = (url: string) => {
               {{ hItem.title }}
             </div>
             <div class="text-xs text-opacity-60 italic truncate" :title="hItem.url">
-              <span v-if="hItem?.lastVisitTime">{{ dayjs(hItem.lastVisitTime).format('MM-DD HH:mm') }}</span>
               <span v-if="hItem?.dateAdded">{{ dayjs(hItem.dateAdded).format('YYYY-MM-DD HH:mm') }}</span>
               / {{ hItem.url }}
             </div>
