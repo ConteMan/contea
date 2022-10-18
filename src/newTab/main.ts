@@ -22,4 +22,9 @@ app.use(GridLayout)
 
 app.mount('#app')
 
+app.config.errorHandler = (err, instance, info) => {
+  // eslint-disable-next-line no-console
+  console.log('[ unhand error with app.config.errorHandler ] >', err, instance, info)
+}
+
 init()

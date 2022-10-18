@@ -119,8 +119,6 @@ class Movie {
         .offset((page - 1) * pageSize)
         .limit(pageSize)
         .toArray()
-      // eslint-disable-next-line no-console
-      console.log(res)
       return res
     }
     catch (e) {

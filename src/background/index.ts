@@ -141,15 +141,17 @@ browser.alarms.onAlarm.addListener(async (alarm: { name: string }) => {
 browser.commands.onCommand.addListener(async (command: string) => {
   try {
     if (command === COMMANDS.CHANGE_MODE)
-      changeMode(EXTENSION_ID)
+      await changeMode(EXTENSION_ID)
     if (command === COMMANDS.SEARCH)
-      changeMode(EXTENSION_ID, { type: 'search' })
+      await changeMode(EXTENSION_ID, { type: 'search' })
     if (command === COMMANDS.CONTENT_SCRIPT)
-      dealContentScript()
+      await dealContentScript()
+    return true
   }
   catch (e) {
     // eslint-disable-next-line no-console
     console.log(`[${SERVICE_WORKER_NAME}] >>> [bg] >> onCommand error: `, e)
+    return true
   }
 })
 
@@ -188,12 +190,13 @@ browser.runtime.onMessage.addListener(async (message: Message.RuntimeMessage, se
         return true
       }
       case MESSAGE_TYPES.SEARCH_HISTORY: {
-        const { text, startTime } = data
+        const { text, startTime, maxResults = 20 } = data
         // eslint-disable-next-line no-console
         console.log('[ data ] >', text, startTime, data)
         const searchRes = await browser.history.search({
           text,
           startTime,
+          maxResults,
         })
         // eslint-disable-next-line no-console
         console.log('[ searchRes ] >', searchRes)
@@ -216,6 +219,7 @@ browser.runtime.onMessage.addListener(async (message: Message.RuntimeMessage, se
   catch (e) {
     // eslint-disable-next-line no-console
     console.log(`[${SERVICE_WORKER_NAME}] >>> [bg] >> onMessage error: `, e)
+    return true
   }
 })
 

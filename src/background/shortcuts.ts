@@ -113,5 +113,6 @@ export async function dealContentScript() {
   catch (e) {
     // eslint-disable-next-line no-console
     console.log('>>> background >> shortcuts > deal-content-script error', e)
+    return false
   }
 }

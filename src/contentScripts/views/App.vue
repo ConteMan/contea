@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { CONTENT_SCRIPT_COMMANDS } from '@enums/index'
-import { usePreferredDark, useToggle } from '@vueuse/core'
+import { useToggle } from '@vueuse/core'
 
 import SearchModal from '../components/Search.vue'
 
@@ -22,7 +22,7 @@ browser.runtime.onMessage.addListener(async (message: Message.RuntimeMessage, se
         return true
       }
       default:
-        return true
+        break
     }
   }
   catch (e) {
@@ -30,8 +30,6 @@ browser.runtime.onMessage.addListener(async (message: Message.RuntimeMessage, se
     console.log('[content script] >>> onMessage error: ', e)
   }
 })
-
-const isPreferredDark = usePreferredDark()
 </script>
 
 <template>

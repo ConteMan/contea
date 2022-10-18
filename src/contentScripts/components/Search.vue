@@ -90,15 +90,17 @@ const clearSearch = () => {
 // 搜索历史记录
 const searchHistory = async () => {
   data.searchMode = 1
-  data.result = await sendToBackground({
+  const res = await sendToBackground({
     type: MESSAGE_TYPES.SEARCH_HISTORY,
     data: {
       text: searchContent.value,
       startTime: dayjs().subtract(historyStart, 'day').valueOf(),
     },
   })
+  if (res)
+    data.result = res
   // eslint-disable-next-line no-console
-  console.log('[ data.result ] >', data.result)
+  console.log('[ data.result ] >', res)
   data.index = 0
 }
 
@@ -148,13 +150,13 @@ watch(modalShow, (newValue) => {
 })
 
 // 带防抖的搜索请求处理
-debouncedWatch(searchContent, (newValue) => {
+debouncedWatch(searchContent, async (newValue) => {
   if (/^b\s(.)*/.test(newValue))
-    searchBookmark(newValue.replace('b ', ''))
+    await searchBookmark(newValue.replace('b ', ''))
   else if (/^s\s(.)*/.test(newValue))
-    searchWeb()
+    await searchWeb()
   else
-    searchHistory()
+    await searchHistory()
 }, { debounce: 300 })
 
 // 结果容器引用
@@ -330,20 +332,20 @@ const clickOpenSite = (url: string) => {
 <template>
   <div
     v-show="modalShow"
-    class="z-2147483647 fixed w-screen h-screen top-0 left-0 bg-white bg-opacity-40 text-black flex justify-center items-center dark:(text-white) "
+    class="z-2147483647 fixed w-screen h-screen top-0 left-0 bg-white bg-opacity-40 text-black text-[14px] flex justify-center items-center dark:(text-white) "
     @click="stayFocus()"
   >
-    <div class="w-[40%] h-[80%] max-h-[400px] rounded-md shadow-md bg-white flex flex-col dark:(bg-dark-800)">
+    <div class="w-[40%] h-[80%] max-h-[400px] rounded-[6px] shadow-md bg-white flex flex-col dark:(bg-dark-800)">
       <input
         id="contea-search-input"
         ref="searchInputRef"
         v-model="searchContent"
-        class="h-[60px] flex-shrink-0 flex-grow-0 border-none outline-none px-4 rounded-tl-md rounded-tr-md text-[16px]"
+        class="h-[60px] flex-shrink-0 flex-grow-0 border-none outline-none px-[16px] rounded-tl-[6px] rounded-tr-[6px] text-[16px]"
       >
       <div class="bg-light-400 h-[1px] flex-shrink-0 flex-grow-0 dark:(bg-gray-600)" />
       <div
         ref="resultRef"
-        class="overflow-y-auto hover-scroll flex-shrink flex-grow rounded-bl-md rounded-br-md bg-white dark:(bg-dark-800)"
+        class="overflow-y-auto hover-scroll flex-shrink flex-grow rounded-bl-[6px] rounded-br-[6px] bg-white dark:(bg-dark-800)"
       >
         <!-- 书签、历史记录搜索模式  -->
         <template v-if="[1, 2].includes(data.searchMode)">
@@ -351,7 +353,7 @@ const clickOpenSite = (url: string) => {
             v-for="(hItem, hIndex) in result"
             :key="hItem.lastVisitTime ?? hItem?.dateAdded"
             :ref="el => { if (el) divs[hIndex] = el }"
-            class="py-2 px-4 cursor-pointer"
+            class="py-[12px] px-[16px] cursor-pointer"
             :class="{ 'bg-hover': active(hIndex) }"
             @click="clickOpenSite(hItem.url)"
             @mouseover="setIndex(hIndex)"
@@ -359,7 +361,7 @@ const clickOpenSite = (url: string) => {
             <div class="truncate" :title="hItem.title">
               {{ hItem.title }}
             </div>
-            <div class="text-xs text-opacity-60 italic truncate" :title="hItem.url">
+            <div class="mt-[6px] text-[12px] opacity-60 italic truncate" :title="hItem.url">
               <span v-if="hItem?.lastVisitTime">{{ dayjs(hItem.lastVisitTime).format('MM-DD HH:mm') }}</span>
               <span v-if="hItem?.dateAdded">{{ dayjs(hItem.dateAdded).format('YYYY-MM-DD HH:mm') }}</span>
               / {{ hItem.url }}
@@ -373,7 +375,7 @@ const clickOpenSite = (url: string) => {
             v-for="(item, index) in result"
             :key="item.name"
             :ref="el => { if (el) divs[index] = el }"
-            class="py-2 px-4 cursor-pointer"
+            class="py-[12px] px-[16px] cursor-pointer"
             :class="{ 'bg-hover': active(index) }"
             @click="clickOpenSite(`${item.url}${data.searchContent}`)"
             @mouseover="setIndex(index)"
@@ -381,7 +383,7 @@ const clickOpenSite = (url: string) => {
             <div class="truncate" :title="item.name">
               {{ item.name }}
             </div>
-            <div class="text-xs text-opacity-60 italic truncate" :title="item.url">
+            <div class="mt-[6px] text-[12px] opacity-60 italic truncate" :title="item.url">
               {{ item.url }}
             </div>
           </div>

@@ -128,22 +128,32 @@ interface Message {
  * @param message - 信息体
  */
 export async function sendToBackground(message: Message) {
-  return await browser.runtime.sendMessage(message)
+  try {
+    return await browser.runtime.sendMessage(message)
+  }
+  catch (e) {
+    // eslint-disable-next-line no-console
+    console.log('[ sendToBackground e ] >', e)
+    return false
+  }
 }
 
 /**
  * 激活下一个标签页
  */
-export async function nextTab() {
+export async function nextTab(tabId = 0) {
   try {
-    const currentTab = await browser.tabs.getCurrent()
-    const tabId = currentTab.id
-    if (!tabId)
-      return false
+    let dealTabId = tabId
+    if (!dealTabId) {
+      const currentTab = await browser.tabs.getCurrent()
+      if (!currentTab.id)
+        return false
+      dealTabId = currentTab.id
+    }
 
     const tabs = await browser.tabs.query({ currentWindow: true }) // 当前窗口全部标签页
     const index = _.findIndex(tabs, (item) => {
-      return item.id === tabId
+      return item.id === dealTabId
     })
 
     if (index < 0)

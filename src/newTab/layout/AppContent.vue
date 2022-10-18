@@ -51,7 +51,7 @@ dealAlarm()
 
 // 监听消息
 browser.runtime.onMessage.addListener(async (message: Message.TabMessage, sender: any) => {
-  const { type, name } = message
+  const { type } = message
 
   // eslint-disable-next-line no-console
   console.log(`${new Date()} [NewTab AppContent] 收到 [${sender.id}] 发来的信息：${JSON.stringify(message)}`)
@@ -69,6 +69,7 @@ browser.runtime.onMessage.addListener(async (message: Message.TabMessage, sender
     }
     case 'alarm':
     case 'alarm-sync': {
+      const { name = '' } = message
       if (!name)
         break
       if (type === 'alarm') {
@@ -76,6 +77,42 @@ browser.runtime.onMessage.addListener(async (message: Message.TabMessage, sender
         await sleep(1000) // 处理后等待 1 秒再继续
       }
       break
+    }
+    case MESSAGE_TYPES.NEXT_TAB: {
+      const { tabId = 0 } = message
+      let dealTabId = parseInt(tabId)
+      if (!dealTabId && sender.tab?.id)
+        dealTabId = sender.tab.id
+      return await nextTab(dealTabId)
+    }
+    case MESSAGE_TYPES.DEAL_CONTENT_SCRIPT: {
+      return true
+    }
+    case MESSAGE_TYPES.SEARCH_HISTORY: {
+      const { data } = message
+      const { text, startTime, maxResults = 20 } = data
+      // eslint-disable-next-line no-console
+      console.log('[ data ] >', text, startTime, data)
+      const searchRes = await browser.history.search({
+        text,
+        startTime,
+        maxResults,
+      })
+      // eslint-disable-next-line no-console
+      console.log('[ newTab searchRes ] >', searchRes)
+      return searchRes
+    }
+    case MESSAGE_TYPES.RECENT_BOOKMARKS: {
+      const { data } = message
+      const { count = 20 } = data
+      return await browser.bookmarks.getRecent(count)
+    }
+    case MESSAGE_TYPES.SEARCH_BOOKMARKS: {
+      const { data } = message
+      const { query } = data
+      return await browser.bookmarks.search({
+        query,
+      })
     }
     default:
       break
