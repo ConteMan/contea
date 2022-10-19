@@ -1,49 +1,22 @@
 import type { SettingKeys } from '@setting/index'
-import RequestCache from '@services/base/requestCache'
-import { defHttp } from '@utils/http/axios'
+import { MODULES } from '@enums/index'
+import { station as cmaStation } from './modules/cma'
 
 export type sourceType = 'cma'
 
 class Weather {
-  private module: SettingKeys = 'weather'
+  public MODULE: SettingKeys = MODULES.WEATHER
 
   /**
    * 获取天气数据
+   * @param type - 来源， 默认 cma
+   * @param params - 参数
+   * @param refresh - 是否刷新，默认 false
    */
   async data(type: sourceType = 'cma', params?: any, refresh = false) {
     switch (type) {
       default:
-        return await this.cma(params?.stationId, refresh)
-    }
-  }
-
-  /**
-   * 中国气象局数据
-   * @param stationId number - 地域代码
-   */
-  async cma(stationId: number | undefined = undefined, refresh = false) {
-    const cacheKey = [this.module, stationId]
-    if (!refresh) {
-      const cacheData = await RequestCache.get(cacheKey)
-      if (cacheData)
-        return cacheData
-    }
-
-    try {
-      const res = await defHttp.get({
-        url: 'https://weather.cma.cn/api/weather/view',
-        params: {
-          stationId,
-        },
-      })
-
-      if (res.data.data)
-        return await RequestCache.set(cacheKey, { data: res.data.data }, this.module, -1)
-
-      return false
-    }
-    catch (e) {
-      return false
+        return await cmaStation(params?.stationId, refresh)
     }
   }
 }

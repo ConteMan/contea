@@ -1,3 +1,5 @@
+import { MODULES } from '@enums/index'
+
 import { setting as base } from '@services/base/model'
 import { setting as sspai } from '@services/sspai/model'
 import { setting as movie } from '@services/movie/model'
@@ -26,7 +28,7 @@ export const modules = [
   'one',
   'weread',
   'sport',
-  'weather',
+  MODULES.WEATHER,
   'github',
 
   // 'v2ex',
