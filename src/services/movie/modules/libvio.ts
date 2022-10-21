@@ -203,6 +203,11 @@ export default new class Libvio {
 
       const douban_url = dom.querySelector('.stui-content .stui-content__detail p a[href*=douban]')?.getAttribute('href') ?? ''
       const douban_id = douban_url ? parseInt(douban_url.replace('https://movie.douban.com/subject/', '').replaceAll('/', '')) : 0
+
+      // 暂时不保存无豆瓣 ID 数据
+      if (!douban_id)
+        return false
+
       const details = dom.querySelectorAll('.stui-content .stui-content__detail p.data')
       const detail_str = dom.querySelector('.stui-content .stui-content__detail .desc.detail .detail-content')?.innerHTML ?? ''
       let updated_at = ''
@@ -277,7 +282,7 @@ export default new class Libvio {
         if (detail) {
           detailList.push({ ...data[i], ...detail.data })
           if (detail?.cache_sign && detail.cache_sign === 'get')
-            await sleep(getRandomIntInclusive(100, 3000))
+            await sleep(getRandomIntInclusive(800, 3000))
         }
       }
       await this.save(detailList)

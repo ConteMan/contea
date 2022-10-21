@@ -79,7 +79,7 @@ class Movie {
   }
 
   /**
-   * 获取列表
+   * 请求页面获取列表
    * @param module - 模块
    * @param refresh - 是否刷新数据
    * @param extend - 扩展参数，如具体类型、页码等

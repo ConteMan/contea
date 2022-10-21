@@ -7,8 +7,6 @@ import { MESSAGE_TYPES } from '@enums/index'
 
 const props = defineProps(['show'])
 const emit = defineEmits(['update:show'])
-// eslint-disable-next-line no-console
-console.log('[ props ] >', props)
 
 const historyStart = 30 // 历史记录搜索开始，距离目前的天数
 const BOOKMARK_RECENT = 20 // 最近书签数量
@@ -57,6 +55,7 @@ modalShow.value = props.show
 // 输入框始终获取焦点
 const searchInputRef: Ref<null | HTMLElement> = ref(null)
 
+// 跳转下个标签页
 const toNextTab = () => {
   try {
     sendToBackground({
@@ -64,8 +63,6 @@ const toNextTab = () => {
     })
   }
   catch (e) {
-    // eslint-disable-next-line no-console
-    console.log('[ toNextTab e ] >', e)
     return false
   }
 }
@@ -99,8 +96,6 @@ const searchHistory = async () => {
   })
   if (res)
     data.result = res
-  // eslint-disable-next-line no-console
-  console.log('[ data.result ] >', res)
   data.index = 0
 }
 
@@ -131,23 +126,6 @@ const searchWeb = async () => {
   data.searchMode = 3
   data.result = webSearch
 }
-
-watch(() => props.show, (newValue) => {
-  modalShow.value = newValue
-  if (newValue) {
-    nextTick(() => {
-      if (searchInputRef.value)
-        searchInputRef.value.focus()
-    })
-  }
-})
-watch(modalShow, (newValue) => {
-  emit('update:show', newValue)
-  if (newValue) {
-    clearSearch()
-    searchHistory()
-  }
-})
 
 // 带防抖的搜索请求处理
 debouncedWatch(searchContent, async (newValue) => {
@@ -204,97 +182,98 @@ const downAction = () => {
   }
 }
 
-const isTypedCharValid = ({
-  keyCode,
-  metaKey,
-  ctrlKey,
-  altKey,
-}: KeyboardEvent) => {
-  if (metaKey || ctrlKey || altKey)
-    return false
-
-  // 0...9
-  if ((keyCode >= 48 && keyCode <= 57) || (keyCode >= 96 && keyCode <= 105))
-    return true
-
-  // a...z
-  if (keyCode >= 65 && keyCode <= 90)
-    return true
-
-  // All other keys.
-  return false
-}
-
+// 保持焦点
 const stayFocus = () => {
-  if (searchInputRef.value)
-    searchInputRef.value.focus()
+  searchInputRef.value?.focus()
 }
 
-useEventListener(document.getElementById('contea-content-script'), 'keydown', (e: KeyboardEvent) => {
-  if (isTypedCharValid(e)) {
+// 处理按键事件
+const dealKeyEvent = () => {
+  window.addEventListener('keydown', async (e: any) => {
+    if (!modalShow.value)
+      return false
+
+    e.stopPropagation()
+    e.stopImmediatePropagation()
+
     const { activeElement } = document
-    if ((!activeElement || activeElement.id !== 'contea-search-input') && searchInputRef.value) {
-      nextTick(() => {
-        if (searchInputRef.value)
-          searchInputRef.value.focus()
-      })
+    if (!activeElement || activeElement.id !== 'contea-content-script') { // shadow dom root
+      const el = document.getElementById('contea-content-script')?.shadowRoot?.getElementById('contea-script-modal')
+      el?.focus()
     }
-  }
-  e.stopPropagation()
 
-  // eslint-disable-next-line no-console
-  console.log('[ contea-content-script keydown ] >', e)
-
-  let deal = false
-  if (e.key === 'Escape') {
-    modalShow.value = false
-    deal = true
-  }
-  else if (['Tab', 'ArrowDown'].includes(e.key)) {
-    if (e.shiftKey && e.key === 'Tab')
+    let deal = false
+    if (e.key === 'Escape') {
+      modalShow.value = false
+      deal = true
+    }
+    else if (['Tab', 'ArrowDown'].includes(e.key)) {
+      if (e.shiftKey && e.key === 'Tab')
+        upAction()
+      else
+        downAction()
+      deal = true
+    }
+    else if (['ArrowUp'].includes(e.key)) {
       upAction()
-    else
-      downAction()
-    deal = true
-  }
-  else if (['ArrowUp'].includes(e.key)) {
-    upAction()
-    deal = true
-  }
-  else if (e.key === 'Enter') {
-    // 历史记录模式
-    // 如果没有结果，是网址则打开新标签页，不是网址则默认搜索
-    if ([1].includes(data.searchMode)) {
-      if (data.result?.[data.index]) {
-        openSite(data.result[data.index].url, e.metaKey)
-      }
-      else {
-        if (/^\w+[^\s]+(\.[^\s]+){1,}$/.test(data.searchContent)) {
-          const realUrl = /^(http(s)?:\/\/)(.){1,}/.test(data.searchContent) ? data.searchContent : `https://${data.searchContent}`
-          openSite(realUrl, e.metaKey)
+      deal = true
+    }
+    else if (e.key === 'Enter') {
+      // 历史记录模式
+      // 如果没有结果，是网址则打开新标签页，不是网址则默认搜索
+      if ([1].includes(data.searchMode)) {
+        if (data.result?.[data.index]) {
+          openSite(data.result[data.index].url, e.metaKey)
         }
         else {
-          openSite(`${webSearch[defaultSearchIndex].url}${data.searchContent}`, e.metaKey)
+          if (/^\w+[^\s]+(\.[^\s]+){1,}$/.test(data.searchContent)) {
+            const realUrl = /^(http(s)?:\/\/)(.){1,}/.test(data.searchContent) ? data.searchContent : `https://${data.searchContent}`
+            openSite(realUrl, e.metaKey)
+          }
+          else {
+            openSite(`${webSearch[defaultSearchIndex].url}${data.searchContent}`, e.metaKey)
+          }
         }
       }
-    }
-    // 书签模式
-    if ([2].includes(data.searchMode)) {
-      if (data.result?.[data.index])
-        openSite(data.result[data.index].url, e.metaKey)
-    }
-    // 搜索引擎模式
-    if ([3].includes(data.searchMode))
-      openSite(`${data.result[data.index].url}${(data.searchContent).replace('s ', '')}`, e.metaKey)
+      // 书签模式
+      if ([2].includes(data.searchMode)) {
+        if (data.result?.[data.index])
+          openSite(data.result[data.index].url, e.metaKey)
+      }
+      // 搜索引擎模式
+      if ([3].includes(data.searchMode))
+        openSite(`${data.result[data.index].url}${(data.searchContent).replace('s ', '')}`, e.metaKey)
 
-    deal = true
-  }
+      deal = true
+    }
 
-  if (deal) {
-    e.stopImmediatePropagation()
-    e.preventDefault()
+    if (deal) {
+      e.stopPropagation()
+      e.stopImmediatePropagation()
+    }
+  }, {
+    // once: true,
+    capture: true,
+    passive: true,
+  })
+}
+
+dealKeyEvent()
+
+watch(() => props.show, async (newValue) => {
+  modalShow.value = newValue
+  if (newValue) {
+    await nextTick()
+    searchInputRef.value?.focus()
+    dealKeyEvent()
   }
-  return true
+})
+watch(modalShow, (newValue) => {
+  emit('update:show', newValue)
+  if (newValue) {
+    clearSearch()
+    searchHistory()
+  }
 })
 
 // 判断激活
@@ -332,8 +311,11 @@ const clickOpenSite = (url: string) => {
 <template>
   <div
     v-show="modalShow"
+    id="contea-script-modal"
     class="z-2147483647 fixed w-screen h-screen top-0 left-0 bg-white bg-opacity-40 text-black text-[14px] flex justify-center items-center dark:(text-white) "
+    tabindex="999"
     @click="stayFocus()"
+    @focus="stayFocus()"
   >
     <div class="w-[40%] h-[80%] max-h-[400px] rounded-[6px] shadow-md bg-white flex flex-col dark:(bg-dark-800)">
       <input

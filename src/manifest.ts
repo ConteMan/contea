@@ -67,6 +67,7 @@ export async function getManifest() {
           './dist/contentScripts/index.global.js',
         ],
         matches: ['<all_urls>'],
+        run_at: 'document_start',
       },
     ],
     content_security_policy: {

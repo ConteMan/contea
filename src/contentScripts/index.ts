@@ -20,12 +20,14 @@ import App from './views/App.vue'
   container.setAttribute('id', 'contea-content-script')
   const root = document.createElement('div')
   root.setAttribute('id', 'contea-root')
-  const shadowDOM = container.attachShadow?.({ mode: __DEV__ ? 'open' : 'closed' }) || container
+  // const shadowDOM = container.attachShadow?.({ mode: __DEV__ ? 'open' : 'closed' }) || container
+  const shadowDOM = container.attachShadow?.({ mode: 'open' }) || container
   const styleEl = document.createElement('link')
   styleEl.setAttribute('rel', 'stylesheet')
   styleEl.setAttribute('href', cssUrl)
   shadowDOM.appendChild(styleEl)
   shadowDOM.appendChild(root)
+
   document.documentElement.append(container)
 
   // const scriptEl = document.createElement('script')

@@ -7,17 +7,18 @@ import SearchModal from '../components/Search.vue'
 const [show] = useToggle(false)
 
 watch(show, (newValue) => {
-  // eslint-disable-next-line no-console
-  console.log('%c [ show ]: ', 'color: #bf2c9f; background: pink; font-size: 13px;', newValue)
+  if (newValue)
+    window.focus()
 })
 
 browser.runtime.onMessage.addListener(async (message: Message.RuntimeMessage, sender: any) => {
   // eslint-disable-next-line no-console
   console.log(`${new Date()} [content script] 收到 [${sender.id}] 发来的信息：${JSON.stringify(message)}`)
   try {
-    const { type, name = '', tabId = '' } = message
+    const { type } = message
     switch (type) {
       case CONTENT_SCRIPT_COMMANDS.SHOW: {
+        window.focus()
         show.value = !show.value
         return true
       }
