@@ -21,15 +21,15 @@ import { setting as github } from '@services/github/model'
 // import { setting as sync } from '@services/sync/model'
 
 export const modules = [
-  'base',
-  'sspai',
-  'movie',
-  'bilibili',
-  'one',
-  'weread',
-  'sport',
+  MODULES.BASE,
+  MODULES.SSPAI,
+  MODULES.MOVIE,
+  MODULES.BILIBILI,
+  MODULES.ONE,
+  MODULES.WEREAD,
+  MODULES.SPORT,
   MODULES.WEATHER,
-  'github',
+  MODULES.GITHUB,
 
   // 'v2ex',
   // 'juejin',

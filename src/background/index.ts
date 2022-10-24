@@ -2,11 +2,12 @@ import type { Runtime, Tabs } from 'webextension-polyfill'
 
 import _ from 'lodash-es'
 
-import { COMMANDS, MESSAGE_TYPES } from '@enums/index'
+import { COMMANDS, MESSAGE_TYPES, MODULES } from '@enums/index'
 import AlarmService from '@services/base/alarm'
 import { AlarmTaskModel, ConfigModel } from '@models/index'
 import { getVersion } from './version'
 import { changeMode, dealContentScript, nextTab } from './shortcuts'
+import { isObject } from '~/utils/is'
 
 const EXTENSION_NAME = 'CONTEA'
 const EXTENSION_ID = browser.runtime.getURL('').replace(/chrome-extension:\/\/|\//g, '')
@@ -46,10 +47,10 @@ browser.runtime.onInstalled.addListener(async () => {
  * @param alarm string - 定时任务信息
  * - @param name string - 定时任务名称
  */
-browser.alarms.onAlarm.addListener(async (alarm: { name: string }) => {
+browser.alarms.onAlarm.addListener(async (alarm) => {
   try {
-    const DEAL_MODULES = ['sspai', 'movie', 'bilibili', 'weread']
-    const REDIRECT_MODULES = ['one', 'movie', 'sport']
+    const DEAL_MODULES: string[] = [MODULES.SSPAI, MODULES.MOVIE, MODULES.BILIBILI, MODULES.WEREAD, MODULES.WEATHER]
+    const REDIRECT_MODULES: string[] = [MODULES.ONE, MODULES.MOVIE, MODULES.SPORT]
     const { name } = alarm
 
     if (![DEV_ALARM_NAME].includes(name))
@@ -167,8 +168,8 @@ browser.runtime.onMessage.addListener(async (message: Message.RuntimeMessage, se
     console.log(`[${SERVICE_WORKER_NAME}] >>> [bg] >> onMessage > ${type}`, sender)
     switch (type) {
       case MESSAGE_TYPES.DEAL_ALARM: { // 前端请求，在后端执行定时任务
-        await AlarmService.dealAlarm(name)
-        return true
+        const res = await AlarmService.dealAlarm(name)
+        return isObject(res) ? res : true
       }
       case MESSAGE_TYPES.GET_PAGE_ALARM: { // 获取需要页面执行的定时任务
         return await AlarmTaskModel.query()

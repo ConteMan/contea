@@ -44,10 +44,12 @@ const activeAlarm = async (name: string) => {
 
 const sendBackgroundActiveAlarm = async (name: string) => {
   activeLoading.value = `${name}_background`
-  await sendToBackground({
+  const res = await sendToBackground({
     type: MESSAGE_TYPES.DEAL_ALARM,
     name,
   })
+  // eslint-disable-next-line no-console
+  console.log('sendBackgroundActiveAlarm: ', res)
   activeLoading.value = ''
 }
 </script>

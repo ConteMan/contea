@@ -1,4 +1,5 @@
 import { ConfigModel } from '@models/index'
+import { MODULES } from '@enums/index'
 
 import sspai from '@services/sspai'
 import movie from '@services/movie'
@@ -53,35 +54,35 @@ class Alarm {
     let result
 
     switch (module) {
-      case 'sspai': {
+      case MODULES.SSPAI: {
         const { enableTypes } = configInfo
         result = await sspai.lists(enableTypes)
         break
       }
-      case 'movie': {
+      case MODULES.MOVIE: {
         if (source === 'service_worker')
           result = await movie.sync()
         if (source === 'page')
           result = await movie.getList('libvio', true)
         break
       }
-      case 'bilibili': {
+      case MODULES.BILIBILI: {
         const moduleInfo = await bilibili.moduleInfo(true)
         const sign = await bilibili.sign()
         result = { moduleInfo, sign }
         break
       }
-      case 'one': {
+      case MODULES.ONE: {
         result = await one.list(true)
         if (result)
           await one.sync(result.data)
         break
       }
-      case 'weread': {
+      case MODULES.WEREAD: {
         result = await weread.moduleInfo(true)
         break
       }
-      case 'sport' : {
+      case MODULES.SPORT : {
         if (source === 'page') {
           const competitionRankRes: { id: number; res: any }[] = []
           const competitionIds = Object.keys(football.COMPETITIONS)
@@ -99,11 +100,12 @@ class Alarm {
         }
         break
       }
-      case 'weather': {
-        weather.data('cma', undefined, true)
+      case MODULES.WEATHER: {
+        result = await weather.data('cma', undefined, true)
         break
       }
       default: {
+        result = false
         break
       }
     }
