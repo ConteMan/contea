@@ -75,21 +75,28 @@ export async function getManifest() {
     },
     commands: {
       [COMMANDS.CHANGE_MODE]: {
-        description: 'Change Mode',
+        description: '切换到扩展页',
         suggested_key: {
           default: 'Alt+W',
           mac: 'Alt+W',
         },
       },
+      [COMMANDS.CHANGE_MODE_CURRENT]: {
+        description: '关闭当前页面并切换到扩展页',
+        suggested_key: {
+          default: 'Shift+Alt+W',
+          mac: 'Shift+Alt+W',
+        },
+      },
       [COMMANDS.SEARCH]: {
-        description: 'Search',
+        description: '切换到扩展页并打开搜索',
         suggested_key: {
           default: 'Alt+Q',
           mac: 'Alt+Q',
         },
       },
       [COMMANDS.CONTENT_SCRIPT]: {
-        description: 'Show Page Content',
+        description: '打开搜索',
         suggested_key: {
           default: 'Alt+E',
           mac: 'Alt+E',

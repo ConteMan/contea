@@ -142,9 +142,11 @@ browser.alarms.onAlarm.addListener(async (alarm) => {
 browser.commands.onCommand.addListener(async (command: string) => {
   try {
     if (command === COMMANDS.CHANGE_MODE)
-      await changeMode(EXTENSION_ID)
+      await changeMode(EXTENSION_ID, { type: 'change-mode', action: 'default' })
+    if (command === COMMANDS.CHANGE_MODE_CURRENT)
+      await changeMode(EXTENSION_ID, { type: 'change-mode', action: 'close' })
     if (command === COMMANDS.SEARCH)
-      await changeMode(EXTENSION_ID, { type: 'search' })
+      await changeMode(EXTENSION_ID, { type: 'search', action: 'default' })
     if (command === COMMANDS.CONTENT_SCRIPT)
       await dealContentScript()
     return true

@@ -3,11 +3,16 @@ import _ from 'lodash-es'
 import { CONTENT_SCRIPT_COMMANDS } from '@enums/index'
 import { ConfigModel } from '@models/index'
 
+interface Param {
+  type: 'search' | 'change-mode'
+  action: 'default' | 'close'
+}
+
 /**
  * 快捷键切换标签页模式
  */
-export async function changeMode(extensionId: string, params: { type: 'search' | 'change-mode' } = { type: 'change-mode' }) {
-  const { type } = params
+export async function changeMode(extensionId: string, params: Param = { type: 'change-mode', action: 'default' }) {
+  const { type, action } = params
   const defaultPath = '/'
   const tabs = await browser.tabs.query({ currentWindow: true }) // 当前窗口全部标签页
 
@@ -24,16 +29,19 @@ export async function changeMode(extensionId: string, params: { type: 'search' |
 
   // 查询新标签页
   let targetTab: Tabs.Tab | undefined
-  tabs.every((item: any) => {
-    if (item.url && (item.url === 'chrome://newtab/' || isExtensionPage(item.url))) {
+  let currentTab: Tabs.Tab | undefined
+  tabs.forEach((item: any) => {
+    if (item.url && (item.url === 'chrome://newtab/' || isExtensionPage(item.url)))
       targetTab = item
-      return false
-    }
-    return true
+    if (item.active)
+      currentTab = item
   })
 
   const pagePath = (await ConfigModel.getItem('base'))?.[defaultPath] ?? defaultPath
   const pageUrl = `chrome-extension://${extensionId}/dist/newTab/index.html#${pagePath}`
+
+  if (action === 'close' && currentTab?.id && (targetTab?.id !== currentTab.id))
+    await browser.tabs.remove(currentTab?.id)
 
   // 不存在扩展标签页
   if (!targetTab || !targetTab.id || !targetTab.url) {
