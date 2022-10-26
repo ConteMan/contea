@@ -27,6 +27,11 @@ export async function changeMode(extensionId: string, params: Param = { type: 'c
     await browser.tabs.sendMessage(tabId, message)
   }
 
+  async function removeTab(currentTab: Tabs.Tab | undefined, targetTab: Tabs.Tab | undefined, action: Param['action']) {
+    if (action === 'close' && currentTab?.id && (targetTab?.id !== currentTab.id))
+      await browser.tabs.remove(currentTab?.id)
+  }
+
   // 查询新标签页
   let targetTab: Tabs.Tab | undefined
   let currentTab: Tabs.Tab | undefined
@@ -40,14 +45,14 @@ export async function changeMode(extensionId: string, params: Param = { type: 'c
   const pagePath = (await ConfigModel.getItem('base'))?.[defaultPath] ?? defaultPath
   const pageUrl = `chrome-extension://${extensionId}/dist/newTab/index.html#${pagePath}`
 
-  if (action === 'close' && currentTab?.id && (targetTab?.id !== currentTab.id))
-    await browser.tabs.remove(currentTab?.id)
-
   // 不存在扩展标签页
   if (!targetTab || !targetTab.id || !targetTab.url) {
     if (type === 'search')
       await ConfigModel.addOrUpdateItem('BACKGROUND_SHORTCUT_SEARCH', { show: true }) // 新建标签页有加载过程，直接通讯会报错，所以采用 hack 方法，存储标识进行沟通
     await browser.tabs.create({ active: true, url: pageUrl, index: tabs.length })
+
+    await removeTab(currentTab, targetTab, action)
+
     return true
   }
 
@@ -60,9 +65,11 @@ export async function changeMode(extensionId: string, params: Param = { type: 'c
     if (type === 'search')
       await ConfigModel.addOrUpdateItem('BACKGROUND_SHORTCUT_SEARCH', { show: true })
     await browser.tabs.create({ active: true, url: pageUrl, index: tabs.length })
+    await removeTab(currentTab, targetTab, action)
   }
   else {
     await browser.tabs.move(targetTab.id, { index: -1 })
+    await removeTab(currentTab, targetTab, action)
 
     if (!targetTab.active) { // 非活跃状态
       if (targetTab.id && type === 'search')
