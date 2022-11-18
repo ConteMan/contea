@@ -206,7 +206,7 @@ const selectArchive = (archiveId: number) => {
                   </template>
                   <template v-if="item.type === 'archive'">
                     <div
-                      class="h-[185px] mb-4 inline-grid grid-cols-2 grid-cols-2 gap-1"
+                      class="cursor-pointer h-[185px] mb-4 inline-grid grid-cols-2 grid-cols-2 gap-1"
                       @click="selectArchive(item.archiveId)"
                     >
                       <img

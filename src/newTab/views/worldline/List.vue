@@ -261,8 +261,8 @@ const removeMenuItem = (key: string, type: Store.MenuItemType = 'divider') => {
             <div v-if="element.type === 'module'" class="pl-8 py-2 cursor-pointer" @click="changeMenu(element.key)">
               {{ element.title }}
             </div>
-            <div v-if="element.type === 'divider'" class="w-full ml-8 py-2 flex items-center ">
-              <div class="w-full h-[1px] inline-block bg-white bg-opacity-80" />
+            <div v-if="element.type === 'divider'" class="w-full ml-8 py-2px flex items-center ">
+              <div class="w-full h-[1px] inline-block" :class="[menuMode ? 'bg-white' : '']" />
             </div>
             <div class="flex-grow flex items-center justify-end">
               <span
