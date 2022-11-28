@@ -11,4 +11,5 @@ export enum MODULES {
   SPORT = 'sport',
   GITHUB = 'github',
   WEATHER = 'weather',
+  BOOKMARK = 'bookmark',
 }

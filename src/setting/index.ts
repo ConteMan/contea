@@ -9,6 +9,7 @@ import { setting as weread } from '@services/weread/model'
 import { setting as sport } from '@services/sport/model'
 import { setting as weather } from '@services/weather/model'
 import { setting as github } from '@services/github/model'
+import { setting as bookmark } from '@services/bookmark/model'
 
 // import { setting as v2ex } from '@services/v2ex/model'
 // import { setting as bgm } from '@services/bgm/model'
@@ -30,6 +31,7 @@ export const modules = [
   MODULES.SPORT,
   MODULES.WEATHER,
   MODULES.GITHUB,
+  MODULES.BOOKMARK,
 
   // 'v2ex',
   // 'juejin',
@@ -52,6 +54,7 @@ export interface Setting {
   sport: typeof sport
   weather: typeof weather
   github: typeof github
+  bookmark: typeof bookmark
 
   // v2ex: typeof v2ex
   // bgm: typeof bgm
@@ -77,6 +80,7 @@ export default {
   sport,
   weather,
   github,
+  bookmark,
 
   // v2ex,
   // bgm,

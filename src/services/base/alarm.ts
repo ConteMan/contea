@@ -15,9 +15,9 @@ class Alarm {
    * @param module - 模块名称
    */
   async setAlarm(module: string) {
-    const { enable, alarm } = await ConfigModel.getItem(module)
+    const { enable, alarm = false } = await ConfigModel.getItem(module)
 
-    if (enable)
+    if (enable && alarm)
       this.dealAlarm(module, 'page')
 
     const exist = await browser.alarms.get(module)

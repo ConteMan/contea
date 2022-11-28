@@ -3,7 +3,7 @@ export interface BaseConfig {
   name: string // 模块名称
   enable: boolean // 是否启用
 
-  site: string // 站点 URL
+  site?: string // 站点 URL
   apiUrl?: string // API URL
   expired?: number // 缓存时间，单位：秒
   showCard?: boolean // 是否显示卡片
@@ -13,6 +13,7 @@ export interface BaseConfig {
     alarm: number
     url: string
   }
+  worldlineEnable?: boolean // 是否在世界线模块开启
   [other: string]: any
 }
 

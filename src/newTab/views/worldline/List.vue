@@ -34,6 +34,7 @@ const { all } = storeToRefs(ConfigStore)
 const file: Record<string, string> = import.meta.glob('./modules/*.vue', { import: 'default', eager: true })
 const paths = Object.keys(file)
 
+// 特殊模块
 const specialModules: SpecialModule = {
   status: {
     key: 'status',
@@ -58,11 +59,12 @@ const specialModules: SpecialModule = {
   },
 }
 
-// 已开启模块
+/** modules 目录下的模块, 根据 all 更新 */
 const modules = computed(() => {
   const res: Record<string, ModuleItem> = {}
   paths.forEach((path) => {
     const key = path.replace('\.\/modules\/', '').replace('.vue', '').toLowerCase()
+
     const specialModuleKeys = Object.keys(specialModules)
     if (specialModuleKeys.includes(key)) {
       const { configModule, configKey, type, title } = specialModules[key]
@@ -71,12 +73,18 @@ const modules = computed(() => {
           key,
           type,
           title,
+          config: {
+            worldlineEnable: true,
+          },
           component: file[path],
         }
-        return
       }
     }
-    if (all.value?.[key] && all.value?.[key].enable) {
+
+    if (all.value?.[key]) {
+      if (!all.value?.[key]?.enable || (typeof all.value?.[key]?.worldlineEnable !== 'undefined' && all.value?.[key]?.worldlineEnable))
+        return
+
       res[key] = {
         key,
         type: 'module',
@@ -86,36 +94,35 @@ const modules = computed(() => {
       }
     }
   })
+
+  // eslint-disable-next-line no-console
+  console.log('[ res ] >', res)
+
   return res
 })
 
-// 处理菜单数据
+/** 处理菜单关联模块数据  */
 const dealModule = (data: Store.MenuItem[]) => {
-  const currentModules = { ...modules.value }
+  const currentModules = { ...modules.value } // modules 目录下的模块
   const currentModuleKeys = Object.keys(currentModules)
   const dealModules: Store.MenuItem[] = []
+
   if (data.length) { // Store 存在数据
     data.forEach((wItem) => {
-      if (wItem.type !== 'module') { // 不是模块数据，通过
+      if (['divider'].includes(wItem.type)) { // 特殊类型数据
         dealModules.push(wItem)
+        return
       }
-      else {
-        if (currentModules?.[wItem.key]) { // 是模块数据，且存在组件，通过
+      if (['module'].includes(wItem.type)) {
+        if (currentModules?.[wItem.key]) { // 模块数据，且存在组件、模块开启
           dealModules.push(wItem)
           _.pull(currentModuleKeys, wItem.key)
         }
       }
     })
-    if (currentModuleKeys.length) { // 加载的组件中存在未配置，通过
-      currentModuleKeys.forEach((cItem) => {
-        dealModules.push({
-          key: currentModules[cItem].key,
-          type: currentModules[cItem].type,
-        })
-      })
-    }
   }
-  else {
+
+  if (currentModuleKeys.length) { // 加载的组件中存在状态保存中未配置的部分
     currentModuleKeys.forEach((cItem) => {
       dealModules.push({
         key: currentModules[cItem].key,
@@ -123,6 +130,7 @@ const dealModule = (data: Store.MenuItem[]) => {
       })
     })
   }
+
   NewTabStore.setWorldlineMenu(dealModules)
 }
 dealModule(worldlineMenu.value)
@@ -133,10 +141,11 @@ const menu: Ref<ModuleItem[]> = ref([])
 const dealMenu = (data: ModuleItem[]) => {
   const res: ModuleItem[] = []
   data.forEach((item) => {
-    if (item.type !== 'module') {
+    if (['divider'].includes(item.type)) {
       res.push(item)
+      return
     }
-    else {
+    if (['module'].includes(item.type)) {
       if (modules.value[item.key]) {
         res.push({
           key: item.key,
@@ -251,7 +260,7 @@ const removeMenuItem = (key: string, type: Store.MenuItemType = 'divider') => {
         item-key="key"
         handle=".handle"
         :list="menu"
-        class="overflow-y-auto flex flex-col"
+        class="menu overflow-y-auto flex flex-col"
       >
         <template #item="{ element }">
           <div
@@ -261,8 +270,8 @@ const removeMenuItem = (key: string, type: Store.MenuItemType = 'divider') => {
             <div v-if="element.type === 'module'" class="pl-8 py-2 cursor-pointer" @click="changeMenu(element.key)">
               {{ element.title }}
             </div>
-            <div v-if="element.type === 'divider'" class="w-full ml-8 py-2px flex items-center ">
-              <div class="w-full h-[1px] inline-block" :class="[menuMode ? 'bg-white' : '']" />
+            <div v-if="element.type === 'divider'" class="w-full ml-8 py-12px flex items-center ">
+              <div class="w-full h-[1px] inline-block" :class="[menuMode ? 'bg-white' : 'bg-opacity-20 bg-light-400 w-[12px]']" />
             </div>
             <div class="flex-grow flex items-center justify-end">
               <span
@@ -282,9 +291,8 @@ const removeMenuItem = (key: string, type: Store.MenuItemType = 'divider') => {
           </div>
         </template>
       </draggable>
-      <div
-        class="absolute bottom-0 left-11 py-4 opacity-40 flex justify-start items-center gap-2 hover:(opacity-100)"
-      >
+
+      <div class="menu-action absolute bottom-0 left-11 py-4 opacity-40 flex justify-start items-center gap-2 hover:(opacity-100)">
         <span class="flex items-center" :class="{ 'text-red-400': menuMode }" @click="changeMenuMode()">
           <mdi-sort class="cursor-pointer" />
         </span>
@@ -293,7 +301,7 @@ const removeMenuItem = (key: string, type: Store.MenuItemType = 'divider') => {
         </span>
       </div>
     </div>
-    <div class="h-full w-[1px] bg-gray-400 bg-opacity-10 flex-shrink-0 flex-grow-0" />
+    <div class="menu-divider h-full w-[1px] bg-gray-400 bg-opacity-10 flex-shrink-0 flex-grow-0" />
     <div class="flex-1 w-0 h-full">
       <template v-for="item in dealModuleComponents" :key="item.key">
         <Component :is="item.component" v-if="activeMenu === item.key" class="h-full" />
