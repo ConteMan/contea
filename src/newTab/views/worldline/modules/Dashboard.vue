@@ -1,17 +1,16 @@
 <script setup lang="ts">
-import type { Component, Ref } from 'vue'
-import type { DashboardLayout } from '@localTypes/newTab'
+import type { Component } from 'vue'
 import _ from 'lodash-es'
 import WorldlineContent from '@newTab/layout/WorldlineContent.vue'
+import DragBox from '@newTab/components/drag/DragBox.vue'
 import { useNewTabState } from '@newTab/store/index'
 
 import Weather from '@newTab/components/weather/WeatherCard.vue'
 import BilibiliCard from '@newTab/components/bilibili/BilibiliCard.vue'
 
 interface Data {
-  loading: boolean
   list: any[]
-  layout: DashboardLayout
+  modules: string[]
 }
 
 interface ComponentItem {
@@ -36,23 +35,14 @@ const components: ComponentType = {
 }
 
 const data: Data = reactive({
-  loading: true,
   list: [],
-  layout: [],
+  modules: [],
 })
-const { loading, layout } = toRefs(data)
-
-const showCards: Ref<(string | undefined)[]> = computed(() => {
-  return layout.value
-    ? layout.value.map((item) => {
-      return item.name
-    })
-    : []
-})
+const { modules } = toRefs(data)
 
 const newTabStore = useNewTabState()
-const { worldlineDashboardLayout } = storeToRefs(newTabStore)
-data.layout = worldlineDashboardLayout.value
+const { worldlineModules } = storeToRefs(newTabStore)
+data.modules = worldlineModules.value
 
 const getComponent = (name: string) => {
   if (!Object.keys(components).includes(name))
@@ -60,100 +50,46 @@ const getComponent = (name: string) => {
   return components[name].component ?? false
 }
 
-const layoutUpdated = (newLayout: DashboardLayout) => {
-  newTabStore.setWorldlineDashboardLayout(newLayout)
-}
-
-const closeCard = (name: string | undefined) => {
-  if (name) {
-    _.remove(layout.value, (item) => {
-      return item.name === name
-    })
-  }
-}
-
-const addCard = (name: string) => {
-  let i = 0
-  if (layout.value.length) {
-    layout.value.forEach((item) => {
-      if (!i || item.i > i)
-        i = item.i
-    })
-  }
-  layout.value.push({ x: 0, y: 0, w: 2, h: 2, i: i + 1, name })
-}
-
-watch(worldlineDashboardLayout, (newValue) => {
-  data.layout = newValue
+watch(worldlineModules, (newValue) => {
+  data.modules = newValue
 })
 
-const showAddDropdown = ref(false)
-const addDropdownOptions = computed(() => {
+const moduleOptions = computed(() => {
   const values = Object.values(components)
   const options = values.map((item) => {
-    return showCards.value.includes(item.key) ? { label: item.name, key: item.key, disabled: true } : { label: item.name, key: item.key, disabled: false }
+    return modules.value.includes(item.key) ? { label: item.name, key: item.key, disabled: true } : { label: item.name, key: item.key, disabled: false }
   })
-  // eslint-disable-next-line no-console
-  console.log('[ options ] >', options)
   return options
 })
-const toggleAdd = () => {
-  showAddDropdown.value = !showAddDropdown.value
-}
-const addDropdownSelect = (_key: string, _option: ComponentItem) => {
-  addCard(_key)
-}
 </script>
 
 <template>
   <WorldlineContent>
     <template #bar>
-      <n-dropdown
-        :show="showAddDropdown"
-        :options="addDropdownOptions"
-        @select="addDropdownSelect"
-      >
-        <span class="cursor-pointer py-2 px-4 flex items-center" @click="toggleAdd">
-          <mdi-plus />
-        </span>
-      </n-dropdown>
+      <div class="worldline-action-bar w-full">
+        <n-popover trigger="hover" :show-arrow="false" :to="false">
+          <template #trigger>
+            <mdi:adjust class="module-check cursor-pointer select-none outline-transparent" />
+          </template>
+          <n-checkbox-group v-model:value="modules">
+            <div class="flex flex-col gap-2">
+              <n-checkbox v-for="item in moduleOptions" :key="item.key" :value="item.key" :label="item.label" />
+            </div>
+          </n-checkbox-group>
+        </n-popover>
+      </div>
     </template>
 
     <template #content>
-      <div class="h-full overflow-y-auto hover-scroll pr-8 pb-8 flex flex-col gap-4">
-        <GridLayout
-          v-model:layout="layout"
-          :col-num="12"
-          :row-height="30"
-          @update:layout="layoutUpdated"
+      <div class="relative h-full overflow-y-auto hover-scroll pr-8 pb-8 flex flex-wrap gap-4">
+        <template
+          v-for="item in modules"
+          :key="item"
         >
-          <template #default="{ gridItemProps }">
-            <grid-item
-              v-for="item in layout"
-              :key="`${item.name}-${item.i}`"
-              v-bind="gridItemProps"
-              :x="item.x"
-              :y="item.y"
-              :w="item.w"
-              :h="item.h"
-              :i="item.i"
-              class="bg-opacity-0"
-            >
-              <div class="no-drag h-full flex flex-col">
-                <div class="bar pt-2 pb-1 px-4 flex justify-end flex-nowrap items-center">
-                  <span class="action-btn cursor-pointer flex-grow-0 flex-shrink-0 flex items-center" @click="closeCard(item.name)">
-                    <mdi-close />
-                  </span>
-                </div>
-                <div class="no-drag w-full">
-                  <template v-if="item.name && getComponent(item.name)">
-                    <Component :is="getComponent(item.name)" class="h-full" />
-                  </template>
-                </div>
-              </div>
-            </grid-item>
-          </template>
-        </GridLayout>
+          <DragBox v-bind="{ name: item }">
+            <Component :is="getComponent(item)" class="h-full" />
+          </DragBox>
+        </template>
       </div>
     </template>
   </WorldlineContent>
@@ -178,6 +114,12 @@ const addDropdownSelect = (_key: string, _option: ComponentItem) => {
   opacity: 0;
 }
 :deep(.vue-grid-item:hover > .vue-resizable-handle) {
+  opacity: 1;
+}
+:deep(.worldline-bar-container) {
+  opacity: 0;
+}
+:deep(.worldline-bar-container:hover) {
   opacity: 1;
 }
 </style>

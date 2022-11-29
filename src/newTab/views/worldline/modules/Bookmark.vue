@@ -71,7 +71,7 @@ const nodeProps = ({ option }: { option: TreeOption }) => {
 
     <template #content>
       <div class="h-full w-full pr-8 pb-8">
-        <input v-model="pattern" autofocus placeholder="Search" class="w-full p-4 bg-[#9d9d9d47] text-white text-[14px] rounded-sm">
+        <input v-model="pattern" autofocus placeholder="Search" class="w-full p-4 bg-[#9d9d9d47] placeholder-white text-white text-[14px] rounded-sm">
         <div class="h-full py-4 flex gap-4">
           <div v-if="tree.length" class="bookmark-tree flex-grow-0 flex-shrink-0 h-full w-[50%] overflow-y-auto hover-scroll">
             <n-tree

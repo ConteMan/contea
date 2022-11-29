@@ -2,9 +2,9 @@ import { defineStore } from 'pinia'
 import _ from 'lodash-es'
 import { reactive } from 'vue'
 import type { Ref } from 'vue'
+import type { DashboardLayout, DashboardLayoutItem } from '@localTypes/newTab'
 import wallpaperService from '@services/wallpaper'
 import { useConfigState } from '@newTab/store/index'
-import type { DashboardLayout } from '@localTypes/newTab'
 
 type LayoutMode = 'clean' | 'list' | 'card'
 
@@ -30,7 +30,8 @@ export const useNewTabState = defineStore('newTab',
       theme: 'light', // light, dark
 
       worldlineMenu: [] as Store.MenuItem[],
-      worldlineDashboardLayout: [] as DashboardLayout,
+      worldlineDashboardLayout: {} as DashboardLayout,
+      worldlineModules: [] as string[],
 
       hasInit: false,
     })
@@ -46,6 +47,7 @@ export const useNewTabState = defineStore('newTab',
       themeMode,
       worldlineMenu,
       worldlineDashboardLayout,
+      worldlineModules,
       hasInit,
     } = toRefs(data)
 
@@ -197,8 +199,34 @@ export const useNewTabState = defineStore('newTab',
       return data.worldlineDashboardLayout
     }
 
+    const getWorldlineDashboardLayoutItem = (key: string) => {
+      return data.worldlineDashboardLayout?.[key]
+    }
+
     const setWorldlineDashboardLayout = (info: DashboardLayout) => {
       data.worldlineDashboardLayout = info
+    }
+
+    const setWorldlineDashboardLayoutItem = (key: string, cData: DashboardLayoutItem | undefined) => {
+      if (typeof cData === 'undefined') {
+        if (data.worldlineDashboardLayout?.[key])
+          delete data.worldlineDashboardLayout?.[key]
+        return
+      }
+
+      if (data.worldlineDashboardLayout?.[key])
+        data.worldlineDashboardLayout[key] = cData
+
+      else
+        data.worldlineDashboardLayout = { ...data.worldlineDashboardLayout, [key]: cData }
+    }
+
+    const addWorldlineModules = (name: string) => {
+      data.worldlineModules.push(name)
+    }
+
+    const deleteWorldlineModules = (name: string) => {
+      _.remove(data.worldlineModules, name)
     }
 
     // init
@@ -222,6 +250,7 @@ export const useNewTabState = defineStore('newTab',
 
       worldlineMenu,
       worldlineDashboardLayout,
+      worldlineModules,
 
       hasInit, // 临时标识，不持久化
 
@@ -253,6 +282,11 @@ export const useNewTabState = defineStore('newTab',
       setWorldlineMenu,
       getWorldlineDashboardLayout,
       setWorldlineDashboardLayout,
+      getWorldlineDashboardLayoutItem,
+      setWorldlineDashboardLayoutItem,
+
+      addWorldlineModules,
+      deleteWorldlineModules,
 
       setInit,
     }
@@ -276,6 +310,7 @@ export const useNewTabState = defineStore('newTab',
 
         'worldlineMenu',
         'worldlineDashboardLayout',
+        'worldlineModules',
       ],
     },
   },

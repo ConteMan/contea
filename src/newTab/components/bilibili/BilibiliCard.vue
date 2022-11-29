@@ -42,32 +42,25 @@ getData()
 <template>
   <div
     v-if="!loading"
-    class="p-4 max-w-[320px] overflow-auto rounded-md bg-transparent bg-opacity-20 flex flex-col"
+    class="p-4 max-w-[320px] rounded-md bg-transparent flex flex-col gap-1"
   >
-    <div class="text-xl font-bold mb-2">
+    <div class="uppercase">
       {{ title }}
     </div>
     <div class="cursor-pointer hover:(underline underline-offset-2)" @click="openSite(`${config.spaceSite}/${profile.mid}`)">
-      {{ profile.uname }}
+      {{ `${profile.uname} / ${profile.mid} / lv${profile.level_info.current_level}` }}
     </div>
     <div>
-      {{ profile.mid }}
-    </div>
-    <div class="flex items-center">
-      <span>lv {{ profile.level_info.current_level }} ({{ profile.level_info.current_exp }} / {{ profile.level_info.current_min }})</span>
-    </div>
-    <div>
-      <span class="text-xs mr-2">FOLLOWED / FOLLOWER</span>
-      <span class="cursor-pointer mr-1 hover:(underline underline-offset-2)" @click="openSite(`${config.spaceSite}/${profile.mid}/fans/follow`)">
-        {{ stat.following }}
+      <span class="cursor-pointer hover:(underline underline-offset-2)" @click="openSite(`${config.spaceSite}/${profile.mid}/fans/follow`)">
+        {{ `FOLLOWED ${stat.following}` }}
       </span>
-      <span class="mr-1">/</span>
+      <span class="mx-1">/</span>
       <span class="cursor-pointer hover:(underline underline-offset-2)" @click="openSite(`${config.spaceSite}/${profile.mid}/fans/fans`)">
-        {{ stat.follower }}
+        {{ `FOLLOWER ${stat.follower}` }}
       </span>
     </div>
-    <div class="mt-2 uppercase">
-      {{ sign.date }} / <span :class="[sign.success ? '' : 'text-red-400']">{{ sign.success ? 'signed' : 'not sign' }}</span>
+    <div class="uppercase">
+      <span :class="[sign.success ? '' : 'text-red-400']">{{ sign.success ? 'signed' : 'not sign' }}</span>
     </div>
   </div>
 </template>
