@@ -3,7 +3,7 @@ import { useElementBounding } from '@vueuse/core'
 import { useNewTabState } from '@newTab/store/index'
 
 import List from '@newTab/views/worldline/List.vue'
-import Card from '@newTab/views/card/Card.vue'
+// import Card from '@newTab/views/card/Card.vue'
 import ActionBar from '@newTab/components/layout/ActionBar.vue'
 
 // 容器样式：背景
@@ -44,7 +44,7 @@ const layoutMode = (mode: 'list' | 'card') => {
   >
     <div class="w-full" :style="contentStyle">
       <List v-if="layoutMode('list')" class="h-full w-full" />
-      <Card v-if="layoutMode('card')" class="w-full h-full flex justify-center items-center" />
+      <!-- <Card v-if="layoutMode('card')" class="w-full h-full flex justify-center items-center" /> -->
     </div>
 
     <ActionBar />

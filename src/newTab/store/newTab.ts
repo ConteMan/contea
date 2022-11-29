@@ -163,8 +163,8 @@ export const useNewTabState = defineStore('newTab',
     function changeLayoutMode() {
       if (layoutMode.value === 'clean')
         layoutMode.value = 'list'
-      else if (layoutMode.value === 'list')
-        layoutMode.value = 'card'
+      // else if (layoutMode.value === 'list')
+      //   layoutMode.value = 'card'
       else
         layoutMode.value = 'clean'
     }

@@ -55,7 +55,7 @@ const specialModules: SpecialModule = {
     configModule: 'base',
     configKey: 'dashboardPage',
     type: 'module',
-    title: '主页',
+    title: '面板',
   },
 }
 
@@ -94,9 +94,6 @@ const modules = computed(() => {
       }
     }
   })
-
-  // eslint-disable-next-line no-console
-  console.log('[ res ] >', res)
 
   return res
 })

@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import type { Component } from 'vue'
+import type { Component, Ref } from 'vue'
 import type { DashboardLayout } from '@localTypes/newTab'
 import _ from 'lodash-es'
 import WorldlineContent from '@newTab/layout/WorldlineContent.vue'
 import { useNewTabState } from '@newTab/store/index'
 
 import Weather from '@newTab/components/weather/WeatherCard.vue'
+import BilibiliCard from '@newTab/components/bilibili/BilibiliCard.vue'
 
 interface Data {
   loading: boolean
@@ -13,11 +14,13 @@ interface Data {
   layout: DashboardLayout
 }
 
-type ComponentType = Record<string, {
+interface ComponentItem {
   key: string
   name: string
   component: Component
-}>
+}
+
+type ComponentType = Record<string, ComponentItem>
 
 const components: ComponentType = {
   weather: {
@@ -25,16 +28,27 @@ const components: ComponentType = {
     name: '天气',
     component: Weather,
   },
+  bilibili: {
+    key: 'bilibili',
+    name: 'Bilibili',
+    component: BilibiliCard,
+  },
 }
 
 const data: Data = reactive({
   loading: true,
   list: [],
-  layout: [
-    { x: 0, y: 0, w: 2, h: 2, i: 0, name: 'weather' },
-  ],
+  layout: [],
 })
 const { loading, layout } = toRefs(data)
+
+const showCards: Ref<(string | undefined)[]> = computed(() => {
+  return layout.value
+    ? layout.value.map((item) => {
+      return item.name
+    })
+    : []
+})
 
 const newTabStore = useNewTabState()
 const { worldlineDashboardLayout } = storeToRefs(newTabStore)
@@ -59,20 +73,50 @@ const closeCard = (name: string | undefined) => {
 }
 
 const addCard = (name: string) => {
-  layout.value.push({ x: 0, y: 0, w: 2, h: 2, i: 0, name })
+  let i = 0
+  if (layout.value.length) {
+    layout.value.forEach((item) => {
+      if (!i || item.i > i)
+        i = item.i
+    })
+  }
+  layout.value.push({ x: 0, y: 0, w: 2, h: 2, i: i + 1, name })
 }
 
 watch(worldlineDashboardLayout, (newValue) => {
   data.layout = newValue
 })
+
+const showAddDropdown = ref(false)
+const addDropdownOptions = computed(() => {
+  const values = Object.values(components)
+  const options = values.map((item) => {
+    return showCards.value.includes(item.key) ? { label: item.name, key: item.key, disabled: true } : { label: item.name, key: item.key, disabled: false }
+  })
+  // eslint-disable-next-line no-console
+  console.log('[ options ] >', options)
+  return options
+})
+const toggleAdd = () => {
+  showAddDropdown.value = !showAddDropdown.value
+}
+const addDropdownSelect = (_key: string, _option: ComponentItem) => {
+  addCard(_key)
+}
 </script>
 
 <template>
   <WorldlineContent>
     <template #bar>
-      <span class="cursor-pointer py-2 px-4 flex items-center" @click="addCard('weather')">
-        <mdi-plus />
-      </span>
+      <n-dropdown
+        :show="showAddDropdown"
+        :options="addDropdownOptions"
+        @select="addDropdownSelect"
+      >
+        <span class="cursor-pointer py-2 px-4 flex items-center" @click="toggleAdd">
+          <mdi-plus />
+        </span>
+      </n-dropdown>
     </template>
 
     <template #content>
@@ -86,7 +130,7 @@ watch(worldlineDashboardLayout, (newValue) => {
           <template #default="{ gridItemProps }">
             <grid-item
               v-for="item in layout"
-              :key="item.i"
+              :key="`${item.name}-${item.i}`"
               v-bind="gridItemProps"
               :x="item.x"
               :y="item.y"
