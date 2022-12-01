@@ -175,7 +175,6 @@ const toggleLock = () => {
 
 <style lang="less">
 .drag-container {
-  font-family: 'JetBrainsMono';
   &:hover {
     .resize-btn, .action-bar {
       opacity: 100;
