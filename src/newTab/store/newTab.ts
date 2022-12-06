@@ -221,6 +221,9 @@ export const useNewTabState = defineStore('newTab',
         data.worldlineDashboardLayout = { ...data.worldlineDashboardLayout, [key]: cData }
     }
 
+    const setWorldlineModules = (modules: string[]) => {
+      data.worldlineModules = modules
+    }
     const addWorldlineModules = (name: string) => {
       data.worldlineModules.push(name)
     }
@@ -285,6 +288,7 @@ export const useNewTabState = defineStore('newTab',
       getWorldlineDashboardLayoutItem,
       setWorldlineDashboardLayoutItem,
 
+      setWorldlineModules,
       addWorldlineModules,
       deleteWorldlineModules,
 

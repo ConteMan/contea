@@ -53,6 +53,9 @@ const getComponent = (name: string) => {
 watch(worldlineModules, (newValue) => {
   data.modules = newValue
 })
+watch(modules, (newValue) => {
+  newTabStore.setWorldlineModules(newValue)
+})
 
 const moduleOptions = computed(() => {
   const values = Object.values(components)
