@@ -8,6 +8,7 @@ import one from '@services/one'
 import weread from '@services/weread'
 import weather from '@services/weather'
 import { football } from '@services/sport'
+import { getRandomIntInclusive, sleep } from '@utils/index'
 
 class Alarm {
   /**
@@ -86,14 +87,15 @@ class Alarm {
         if (source === 'page') {
           const competitionRankRes: { id: number; res: any }[] = []
           const competitionIds = Object.keys(football.COMPETITIONS)
-          competitionIds.forEach(async (competitionId) => {
+          for (const competitionId of competitionIds) {
             const id = parseInt(competitionId)
             const res = await football.getCompetitionRank(id, true)
             competitionRankRes.push({
               id,
               res,
             })
-          })
+            await sleep(getRandomIntInclusive(2000, 5000))
+          }
           result = {
             competitionRank: competitionRankRes,
           }

@@ -20,15 +20,17 @@ export default new class DomDeal {
   * 获取页面
   * @param url - 请求类型
   */
-  async getPage(url = ''): Promise<false | string> {
+  async getPage(url = '', header: any = {}): Promise<false | string> {
     try {
       const cookieStr = await this.getCookieStr(url)
+      const defaultHeader = {
+        Cookie: cookieStr ?? undefined,
+      }
+      const headers = { ...defaultHeader, ...header }
       const res = await defHttp.get({
         url,
         withCredentials: true,
-        headers: {
-          Cookie: cookieStr ?? undefined,
-        },
+        headers,
       })
 
       if (!res.data)

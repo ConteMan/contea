@@ -150,7 +150,11 @@ export default new class Gooooal {
         sid = new Date().getFullYear()
 
       const pageUrl = `${this.URL}/competition.do?lid=${lid}&sid=${sid}&lang=cn`
-      const pageData = await DomDeal.getPage(pageUrl)
+      const header = {
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+        'Content-Type': 'text/html;charset=UTF-8',
+      }
+      const pageData = await DomDeal.getPage(pageUrl, header)
       if (!pageData)
         return false
 
