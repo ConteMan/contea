@@ -44,6 +44,7 @@ export async function getManifest() {
       'scripting',
       'declarativeNetRequest',
       'declarativeNetRequestFeedback',
+      'management',
     ],
     host_permissions: [
       '<all_urls>',

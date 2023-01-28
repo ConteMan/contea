@@ -27,7 +27,7 @@ browser.runtime.onInstalled.addListener(async () => {
 
     if (version.isDev) {
       await browser.storage.local.set({ [DEV_VERSION_KEY]: version })
-      await browser.alarms.create(
+      browser.alarms.create(
         DEV_ALARM_NAME,
         {
           periodInMinutes: 0.1,
@@ -183,16 +183,16 @@ browser.runtime.onMessage.addListener(async (message: Message.RuntimeMessage, se
       case MESSAGE_TYPES.DEAL_PAGE_ALARM: { // 标记处理完成的定时任务
         return await AlarmTaskModel.alarmAction(name, 'deal')
       }
-      case MESSAGE_TYPES.NEXT_TAB: {
+      case MESSAGE_TYPES.NEXT_TAB: { // 移动到下一个标签页
         let dealTabId = parseInt(tabId)
         if (!dealTabId && sender.tab?.id)
           dealTabId = sender.tab.id
         return await nextTab(dealTabId)
       }
-      case MESSAGE_TYPES.DEAL_CONTENT_SCRIPT: {
+      case MESSAGE_TYPES.DEAL_CONTENT_SCRIPT: { // 处理内容脚本
         return true
       }
-      case MESSAGE_TYPES.SEARCH_HISTORY: {
+      case MESSAGE_TYPES.SEARCH_HISTORY: { // 搜索浏览历史
         const { text, startTime, maxResults = 20 } = data
         // eslint-disable-next-line no-console
         console.log('[ data ] >', text, startTime, data)
@@ -205,11 +205,11 @@ browser.runtime.onMessage.addListener(async (message: Message.RuntimeMessage, se
         console.log('[ searchRes ] >', searchRes)
         return searchRes
       }
-      case MESSAGE_TYPES.RECENT_BOOKMARKS: {
+      case MESSAGE_TYPES.RECENT_BOOKMARKS: { // 最近改动书签
         const { count = 20 } = data
         return await browser.bookmarks.getRecent(count)
       }
-      case MESSAGE_TYPES.SEARCH_BOOKMARKS: {
+      case MESSAGE_TYPES.SEARCH_BOOKMARKS: { // 搜索书签
         const { query } = data
         return await browser.bookmarks.search({
           query,

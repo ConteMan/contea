@@ -10,6 +10,7 @@ import { setting as sport } from '@services/sport/model'
 import { setting as weather } from '@services/weather/model'
 import { setting as github } from '@services/github/model'
 import { setting as bookmark } from '@services/bookmark/model'
+import { setting as extension } from '@services/extension/model'
 
 // import { setting as v2ex } from '@services/v2ex/model'
 // import { setting as bgm } from '@services/bgm/model'
@@ -32,6 +33,7 @@ export const modules = [
   MODULES.WEATHER,
   MODULES.GITHUB,
   MODULES.BOOKMARK,
+  MODULES.EXTENSION,
 
   // 'v2ex',
   // 'juejin',
@@ -55,6 +57,7 @@ export interface Setting {
   weather: typeof weather
   github: typeof github
   bookmark: typeof bookmark
+  extension: typeof extension
 
   // v2ex: typeof v2ex
   // bgm: typeof bgm
@@ -81,6 +84,7 @@ export default {
   weather,
   github,
   bookmark,
+  extension,
 
   // v2ex,
   // bgm,

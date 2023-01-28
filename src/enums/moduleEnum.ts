@@ -12,4 +12,5 @@ export enum MODULES {
   GITHUB = 'github',
   WEATHER = 'weather',
   BOOKMARK = 'bookmark',
+  EXTENSION = 'extension', // 扩展模块
 }
