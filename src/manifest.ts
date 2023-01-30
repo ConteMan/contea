@@ -75,32 +75,22 @@ export async function getManifest() {
       extension_pages: 'script-src \'self\'; object-src \'self\'',
     },
     commands: {
-      [COMMANDS.CHANGE_MODE]: {
-        description: '切换到扩展页',
-        suggested_key: {
-          default: 'Alt+W',
-          mac: 'Alt+W',
-        },
-      },
-      [COMMANDS.CHANGE_MODE_CURRENT]: {
-        description: '关闭当前页面并切换到扩展页',
-        suggested_key: {
-          default: 'Shift+Alt+W',
-          mac: 'Shift+Alt+W',
-        },
-      },
-      [COMMANDS.SEARCH]: {
-        description: '切换到扩展页并打开搜索',
+      [COMMANDS.POPUP]: {
         suggested_key: {
           default: 'Alt+Q',
           mac: 'Alt+Q',
         },
       },
       [COMMANDS.CONTENT_SCRIPT]: {
-        description: '打开搜索',
+        description: 'Active (In Page)',
         suggested_key: {
           default: 'Alt+E',
-          mac: 'Alt+E',
+        },
+      },
+      [COMMANDS.TAB]: {
+        description: 'Switch to Contea tab',
+        suggested_key: {
+          default: 'Alt+W',
         },
       },
     },

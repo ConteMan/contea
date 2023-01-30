@@ -140,13 +140,11 @@ browser.alarms.onAlarm.addListener(async (alarm) => {
  * @param command string - 快捷键名称
  */
 browser.commands.onCommand.addListener(async (command: string) => {
+  // eslint-disable-next-line no-console
+  console.log(`[${SERVICE_WORKER_NAME}] >>> [bg] >> onCommand: `, command)
   try {
-    if (command === COMMANDS.CHANGE_MODE)
+    if (command === COMMANDS.TAB)
       await changeMode(EXTENSION_ID, { type: 'change-mode', action: 'default' })
-    if (command === COMMANDS.CHANGE_MODE_CURRENT)
-      await changeMode(EXTENSION_ID, { type: 'change-mode', action: 'close' })
-    if (command === COMMANDS.SEARCH)
-      await changeMode(EXTENSION_ID, { type: 'search', action: 'default' })
     if (command === COMMANDS.CONTENT_SCRIPT)
       await dealContentScript()
     return true
