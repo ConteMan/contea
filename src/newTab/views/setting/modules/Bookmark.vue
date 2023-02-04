@@ -26,10 +26,6 @@ const { model }: { model: Ref<ShowConfig> } = setting
       <n-switch v-model:value="model.enable" size="small" :round="false" />
     </n-form-item>
 
-    <n-form-item label="世界线" path="enable">
-      <n-switch v-model:value="model.worldlineEnable" size="small" :round="false" />
-    </n-form-item>
-
     <n-form-item label="重置">
       <n-switch
         v-model:value="resetLoading"
