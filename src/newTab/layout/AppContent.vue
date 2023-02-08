@@ -2,7 +2,7 @@
 import { MESSAGE_TYPES } from '@enums/index'
 
 import { useActiveElement, useEventListener } from '@vueuse/core'
-import { nextTab, sendToBackground, sleep } from '@utils/index'
+import { moveToTab, nextTab, preTab, sendToBackground, sleep } from '@utils/index'
 
 import SearchModal from '@newTab/components/search/Search.vue'
 import SettingDrawer from '@newTab/views/setting/SettingDrawer.vue'
@@ -10,10 +10,15 @@ import SettingDrawer from '@newTab/views/setting/SettingDrawer.vue'
 import AlarmService from '@services/base/alarm'
 import { useModalState, useNewTabState } from '@newTab/store/index'
 
-const SEARCH_KEY = 'q'
+const SEARCH_KEY = ['q', 't', 'go']
 const ZEN_KEY = 'z'
 const SETTING_KEY = 's'
 const TAB_CHANGE_KEY = 'Tab'
+const GO_TO_PRE_TAB_KEY = 'E'
+const GO_TO_NEXT_TAB_KEY = 'R'
+const MOVE_TO_LEFT_TAB_KEY = '<<'
+const MOVE_TO_RIGHT_TAB_KEY = '>>'
+const USED_KEY_ARRAY = ['>', '<', 'g', 'o']
 
 const ModalStore = useModalState()
 const { show: SearchModalShow } = storeToRefs(ModalStore)
@@ -48,6 +53,8 @@ const dealAlarm = async () => {
   }
 }
 dealAlarm()
+
+const commandStr = ref('')
 
 // 监听消息
 browser.runtime.onMessage.addListener(async (message: Message.TabMessage, sender: any) => {
@@ -127,7 +134,10 @@ const notUsingInput = computed(() =>
 
 // 监听按键 按下 事件（非输入模式下）
 useEventListener(window, 'keydown', (e: KeyboardEvent) => {
-  if (e.key === 'Enter' && notUsingInput.value) {
+  if (!notUsingInput.value)
+    return
+
+  if (e.key === 'Enter') {
     e.preventDefault()
     e.stopPropagation()
     e.stopImmediatePropagation()
@@ -137,32 +147,55 @@ useEventListener(window, 'keydown', (e: KeyboardEvent) => {
 
 // 监听按键 完成 事件（非输入模式下）
 useEventListener(window, 'keyup', async (e: KeyboardEvent) => {
-  if (e.key === 'Enter' && notUsingInput.value) {
+  if (!notUsingInput.value) {
+    if (commandStr.value) // 在输入内容后清空命令监听
+      commandStr.value = ''
+    return
+  }
+
+  if (e.key === 'Escape') {
+    commandStr.value = ''
+    return
+  }
+
+  if (e.key === 'Enter') {
     e.preventDefault()
     e.stopPropagation()
     return
   }
 
   // 搜索
-  if (e.key === SEARCH_KEY && notUsingInput.value) {
+  if (SEARCH_KEY.includes(e.key)) {
     ModalStore.change(true)
     return
   }
 
   // 模式切换
-  if (e.key === ZEN_KEY && notUsingInput.value) {
+  if (e.key === ZEN_KEY) {
     changeMode()
     return
   }
 
   // 显示/隐藏设置
-  if (e.key === SETTING_KEY && notUsingInput.value) {
+  if (e.key === SETTING_KEY) {
     NewTabStore.changeSettingDrawer()
     return
   }
 
+  // 切换到上一个标签页
+  if (e.key === GO_TO_PRE_TAB_KEY) {
+    preTab()
+    return
+  }
+
+  // 切换到下一个标签页
+  if (e.key === GO_TO_NEXT_TAB_KEY) {
+    nextTab()
+    return
+  }
+
   // 切换 Tab
-  if (e.key === TAB_CHANGE_KEY && notUsingInput.value) {
+  if (e.key === TAB_CHANGE_KEY) {
     if (e.ctrlKey) { // 兼容 `Ctrl + Tab` 切换网页 Tab
       await nextTab()
       return
@@ -173,6 +206,23 @@ useEventListener(window, 'keyup', async (e: KeyboardEvent) => {
       else
         NewTabStore.changeNextTab()
     }
+    return
+  }
+
+  if (USED_KEY_ARRAY.includes(e.key))
+    commandStr.value += e.key
+
+  if (commandStr.value === MOVE_TO_LEFT_TAB_KEY) {
+    commandStr.value = ''
+    moveToTab('pre')
+  }
+  if (commandStr.value === MOVE_TO_RIGHT_TAB_KEY) {
+    commandStr.value = ''
+    moveToTab('next')
+  }
+  if (SEARCH_KEY.includes(commandStr.value)) {
+    commandStr.value = ''
+    ModalStore.change(true)
   }
 })
 </script>
@@ -184,4 +234,15 @@ useEventListener(window, 'keyup', async (e: KeyboardEvent) => {
   </template>
   <SearchModal />
   <SettingDrawer />
+  <div class="show-command">
+    {{ commandStr }}
+  </div>
 </template>
+
+<style lang="less">
+.show-command {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+}
+</style>

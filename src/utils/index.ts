@@ -140,6 +140,7 @@ export async function sendToBackground(message: Message) {
 
 /**
  * 激活下一个标签页
+ * （如果是最后一个标签页，则激活第一个标签页）
  */
 export async function nextTab(tabId = 0) {
   try {
@@ -162,6 +163,76 @@ export async function nextTab(tabId = 0) {
     const nextId = index < tabs.length - 1 ? tabs[index + 1].id : tabs[0].id
     if (nextId)
       browser.tabs.update(nextId, { active: true })
+    return true
+  }
+  catch (e) {
+    return false
+  }
+}
+
+/**
+ * 激活上一个标签页
+ * （如果是第一个标签页，则激活最后一个标签页）
+ */
+export async function preTab(tabId = 0) {
+  try {
+    let dealTabId = tabId
+    if (!dealTabId) {
+      const currentTab = await browser.tabs.getCurrent()
+      if (!currentTab.id)
+        return false
+      dealTabId = currentTab.id
+    }
+
+    const tabs = await browser.tabs.query({ currentWindow: true }) // 当前窗口全部标签页
+    const index = _.findIndex(tabs, (item) => {
+      return item.id === dealTabId
+    })
+
+    if (index < 0)
+      return false
+
+    const preId = index > 0 ? tabs[index - 1].id : tabs[tabs.length - 1].id
+    if (preId)
+      browser.tabs.update(preId, { active: true })
+    return true
+  }
+  catch (e) {
+    return false
+  }
+}
+
+/**
+ * 移动标签页
+ * @param tabId - 标签页 ID
+ * @param direction - 移动方向
+ */
+export async function moveToTab(direction: 'pre' | 'next' = 'next', tabId = 0) {
+  try {
+    let dealTabId = tabId
+    if (!dealTabId) {
+      const currentTab = await browser.tabs.getCurrent()
+      if (!currentTab.id)
+        return false
+      dealTabId = currentTab.id
+    }
+
+    const tabs = await browser.tabs.query({ currentWindow: true }) // 当前窗口全部标签页
+    const index = _.findIndex(tabs, (item) => {
+      return item.id === dealTabId
+    })
+
+    if (index < 0)
+      return false
+
+    let dealIndex = index
+    if (direction === 'pre') { // 向前（左侧）移动
+      dealIndex = index > 0 ? (index - 1) : (tabs.length - 1)
+    }
+    else {
+      dealIndex = index < (tabs.length - 1) ? (index + 1) : 0
+    }
+    browser.tabs.move(dealTabId, { index: dealIndex })
     return true
   }
   catch (e) {
