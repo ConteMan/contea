@@ -5,9 +5,10 @@ import Football from '@services/sport/modules/football'
 import WorldlineContent from '@newTab/layout/WorldlineContent.vue'
 import type { DataTableColumns } from 'naive-ui'
 import type { VNodeChild } from 'vue'
+import { sleep } from '~/utils'
 
 interface Data {
-  loading: string
+  loading: number
   moduleType: string
   mode: 'team' | 'competition'
   competitions: CompetitionItem[]
@@ -43,7 +44,7 @@ const MODULE_TYPES: {
 ]
 
 const data: Data = reactive({
-  loading: '',
+  loading: 0,
   moduleType: 'football',
   mode: 'competition',
 
@@ -191,13 +192,23 @@ const changeCompetition = async (competitionId: number) => {
 const changeModuleType = (moduleType: string) => {
   data.moduleType = moduleType
 }
+
+const refresh = async () => {
+  data.loading++
+  await Football.init()
+  await sleep(2000)
+  data.loading--
+}
 </script>
 
 <template>
   <WorldlineContent>
     <template #bar>
-      <a class="cursor-pointer py-2 px-4 flex items-center">
-        <mdi-refresh :class="{ 'animate-spin': loading }" />
+      <a
+        class="cursor-pointer py-2 px-4 flex items-center"
+        @click="refresh()"
+      >
+        <mdi-database-refresh :class="{ 'animate-spin': !!loading }" />
       </a>
       <div class="h-[30%] mx-4 border-l border-l-gray-400 opacity-20" />
       <template v-for="item in MODULE_TYPES" :key="item.key">
