@@ -186,7 +186,7 @@ const contentDeal = (content: string) => {
             <div class="max-w-[1080px] flex flex-col">
               <div class="pb-3">
                 <template v-if="item.type === 'DYNAMIC_TYPE_LIVE_RCMD'">
-                  <a :href="liveInfo(item.modules.module_dynamic.major.live_rcmd.content).live_play_info.link">{{ liveInfo(item.modules.module_dynamic.major.live_rcmd.content).live_play_info.title }}</a>
+                  <a :href="`https:${liveInfo(item.modules.module_dynamic.major.live_rcmd.content).live_play_info.link}`">{{ liveInfo(item.modules.module_dynamic.major.live_rcmd.content).live_play_info.title }}</a>
                 </template>
                 <template v-if="['DYNAMIC_TYPE_DRAW', 'DYNAMIC_TYPE_FORWARD'].includes(item.type) && item.modules.module_dynamic.desc?.text">
                   <a :href="`${config.tSite}/${item.id_str}`"><div v-html="contentDeal(item.modules.module_dynamic.desc.text)" /></a>
@@ -212,7 +212,7 @@ const contentDeal = (content: string) => {
               >
                 <div class="pb-3 max-w-[1080px]">
                   <template v-if="item.orig.type === 'DYNAMIC_TYPE_LIVE_RCMD'">
-                    <a :href="liveInfo(item.orig.modules.module_dynamic.major.live_rcmd.content).live_play_info.link">{{ liveInfo(item.orig.modules.module_dynamic.major.live_rcmd.content).live_play_info.title }}</a>
+                    <a :href="`https:${liveInfo(item.orig.modules.module_dynamic.major.live_rcmd.content).live_play_info.link}`">{{ liveInfo(item.orig.modules.module_dynamic.major.live_rcmd.content).live_play_info.title }}</a>
                   </template>
                   <template v-if="['DYNAMIC_TYPE_DRAW', 'DYNAMIC_TYPE_FORWARD'].includes(item.orig.type) && item.orig.modules.module_dynamic.desc?.text">
                     <a :href="`${config.tSite}/${item.orig.id_str}`"><div v-html="contentDeal(item.orig.modules.module_dynamic.desc.text)" /></a>
