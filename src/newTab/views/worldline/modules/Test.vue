@@ -5,6 +5,8 @@ import Netease from '@services/sport/modules/football/netease'
 import Football from '@services/sport/modules/football'
 import GitHub from '@services/github/index'
 
+const result = ref('')
+
 const testConsole = async (type: string, params: any) => {
   let res
   if (type === 'gooooalRankList')
@@ -20,9 +22,14 @@ const testConsole = async (type: string, params: any) => {
   else if (type === 'footballInit')
     res = await Football.init()
   else if (type === 'githubUser')
-    res = await GitHub.user()
+    res = await GitHub.user(true)
   // eslint-disable-next-line no-console
   console.log(res)
+  result.value = res
+}
+
+const clearResult = () => {
+  result.value = ''
 }
 </script>
 
@@ -31,54 +38,69 @@ const testConsole = async (type: string, params: any) => {
     <template #bar />
 
     <template #content>
-      <div class="h-full overflow-y-auto hover-scroll pr-8 pb-8 flex flex-col gap-4">
-        <div class="p-4 rounded-md bg-gray-400 bg-opacity-20">
-          <div>体育 / 足球</div>
-          <div class="mt-6 flex flex-wrap gap-4">
-            <n-button
-              size="small" @click="testConsole('footballInit', undefined)"
-            >
-              初始化
-            </n-button>
-            <n-button
-              size="small" @click="testConsole('rankList', 1)"
-            >
-              英超联赛排名
-            </n-button>
-            <n-button
-              size="small" @click="testConsole('gooooalRankList', {
-                lid: 4,
-              })"
-            >
-              雪缘园 - 英超联赛排名
-            </n-button>
-            <n-button
-              size="small" @click="testConsole('neteaseRankList', 82)"
-            >
-              网易体育 - 英超联赛排名
-            </n-button>
-            <n-button
-              size="small" @click="testConsole('teams', 1)"
-            >
-              英超队伍列表
-            </n-button>
-            <n-button
-              size="small" @click="testConsole('saveTeams', 1)"
-            >
-              保存 - 英超队伍列表
-            </n-button>
+      <div class="h-full overflow-y-auto hover-scroll pr-8 pb-8 flex gap-6">
+        <div class="flex-grow flex flex-col gap-4">
+          <div class="p-4 rounded-md bg-gray-400 bg-opacity-20">
+            <div>体育 / 足球</div>
+            <div class="mt-6 flex flex-wrap gap-4">
+              <n-button
+                size="small" @click="testConsole('footballInit', undefined)"
+              >
+                初始化
+              </n-button>
+              <n-button
+                size="small" @click="testConsole('rankList', 1)"
+              >
+                英超联赛排名
+              </n-button>
+              <n-button
+                size="small" @click="testConsole('gooooalRankList', {
+                  lid: 4,
+                })"
+              >
+                雪缘园 - 英超联赛排名
+              </n-button>
+              <n-button
+                size="small" @click="testConsole('neteaseRankList', 82)"
+              >
+                网易体育 - 英超联赛排名
+              </n-button>
+              <n-button
+                size="small" @click="testConsole('teams', 1)"
+              >
+                英超队伍列表
+              </n-button>
+              <n-button
+                size="small" @click="testConsole('saveTeams', 1)"
+              >
+                保存 - 英超队伍列表
+              </n-button>
+            </div>
+          </div>
+
+          <div class="p-4 rounded-md bg-gray-400 bg-opacity-20">
+            <div>GitHub</div>
+            <div class="mt-6 flex flex-wrap gap-4">
+              <n-button
+                size="small" @click="testConsole('githubUser', undefined)"
+              >
+                User
+              </n-button>
+            </div>
           </div>
         </div>
-
-        <div class="p-4 rounded-md bg-gray-400 bg-opacity-20">
-          <div>GitHub</div>
-          <div class="mt-6 flex flex-wrap gap-4">
+        <div class="result-container flex-grow-0 w-[30%] min-h-full overflow-y-auto p-4 rounded-md bg-gray-400 bg-opacity-20 break-words">
+          <div class="sticky top-2 mb-6 flex flex-wrap gap-4">
             <n-button
-              size="small" @click="testConsole('githubUser', undefined)"
+              strong
+              secondary
+              type="tertiary"
+              size="small" @click="clearResult"
             >
-              User
+              Clear
             </n-button>
           </div>
+          {{ result }}
         </div>
       </div>
     </template>
