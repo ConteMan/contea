@@ -60,7 +60,7 @@ export async function changeMode(extensionId: string, params: Param = { type: 'c
   // 非「显式链接」
   if (!isExtensionPage(targetTab.url)) {
     if (targetTab.id)
-      browser.tabs.remove(targetTab.id) // 移除旧标签页
+      void browser.tabs.remove(targetTab.id) // 移除旧标签页
 
     if (type === 'search')
       await ConfigModel.addOrUpdateItem('BACKGROUND_SHORTCUT_SEARCH', { show: true })
@@ -104,7 +104,7 @@ export async function nextTab(tabId = 0) {
 
   const nextId = index < tabs.length - 1 ? tabs[index + 1].id : tabs[0].id
   if (nextId)
-    browser.tabs.update(nextId, { active: true })
+    void browser.tabs.update(nextId, { active: true })
   return true
 }
 

@@ -71,7 +71,7 @@ class Football {
   /**
    * 初始化
    */
-  async init() {
+  init() {
     const competitionIds = Object.keys(this.COMPETITIONS)
     competitionIds.forEach(async (competitionId) => {
       const id = parseInt(competitionId)

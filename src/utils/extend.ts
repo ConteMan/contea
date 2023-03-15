@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
+/* eslint-disable max-statements-per-line */
 /* eslint-disable no-sequences */
 /* eslint-disable no-cond-assign */
 /* eslint-disable block-scoped-var */

@@ -1,5 +1,6 @@
-import Bookmark from '@services/browser/bookmark'
-import Storage from '@services/browser/storage'
-import Alarm from '@services/browser/alarm'
+import Alarm from './alarm'
+import Storage from './storage'
+import Bookmark from './bookmark'
+import Extension from './extension'
 
-export { Bookmark, Storage, Alarm }
+export { Alarm, Storage, Bookmark, Extension }

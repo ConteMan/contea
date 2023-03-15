@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import BaseService from '@services/bookmark'
+import { Bookmark as BaseService } from '@services/browser'
 import WorldlineContent from '@newTab/layout/WorldlineContent.vue'
 
 interface TreeOption {

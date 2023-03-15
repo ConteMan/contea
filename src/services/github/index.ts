@@ -15,7 +15,7 @@ class Github {
   private octokit!: OctokitType
 
   constructor(token = '') {
-    this.init(token)
+    void this.init(token)
   }
 
   /**
@@ -101,7 +101,7 @@ class Github {
     if (!lastPage)
       return false
 
-    return lastPage.data.length + per_page * (page - 1)
+    return (lastPage.data ? lastPage.data.length as number : 0) + per_page * (page - 1)
   }
 }
 

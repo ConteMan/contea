@@ -19,7 +19,7 @@ class Alarm {
     const { enable, alarm = false } = await ConfigModel.getItem(module)
 
     if (enable && alarm)
-      this.dealAlarm(module, 'page')
+      void this.dealAlarm(module, 'page')
 
     const exist = await browser.alarms.get(module)
     if (exist) {

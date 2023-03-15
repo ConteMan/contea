@@ -34,7 +34,7 @@ export default (module: SettingKeys, configKeys: string[]) => {
     })
     data.model = showModel
   }
-  init(module)
+  void init(module)
 
   // 保存设置
   const modelSet = async (module: SettingKeys, data: any) => {
@@ -43,7 +43,7 @@ export default (module: SettingKeys, configKeys: string[]) => {
   }
 
   // 重置设置
-  const reset = async (module: SettingKeys) => {
+  const reset = (module: SettingKeys) => {
     data.resetLoading = true
     useTimeoutFn(async () => {
       await ConfigModel.init(module)
@@ -61,7 +61,7 @@ export default (module: SettingKeys, configKeys: string[]) => {
       hasInit.value = true
       return
     }
-    modelSet(module, toRaw(newValue))
+    void modelSet(module, toRaw(newValue))
   }, {
     deep: true,
     flush: 'post',
@@ -69,7 +69,7 @@ export default (module: SettingKeys, configKeys: string[]) => {
   })
 
   // 初始化 **全局** 设置
-  const initConfig = async (type: 'all' | 'increase' = 'increase') => {
+  const initConfig = (type: 'all' | 'increase' = 'increase') => {
     data.initConfigLoading = type
 
     useTimeoutFn(async () => {

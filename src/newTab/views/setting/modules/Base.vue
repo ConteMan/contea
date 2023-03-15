@@ -51,11 +51,33 @@ const newTabState = useNewTabState()
     </n-form-item>
 
     <n-divider title-placement="left">
-      <span class="text-[12px]">世界线</span>
+      <span class="text-[12px]">功能</span>
     </n-divider>
 
-    <n-form-item label="主页">
+    <n-form-item label="面板">
       <n-switch v-model:value="model.dashboardPage" size="small" :round="false">
+        <template #checked>
+          展示
+        </template>
+        <template #unchecked>
+          隐藏
+        </template>
+      </n-switch>
+    </n-form-item>
+
+    <n-form-item label="书签">
+      <n-switch v-model:value="model.moduleBookmark" size="small" :round="false">
+        <template #checked>
+          展示
+        </template>
+        <template #unchecked>
+          隐藏
+        </template>
+      </n-switch>
+    </n-form-item>
+
+    <n-form-item label="扩展">
+      <n-switch v-model:value="model.moduleExtension" size="small" :round="false">
         <template #checked>
           展示
         </template>

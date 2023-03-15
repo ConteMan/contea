@@ -1,5 +1,5 @@
 // generate stub version.json files for dev entry
-import { execSync } from 'child_process'
+import { execSync } from 'node:child_process'
 import _ from 'lodash-es'
 import fs from 'fs-extra'
 import chokidar from 'chokidar'
@@ -8,9 +8,9 @@ import { isDev, log, r } from '@utils/script'
 /**
  * Stub version.json in development
  */
-async function stubVersionJSON(type = '') {
+function stubVersionJSON(type = '') {
   const version = new Date().getTime()
-  await fs.writeFile(r('extension/version.json'), JSON.stringify({ version, type, isDev: true }), 'utf-8')
+  void fs.writeFile(r('extension/version.json'), `{ "version": ${version}, "type": "${type}", "isDev": true }\n`, 'utf-8')
   log('PRE', `version: ${version}`)
 }
 

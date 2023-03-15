@@ -1,17 +1,16 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
 import type { Runtime, Tabs } from 'webextension-polyfill'
-
-import _ from 'lodash-es'
 
 import { COMMANDS, MESSAGE_TYPES, MODULES } from '@enums/index'
 import AlarmService from '@services/base/alarm'
 import { AlarmTaskModel, ConfigModel } from '@models/index'
+import { getRandomIntInclusive } from '@utils/index'
 import { getVersion } from './version'
 import { changeMode, dealContentScript, nextTab } from './shortcuts'
-import { isObject } from '~/utils/is'
 
 const EXTENSION_NAME = 'CONTEA'
 const EXTENSION_ID = browser.runtime.getURL('').replace(/chrome-extension:\/\/|\//g, '')
-const SERVICE_WORKER_NAME = `${EXTENSION_NAME}-${EXTENSION_ID}-${new Date().getTime()}-${_.random(10000, 99999)}`
+const SERVICE_WORKER_NAME = `${EXTENSION_NAME}-${EXTENSION_ID}-${new Date().getTime()}-${getRandomIntInclusive(10000, 99999)}`
 const DEV_VERSION_KEY = 'DEV_VERSION'
 const DEV_ALARM_NAME = 'DEV_WATCH'
 
@@ -49,7 +48,8 @@ browser.runtime.onInstalled.addListener(async () => {
  */
 browser.alarms.onAlarm.addListener(async (alarm) => {
   try {
-    const DEAL_MODULES: string[] = [MODULES.SSPAI, MODULES.MOVIE, MODULES.BILIBILI, MODULES.WEREAD, MODULES.WEATHER]
+    // 当前启用定时任务的模块， DEAL_MODULES 可直接处理，REDIRECT_MODULES 需要转发给前端处理
+    const DEAL_MODULES: string[] = [MODULES.SSPAI, MODULES.BILIBILI, MODULES.WEREAD, MODULES.WEATHER]
     const REDIRECT_MODULES: string[] = [MODULES.ONE, MODULES.MOVIE, MODULES.SPORT]
     const { name } = alarm
 
@@ -67,9 +67,6 @@ browser.alarms.onAlarm.addListener(async (alarm) => {
         return
 
       await browser.storage.local.set({ [DEV_VERSION_KEY]: currentVersion })
-
-      // if (currentVersion.type === 'background') // 不处理 background 更新
-      //   return
 
       const tabs = await browser.tabs.query({ }) // 查询所有标签页，处理扩展相关页面
       if (!Object.keys(tabs).length)
@@ -169,7 +166,7 @@ browser.runtime.onMessage.addListener(async (message: Message.RuntimeMessage, se
     switch (type) {
       case MESSAGE_TYPES.DEAL_ALARM: { // 前端请求，在后端执行定时任务
         const res = await AlarmService.dealAlarm(name)
-        return isObject(res) ? res : true
+        return res ?? true
       }
       case MESSAGE_TYPES.GET_PAGE_ALARM: { // 获取需要页面执行的定时任务
         return await AlarmTaskModel.query()

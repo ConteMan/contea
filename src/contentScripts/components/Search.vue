@@ -2,7 +2,7 @@
 import dayjs from 'dayjs'
 import type { Ref } from 'vue'
 import { debouncedWatch, useMouse } from '@vueuse/core'
-import { openSite as baseOpenSite, nextTab, sendToBackground } from '@utils/index'
+import { openSite as baseOpenSite, sendToBackground } from '@utils/index'
 import { MESSAGE_TYPES } from '@enums/index'
 
 const props = defineProps(['show'])

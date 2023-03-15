@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { Component } from 'vue'
-import _ from 'lodash-es'
 import WorldlineContent from '@newTab/layout/WorldlineContent.vue'
 import DragBox from '@newTab/components/drag/DragBox.vue'
 import { useNewTabState } from '@newTab/store/index'

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Management } from 'webextension-polyfill'
-import BaseService from '@services/extension'
+import { Extension as BaseService } from '@services/browser'
 import WorldlineContent from '@newTab/layout/WorldlineContent.vue'
 
 interface Data {

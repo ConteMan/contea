@@ -127,6 +127,7 @@ export class VAxios {
 
     if (params.data) {
       Object.keys(params.data).forEach((key) => {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
         const value = params.data![key]
         if (Array.isArray(value)) {
           value.forEach((item) => {
@@ -135,6 +136,7 @@ export class VAxios {
           return
         }
 
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
         formData.append(key, params.data![key])
       })
     }

@@ -1,4 +1,4 @@
-import { dirname, relative } from 'path'
+import { dirname, relative } from 'node:path'
 import { defineConfig } from 'vite'
 import type { UserConfig } from 'vite'
 import Vue from '@vitejs/plugin-vue'
@@ -12,6 +12,9 @@ import windiConfig from './windi.config'
 import { isDev, r } from './src/utils/script'
 
 export const sharedConfig: UserConfig = {
+  esbuild: {
+    target: 'ESNext',
+  },
   root: r('src'),
   resolve: {
     alias: [

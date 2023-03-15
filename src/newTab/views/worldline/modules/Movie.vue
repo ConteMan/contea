@@ -155,4 +155,3 @@ const selectModuleType = async (moduleType: Data['selectedType']) => {
     </template>
   </WorldlineContent>
 </template>
-

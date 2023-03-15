@@ -7,7 +7,7 @@ import App from './views/App.vue'
 
 // import { drawFn, sign } from './modules/juejin'
 
-(async () => {
+(() => {
   const cssUrl = browser.runtime.getURL('dist/contentScripts/style.css')
   const currentUrl = document.URL
   const extensionId = browser.runtime.id

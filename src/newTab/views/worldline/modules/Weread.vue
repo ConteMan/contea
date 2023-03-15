@@ -155,7 +155,7 @@ const selectArchive = (archiveId: number) => {
 
         <div class="p-6 rounded-md bg-gray-400 bg-opacity-20">
           <div class="pb-4 font-bold">
-            <span class="cursor-pointer" @click="recentReset()">最近阅读</span>
+            <span class="cursor-pointer" @click="recentReset()">最近阅读 {{ recentBooks.length }}</span>
           </div>
           <div class="flex flex-wrap gap-x-22 gap-y-8">
             <template v-for="item in recentBooks" :key="item.bookId">
@@ -205,16 +205,17 @@ const selectArchive = (archiveId: number) => {
                     </a>
                   </template>
                   <template v-if="item.type === 'archive'">
-                    <div
-                      class="cursor-pointer h-[185px] mb-4 inline-grid grid-cols-2 grid-cols-2 gap-1"
-                      @click="selectArchive(item.archiveId)"
-                    >
-                      <img
-                        v-for="aItem in (item.allBooks).slice(0, 4)" :key="aItem.bookId"
-                        :src="aItem.cover"
-                        class="rounded-sm object-fill"
+                    <a :href="`${config.site}/web/shelf/archive/${item.archiveId}`">
+                      <div
+                        class="cursor-pointer h-[185px] mb-4 inline-grid grid-cols-2 grid-cols-2 gap-1"
                       >
-                    </div>
+                        <img
+                          v-for="aItem in (item.loaded).slice(0, 4)" :key="aItem.bookId"
+                          :src="aItem.cover"
+                          class="rounded-sm object-fill"
+                        >
+                      </div>
+                    </a>
                     <div class="mb-2 ellipsis-2 max-h-[44.8px] overflow-hidden overflow-ellipsis" :title="item.name">
                       {{ item.name }}
                     </div>

@@ -32,7 +32,7 @@ export function deepMerge<T = any>(src: any = {}, target: any = {}): T {
   let key: string
 
   for (key in target)
-    src[key] = isObject(src[key]) && !(Array.isArray(src[key])) ? deepMerge(src[key], target[key]) : (src[key] = target[key])
+    src[key] = (isObject(src[key]) && !(Array.isArray(src[key]))) ? deepMerge(src[key], target[key]) : (src[key] = target[key])
 
   return src
 }
@@ -162,7 +162,7 @@ export async function nextTab(tabId = 0) {
 
     const nextId = index < tabs.length - 1 ? tabs[index + 1].id : tabs[0].id
     if (nextId)
-      browser.tabs.update(nextId, { active: true })
+      void browser.tabs.update(nextId, { active: true })
     return true
   }
   catch (e) {
@@ -194,7 +194,7 @@ export async function preTab(tabId = 0) {
 
     const preId = index > 0 ? tabs[index - 1].id : tabs[tabs.length - 1].id
     if (preId)
-      browser.tabs.update(preId, { active: true })
+      void browser.tabs.update(preId, { active: true })
     return true
   }
   catch (e) {
@@ -232,7 +232,7 @@ export async function moveToTab(direction: 'pre' | 'next' = 'next', tabId = 0) {
     else {
       dealIndex = index < (tabs.length - 1) ? (index + 1) : 0
     }
-    browser.tabs.move(dealTabId, { index: dealIndex })
+    void browser.tabs.move(dealTabId, { index: dealIndex })
     return true
   }
   catch (e) {

@@ -9,18 +9,6 @@ import { setting as weread } from '@services/weread/model'
 import { setting as sport } from '@services/sport/model'
 import { setting as weather } from '@services/weather/model'
 import { setting as github } from '@services/github/model'
-import { setting as bookmark } from '@services/bookmark/model'
-import { setting as extension } from '@services/extension/model'
-
-// import { setting as v2ex } from '@services/v2ex/model'
-// import { setting as bgm } from '@services/bgm/model'
-// import { setting as jike } from '@services/jike/model'
-// import { setting as juejin } from '@services/juejin/model'
-// import { setting as wakatime } from '@services/wakatime/model'
-// import { setting as zhihu } from '@services/zhihu/model'
-// import { setting as wallpaper } from '@services/wallpaper/model'
-// import { setting as yuque } from '@services/yuque/model'
-// import { setting as sync } from '@services/sync/model'
 
 export const modules = [
   MODULES.BASE,
@@ -32,18 +20,6 @@ export const modules = [
   MODULES.SPORT,
   MODULES.WEATHER,
   MODULES.GITHUB,
-  MODULES.BOOKMARK,
-  MODULES.EXTENSION,
-
-  // 'v2ex',
-  // 'juejin',
-  // 'wakatime',
-  // 'jike',
-  // 'bgm',
-  // 'zhihu',
-  // 'wallpaper',
-  // 'yuque',
-  // 'sync',
 ]
 
 export interface Setting {
@@ -56,18 +32,6 @@ export interface Setting {
   sport: typeof sport
   weather: typeof weather
   github: typeof github
-  bookmark: typeof bookmark
-  extension: typeof extension
-
-  // v2ex: typeof v2ex
-  // bgm: typeof bgm
-  // jike: typeof jike
-  // juejin: typeof juejin
-  // wakatime: typeof wakatime
-  // zhihu: typeof zhihu
-  // wallpaper: typeof wallpaper
-  // yuque: typeof yuque
-  // sync: typeof sync
 }
 
 export type SettingKeys = keyof Setting
@@ -83,16 +47,4 @@ export default {
   sport,
   weather,
   github,
-  bookmark,
-  extension,
-
-  // v2ex,
-  // bgm,
-  // jike,
-  // juejin,
-  // wakatime,
-  // zhihu,
-  // wallpaper,
-  // yuque,
-  // sync,
 }

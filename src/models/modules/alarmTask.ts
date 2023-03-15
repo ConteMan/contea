@@ -21,13 +21,13 @@ export default new class AlarmTaskModel extends Base {
       if (action === 'set') {
         return await this.currentTable.update(exist.id, {
           set_at: new Date().getTime(),
-          set_times: exist.set_times ? exist.set_times + 1 : 1,
+          set_times: exist.set_times ? Number(exist.set_times) + 1 : 1,
         })
       }
       else {
         return await this.currentTable.update(exist.id, {
           deal_at: new Date().getTime(),
-          deal_times: exist.deal_times ? exist.deal_times + 1 : 1,
+          deal_times: exist.deal_times ? Number(exist.deal_times) + 1 : 1,
         })
       }
     }

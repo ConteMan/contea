@@ -8,4 +8,4 @@ export async function writeManifest() {
   log('PRE', 'write manifest.json')
 }
 
-writeManifest()
+void writeManifest()

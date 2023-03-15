@@ -57,6 +57,20 @@ const specialModules: SpecialModule = {
     type: 'module',
     title: '面板',
   },
+  bookmark: {
+    key: 'bookmark',
+    configModule: 'base',
+    configKey: 'moduleBookmark',
+    type: 'module',
+    title: '书签',
+  },
+  extension: {
+    key: 'extension',
+    configModule: 'base',
+    configKey: 'moduleExtension',
+    type: 'module',
+    title: '扩展',
+  },
 }
 
 /** modules 目录下的模块, 根据 all 更新 */

@@ -196,7 +196,7 @@ export default new class Libvio {
    * 格式化详情页面数据
    * @param html - 页面 HTML 数据
    */
-  async formatDetailPage(html: string) {
+  formatDetailPage(html: string) {
     try {
       const domParser = new DOMParser()
       const dom = domParser.parseFromString(html, 'text/html')
@@ -253,7 +253,7 @@ export default new class Libvio {
       if (!html)
         return false
 
-      const formatRes = await this.formatDetailPage(html)
+      const formatRes = this.formatDetailPage(html)
       if (!formatRes)
         return false
 

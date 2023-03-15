@@ -25,7 +25,9 @@ export type Config = BaseConfig & {
   // 世界线
   statusList: boolean // 任务
   testPage: boolean // 测试
-  dashboardPage?: boolean // 面板页面
+  dashboardPage: boolean // 面板
+  moduleBookmark: boolean // 书签
+  moduleExtension: boolean // 扩展
 
   // 桌面端
   enableDesktop: boolean // 是否启用与桌面端的通讯
@@ -35,10 +37,8 @@ export type Config = BaseConfig & {
 
 export type ShowConfig = Pick<
   Config,
-  'key' | 'name' | 'enable' | 'expired'
-  | 'alarm' | 'statusList' | 'themeMode' | 'enableDesktop'
-  | 'desktopInterface' | 'desktopInterfaceStatus' | 'testPage'
-  | 'dashboardPage'
+  'key' | 'name' | 'enable' | 'expired' | 'alarm' | 'statusList' | 'themeMode' | 'enableDesktop' | 'desktopInterface' | 'desktopInterfaceStatus' | 'testPage' | 'dashboardPage'
+  | 'moduleBookmark' | 'moduleExtension'
   >
 
 export const setting: Config = {
@@ -56,6 +56,8 @@ export const setting: Config = {
   statusList: false,
   testPage: false,
   dashboardPage: true,
+  moduleBookmark: true,
+  moduleExtension: true,
 
   enableDesktop: false,
   desktopInterface: 'http://127.0.0.1:7788/extension',

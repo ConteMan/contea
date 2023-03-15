@@ -24,4 +24,4 @@ app.config.errorHandler = (err, instance, info) => {
   console.log('[ unhand error with app.config.errorHandler ] >', err, instance, info)
 }
 
-init()
+void init()

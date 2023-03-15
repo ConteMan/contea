@@ -44,7 +44,7 @@ export default new class ConfigModel extends Base {
       await this.currentTable.bulkAdd(setting)
 
       Object.keys(defaultSetting).forEach((item) => {
-        Alarm.setAlarm(item)
+        void Alarm.setAlarm(item)
       })
     }
     else if (module === 'increase') {

@@ -19,7 +19,7 @@ export const useModalState = defineStore('modal',
       const res = await ConfigModel.getItem('BACKGROUND_SHORTCUT_SEARCH')
       if (res && res.show) {
         data.show = true
-        ConfigModel.addOrUpdateItem('BACKGROUND_SHORTCUT_SEARCH', { show: false })
+        void ConfigModel.addOrUpdateItem('BACKGROUND_SHORTCUT_SEARCH', { show: false })
         return true
       }
       else {

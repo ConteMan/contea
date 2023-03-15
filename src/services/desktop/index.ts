@@ -46,7 +46,7 @@ export async function checkConnect() {
 export async function toDesktop(type: string, data: any) {
   try {
     const { enableDesktop, desktopInterface, desktopInterfaceStatus } = await ConfigModel.getItem('base')
-    const url = enableDesktop && desktopInterface && desktopInterfaceStatus ? desktopInterface : false
+    const url = (enableDesktop && desktopInterface && desktopInterfaceStatus) ? desktopInterface : false
     if (!url)
       return false
 

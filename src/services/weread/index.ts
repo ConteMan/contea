@@ -41,6 +41,18 @@ class WeRead {
   }
 
   /**
+   * DOM 数据处理
+   * @param data - DOM 字符串
+   */
+  domDeal(data: string) {
+    const body: string = data
+    const regexRes = body.match(/(\{.*\})\;/)
+    if (!regexRes || !regexRes[1])
+      return false
+    return JSON.parse(regexRes[1])
+  }
+
+  /**
    * 通过首页脚本获取整体信息
    */
   async total() {
@@ -49,22 +61,34 @@ class WeRead {
       if (!loginStatus)
         return false
 
-      const { site: url } = await ConfigModel.getItem(this.MODULE)
+      const { site: url, shelfUrl } = await ConfigModel.getItem(this.MODULE)
+
       const res = await defHttp.get({ url })
 
       if (![200].includes(res.status))
         return false
 
-      const body = res.data
-      const regexRes = body.match(/(\{.*\})\;/)
-      if (!regexRes[1])
+      const data = this.domDeal(res.data)
+      if (!data)
         return false
-      const data = JSON.parse(regexRes[1])
+
       const {
         user,
         homeStoreModule: rankList,
-        shelfStoreModule: shelf,
       } = data
+
+      const shelfRes = await defHttp.get({ url: shelfUrl })
+
+      if (![200].includes(shelfRes.status))
+        return false
+
+      const shelfData = this.domDeal(shelfRes.data)
+      if (!shelfData)
+        return false
+
+      const {
+        shelf,
+      } = shelfData
 
       return {
         user,
