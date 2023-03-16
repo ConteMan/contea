@@ -9,6 +9,7 @@ const { settingDrawer, settingDrawerPosition } = storeToRefs(newTabState)
 <template>
   <n-drawer
     v-model:show="settingDrawer"
+    class="setting-drawer"
     :placement="(settingDrawerPosition === 'left') ? 'left' : 'right'"
     width="500px"
     :auto-focus="false"
@@ -22,7 +23,7 @@ const { settingDrawer, settingDrawerPosition } = storeToRefs(newTabState)
         <mdi-chevron-left />
       </div>
 
-      <Setting class="w-[calc(100%-1rem)] overflow-y-auto" :class="(settingDrawerPosition === 'left') ? 'pl-4' : 'pr-4'" />
+      <Setting class="w-[calc(100%-1rem)] h-full" :class="(settingDrawerPosition === 'left') ? 'pl-4' : 'pr-4'" />
 
       <div
         v-if="settingDrawerPosition === 'left'"
@@ -34,3 +35,11 @@ const { settingDrawer, settingDrawerPosition } = storeToRefs(newTabState)
     </div>
   </n-drawer>
 </template>
+
+<style lang="less">
+.contea-namespace {
+  .setting-drawer .n-drawer-content-wrapper {
+    overflow: hidden !important;
+  }
+}
+</style>
