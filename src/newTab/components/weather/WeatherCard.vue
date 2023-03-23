@@ -22,7 +22,7 @@ const { base, config } = toRefs(data)
 
 const getData = async () => {
   data.config = await ConfigModel.getItem(module)
-  const res = await Weather.data()
+  const res = await Weather.data('cma', { stationId: 59493 })
   if (!res)
     data.error = true
   else

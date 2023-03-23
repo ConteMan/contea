@@ -2,7 +2,7 @@
 import { useElementBounding } from '@vueuse/core'
 import { useNewTabState } from '@newTab/store/index'
 
-import List from '@newTab/views/worldline/List.vue'
+import List from '@newTab/views/board/List.vue'
 // import Card from '@newTab/views/card/Card.vue'
 import ActionBar from '@newTab/components/layout/ActionBar.vue'
 

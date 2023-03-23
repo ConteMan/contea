@@ -6,7 +6,7 @@ import type { Ref } from 'vue'
 import { configKeys } from '@services/base/model'
 import { useNewTabState } from '@newTab/store/index'
 import { checkConnect } from '@services/desktop'
-import Setting from '../index'
+import Setting from './index'
 
 const module: SettingKeys = 'base'
 
@@ -48,65 +48,6 @@ const newTabState = useNewTabState()
 
     <n-form-item label="重置">
       <n-switch v-model:value="resetLoading" :loading="resetLoading" size="small" :round="false" @update:value="reset(module)" />
-    </n-form-item>
-
-    <n-divider title-placement="left">
-      <span class="text-[12px]">功能</span>
-    </n-divider>
-
-    <n-form-item label="面板">
-      <n-switch v-model:value="model.dashboardPage" size="small" :round="false">
-        <template #checked>
-          展示
-        </template>
-        <template #unchecked>
-          隐藏
-        </template>
-      </n-switch>
-    </n-form-item>
-
-    <n-form-item label="书签">
-      <n-switch v-model:value="model.moduleBookmark" size="small" :round="false">
-        <template #checked>
-          展示
-        </template>
-        <template #unchecked>
-          隐藏
-        </template>
-      </n-switch>
-    </n-form-item>
-
-    <n-form-item label="扩展">
-      <n-switch v-model:value="model.moduleExtension" size="small" :round="false">
-        <template #checked>
-          展示
-        </template>
-        <template #unchecked>
-          隐藏
-        </template>
-      </n-switch>
-    </n-form-item>
-
-    <n-form-item label="任务">
-      <n-switch v-model:value="model.statusList" size="small" :round="false">
-        <template #checked>
-          展示
-        </template>
-        <template #unchecked>
-          隐藏
-        </template>
-      </n-switch>
-    </n-form-item>
-
-    <n-form-item label="测试">
-      <n-switch v-model:value="model.testPage" size="small" :round="false">
-        <template #checked>
-          展示
-        </template>
-        <template #unchecked>
-          隐藏
-        </template>
-      </n-switch>
     </n-form-item>
 
     <n-divider title-placement="left">

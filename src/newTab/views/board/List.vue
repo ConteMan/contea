@@ -55,7 +55,7 @@ const specialModules: SpecialModule = {
     configModule: 'base',
     configKey: 'dashboardPage',
     type: 'module',
-    title: '面板',
+    title: '卡片',
   },
   bookmark: {
     key: 'bookmark',

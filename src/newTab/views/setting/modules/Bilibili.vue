@@ -34,10 +34,6 @@ const { model }: { model: Ref<ShowConfig> } = setting
       </n-input-number>
     </n-form-item>
 
-    <n-form-item label="卡片" path="showCard">
-      <n-switch v-model:value="model.showCard" size="small" :round="false" />
-    </n-form-item>
-
     <n-form-item label="重置">
       <n-switch
         v-model:value="resetLoading"

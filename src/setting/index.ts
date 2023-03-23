@@ -10,18 +10,6 @@ import { setting as sport } from '@services/sport/model'
 import { setting as weather } from '@services/weather/model'
 import { setting as github } from '@services/github/model'
 
-export const modules = [
-  MODULES.BASE,
-  MODULES.SSPAI,
-  MODULES.MOVIE,
-  MODULES.BILIBILI,
-  MODULES.ONE,
-  MODULES.WEREAD,
-  MODULES.SPORT,
-  MODULES.WEATHER,
-  MODULES.GITHUB,
-]
-
 export interface Setting {
   base: typeof base
   sspai: typeof sspai
@@ -36,9 +24,22 @@ export interface Setting {
 
 export type SettingKeys = keyof Setting
 
+export const modules = [
+  MODULES.BASE,
+  MODULES.SSPAI,
+  MODULES.MOVIE,
+  MODULES.BILIBILI,
+  MODULES.ONE,
+  MODULES.WEREAD,
+  MODULES.SPORT,
+  MODULES.WEATHER,
+  MODULES.GITHUB,
+]
+
 // #2 默认初始配置
 export default {
   base,
+
   sspai,
   movie,
   bilibili,

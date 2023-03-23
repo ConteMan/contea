@@ -5,10 +5,10 @@ import { useActiveElement, useEventListener } from '@vueuse/core'
 import { moveToTab, nextTab, preTab, sendToBackground, sleep } from '@utils/index'
 
 import SearchModal from '@newTab/components/search/Search.vue'
-import SettingDrawer from '@newTab/views/setting/SettingDrawer.vue'
 
 import AlarmService from '@services/base/alarm'
 import { useModalState, useNewTabState } from '@newTab/store/index'
+import SettingDrawer from '~/newTab/views/setting/Index.vue'
 
 const SEARCH_KEY = ['q', 't', 'go']
 const ZEN_KEY = 'z'

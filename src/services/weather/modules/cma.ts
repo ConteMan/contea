@@ -52,10 +52,10 @@ export interface StationCacheType {
  * 地域天气
  * @param stationId number - 地域代码
  */
-export const station = async (stationId: number | undefined = undefined, refresh = false): Promise<StationCacheType | false> => {
+export const station = async (stationId: number | undefined = 59493, refresh = false): Promise<StationCacheType | false> => {
   const MODULE = MODULES.WEATHER
   const url = 'https://weather.cma.cn/api/weather/view'
-  const cacheStationId = stationId ?? 'default'
+  const cacheStationId = stationId ?? '59493'
 
   const cacheKey = [MODULE, cacheStationId]
   if (!refresh) {

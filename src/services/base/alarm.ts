@@ -103,7 +103,7 @@ class Alarm {
         break
       }
       case MODULES.WEATHER: {
-        result = await weather.data('cma', undefined, true)
+        result = await weather.data('cma', { stationId: 59493 }, true)
         break
       }
       default: {

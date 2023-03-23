@@ -10,7 +10,7 @@ export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiU
 export const setting: Config = {
   key: 'github',
   name: 'GitHub',
-  enable: true,
+  enable: false,
   site: 'https://github.com',
   apiUrl: 'https://api.github.com',
   gistUrl: 'https://gist.github.com',
