@@ -1,10 +1,9 @@
-import configState from '@models/keyValue/configState'
 import RequestCache from '@services/base/requestCache'
 import { defHttp } from '@utils/http/axios'
-import type { SettingKeys } from '@setting/index'
+import ConfigModel from '~/models/modules/config'
 
 class WakaTime {
-  private module: SettingKeys = 'wakatime'
+  private module = 'wakatime'
   private today = dayjs().format('YYYY-MM-DD')
 
   /**
@@ -12,7 +11,7 @@ class WakaTime {
    * @returns Promise<boolean>
    */
   async loginCheck(): Promise<boolean> {
-    const { apiUrl } = await configState.getItem(this.module)
+    const { apiUrl } = await ConfigModel.getItem(this.module)
 
     try {
       const res = await defHttp.get({
@@ -43,7 +42,7 @@ class WakaTime {
     if (!login)
       return { ca_login: login }
 
-    const { apiUrl } = await configState.getItem(this.module)
+    const { apiUrl } = await ConfigModel.getItem(this.module)
 
     const res = await defHttp.get({
       url: `${apiUrl}/users/current/summaries`,
@@ -57,7 +56,7 @@ class WakaTime {
 
     if (res.data) {
       const expired = startDate !== endDate ? 43200 : 0 // 如果不是查询当日的数据，设置缓存时间为半天
-      return await RequestCache.set(cacheKey, { ca_login: login, ...res.data }, this.module, expired)
+      return await RequestCache.set(cacheKey, { ca_login: login, ...res.data }, undefined, expired)
     }
 
     return { ca_login: false }

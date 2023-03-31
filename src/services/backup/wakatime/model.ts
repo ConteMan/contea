@@ -1,17 +1,35 @@
-import type { BaseConfig } from '@services/base/model'
-
-export type Config = BaseConfig & {
+type Config = Module.BaseConfig & {
 }
 
-export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'expired' | 'alarm' | 'showCard'>
+type ConfigShow = Pick<
+  Config,
+  'key' | 'name' | 'enable' | 'expired' | 'alarm'
+>
 
-export const setting: Config = {
+const config: Config = {
   key: 'wakatime',
   name: 'WakaTime',
   enable: false,
+
+  board_menu: [],
+
+  cron: [],
+
+  alarm: 60,
+  expired: 600,
+
   site: 'https://wakatime.com',
   apiUrl: 'https://wakatime.com/api/v1',
-  expired: 600,
-  alarm: 60,
-  showCard: true,
+}
+
+const configKeys = Object.keys(config)
+
+export type {
+  Config,
+  ConfigShow,
+}
+
+export {
+  config,
+  configKeys,
 }

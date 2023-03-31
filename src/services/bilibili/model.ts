@@ -1,25 +1,32 @@
-import type { BaseConfig } from '@services/base/model'
-
-export type Config = BaseConfig & {
+type Config = Module.BaseConfig & {
   tSite: string
   spaceSite: string
   liveApiUrl: string
 }
 
-export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'expired' | 'alarm' | 'showCard'>
+type ConfigShow = Pick<
+  Config,
+  'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'expired' | 'alarm' | 'showCard'
+>
 
-export const setting: Config = {
+const config: Config = {
   key: 'bilibili',
   name: '哔哩哔哩',
   enable: false,
+
+  board_menu: [],
+
+  cron: [],
+
+  alarm: 60,
+  expired: 3600,
+
   site: 'https://www.bilibili.com', // 主站
   tSite: 'https://t.bilibili.com', // 动态
   spaceSite: 'https://space.bilibili.com', // 空间
   apiUrl: 'https://api.bilibili.com',
   liveApiUrl: 'https://api.live.bilibili.com',
-  alarm: 60,
-  expired: 3600,
-  showCard: false,
+
   contentScript: {
     enable: true,
     url: 'https://www.bilibili.com',
@@ -27,11 +34,14 @@ export const setting: Config = {
   },
 }
 
-export const configKeys = Object.keys(setting)
+const configKeys = Object.keys(config)
 
-export interface FeedParam {
-  type: 'all'
-  page: number
-  timezone_offset: number
-  offset?: string
+export type {
+  Config,
+  ConfigShow,
+}
+
+export {
+  config,
+  configKeys,
 }

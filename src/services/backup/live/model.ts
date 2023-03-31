@@ -1,6 +1,4 @@
-import type { BaseConfig } from '@services/base/model'
-
-export type Config = BaseConfig & {
+type Config = Module.BaseConfig & {
   module: {
     huya: {
       site: string
@@ -8,16 +6,22 @@ export type Config = BaseConfig & {
   }
 }
 
-export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'expired' | 'alarm'>
+type ConfigShow = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'expired' | 'alarm'>
 
-export const setting: Config = {
+const config: Config = {
   key: 'live',
   name: '直播',
   enable: false,
-  site: '',
-  apiUrl: '',
+
+  board_menu: [],
+
+  cron: [],
+
   alarm: 60,
   expired: 3600,
+
+  site: '',
+  apiUrl: '',
   showCard: false,
   module: {
     huya: {
@@ -26,9 +30,14 @@ export const setting: Config = {
   },
 }
 
-export interface Item {
-  title?: string
-  [other: string]: any
+const configKeys = Object.keys(config)
+
+export type {
+  Config,
+  ConfigShow,
 }
 
-export type List = Item []
+export {
+  config,
+  configKeys,
+}

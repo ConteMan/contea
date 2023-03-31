@@ -1,11 +1,11 @@
-import type { SettingKeys } from '@setting/index'
-import { MODULES } from '@enums/index'
 import { station as cmaStation } from './modules/cma'
+import { MODULES } from '~/config/index'
+import type { ModuleKey } from '~/config/index'
 
 export type sourceType = 'cma'
 
 class Weather {
-  public MODULE: SettingKeys = MODULES.WEATHER
+  public module: ModuleKey = MODULES.WEATHER
 
   /**
    * 获取天气数据

@@ -1,21 +1,27 @@
-import type { BaseConfig } from '@services/base/model'
-
-export type Config = BaseConfig & {
+type Config = Module.BaseConfig & {
 }
 
-export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'expired' | 'alarm'>
+type ConfigShow = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'expired' | 'alarm'>
 
-export const setting: Config = {
+const config: Config = {
   key: 'wallpaper',
-  name: 'Wallpaper',
+  name: '壁纸',
   enable: false,
+
+  board_menu: [],
+
+  cron: [],
+
+  alarm: 60,
+  expired: 3600,
+
   site: '',
   apiUrl: '',
-  expired: 3600,
-  alarm: 60,
 }
 
-export const alphacodersInfo = {
+const configKeys = Object.keys(config)
+
+const alphacodersInfo = {
   name: 'Alphacoders Wallpaper',
   key: 'alphacoders',
   category: [
@@ -32,7 +38,7 @@ export const alphacodersInfo = {
   ],
 }
 
-export const bing = {
+const bing = {
   name: 'Bing',
   key: 'bing',
   category: [
@@ -44,7 +50,21 @@ export const bing = {
   ],
 }
 
-export const SourceTypes = [
+const SourceTypes = [
   alphacodersInfo,
   bing,
 ]
+
+export type {
+  Config,
+  ConfigShow,
+}
+
+export {
+  config,
+  configKeys,
+
+  alphacodersInfo,
+  bing,
+  SourceTypes,
+}

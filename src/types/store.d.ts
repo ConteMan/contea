@@ -3,5 +3,6 @@ namespace Store {
   export interface MenuItem {
     key: string
     type: MenuItemType
+    [others: string]: any
   }
 }

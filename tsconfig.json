@@ -20,6 +20,9 @@
       "./node_modules/@types/",
       "./src/types"
     ],
+    "types": [
+      "vite/client"
+    ],
     "paths": {
       "~/*": [
         "src/*"
@@ -36,8 +39,8 @@
       "@models/*": [
         "src/models/*"
       ],
-      "@setting/*": [
-        "src/setting/*"
+      "@config/*": [
+        "src/config/*"
       ],
       "@enums/*": [
         "src/enums/*"

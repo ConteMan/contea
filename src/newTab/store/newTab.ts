@@ -5,6 +5,7 @@ import type { Ref } from 'vue'
 import type { DashboardLayout, DashboardLayoutItem } from '@localTypes/newTab'
 import wallpaperService from '@services/wallpaper'
 import { useConfigState } from '@newTab/store/index'
+import Board from '@services/board'
 
 type LayoutMode = 'clean' | 'list' | 'card'
 
@@ -33,6 +34,8 @@ export const useNewTabState = defineStore('newTab',
       worldlineDashboardLayout: {} as DashboardLayout,
       worldlineModules: [] as string[],
 
+      boardMenu: [] as Board.ModuleItem[],
+
       hasInit: false,
     })
 
@@ -49,6 +52,7 @@ export const useNewTabState = defineStore('newTab',
       worldlineDashboardLayout,
       worldlineModules,
       hasInit,
+      boardMenu,
     } = toRefs(data)
 
     const layoutMode = ref('clean') as Ref<LayoutMode>
@@ -162,6 +166,18 @@ export const useNewTabState = defineStore('newTab',
         changeTheme(data.isPreferredDark ? 'dark' : 'light')
     }
 
+    const getDarkClass = () => {
+      if (data.theme === 'dark') {
+        document.querySelector('html')?.setAttribute('class', 'dark')
+        return true
+      }
+      else {
+        document.querySelector('html')?.removeAttribute('class')
+        return false
+      }
+    }
+
+    // 布局
     function changeLayoutMode() {
       if (layoutMode.value === 'clean')
         layoutMode.value = 'list'
@@ -173,17 +189,6 @@ export const useNewTabState = defineStore('newTab',
 
     function setLayoutMode(mode: LayoutMode) {
       layoutMode.value = mode
-    }
-
-    const getDarkClass = () => {
-      if (data.theme === 'dark') {
-        document.querySelector('html')?.setAttribute('class', 'dark')
-        return true
-      }
-      else {
-        document.querySelector('html')?.removeAttribute('class')
-        return false
-      }
     }
 
     // Worldline Menu
@@ -232,6 +237,19 @@ export const useNewTabState = defineStore('newTab',
       _.remove(data.worldlineModules, name)
     }
 
+    const getBoardMenu = () => {
+      return data.boardMenu
+    }
+    const setBoardMenu = async (menu: Store.MenuItem[]) => {
+      await Board.setMenu(menu)
+      data.boardMenu = menu
+    }
+
+    const setBoardMenuByDB = async () => {
+      const menu = await Board.getMenu()
+      data.boardMenu = menu
+    }
+
     // init
     const setInit = () => {
       data.hasInit = true
@@ -255,9 +273,10 @@ export const useNewTabState = defineStore('newTab',
       worldlineDashboardLayout,
       worldlineModules,
 
+      boardMenu,
+
       hasInit, // 临时标识，不持久化
 
-      getDarkClass,
       setDealMenuKeys,
       changeTab,
       changeNextTab,
@@ -277,6 +296,7 @@ export const useNewTabState = defineStore('newTab',
       setThemeMode,
       changeTheme,
       changeIsPreferredDark,
+      getDarkClass,
 
       changeLayoutMode,
       setLayoutMode,
@@ -291,6 +311,10 @@ export const useNewTabState = defineStore('newTab',
       setWorldlineModules,
       addWorldlineModules,
       deleteWorldlineModules,
+
+      getBoardMenu,
+      setBoardMenu,
+      setBoardMenuByDB,
 
       setInit,
     }
@@ -315,6 +339,8 @@ export const useNewTabState = defineStore('newTab',
         'worldlineMenu',
         'worldlineDashboardLayout',
         'worldlineModules',
+
+        'boardMenu',
       ],
     },
   },

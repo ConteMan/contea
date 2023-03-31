@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { Ref } from 'vue'
-import type { SettingKeys } from '@setting/index'
 import type { ShowConfig } from '@services/weather/model'
 import { configKeys } from '@services/weather/model'
 import Setting from '../index'
+import type { ModuleKey } from '~/config/index'
 
-const module: SettingKeys = 'weather'
+const module: ModuleKey = 'weather'
 
 const setting = Setting(module, configKeys)
 const { rules, resetLoading, reset } = setting

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { MovieModules } from '@services/movie/model'
 import { vInfiniteScroll } from '@vueuse/components'
 import { ConfigModel } from '@models/index'
 import BaseService from '@services/movie'
@@ -15,7 +14,7 @@ interface Data {
   config: Record<string, any>
 
   moduleTypes: Record<string, any>[]
-  selectedType: MovieModules | ''
+  selectedType: Movie.MovieModules | ''
   page: number
   pageSize: number
   hasMore: boolean

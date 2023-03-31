@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type { SettingKeys } from '@setting/index'
 import { ConfigModel } from '@models/index'
 import { useConfigState } from '@newTab/store/index'
+import type { ModuleKey } from '~/config/index'
 
 const init = ref(0)
 const configShow: Ref<Record<string, any>> = ref({})
@@ -46,11 +46,11 @@ const newConfigShow = computed(() => {
 
 // 收集对象差异
 const diff = (n: Record<string, any>, o: Record<string, any>) => {
-  const res: { module: SettingKeys; key: string; value: any }[] = []
+  const res: { module: ModuleKey; key: string; value: any }[] = []
   for (const key in n) {
     if (n[key] !== o[key]) {
       const moduleKey = key.split('_')
-      const module = moduleKey[0] as SettingKeys
+      const module = moduleKey[0] as ModuleKey
       const keyName = moduleKey[1]
       const value = n[key]
       res.push({ module, key: keyName, value })
@@ -61,10 +61,8 @@ const diff = (n: Record<string, any>, o: Record<string, any>) => {
 
 // 根据对象差异，更新配置
 const ConfigStore = useConfigState()
-const updateConfig = async (data: { module: SettingKeys; key: string; value: any }[]) => {
+const updateConfig = async (data: { module: ModuleKey; key: string; value: any }[]) => {
   data.map(async (item) => {
-    // eslint-disable-next-line no-console
-    console.log('item', item.module, item.key, item.value)
     await ConfigModel.mergeSet(item.module, { [item.key]: item.value })
   })
   await ConfigStore.setAll()

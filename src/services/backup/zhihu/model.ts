@@ -1,24 +1,35 @@
-import type { BaseConfig } from '@services/base/model'
-
-export type Config = BaseConfig & {
+type Config = Module.BaseConfig & {
 }
 
-export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'expired' | 'alarm' | 'showCard'>
+type ConfigShow = Pick<
+  Config,
+  'key' | 'name' | 'enable' | 'expired' | 'alarm'
+>
 
-export const setting: Config = {
+const config: Config = {
   key: 'zhihu',
   name: '知乎',
   enable: false,
+
+  board_menu: [],
+
+  cron: [],
+
+  alarm: 60,
+  expired: 600,
+
   site: 'https://www.zhihu.com',
   apiUrl: 'https://www.zhihu.com',
-  alarm: 60,
-  expired: 3600,
-  showCard: true,
 }
 
-export interface HotParams {
-  /**
-   * 数量限制
-   */
-  limit: number
+const configKeys = Object.keys(config)
+
+export type {
+  Config,
+  ConfigShow,
+}
+
+export {
+  config,
+  configKeys,
 }

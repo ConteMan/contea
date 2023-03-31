@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import type { SettingKeys } from '@setting/index'
-import type { ShowConfig } from '@services/base/model'
+import type { ConfigShow } from '@services/base/model'
 import type { Ref } from 'vue'
 
 import { configKeys } from '@services/base/model'
 import { useNewTabState } from '@newTab/store/index'
 import { checkConnect } from '@services/desktop'
 import Setting from './index'
+import type { ModuleKey } from '~/config/index'
 
-const module: SettingKeys = 'base'
+const module: ModuleKey = 'base'
 
 const setting = Setting(module, configKeys)
 const { rules, resetLoading, reset, initConfig, initConfigLoading } = setting
-const { model }: { model: Ref<ShowConfig> } = setting
+const { model }: { model: Ref<ConfigShow> } = setting
 
 const newTabState = useNewTabState()
 </script>

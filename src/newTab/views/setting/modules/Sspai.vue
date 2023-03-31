@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import type { Ref } from 'vue'
-import type { SettingKeys } from '@setting/index'
 import type { ShowConfig } from '@services/sspai/model'
 import { configKeys } from '@services/sspai/model'
 import { enumToObj } from '@utils/index'
 import { TypeEnum } from '@enums/sspaiEnum'
 import Setting from '../index'
+import type { ModuleKey } from '~/config/index'
 
-const module: SettingKeys = 'sspai'
+const module: ModuleKey = 'sspai'
 
 const baseTypes = ref([] as Record<string, any>[])
 const getTypes = () => {

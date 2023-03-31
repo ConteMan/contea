@@ -1,19 +1,34 @@
-import type { BaseConfig } from '@services/base/model'
-
-export type Config = BaseConfig & {
+type Config = Module.BaseConfig & {
   enableTypes: string[]
 }
 
-export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'expired' | 'alarm' | 'showCard'>
+type ConfigShow = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'expired' | 'alarm'>
 
-export const setting: Config = {
+const config: Config = {
   key: 'jike',
   name: '即刻',
   enable: false,
+
+  board_menu: [],
+
+  cron: [],
+
+  alarm: 60,
+  expired: 3600,
+
   site: 'https://web.okjike.com',
   apiUrl: 'https://web-api.okjike.com/api/graphql',
-  expired: 3600,
   enableTypes: [],
-  alarm: 60,
-  showCard: true,
+}
+
+const configKeys = Object.keys(config)
+
+export type {
+  Config,
+  ConfigShow,
+}
+
+export {
+  config,
+  configKeys,
 }

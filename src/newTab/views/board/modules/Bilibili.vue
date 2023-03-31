@@ -5,8 +5,7 @@ import { vInfiniteScroll } from '@vueuse/components'
 import { TypeEnum } from '@enums/bilibiliEnum'
 import { enumToObj } from '@utils/index'
 import { ConfigModel } from '@models/index'
-import Bilibili from '@services/bilibili'
-import type { FeedParam } from '@services/bilibili/model'
+import BilibiliService from '@services/bilibili'
 import WorldlineContent from '@newTab/layout/WorldlineContent.vue'
 
 dayjs.locale('zh-cn')
@@ -23,9 +22,9 @@ interface Data {
 
   hasMore: boolean
 
-  page: FeedParam['page']
-  timezoneOffset: FeedParam['timezone_offset']
-  offset: FeedParam['offset']
+  page: Bilibili.FeedParam['page']
+  timezoneOffset: Bilibili.FeedParam['timezone_offset']
+  offset: Bilibili.FeedParam['offset']
 
   list: any[]
 }
@@ -53,7 +52,7 @@ const getDynamic = async (refresh = false) => {
     data.page = 1
   }
 
-  const res = await Bilibili.feed({
+  const res = await BilibiliService.feed({
     type: 'all',
     page: data.page,
     timezone_offset: data.timezoneOffset,

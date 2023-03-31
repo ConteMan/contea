@@ -2,7 +2,6 @@ import dayjs from 'dayjs'
 import { defHttp } from '@utils/http/axios'
 import { ConfigModel, InfoModel } from '@models/index'
 import { getEnable, toDesktop } from '@services/desktop'
-import type { Paginate } from './model'
 
 class Sspai {
   private MODULE = 'sspai'
@@ -69,7 +68,7 @@ class Sspai {
   /**
    * 获取关注的人的动态列表
    */
-  async followActivity(paginate: Paginate = { limit: 10, offset: 0 }) {
+  async followActivity(paginate: Sspai.Paginate = { limit: 10, offset: 0 }) {
     try {
       const moduleType = 'followActivity'
 
@@ -118,7 +117,7 @@ class Sspai {
    * 获取信息列表, 通用
    * @param paginate Paginate - 分页数据
    */
-  async commonList(moduleType = 'index', paginate: Paginate = { limit: 10, offset: 0 }) {
+  async commonList(moduleType = 'index', paginate: Sspai.Paginate = { limit: 10, offset: 0 }) {
     try {
       const { apiUrl } = await ConfigModel.getItem(this.MODULE)
       const jwtToken = await this.getToken()
@@ -165,7 +164,7 @@ class Sspai {
    * 获取首页信息列表
    * @param paginate Paginate - 分页数据
    */
-  async indexList(paginate: Paginate = { limit: 20, offset: 0 }) {
+  async indexList(paginate: Sspai.Paginate = { limit: 20, offset: 0 }) {
     return await this.commonList('index', paginate)
   }
 
@@ -173,7 +172,7 @@ class Sspai {
    * 获取 Matrix 信息列表
    * @param paginate Paginate - 分页数据
    */
-  async matrixList(paginate: Paginate = { limit: 20, offset: 0 }) {
+  async matrixList(paginate: Sspai.Paginate = { limit: 20, offset: 0 }) {
     return await this.commonList('matrix', paginate)
   }
 

@@ -1,23 +1,38 @@
-import type { BaseConfig } from '@services/base/model'
-
-export type Config = BaseConfig & {
+type Config = Module.BaseConfig & {
   token: string // AccessToken
   gistUrl: string
 }
 
-export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'token' | 'expired' | 'alarm' | 'showCard'>
+type ConfigShow = Pick<
+  Config,
+  'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'token' | 'expired' | 'alarm'
+>
 
-export const setting: Config = {
+const config: Config = {
   key: 'github',
   name: 'GitHub',
   enable: false,
+
+  board_menu: [],
+
+  cron: [],
+
+  alarm: 60,
+
   site: 'https://github.com',
   apiUrl: 'https://api.github.com',
   gistUrl: 'https://gist.github.com',
-  expired: 3600,
   token: '',
-  alarm: 60,
-  showCard: true,
 }
 
-export const configKeys = Object.keys(setting)
+const configKeys = Object.keys(config)
+
+export type {
+  Config,
+  ConfigShow,
+}
+
+export {
+  config,
+  configKeys,
+}

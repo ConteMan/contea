@@ -1,6 +1,4 @@
-import type { BaseConfig } from '@services/base/model'
-
-export type Config = BaseConfig & {
+type Config = Module.BaseConfig & {
   module: {
     libvio: {
       site: string
@@ -11,17 +9,25 @@ export type Config = BaseConfig & {
   }
 }
 
-export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'expired' | 'alarm'>
+type ConfigShow = Pick<
+  Config,
+  'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'expired' | 'alarm'
+>
 
-export const setting: Config = {
+const config: Config = {
   key: 'movie',
   name: '影视',
   enable: false,
-  site: '',
-  apiUrl: '',
+
+  board_menu: [],
+
+  cron: [],
+
   alarm: 60,
   expired: 3600,
-  showCard: false,
+
+  site: '',
+  apiUrl: '',
   module: {
     libvio: {
       site: 'https://www.libvio.me',
@@ -32,13 +38,14 @@ export const setting: Config = {
   },
 }
 
-export const configKeys = Object.keys(setting)
+const configKeys = Object.keys(config)
 
-export interface Item {
-  title?: string
-  [other: string]: any
+export type {
+  Config,
+  ConfigShow,
 }
 
-export type List = Item []
-
-export type MovieModules = 'libvio' | 'ddrk'
+export {
+  config,
+  configKeys,
+}

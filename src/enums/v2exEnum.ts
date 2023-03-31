@@ -1,5 +1,3 @@
-export type types = 'all' | 'members' | 'hot' | 'tech'
-
 export enum TypeEnum {
   all = '全部',
   members = '关注',

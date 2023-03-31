@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { Ref } from 'vue'
-import type { SettingKeys } from '@setting/index'
 import type { ShowConfig } from '@services/github/model'
 import { configKeys } from '@services/github/model'
 import Setting from '../index'
+import type { ModuleKey } from '~/config/index'
 
-const module: SettingKeys = 'github'
+const module: ModuleKey = 'github'
 
 const setting = Setting(module, configKeys)
 const { rules, resetLoading, reset } = setting

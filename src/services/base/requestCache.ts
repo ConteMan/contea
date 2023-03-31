@@ -1,6 +1,5 @@
-import type { SettingKeys } from '@setting/index'
-
 import { CacheModel, ConfigModel } from '@models/index'
+import type { ModuleKey } from '~/config/index'
 
 class RequestCache {
   /**
@@ -37,7 +36,7 @@ class RequestCache {
    * @param module - 取用过期时间模块，可选，默认 base
    * @param expired - 过期时间，单位：秒；0 使用默认过期设置；-1 不过期；
    */
-  async set(key: any[], data: any, module: SettingKeys | undefined = 'base', expired = 0) {
+  async set(key: any[], data: any, module: ModuleKey | undefined = 'base', expired = 0) {
     if (!expired) {
       const { expired: moduleExpired } = await ConfigModel.getItem(module)
       expired = parseInt(moduleExpired) ?? 0

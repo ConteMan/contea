@@ -1,13 +1,17 @@
-import type { SettingKeys } from '@setting/index'
 import type { Table } from 'dexie'
 import { deepMerge } from '@utils/index'
-import defaultSetting, { modules } from '@setting/index'
 import Alarm from '@services/base/alarm'
+import Board from '@services/board'
 import Base from '../base'
 import db from '../db'
+import type { Config } from '~/models/migrations/config'
+import type { ModuleKey } from '~/config/index'
+import { MODULE_DEFAULT_ARRAY, MODULE_DEFAULT_KEYS, MODULE_DEFAULT_MAP } from '~/config/index'
+
+type ConfigInitType = ModuleKey | 'all' | 'increase'
 
 export default new class ConfigModel extends Base {
-  public currentTable: Table
+  public currentTable: Table<Config>
 
   constructor() {
     super(db.config)
@@ -15,50 +19,35 @@ export default new class ConfigModel extends Base {
   }
 
   /**
-   * 对象转数组
-   * @param data - 对象数据
-   */
-  objToArr(data: Record<string, any>) {
-    const keys = Object.keys(data)
-    if (!keys.length)
-      return []
-
-    const array = []
-    for (let i = 0; i < keys.length; i++) {
-      const item = { ...data[keys[i]] }
-      array.push(item)
-    }
-
-    return array
-  }
-
-  /**
    * 设置初始化
-   * @param module - 设置模块或模式，all 重置初始化，increase 增量初始化（不覆盖已有设置，只增加新字段）
+   * #1.1
+   * @param module - 设置模块或模式；all 重置初始化，increase 增量初始化（不覆盖已有设置，只增加新字段）
    */
-  async init(module: SettingKeys | 'all' | 'increase' = 'all') {
+  async init(module: ConfigInitType = 'all') {
     if (module === 'all') {
       await this.reset()
 
-      const setting = this.objToArr(defaultSetting)
-      await this.currentTable.bulkAdd(setting)
+      await this.currentTable.bulkAdd(MODULE_DEFAULT_ARRAY)
 
-      Object.keys(defaultSetting).forEach((item) => {
+      MODULE_DEFAULT_KEYS.forEach((item) => {
         void Alarm.setAlarm(item)
       })
     }
     else if (module === 'increase') {
-      const setting = this.objToArr(defaultSetting)
-      setting.forEach(async (item) => {
+      MODULE_DEFAULT_ARRAY.forEach(async (item) => {
         const res = await this.addOrIncreaseItem(item.key, item)
         if (res.type === 'add')
           await Alarm.setAlarm(item.key)
       })
     }
     else {
-      await this.addOrUpdateItem(module, { ...defaultSetting[module] })
+      if (typeof MODULE_DEFAULT_MAP[module] === 'undefined')
+        return false
+      await this.addOrUpdateItem(module, MODULE_DEFAULT_MAP[module])
       await Alarm.setAlarm(module)
     }
+    await Board.initMenu()
+    return true
   }
 
   /**
@@ -88,7 +77,7 @@ export default new class ConfigModel extends Base {
    * @param type - 返回数据类型
    * @param keys - 模块名称数组
    */
-  async getAll(type: 'array' | 'obj' = 'array', keys = modules): Promise<(any[] | Record<string, any>)> {
+  async getAll(type: 'array' | 'obj' = 'array', keys: string[] = MODULE_DEFAULT_KEYS) {
     const res = await this.currentTable
       .filter(item => keys.includes(item.key))
       .toArray()
@@ -96,9 +85,9 @@ export default new class ConfigModel extends Base {
     if (type === 'array')
       return res
 
-    const objRes: Record<string, any> = {}
+    const objRes = {} as Record<ModuleKey, Config>
     res.forEach((item) => {
-      objRes[item.key] = item
+      objRes[item.key as ModuleKey] = item
     })
     return objRes
   }

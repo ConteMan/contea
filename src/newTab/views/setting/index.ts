@@ -1,10 +1,10 @@
-import type { SettingKeys } from '@setting/index'
 import { useMessage } from 'naive-ui'
 import { useTimeoutFn, watchDebounced } from '@vueuse/core'
 import { ConfigModel } from '@models/index'
 import { useConfigState } from '@newTab/store/index'
+import type { ModuleKey } from '~/config/index'
 
-export default (module: SettingKeys, configKeys: string[]) => {
+export default (module: ModuleKey, configKeys: string[]) => {
   const message = useMessage()
 
   const data = reactive({
@@ -25,7 +25,7 @@ export default (module: SettingKeys, configKeys: string[]) => {
   const ConfigStore = useConfigState()
 
   // 初始化，获取设置
-  const init = async (module: SettingKeys) => {
+  const init = async (module: ModuleKey) => {
     const showModel = {} as any
     const model = await ConfigModel.getItem(module)
     configKeys.forEach((key) => {
@@ -37,13 +37,13 @@ export default (module: SettingKeys, configKeys: string[]) => {
   void init(module)
 
   // 保存设置
-  const modelSet = async (module: SettingKeys, data: any) => {
+  const modelSet = async (module: ModuleKey, data: any) => {
     await ConfigModel.mergeSet(module, data)
     await ConfigStore.setAll()
   }
 
   // 重置设置
-  const reset = (module: SettingKeys) => {
+  const reset = (module: ModuleKey) => {
     data.resetLoading = true
     useTimeoutFn(async () => {
       await ConfigModel.init(module)

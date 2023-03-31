@@ -1,17 +1,26 @@
-import type { BaseConfig } from '@services/base/model'
-
-export type Config = BaseConfig & {
+type Config = Module.BaseConfig & {
   url: string
   cdnUrl?: string
   enableTypes: any[]
 }
 
-export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'expired' | 'alarm' | 'showCard' | 'enableTypes'>
+type ConfigShow = Pick<
+  Config,
+  'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'expired' | 'alarm' | 'enableTypes'
+>
 
-export const setting: Config = {
+const config: Config = {
   key: 'sspai',
   name: '少数派',
   enable: false,
+
+  board_menu: [],
+
+  cron: [],
+
+  alarm: 30,
+  expired: 3600,
+
   site: 'https://sspai.com',
   url: 'https://sspai.com',
   apiUrl: 'https://sspai.com/api/v1',
@@ -21,21 +30,16 @@ export const setting: Config = {
     // 'followActivity',
     // 'matrix',
   ],
-  expired: 3600,
-  alarm: 30,
-  showCard: false,
 }
 
-export const configKeys = Object.keys(setting)
+const configKeys = Object.keys(config)
 
-export interface User {
-  updatedAt?: number
-  expired?: number
-
-  [propName: string]: any
+export type {
+  Config,
+  ConfigShow,
 }
 
-export interface Paginate {
-  limit: number
-  offset: number
+export {
+  config,
+  configKeys,
 }

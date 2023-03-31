@@ -1,17 +1,35 @@
-import type { BaseConfig } from '@services/base/model'
-
-export type Config = BaseConfig & {
+type Config = Module.BaseConfig & {
 }
 
-export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'expired' | 'alarm'>
+type ConfigShow = Pick<
+  Config,
+  'key' | 'name' | 'enable' | 'expired' | 'alarm'
+>
 
-export const setting: Config = {
+const config: Config = {
   key: 'sport',
   name: '体育',
   enable: false,
+
+  board_menu: [],
+
+  cron: [],
+
+  alarm: 60,
+  expired: 600,
+
   site: '',
   apiUrl: '',
-  expired: 600,
-  alarm: 60,
-  showCard: false,
+}
+
+const configKeys = Object.keys(config)
+
+export type {
+  Config,
+  ConfigShow,
+}
+
+export {
+  config,
+  configKeys,
 }

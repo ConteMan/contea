@@ -4,25 +4,40 @@ import Gooooal from '@services/sport/modules/football/gooooal'
 import Netease from '@services/sport/modules/football/netease'
 import Football from '@services/sport/modules/football'
 import GitHub from '@services/github/index'
-
+import Board from '@services/board'
+import { useNewTabState } from '@newTab/store/index'
 const result = ref('')
 
 const testConsole = async (type: string, params: any) => {
   let res
-  if (type === 'gooooalRankList')
+  if (type === 'gooooalRankList') {
     res = await Gooooal.getCompetitionRank(params)
-  else if (type === 'neteaseRankList')
+  }
+  else if (type === 'neteaseRankList') {
     res = await Netease.getCompetitionRank(params)
-  else if (type === 'teams')
+  }
+  else if (type === 'teams') {
     res = await Football.getTeamsByRank(params)
-  else if (type === 'saveTeams')
+  }
+  else if (type === 'saveTeams') {
     res = await Football.saveTeams(params)
-  else if (type === 'rankList')
+  }
+  else if (type === 'rankList') {
     res = await Football.getCompetitionRank(params)
-  else if (type === 'footballInit')
+  }
+  else if (type === 'footballInit') {
     res = await Football.init()
-  else if (type === 'githubUser')
+  }
+  else if (type === 'githubUser') {
     res = await GitHub.user(true)
+  }
+  else if (type === 'board') {
+    res = await Board.getModuleMenu(1)
+  }
+  else if (type === 'board_menu_db') {
+    const NewTabStore = useNewTabState()
+    NewTabStore.setBoardMenuByDB()
+  }
   // eslint-disable-next-line no-console
   console.log(res)
   result.value = res
@@ -88,7 +103,24 @@ const clearResult = () => {
               </n-button>
             </div>
           </div>
+
+          <div class="p-4 rounded-md bg-gray-400 bg-opacity-20">
+            <div>Board</div>
+            <div class="mt-6 flex flex-wrap gap-4">
+              <n-button
+                size="small" @click="testConsole('board', undefined)"
+              >
+                GetModuleMenu
+              </n-button>
+              <n-button
+                size="small" @click="testConsole('board_menu_db', undefined)"
+              >
+                SetBoardMenuByDB
+              </n-button>
+            </div>
+          </div>
         </div>
+
         <div class="result-container flex-grow-0 w-[30%] min-h-full overflow-y-auto p-4 rounded-md bg-gray-400 bg-opacity-20 break-words">
           <div class="sticky top-2 mb-6 flex flex-wrap gap-4">
             <n-button
@@ -100,7 +132,7 @@ const clearResult = () => {
               Clear
             </n-button>
           </div>
-          {{ result }}
+          <pre>{{ result }}</pre>
         </div>
       </div>
     </template>

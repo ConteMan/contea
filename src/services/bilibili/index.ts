@@ -1,6 +1,5 @@
 import { defHttp } from '@utils/http/axios'
 import { ConfigModel } from '@models/index'
-import type { FeedParam } from './model'
 
 class Bilibili {
   private module = 'bilibili'
@@ -126,7 +125,7 @@ class Bilibili {
    * 动态信息流
    * @param params - 参数
    */
-  async feed(params: FeedParam = {
+  async feed(params: Bilibili.FeedParam = {
     type: 'all',
     page: 1,
     timezone_offset: -480,

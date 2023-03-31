@@ -1,6 +1,4 @@
-import type { BaseConfig } from '@services/base/model'
-
-export type Config = BaseConfig & {
+export type Config = Module.BaseConfig & {
   key: string
   name: string
   enable: boolean
@@ -11,16 +9,24 @@ export type Config = BaseConfig & {
   alarm?: number
 }
 
-export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'expired' | 'alarm'>
+export type ShowConfig = Pick<
+  Config,
+  'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'expired' | 'alarm'
+>
 
-export const setting: Config = {
+export const config: Config = {
   key: 'bgm',
   name: 'Bangumi',
   enable: false,
+
+  board_menu: [],
+
+  cron: [],
+
+  alarm: 60,
+  expired: 3600,
+
   site: 'https://bgm.tv',
   apiUrl: 'https://api.bgm.tv/v0',
-  expired: 3600,
   token: '',
-  alarm: 60,
-  showCard: false,
 }

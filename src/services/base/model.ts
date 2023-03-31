@@ -1,24 +1,4 @@
-export interface BaseConfig {
-  key: string
-  name: string // 模块名称
-  enable: boolean // 是否启用
-
-  site?: string // 站点 URL
-  apiUrl?: string // API URL
-  expired?: number // 缓存时间，单位：秒
-  showCard?: boolean // 是否显示卡片
-  alarm?: number // 定时任务时间，单位：分钟
-  contentScript?: {
-    enable: boolean
-    alarm: number
-    url: string
-  }
-  worldlineEnable?: boolean // 是否在世界线模块开启
-  [other: string]: any
-}
-
-export type Config = BaseConfig & {
-  showCards: string[]
+type Config = Module.BaseConfig & {
   defaultPath: string
   themeMode: boolean // true => system, false => manual
 
@@ -35,21 +15,55 @@ export type Config = BaseConfig & {
   desktopInterfaceStatus: boolean // 桌面端接口状态，true 连通，false 未连通
 }
 
-export type ShowConfig = Pick<
+type ConfigShow = Pick<
   Config,
-  'key' | 'name' | 'enable' | 'expired' | 'alarm' | 'statusList' | 'themeMode' | 'enableDesktop' | 'desktopInterface' | 'desktopInterfaceStatus' | 'testPage' | 'dashboardPage'
-  | 'moduleBookmark' | 'moduleExtension'
+  'key' | 'name' | 'enable' | 'expired' | 'alarm' | 'statusList' | 'themeMode' | 'enableDesktop' | 'desktopInterface' | 'desktopInterfaceStatus'
   >
 
-export const setting: Config = {
+const config: Config = {
   key: 'base',
   name: '基础',
   enable: true,
-  site: '',
-  apiUrl: '',
+
+  board_menu: [
+    {
+      key: 'dashboard',
+      name: '面板',
+      enable: true,
+      sort: 0,
+    },
+    {
+      key: 'bookmark',
+      name: '书签',
+      enable: true,
+      sort: 1,
+    },
+    {
+      key: 'extension',
+      name: '扩展',
+      enable: true,
+      sort: 2,
+    },
+    {
+      key: 'status',
+      name: '任务',
+      enable: true,
+      sort: 3,
+    },
+    {
+      key: 'test',
+      name: '测试',
+      enable: true,
+      sort: 4,
+    },
+  ],
+  cron: [],
+
   alarm: 10,
   expired: 3600,
-  showCards: [],
+
+  site: '',
+  apiUrl: '',
   defaultPath: '/index',
   themeMode: true,
 
@@ -64,23 +78,14 @@ export const setting: Config = {
   desktopInterfaceStatus: false,
 }
 
-export const configKeys = Object.keys(setting)
+const configKeys = Object.keys(config)
 
-export interface InfoItem {
-  module: string
-  module_type: string
-  [other: string]: any
+export type {
+  Config,
+  ConfigShow,
 }
 
-export type InfoList = InfoItem []
-
-export interface BaseModule {
-  ca_login?: boolean
-  ca_expired_at?: number
-  ca_updated_at?: number
-}
-
-// 模块 model 基础
-export interface BaseModel {
-  showCard: boolean
+export {
+  config,
+  configKeys,
 }

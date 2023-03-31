@@ -1,15 +1,14 @@
 <script setup lang="ts">
-import type { Ref } from 'vue'
-import type { SettingKeys } from '@setting/index'
-import type { ShowConfig } from '@services/weread/model'
+import type { ConfigShow } from '@services/weread/model'
 import { configKeys } from '@services/weread/model'
 import Setting from '../index'
+import type { ModuleKey } from '~/config/index'
 
-const module: SettingKeys = 'weread'
+const module: ModuleKey = 'weread'
 
 const setting = Setting(module, configKeys)
 const { rules, resetLoading, reset } = setting
-const { model }: { model: Ref<ShowConfig> } = setting
+const { model }: { model: Ref<ConfigShow> } = setting
 </script>
 
 <template>

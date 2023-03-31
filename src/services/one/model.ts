@@ -1,23 +1,39 @@
-import type { BaseConfig } from '@services/base/model'
-
-export type Config = BaseConfig & {
+type Config = Module.BaseConfig & {
   token?: string // AccessToken
   enableTypes: string[]
 }
 
-export type ShowConfig = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'expired' | 'alarm' | 'showCard'>
+type ConfigShow = Pick<
+  Config,
+  'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'expired' | 'alarm'
+>
 
-export const setting: Config = {
+const config: Config = {
   key: 'one',
   name: '一个',
   enable: false,
+
+  board_menu: [],
+
+  cron: [],
+
+  alarm: 60,
+  expired: 86400,
+
   site: 'http://wufazhuce.com',
   apiUrl: '',
-  expired: 86400,
   token: '',
   enableTypes: [],
-  alarm: 60,
-  showCard: false,
 }
 
-export const configKeys = Object.keys(setting)
+const configKeys = Object.keys(config)
+
+export type {
+  Config,
+  ConfigShow,
+}
+
+export {
+  config,
+  configKeys,
+}

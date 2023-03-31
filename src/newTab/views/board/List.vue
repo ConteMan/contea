@@ -4,19 +4,6 @@ import _ from 'lodash-es'
 import draggable from 'vuedraggable'
 import { useConfigState, useNewTabState } from '@newTab/store/index'
 
-type ModuleItem = Store.MenuItem & {
-  component?: string
-  title?: string
-  config?: Record<string, any>
-}
-type SpecialModule = Record<string, {
-  key: string
-  configModule: string
-  configKey: string
-  type: 'module'
-  title: string
-}>
-
 const NewTabStore = useNewTabState()
 const { tabSelected, worldlineMenu } = storeToRefs(NewTabStore)
 
@@ -35,7 +22,7 @@ const file: Record<string, string> = import.meta.glob('./modules/*.vue', { impor
 const paths = Object.keys(file)
 
 // 特殊模块
-const specialModules: SpecialModule = {
+const specialModules: Board.SpecialModule = {
   status: {
     key: 'status',
     configModule: 'base',
@@ -75,7 +62,7 @@ const specialModules: SpecialModule = {
 
 /** modules 目录下的模块, 根据 all 更新 */
 const modules = computed(() => {
-  const res: Record<string, ModuleItem> = {}
+  const res: Record<string, Board.ModuleItem> = {}
   paths.forEach((path) => {
     const key = path.replace('\.\/modules\/', '').replace('.vue', '').toLowerCase()
 
@@ -144,13 +131,12 @@ const dealModule = (data: Store.MenuItem[]) => {
 
   NewTabStore.setWorldlineMenu(dealModules)
 }
-dealModule(worldlineMenu.value)
 
-const menu: Ref<ModuleItem[]> = ref([])
+const menu: Ref<Board.ModuleItem[]> = ref([])
 
-// 处理后的菜单数组，主要是关联组件和配置
-const dealMenu = (data: ModuleItem[]) => {
-  const res: ModuleItem[] = []
+// 处理菜单数组，主要是关联组件和配置
+const dealMenu = (data: Board.ModuleItem[]) => {
+  const res: Board.ModuleItem[] = []
   data.forEach((item) => {
     if (['divider'].includes(item.type)) {
       res.push(item)
