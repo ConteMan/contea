@@ -1,6 +1,6 @@
 {
   "name": "contea",
-  "version": "0.3.84",
+  "version": "0.4.0",
   "description": "Chrome Extension",
   "license": "MIT",
   "author": "ConteMan",
@@ -24,6 +24,7 @@
   "dependencies": {
     "@interactjs/core": "1.10.17",
     "@interactjs/utils": "1.10.17",
+    "@realconteman/utils": "^0.0.5",
     "@vespaiach/axios-fetch-adapter": "^0.3.1",
     "axios": "^0.27.2",
     "crypto-js": "^4.1.1",

@@ -16,7 +16,7 @@ const activeMenu = tabSelected
 const file: Record<string, string> = import.meta.glob('./modules/*.vue', { import: 'default', eager: true })
 const paths = Object.keys(file)
 
-const menu: Ref<Board.ModuleItem[]> = ref([])
+const menu: Ref<Module.BoardMenu[]> = ref([])
 
 // 处理菜单数据，绑定组件
 const dealMenu = () => {
@@ -32,7 +32,7 @@ const dealMenu = () => {
     boardMenu.value.forEach((item) => {
       if (item.type === 'module') {
         const index = components.findIndex(cItem => cItem.key === item.key)
-        if (index >= 0) {
+        if (index >= 0 && item.enable) {
           res.push({
             ...components[index],
             ...item,
@@ -119,7 +119,7 @@ const saveMenuSort = async () => {
     const { component, ...others } = item
     return others
   })
-  NewTabStore.setBoardMenu(boardMenu)
+  await NewTabStore.setBoardMenu(boardMenu)
 }
 
 // 菜单模式
@@ -133,6 +133,7 @@ const addMenuItem = async (type: Store.MenuItemType = 'divider') => {
   await Board.addMenuItem({
     key: `divider-${new Date().getTime()}`,
     type,
+    name: '',
   })
   await NewTabStore.setBoardMenuByDB()
 }

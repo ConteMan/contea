@@ -29,17 +29,19 @@ const { settingDrawer, settingDrawerPosition } = storeToRefs(newTabState)
       <div class="w-[calc(100%-1rem)] h-full setting-container max-w-[700px]" :class="(settingDrawerPosition === 'left') ? 'pl-4' : 'pr-4'">
         <n-tabs class="setting-tab h-full" type="line" default-value="base">
           <n-tab-pane name="base" tab="基础">
-            <div class="base-pane !px-[1rem] mt-[0.5rem] mb-[1rem]">
+            <div class="base-pane compact-mode !p-[1.5rem] mt-[0.5rem] mb-[1rem]">
               <Base />
             </div>
           </n-tab-pane>
 
           <n-tab-pane name="module" tab="模块">
-            <Module />
+            <div class="base-pane compact-mode !p-[1rem] mt-[0.5rem] mb-[1rem]">
+              <Module />
+            </div>
           </n-tab-pane>
 
           <n-tab-pane name="board" tab="面板">
-            <div class="base-pane !px-[1rem] mt-[0.5rem] mb-[1rem]">
+            <div class="base-pane compact-mode !p-[1rem] mt-[0.5rem] mb-[1rem]">
               <Board />
             </div>
           </n-tab-pane>

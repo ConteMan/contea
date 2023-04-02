@@ -86,6 +86,7 @@ export const sharedConfig: UserConfig = {
           'naive-ui': ['useNotification'],
           'pinia': ['storeToRefs'],
           'dayjs': [['default', 'dayjs']],
+          '@realconteman/utils': ['sleep'],
         },
       ],
       dts: r('src/auto-imports.d.ts'),

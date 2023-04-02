@@ -1,47 +1,31 @@
 <script setup lang="ts">
-import { ConfigModel } from '@models/index'
-import { useConfigState } from '@newTab/store/index'
-import type { ModuleKey } from '~/config/index'
+import type { ModuleKey } from '@config/index'
+import { useConfigState, useNewTabState } from '@newTab/store/index'
+import Board from '@services/board'
 
 const init = ref(0)
-const configShow: Ref<Record<string, any>> = ref({})
-const moduleShow: Ref<{ name: string; key: string }[]> = ref([])
-
-const relations: Record<string, { name: string; key: string }[]> = {
-  base: [
-    { name: '卡片', key: 'dashboardPage' },
-    { name: '书签', key: 'moduleBookmark' },
-    { name: '扩展', key: 'moduleExtension' },
-    { name: '定时', key: 'statusList' },
-    { name: '测试', key: 'testPage' },
-  ],
-}
+const configModel: Ref<Record<string, any>> = ref({})
+const configShow: Ref<{ name: string; key: string }[]> = ref([])
+const configShowModule: Ref<Board.FilterModule[]> = ref([])
 
 const getConfig = async () => {
-  const configAll = await ConfigModel.getAll('obj') as Record<string, any>
+  const { menus: configAll, modules } = await Board.getModuleMenu(-1, true) as Board.MenuWithModule
   if (!configAll)
     return false
 
-  Object.keys(relations).forEach((key: string) => {
-    relations[key].forEach((item) => {
-      moduleShow.value = [...moduleShow.value, { name: item.name, key: `${key}_${item.key}` }]
-      configShow.value = { ...configShow.value, ...{ [`${key}_${item.key}`]: configAll?.[key]?.[item.key] } }
-    })
-  })
+  configShowModule.value = modules
 
-  Object.keys(configAll).forEach((key: string) => {
-    if (key === 'base')
-      return
-    moduleShow.value = [...moduleShow.value, { name: configAll[key].name, key: `${key}_boardEnable` }]
-    configShow.value = { ...configShow.value, ...{ [`${key}_boardEnable`]: configAll[key].boardEnable ?? false } }
+  configAll.forEach((item) => {
+    configShow.value = [...configShow.value, { name: item.name, key: `${item.module}_${item.key}` }]
+    configModel.value = { ...configModel.value, ...{ [`${item.module}_${item.key}`]: item.enable } }
   })
 
   init.value = 1
 }
 getConfig()
 
-const newConfigShow = computed(() => {
-  return JSON.parse(JSON.stringify(configShow.value))
+const newConfigModel = computed(() => {
+  return JSON.parse(JSON.stringify(configModel.value))
 })
 
 // 收集对象差异
@@ -61,49 +45,50 @@ const diff = (n: Record<string, any>, o: Record<string, any>) => {
 
 // 根据对象差异，更新配置
 const ConfigStore = useConfigState()
+const NewTabStore = useNewTabState()
 const updateConfig = async (data: { module: ModuleKey; key: string; value: any }[]) => {
-  data.map(async (item) => {
-    await ConfigModel.mergeSet(item.module, { [item.key]: item.value })
-  })
-  await ConfigStore.setAll()
+  for (const item of data) {
+    await Board.setModuleMenu(item.module, item.key, { enable: item.value })
+    await Board.refreshMenu(item.module)
+  }
 }
 
 // 自动保存
-watchDebounced(() => newConfigShow.value, (newValue, oldValue) => {
+watchDebounced(() => newConfigModel.value, async (newValue, oldValue) => {
   if (init.value < 2) {
     init.value++
     return
   }
 
   const diffValue = diff(newValue, oldValue)
-  if (diffValue.length)
-    updateConfig(diffValue)
+  if (diffValue.length) {
+    await updateConfig(diffValue)
+    await NewTabStore.setBoardMenuByDB()
+    await ConfigStore.setAll()
+  }
 }, {
   deep: true,
   flush: 'post',
-  debounce: 500,
+  debounce: 100,
 })
 </script>
 
 <template>
   <n-form
     ref="formRef"
-    :model="configShow"
+    :model="configModel"
     size="small"
     label-placement="left"
     label-width="auto"
     label-align="left"
   >
-    <n-form-item v-for="moduleItem in moduleShow" :key="moduleItem.key" :label="moduleItem.name">
-      <n-switch v-model:value="configShow[moduleItem.key]" size="small" :round="false">
-        <template #checked>
-          展示
-        </template>
-        <template #unchecked>
-          隐藏
-        </template>
-      </n-switch>
-    </n-form-item>
+    <div class="max-w-full flex flex-col gap-2">
+      <n-card v-for="moduleItem in configShowModule" :key="moduleItem.key" :title="moduleItem.name">
+        <n-form-item v-for="menuItem in moduleItem.menus" :key="menuItem.key" :label="menuItem.name">
+          <n-switch v-model:value="configModel[`${menuItem.module}_${menuItem.key}`]" size="small" :round="false" />
+        </n-form-item>
+      </n-card>
+    </div>
   </n-form>
 </template>
 

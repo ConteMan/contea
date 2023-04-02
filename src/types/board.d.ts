@@ -12,4 +12,15 @@ namespace Board {
     type: 'module'
     title: string
   }>
+
+  export type FilterModule = {
+    key:string
+    name: string
+    menus: Module.BoardMenu[]
+  }
+
+  export type MenuWithModule = {
+    menus: Module.BoardMenu[],
+    modules: FilterModule[]
+  }
 }

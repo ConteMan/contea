@@ -34,7 +34,7 @@ export const useNewTabState = defineStore('newTab',
       worldlineDashboardLayout: {} as DashboardLayout,
       worldlineModules: [] as string[],
 
-      boardMenu: [] as Board.ModuleItem[],
+      boardMenu: [] as Module.BoardMenu[],
 
       hasInit: false,
     })
@@ -240,7 +240,7 @@ export const useNewTabState = defineStore('newTab',
     const getBoardMenu = () => {
       return data.boardMenu
     }
-    const setBoardMenu = async (menu: Store.MenuItem[]) => {
+    const setBoardMenu = async (menu: Module.BoardMenu[]) => {
       await Board.setMenu(menu)
       data.boardMenu = menu
     }

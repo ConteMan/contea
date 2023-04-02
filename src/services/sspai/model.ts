@@ -14,7 +14,14 @@ const config: Config = {
   name: '少数派',
   enable: false,
 
-  board_menu: [],
+  board_menu: [
+    {
+      key: 'sspai',
+      name: '少数派',
+      enable: false,
+      sort: 0,
+    },
+  ],
 
   cron: [],
 

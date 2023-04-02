@@ -2,7 +2,7 @@ namespace Module {
   export interface BoardMenu {
     key: string // 唯一标识，对应组件文件名小写
     name: string // 名称
-    enable: boolean // 开关
+    enable?: boolean // 开关
     sort?: number // 排序，数字越小越考前
     alias?: string //别名，如果别名不为空，优先显示别名
     type?: string

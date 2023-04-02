@@ -5,6 +5,7 @@ specifiers:
   '@iconify/json': ^2.2.35
   '@interactjs/core': 1.10.17
   '@interactjs/utils': 1.10.17
+  '@realconteman/utils': ^0.0.5
   '@types/crypto-js': ^4.1.1
   '@types/fs-extra': ^11.0.1
   '@types/lodash-es': ^4.17.7
@@ -57,6 +58,7 @@ specifiers:
 dependencies:
   '@interactjs/core': 1.10.17_@interactjs+utils@1.10.17
   '@interactjs/utils': 1.10.17
+  '@realconteman/utils': 0.0.5
   '@vespaiach/axios-fetch-adapter': 0.3.1_axios@0.27.2
   axios: 0.27.2
   crypto-js: 4.1.1
@@ -777,6 +779,10 @@ packages:
   /@polka/url/1.0.0-next.21:
     resolution: {integrity: sha512-a5Sab1C4/icpTZVzZc5Ghpz88yQtGOyNqYXcZgOssB2uuAr+wF/MvN6bgtW32q7HHrvBki+BsZ0OuNv6EV3K9g==}
     dev: true
+
+  /@realconteman/utils/0.0.5:
+    resolution: {integrity: sha512-mnizLWDkvQ85UN50Jp0f7p4X5T0BuA6GUutLl/YXjqm/sQKWniiWE9Vjvw21rTX091ML/15tnLiJxkOOhjjHJQ==}
+    dev: false
 
   /@rollup/pluginutils/5.0.2:
     resolution: {integrity: sha512-pTd9rIsP92h+B6wWwFbW8RkZv4hiR/xKsqre4SIuAOaOEQRxi0lqLke9k2/7WegC85GgUs9pjmOjCUi3In4vwA==}

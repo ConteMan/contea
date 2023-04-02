@@ -19,7 +19,14 @@ const config: Config = {
   name: '影视',
   enable: false,
 
-  board_menu: [],
+  board_menu: [
+    {
+      key: 'movie',
+      name: '影视',
+      enable: false,
+      sort: 0,
+    },
+  ],
 
   cron: [],
 

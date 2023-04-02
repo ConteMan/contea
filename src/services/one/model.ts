@@ -13,7 +13,14 @@ const config: Config = {
   name: '一个',
   enable: false,
 
-  board_menu: [],
+  board_menu: [
+    {
+      key: 'one',
+      name: '一个',
+      enable: false,
+      sort: 0,
+    },
+  ],
 
   cron: [],
 

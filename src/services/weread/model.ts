@@ -13,7 +13,14 @@ const config: Config = {
   name: '微信读书',
   enable: false,
 
-  board_menu: [],
+  board_menu: [
+    {
+      key: 'weread',
+      name: '微信读书',
+      enable: false,
+      sort: 0,
+    },
+  ],
 
   cron: [],
 

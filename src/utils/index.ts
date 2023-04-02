@@ -28,11 +28,12 @@ export function setObjToUrlParams(baseUrl: string, obj: any): string {
   return /\?$/.test(baseUrl) ? baseUrl + parameters : baseUrl.replace(/\/?$/, '?') + parameters
 }
 
-export function deepMerge<T = any>(src: any = {}, target: any = {}): T {
+export function deepMerge<T = any>(src: any = {}, target: any = {}, deep = 0, targetDeep = 0): T {
   let key: string
+  targetDeep++
 
   for (key in target)
-    src[key] = (isObject(src[key]) && !(Array.isArray(src[key]))) ? deepMerge(src[key], target[key]) : (src[key] = target[key])
+    src[key] = (isObject(src[key]) && !(Array.isArray(src[key])) && (!deep || targetDeep > deep)) ? deepMerge(src[key], target[key], deep, targetDeep) : (src[key] = target[key])
 
   return src
 }

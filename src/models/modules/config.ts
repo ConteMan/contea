@@ -2,11 +2,11 @@ import type { Table } from 'dexie'
 import { deepMerge } from '@utils/index'
 import Alarm from '@services/base/alarm'
 import Board from '@services/board'
-import Base from '../base'
+import type { Config } from '@models/migrations/config'
+import type { ModuleKey } from '@config/index'
+import { MODULE_DEFAULT_ARRAY, MODULE_DEFAULT_KEYS, MODULE_DEFAULT_MAP } from '@config/index'
 import db from '../db'
-import type { Config } from '~/models/migrations/config'
-import type { ModuleKey } from '~/config/index'
-import { MODULE_DEFAULT_ARRAY, MODULE_DEFAULT_KEYS, MODULE_DEFAULT_MAP } from '~/config/index'
+import Base from '../base'
 
 type ConfigInitType = ModuleKey | 'all' | 'increase'
 
@@ -46,7 +46,8 @@ export default new class ConfigModel extends Base {
       await this.addOrUpdateItem(module, MODULE_DEFAULT_MAP[module])
       await Alarm.setAlarm(module)
     }
-    await Board.initMenu()
+    if (module === 'all')
+      await Board.initMenu()
     return true
   }
 
@@ -54,11 +55,12 @@ export default new class ConfigModel extends Base {
    * 合并式设置
    * @param module string - 模块名称
    * @param data {} - 模块内容
+   * @param deep number - 合并深度，0 完全
    */
-  async mergeSet(module: string, data: Record<string, any>) {
+  async mergeSet(module: string, data: Record<string, any>, deep = 0) {
     const res = await this.currentTable.get({ key: module })
     if (res) {
-      const mergeRes = deepMerge(res, data)
+      const mergeRes = deepMerge(res, data, deep)
       await this.currentTable.put(mergeRes)
     }
     else {

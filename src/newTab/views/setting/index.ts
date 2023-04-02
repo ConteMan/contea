@@ -1,8 +1,9 @@
+import type { ModuleKey } from '@config/index'
 import { useMessage } from 'naive-ui'
 import { useTimeoutFn, watchDebounced } from '@vueuse/core'
 import { ConfigModel } from '@models/index'
-import { useConfigState } from '@newTab/store/index'
-import type { ModuleKey } from '~/config/index'
+import { useConfigState, useNewTabState } from '@newTab/store/index'
+import Board from '@services/board'
 
 export default (module: ModuleKey, configKeys: string[]) => {
   const message = useMessage()
@@ -36,10 +37,20 @@ export default (module: ModuleKey, configKeys: string[]) => {
   }
   void init(module)
 
+  // 模块修改涉及的变动
+  const effect = async (module: ModuleKey) => {
+    await ConfigStore.setAll()
+
+    await Board.refreshMenu(module)
+
+    const NewTabStore = useNewTabState()
+    await NewTabStore.setBoardMenuByDB()
+  }
+
   // 保存设置
   const modelSet = async (module: ModuleKey, data: any) => {
     await ConfigModel.mergeSet(module, data)
-    await ConfigStore.setAll()
+    await effect(module)
   }
 
   // 重置设置
@@ -47,7 +58,9 @@ export default (module: ModuleKey, configKeys: string[]) => {
     data.resetLoading = true
     useTimeoutFn(async () => {
       await ConfigModel.init(module)
-      await ConfigStore.setAll()
+
+      await effect(module)
+
       await init(module)
 
       data.resetLoading = false

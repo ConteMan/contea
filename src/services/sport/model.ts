@@ -11,7 +11,14 @@ const config: Config = {
   name: '体育',
   enable: false,
 
-  board_menu: [],
+  board_menu: [
+    {
+      key: 'sport',
+      name: '体育',
+      enable: false,
+      sort: 0,
+    },
+  ],
 
   cron: [],
 

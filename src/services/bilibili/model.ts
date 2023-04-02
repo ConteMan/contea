@@ -14,7 +14,14 @@ const config: Config = {
   name: '哔哩哔哩',
   enable: false,
 
-  board_menu: [],
+  board_menu: [
+    {
+      key: 'bilibili',
+      name: 'Bilibili',
+      enable: false,
+      sort: 0,
+    },
+  ],
 
   cron: [],
 
