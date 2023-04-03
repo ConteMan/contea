@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import dayjs from 'dayjs'
-import { ConfigModel } from '@models/index'
 import type { Config } from '@services/weather/model'
+import type { StationType } from '@services/weather/modules/cma'
+
+import { ConfigModel } from '@models/index'
 import Weather from '@services/weather'
-import type { StationType } from '~/services/weather/modules/cma'
 
 const module = 'weather'
 
@@ -22,7 +22,7 @@ const { base, config } = toRefs(data)
 
 const getData = async () => {
   data.config = await ConfigModel.getItem(module)
-  const res = await Weather.data('cma', { stationId: 59493 })
+  const res = await Weather.data('cma')
   if (!res)
     data.error = true
   else

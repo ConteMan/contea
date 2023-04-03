@@ -1,9 +1,10 @@
 type Config = Module.BaseConfig & {
+  default_cma_station_id: number
 }
 
 type ConfigShow = Pick<
   Config,
-  'key' | 'name' | 'enable' | 'expired' | 'alarm'
+  'key' | 'name' | 'enable' | 'expired' | 'alarm' | 'default_cma_station_id'
 >
 
 const config: Config = {
@@ -16,7 +17,8 @@ const config: Config = {
   cron: [],
 
   alarm: 60,
-  expired: 600,
+  expired: 3600,
+  default_cma_station_id: 59493,
 
   site: 'https://weather.cma.cn',
   apiUrl: 'https://weather.cma.cn/api',

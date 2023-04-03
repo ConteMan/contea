@@ -1,8 +1,6 @@
+import type { ModuleKey } from '@config/index'
 import { station as cmaStation } from './modules/cma'
 import { MODULES } from '~/config/index'
-import type { ModuleKey } from '~/config/index'
-
-export type sourceType = 'cma'
 
 class Weather {
   public module: ModuleKey = MODULES.WEATHER
@@ -13,7 +11,7 @@ class Weather {
    * @param params - 参数
    * @param refresh - 是否刷新，默认 false
    */
-  async data(type: sourceType = 'cma', params?: any, refresh = false) {
+  async data(type: WeatherType.sourceType = 'cma', params?: any, refresh = false) {
     switch (type) {
       default:
         return await cmaStation(params?.stationId, refresh)
