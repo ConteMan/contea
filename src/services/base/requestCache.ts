@@ -21,7 +21,7 @@ class RequestCache {
     if (!withExpired && res.ca_expired_at)
       delete res.ca_expired_at
 
-    if (ca_expired_at < new Date().getTime())
+    if (ca_expired_at > 0 && ca_expired_at < new Date().getTime())
       return false
 
     return { ...res, cache_sign: 'get' }

@@ -9792,7 +9792,7 @@ export const station = async (stationId: number | 0 = 0, refresh = false) => {
     const res = await defHttp.get({
       url,
       params: {
-        stationId,
+        stationid: stationId,
       },
     })
 

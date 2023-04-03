@@ -1,7 +1,5 @@
 {
   "cSpell.words": [
-    "live_rcmd",
-    "DYNAMIC_TYPE_LIVE_RCMD",
     "alphacoders",
     "Bangumi",
     "Bilibili",
@@ -13,16 +11,21 @@
     "dexie",
     "divs",
     "Duckduckgo",
+    "DYNAMIC_TYPE_LIVE_RCMD",
     "esno",
     "ffflorian",
+    "gooooal",
     "huya",
+    "interactjs",
     "Jike",
     "jszip",
     "Juejin",
     "kolorist",
     "kurimudb",
     "libvio",
+    "live_rcmd",
     "localstorage",
+    "netease",
     "newtab",
     "paywalled",
     "persistedstate",
@@ -31,6 +34,7 @@
     "slient",
     "Sogou",
     "Sspai",
+    "stationid",
     "ucenter",
     "vespaiach",
     "vuedraggable",
@@ -44,10 +48,7 @@
     "worldline",
     "xlive",
     "yuque",
-    "Zhihu",
-    "gooooal",
-    "netease",
-    "interactjs"
+    "Zhihu"
   ],
   "cSpell.enableFiletypes": [
     "jsonc"
