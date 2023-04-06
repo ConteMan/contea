@@ -5,9 +5,9 @@ import { COMMANDS, MESSAGE_TYPES } from '@enums/index'
 import AlarmService from '@services/base/alarm'
 import { AlarmTaskModel, ConfigModel } from '@models/index'
 import { getRandomIntInclusive } from '@utils/index'
+import { MODULES } from '@config/index'
 import { getVersion } from './version'
 import { changeMode, dealContentScript, nextTab } from './shortcuts'
-import { MODULES } from '~/config/index'
 
 const EXTENSION_NAME = 'CONTEA'
 const EXTENSION_ID = browser.runtime.getURL('').replace(/chrome-extension:\/\/|\//g, '')

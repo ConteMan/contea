@@ -88,7 +88,8 @@ const getDefaultKey = (options: any[], key = '') => {
 const init = async () => {
   await NewTabStore.setBoardMenuByDB()
   dealMenu()
-  activeMenu.value = getDefaultKey(Object.values(menu.value), tabSelected.value)
+  // activeMenu.value = getDefaultKey(Object.values(menu.value), tabSelected.value)
+  activeMenu.value = Object.keys(menu.value)[0] ?? tabSelected.value // 默认打开第一个 Tab
 }
 init()
 

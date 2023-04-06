@@ -7,6 +7,7 @@ import { config as one } from '@services/one/model'
 import { config as weread } from '@services/weread/model'
 import { config as sport } from '@services/sport/model'
 import { config as weather } from '@services/weather/model'
+import { config as juejin } from '@services/juejin/model'
 
 /**
  * 模块 MAP
@@ -21,6 +22,7 @@ const MODULE_DEFAULT_MAP = {
   weread,
   sport,
   weather,
+  juejin,
 }
 
 /**

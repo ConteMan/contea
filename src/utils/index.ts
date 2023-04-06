@@ -264,3 +264,18 @@ export const isTypedCharValid = ({
   // All other keys.
   return false
 }
+
+/**
+ * 获取域名的 Cookie 字符串
+ * @param url - 域名
+ */
+export const getCookieStr = async (url: string) => {
+  const cookies = await browser.cookies.getAll({ url })
+  let cookieStr = ''
+  if (cookies) {
+    cookies.forEach((item) => {
+      cookieStr += `${item.name}=${item.value};`
+    })
+  }
+  return cookieStr
+}

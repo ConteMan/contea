@@ -1,8 +1,12 @@
 type Config = Module.BaseConfig & {
+  url: {
+    site: string
+    api: string
+  }
   enableTypes: string[]
 }
 
-type ConfigShow = Pick<Config, 'key' | 'name' | 'enable' | 'site' | 'apiUrl' | 'expired' | 'alarm'>
+type ConfigShow = Pick<Config, 'key' | 'name' | 'enable' | 'alarm'>
 
 const config: Config = {
   key: 'juejin',
@@ -16,8 +20,11 @@ const config: Config = {
   alarm: 60,
   expired: 3600,
 
-  site: 'https://juejin.cn',
-  apiUrl: 'https://api.juejin.cn',
+  url: {
+    site: 'https://juejin.cn',
+    api: 'https://api.juejin.cn',
+  },
+
   enableTypes: [],
   contentScript: {
     enable: true,

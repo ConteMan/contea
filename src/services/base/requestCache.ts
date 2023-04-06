@@ -7,7 +7,7 @@ class RequestCache {
    * @param key - 键数组
    * @param withExpired - 是否携带过期时间信息，默认不带
    */
-  async get(key: (string | number)[], withExpired = true) {
+  async get(key: RequestCache.CacheKey, withExpired = true) {
     const keyString = key.join('_')
     const res = await CacheModel.getItem(keyString)
     if (!res)
@@ -34,7 +34,7 @@ class RequestCache {
    * @param module - 取用过期时间模块，可选，默认 base
    * @param expired - 过期时间，单位：秒；0 使用默认过期设置；-1 不过期；
    */
-  async set(key: (string | number)[], data: any, module: ModuleKey | undefined = 'base', expired = 0) {
+  async set(key: RequestCache.CacheKey, data: any, module: ModuleKey | undefined = 'base', expired = 0) {
     if (!expired) {
       const { expired: moduleExpired = 3600 } = await ConfigModel.getItem(module)
       expired = parseInt(moduleExpired) ?? 0
@@ -50,6 +50,26 @@ class RequestCache {
 
     data.cache_sign = 'set'
     return data
+  }
+
+  /**
+   * 设置缓存，自动格式化
+   * @param key - 键数组
+   * @param data - 缓存内容
+   * @param module - 取用过期时间模块，可选，默认 base
+   * @param expired - 过期时间，单位：秒；0 使用默认过期设置；-1 不过期；
+   */
+  async pureSet(key: RequestCache.CacheKey, data: any, module: ModuleKey | undefined = 'base', expired = 0) {
+    return await this.set(key, { data }, module, expired)
+  }
+
+  /**
+   * 获取缓存，自动格式化
+   * @param key - 键数组
+   */
+  async pureGet(key: RequestCache.CacheKey) {
+    const res = await this.get(key, false)
+    return res.data ?? res
   }
 }
 

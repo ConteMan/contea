@@ -1,11 +1,13 @@
 <script setup lang="ts">
+import { useNewTabState } from '@newTab/store/index'
 import WorldlineContent from '@newTab/layout/WorldlineContent.vue'
 import Gooooal from '@services/sport/modules/football/gooooal'
 import Netease from '@services/sport/modules/football/netease'
 import Football from '@services/sport/modules/football'
 import GitHub from '@services/github/index'
 import Board from '@services/board'
-import { useNewTabState } from '@newTab/store/index'
+import Juejin from '@services/juejin'
+
 const result = ref('')
 
 const testConsole = async (type: string, params: any) => {
@@ -26,7 +28,7 @@ const testConsole = async (type: string, params: any) => {
     res = await Football.getCompetitionRank(params)
   }
   else if (type === 'footballInit') {
-    res = await Football.init()
+    res = Football.init()
   }
   else if (type === 'githubUser') {
     res = await GitHub.user(true)
@@ -37,6 +39,15 @@ const testConsole = async (type: string, params: any) => {
   else if (type === 'board_menu_db') {
     const NewTabStore = useNewTabState()
     NewTabStore.setBoardMenuByDB()
+  }
+  else if (type === 'juejin_user') {
+    res = await Juejin.getUser()
+  }
+  else if (type === 'juejin_collections') {
+    res = await Juejin.getCollections()
+  }
+  else if (type === 'juejin_collection_detail') {
+    res = await Juejin.getCollectionDetail()
   }
   // eslint-disable-next-line no-console
   console.log(res)
@@ -116,6 +127,27 @@ const clearResult = () => {
                 size="small" @click="testConsole('board_menu_db', undefined)"
               >
                 SetBoardMenuByDB
+              </n-button>
+            </div>
+          </div>
+
+          <div class="p-4 rounded-md bg-gray-400 bg-opacity-20">
+            <div>掘金</div>
+            <div class="mt-6 flex flex-wrap gap-4">
+              <n-button
+                size="small" @click="testConsole('juejin_user', undefined)"
+              >
+                User
+              </n-button>
+              <n-button
+                size="small" @click="testConsole('juejin_collections', undefined)"
+              >
+                Collections
+              </n-button>
+              <n-button
+                size="small" @click="testConsole('juejin_collection_detail', undefined)"
+              >
+                Collection Detail
               </n-button>
             </div>
           </div>

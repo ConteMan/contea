@@ -7,4 +7,5 @@ export enum MESSAGE_TYPES {
   SEARCH_HISTORY = 'search-history',
   RECENT_BOOKMARKS = 'recent-bookmarks',
   SEARCH_BOOKMARKS = 'search-bookmarks',
+  REQUEST_CORS = 'request-cors',
 }

@@ -1,7 +1,6 @@
 import { defHttp } from '@utils/http/axios'
 import { getEnable, toDesktop } from '@services/desktop'
 import { MovieModel } from '@models/index'
-import type { MovieModules } from './model'
 import Libvio from './modules/libvio'
 
 class Movie {
@@ -84,7 +83,7 @@ class Movie {
    * @param refresh - 是否刷新数据
    * @param extend - 扩展参数，如具体类型、页码等
    */
-  async getList(module: MovieModules = 'libvio', refresh = false, extend: Record<string, any> = {}) {
+  async getList(module: Movie.MovieModules = 'libvio', refresh = false, extend: Record<string, any> = {}) {
     try {
       switch (module) {
         case 'libvio':

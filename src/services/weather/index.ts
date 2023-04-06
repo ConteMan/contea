@@ -1,6 +1,6 @@
 import type { ModuleKey } from '@config/index'
+import { MODULES } from '@config/index'
 import { station as cmaStation } from './modules/cma'
-import { MODULES } from '~/config/index'
 
 class Weather {
   public module: ModuleKey = MODULES.WEATHER
