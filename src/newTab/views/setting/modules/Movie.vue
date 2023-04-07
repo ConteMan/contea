@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import type { Ref } from 'vue'
-import type { ShowConfig } from '@services/movie/model'
+import type { ConfigShow } from '@services/movie/model'
+import type { ModuleKey } from '@config/index'
 import { configKeys } from '@services/movie/model'
+import { MODULES } from '@config/index'
 import Setting from '../index'
-import type { ModuleKey } from '~/config/index'
 
-const module: ModuleKey = 'movie'
+const module: ModuleKey = MODULES.MOVIE
 
 const setting = Setting(module, configKeys)
 const { rules, resetLoading, reset } = setting
-const { model }: { model: Ref<ShowConfig> } = setting
+const { model }: { model: Ref<ConfigShow> } = setting
 </script>
 
 <template>

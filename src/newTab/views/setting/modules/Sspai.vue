@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import type { Ref } from 'vue'
-import type { ShowConfig } from '@services/sspai/model'
+import type { ConfigShow } from '@services/sspai/model'
+import type { ModuleKey } from '@config/index'
 import { configKeys } from '@services/sspai/model'
 import { enumToObj } from '@utils/index'
 import { TypeEnum } from '@enums/sspaiEnum'
 import Setting from '../index'
-import type { ModuleKey } from '~/config/index'
 
 const module: ModuleKey = 'sspai'
 
@@ -17,7 +16,7 @@ getTypes()
 
 const setting = Setting(module, configKeys)
 const { rules, resetLoading, reset } = setting
-const { model }: { model: Ref<ShowConfig> } = setting
+const { model }: { model: Ref<ConfigShow> } = setting
 </script>
 
 <template>

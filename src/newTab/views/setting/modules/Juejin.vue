@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import type { ConfigShow } from '@services/github/model'
+import type { ConfigShow } from '@services/juejin/model'
 import type { ModuleKey } from '@config/index'
-import { configKeys } from '@services/github/model'
+import { configKeys } from '@services/juejin/model'
 import { MODULES } from '@config/index'
 import Setting from '../index'
 
-const module: ModuleKey = MODULES.GITHUB
+const module: ModuleKey = MODULES.JUEJIN
 
 const setting = Setting(module, configKeys)
 const { rules, resetLoading, reset } = setting
@@ -24,18 +24,6 @@ const { model }: { model: Ref<ConfigShow> } = setting
   >
     <n-form-item label="开启" path="enable">
       <n-switch v-model:value="model.enable" size="small" :round="false" />
-    </n-form-item>
-
-    <n-form-item label="定时" path="alarm">
-      <n-input-number v-model:value="model.alarm" class="w-full">
-        <template #suffix>
-          分钟
-        </template>
-      </n-input-number>
-    </n-form-item>
-
-    <n-form-item label="Token">
-      <n-input v-model:value="model.token" />
     </n-form-item>
 
     <n-form-item label="重置">

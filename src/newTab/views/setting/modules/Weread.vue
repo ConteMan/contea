@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import type { ConfigShow } from '@services/weread/model'
+import type { ModuleKey } from '@config/index'
 import { configKeys } from '@services/weread/model'
+import { MODULES } from '@config/index'
 import Setting from '../index'
-import type { ModuleKey } from '~/config/index'
 
-const module: ModuleKey = 'weread'
+const module: ModuleKey = MODULES.WEREAD
 
 const setting = Setting(module, configKeys)
 const { rules, resetLoading, reset } = setting
