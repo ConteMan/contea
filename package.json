@@ -1,9 +1,23 @@
 {
   "name": "contea",
-  "version": "0.4.1",
-  "description": "Chrome Extension For ConteMan",
+  "version": "0.4.2",
+  "private": true,
+  "packageManager": "pnpm@8.1.0",
+  "description": "Personal Chrome Extension",
+  "author": {
+    "name": "ConteMan",
+    "email": "real.conteman@gmail.com",
+    "url": "https://isconte.com"
+  },
   "license": "MIT",
-  "author": "ConteMan <real.conteman@gmail.com>",
+  "homepage": "https://github.com/ConteMan/contea",
+  "repository": {
+    "type": "github",
+    "url": "https://github.com/ConteMan/contea"
+  },
+  "keywords": [
+    "extension"
+  ],
   "main": "index.js",
   "scripts": {
     "build": "cross-env NODE_ENV=production run-s clear build:web build:prepare build:bg build:content",

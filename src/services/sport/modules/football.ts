@@ -71,13 +71,13 @@ class Football {
   /**
    * 初始化
    */
-  init() {
+  async init() {
     const competitionIds = Object.keys(this.COMPETITIONS)
-    competitionIds.forEach(async (competitionId) => {
+    await Promise.all(competitionIds.map(async (competitionId) => {
       const id = parseInt(competitionId)
-      await this.saveTeams(id)
-      await this.getCompetitionRank(id)
-    })
+      await this.saveTeams(id, true)
+      await this.getCompetitionRank(id, true)
+    }))
     return true
   }
 
@@ -131,14 +131,23 @@ class Football {
    * 保存联赛队伍数据
    * @param competitionId - 联赛 ID
    */
-  async saveTeams(competitionId = 1) {
+  async saveTeams(competitionId = 1, force = false) {
     try {
-      const hasData = await FootballTeam.has(competitionId, 'competition_id')
-      if (hasData)
-        return false
+      if (!force) {
+        const hasData = await FootballTeam.has(competitionId, 'competition_id')
+        if (hasData)
+          return false
+      }
       const teams = await this.getTeamsByRank(competitionId)
       if (!teams)
         return false
+
+      const existTeams = await this.getTeams(competitionId)
+      if (existTeams && existTeams.length) {
+        const existTeamIds = existTeams.map(item => item.id)
+        await FootballTeam.query().bulkDelete(existTeamIds)
+      }
+
       return await FootballTeam.query().bulkAdd(teams)
     }
     catch (e) {
@@ -178,7 +187,8 @@ class Football {
         return false
       list.map(async (item) => {
         const teamInfo = await this.getTeam(item.team_id, 'g_id')
-        item.team_id = teamInfo.id
+        if (teamInfo?.id)
+          return { ...item, id: teamInfo.id }
         return item
       })
 
