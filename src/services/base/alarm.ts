@@ -1,6 +1,6 @@
 import { ConfigModel } from '@models/index'
 import { MODULES } from '@enums/index'
-
+import { getRandomIntInclusive, sleep } from '@utils/index'
 import sspai from '@services/sspai'
 import movie from '@services/movie'
 import bilibili from '@services/bilibili'
@@ -8,7 +8,7 @@ import one from '@services/one'
 import weread from '@services/weread'
 import weather from '@services/weather'
 import { football } from '@services/sport'
-import { getRandomIntInclusive, sleep } from '@utils/index'
+import hub from '@services/hub/index'
 
 class Alarm {
   /**
@@ -55,6 +55,10 @@ class Alarm {
     let result
 
     switch (module) {
+      case MODULES.BASE: {
+        await hub.saveCookie()
+        break
+      }
       case MODULES.SSPAI: {
         const { enableTypes } = configInfo
         result = await sspai.lists(enableTypes)

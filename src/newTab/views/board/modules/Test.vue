@@ -7,8 +7,11 @@ import Football from '@services/sport/modules/football'
 import GitHub from '@services/github/index'
 import Board from '@services/board'
 import Juejin from '@services/juejin'
+import { Cookie } from '@services/browser'
+import Hub from '@services/hub'
 
 const result = ref('')
+const cookieUrl = ref('')
 
 const testConsole = async (type: string, params: any) => {
   let res
@@ -48,6 +51,16 @@ const testConsole = async (type: string, params: any) => {
   }
   else if (type === 'juejin_collection_detail') {
     res = await Juejin.getCollectionDetail()
+  }
+  else if (type === 'cookie') {
+    if (cookieUrl.value)
+      res = await Cookie.getAll({ url: cookieUrl.value })
+  }
+  else if (type === 'hub-sync-list') {
+    res = await Hub.getCookieSyncList()
+  }
+  else if (type === 'hub-save-cookie') {
+    res = await Hub.saveCookie()
   }
   // eslint-disable-next-line no-console
   console.log(res)
@@ -148,6 +161,28 @@ const clearResult = () => {
                 size="small" @click="testConsole('juejin_collection_detail', undefined)"
               >
                 Collection Detail
+              </n-button>
+            </div>
+          </div>
+
+          <div class="p-4 rounded-md bg-gray-400 bg-opacity-20">
+            <div>Cookie</div>
+            <div class="mt-6 flex flex-wrap gap-4">
+              <n-input v-model:value="cookieUrl" size="small" placeholder="Cookie Url" />
+              <n-button
+                size="small" @click="testConsole('cookie', undefined)"
+              >
+                Get Cookie
+              </n-button>
+              <n-button
+                size="small" @click="testConsole('hub-sync-list', undefined)"
+              >
+                Get Hub Sync List
+              </n-button>
+              <n-button
+                size="small" @click="testConsole('hub-save-cookie', undefined)"
+              >
+                Save Cookie to Hub
               </n-button>
             </div>
           </div>
