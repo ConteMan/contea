@@ -241,7 +241,7 @@ export default new class Libvio {
    */
   async getDetail(url: string, refresh = false): Promise<false | CacheDetail> {
     try {
-      const urlId = MD5(url)
+      const urlId = MD5(url).toString()
       const cacheKey = [this.MODULE, this.MODULE_TYPE, 'item', urlId]
       if (!refresh) {
         const cacheRes = await RequestCache.get(cacheKey)

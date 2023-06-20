@@ -3,6 +3,7 @@ import { useElementBounding } from '@vueuse/core'
 import { useNewTabState } from '@newTab/store/index'
 
 import Board from '@newTab/views/board/Index.vue'
+
 // import Card from '@newTab/views/card/Card.vue'
 import ActionBar from '@newTab/components/layout/ActionBar.vue'
 

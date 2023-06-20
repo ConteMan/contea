@@ -4,6 +4,7 @@ import InfoModel from './modules/info'
 import AlarmTaskModel from './modules/alarmTask'
 import MovieModel from './modules/movie'
 import FootballTeam from './modules/footballTeam'
+import LogModel from './modules/log'
 
 export {
   ConfigModel,
@@ -12,4 +13,5 @@ export {
   AlarmTaskModel,
   MovieModel,
   FootballTeam,
+  LogModel,
 }

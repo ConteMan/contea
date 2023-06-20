@@ -50,7 +50,7 @@ browser.runtime.onInstalled.addListener(async () => {
 browser.alarms.onAlarm.addListener(async (alarm) => {
   try {
     // 当前启用定时任务的模块， DEAL_MODULES 可直接处理，REDIRECT_MODULES 需要转发给前端处理
-    const DEAL_MODULES: string[] = [MODULES.SSPAI, MODULES.BILIBILI, MODULES.WEREAD, MODULES.WEATHER]
+    const DEAL_MODULES: string[] = [MODULES.BASE, MODULES.SSPAI, MODULES.BILIBILI, MODULES.WEREAD, MODULES.WEATHER]
     const REDIRECT_MODULES: string[] = [MODULES.ONE, MODULES.MOVIE, MODULES.SPORT]
     const { name } = alarm
 

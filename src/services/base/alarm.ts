@@ -1,5 +1,5 @@
-import { ConfigModel } from '@models/index'
-import { MODULES } from '@enums/index'
+import { ConfigModel, LogModel } from '@models/index'
+import { LOG_TYPES, MODULES } from '@enums/index'
 import { getRandomIntInclusive, sleep } from '@utils/index'
 import sspai from '@services/sspai'
 import movie from '@services/movie'
@@ -49,8 +49,10 @@ class Alarm {
     const configInfo = await ConfigModel.getItem(module)
 
     const { enable } = configInfo
-    if (!enable)
+    if (!enable) {
+      await LogModel.record(LOG_TYPES.ALARM, { module, source, result: false })
       return false
+    }
 
     let result
 
@@ -115,6 +117,8 @@ class Alarm {
         break
       }
     }
+
+    await LogModel.record(LOG_TYPES.ALARM, { module, source, result })
     return result
   }
 }

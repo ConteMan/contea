@@ -63,13 +63,13 @@ export async function getManifest() {
       },
     ],
     content_scripts: [
-      {
-        js: [
-          './dist/contentScripts/index.global.js',
-        ],
-        matches: ['<all_urls>'],
-        run_at: 'document_start',
-      },
+      // {
+      //   js: [
+      //     './dist/contentScripts/index.global.js',
+      //   ],
+      //   matches: ['<all_urls>'],
+      //   run_at: 'document_start',
+      // },
     ],
     content_security_policy: {
       extension_pages: 'script-src \'self\'; object-src \'self\'',

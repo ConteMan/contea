@@ -15,5 +15,6 @@ module.exports = {
         checksVoidReturn: false,
       },
     ],
+    'antfu/top-level-function': 0,
   },
 }

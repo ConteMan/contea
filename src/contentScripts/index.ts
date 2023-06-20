@@ -1,10 +1,9 @@
 import 'uno.css'
 import '@styles/index.less'
-
 import { createApp } from 'vue'
-// import { MESSAGE_TYPES } from '@enums/index'
 import App from './views/App.vue'
 
+// import { MESSAGE_TYPES } from '@enums/index'
 // import { drawFn, sign } from './modules/juejin'
 
 (() => {

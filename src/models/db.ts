@@ -7,6 +7,7 @@ import type { Info } from './migrations/info'
 import type { AlarmTask } from './migrations/alarmTask'
 import type { Movie } from './migrations/movie'
 import type { FootballTeam } from './migrations/footballTeam'
+import type { Log } from './migrations/log'
 
 import { config } from './migrations/config'
 import { cache } from './migrations/cache'
@@ -14,6 +15,7 @@ import { info } from './migrations/info'
 import { alarmTask } from './migrations/alarmTask'
 import { movie } from './migrations/movie'
 import { footballTeam } from './migrations/footballTeam'
+import { log } from './migrations/log'
 
 export class ModelDexie extends Dexie {
   // added by dexie when declaring the stores()
@@ -24,16 +26,18 @@ export class ModelDexie extends Dexie {
   alarmTask!: Table<AlarmTask>
   movie!: Table<Movie>
   footballTeam!: Table<FootballTeam>
+  log!: Table<Log>
 
   constructor() {
     super('contea_main')
-    this.version(11).stores({ // !!! 修改表后，记得更新版本
+    this.version(12).stores({ // !!! 修改表后，记得更新版本
       config,
       cache,
       info,
       alarmTask,
       movie,
       footballTeam,
+      log,
     })
   }
 }

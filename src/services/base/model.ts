@@ -17,11 +17,14 @@ type Config = Module.BaseConfig & {
   url: { // 地址集合
     proxy_query: string // 请求代理
   }
+
+  hubUrl: string // Hub 接口地址
+  hubToken: string // Hub Token
 }
 
 type ConfigShow = Pick<
   Config,
-  'key' | 'name' | 'enable' | 'expired' | 'alarm' | 'statusList' | 'themeMode' | 'enableDesktop' | 'desktopInterface' | 'desktopInterfaceStatus'
+  'key' | 'name' | 'enable' | 'expired' | 'alarm' | 'statusList' | 'themeMode' | 'enableDesktop' | 'desktopInterface' | 'desktopInterfaceStatus' | 'hubUrl' | 'hubToken'
   >
 
 const config: Config = {
@@ -49,7 +52,7 @@ const config: Config = {
       sort: 2,
     },
     {
-      key: 'status',
+      key: 'alarm',
       name: '任务',
       enable: true,
       sort: 3,
@@ -84,6 +87,9 @@ const config: Config = {
   enableDesktop: false,
   desktopInterface: 'http://127.0.0.1:7788/extension',
   desktopInterfaceStatus: false,
+
+  hubUrl: '',
+  hubToken: '',
 }
 
 const configKeys = Object.keys(config)

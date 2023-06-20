@@ -78,9 +78,19 @@ const sendBackgroundActiveAlarm = async (name: string) => {
             <span v-if="item.periodInMinutes" class="h-[30%] mx-4 border-l border-l-gray-400 opacity-20" />
             <span v-if="item.periodInMinutes">{{ item.periodInMinutes }} min</span>
             <span class="h-[30%] mx-4 border-l border-l-gray-400 opacity-20" />
-            <mdi-access-point class="cursor-pointer mr-2 hover:(text-red-400)" :class="{ 'animate-spin': activeLoading === item.name }" @click="activeAlarm(item.name)" />
-            <mdi-access-point-network class="cursor-pointer mr-2 hover:(text-red-400)" :class="{ 'animate-spin': activeLoading === `${item.name}_background` }" @click="sendBackgroundActiveAlarm(item.name)" />
-            <mdi-delete class="cursor-pointer hover:(text-red-400)" @click="deleteAlarm(item.name)" />
+            <n-tooltip trigger="hover">
+              <template #trigger>
+                <mdi-access-point class="cursor-pointer mr-2 hover:(text-red-400) focus:(outline-none)" :class="{ 'animate-spin': activeLoading === item.name }" @click="activeAlarm(item.name)" />
+              </template>
+              直接执行
+            </n-tooltip>
+            <n-tooltip trigger="hover">
+              <template #trigger>
+                <mdi-access-point-network class="cursor-pointer mr-2 hover:(text-red-400) focus:(outline-none)" :class="{ 'animate-spin': activeLoading === `${item.name}_background` }" @click="sendBackgroundActiveAlarm(item.name)" />
+              </template>
+              发送到后台
+            </n-tooltip>
+            <mdi-delete class="cursor-pointer hover:(text-red-400) focus:(outline-none)" @click="deleteAlarm(item.name)" />
           </template>
         </SettingItem>
       </div>

@@ -19,7 +19,6 @@ const newTabState = useNewTabState()
 
 <template>
   <n-form
-    ref="formRef"
     :model="model"
     :rules="rules"
     size="small"
@@ -53,7 +52,6 @@ const newTabState = useNewTabState()
     <n-divider title-placement="left">
       <span class="text-[12px]">桌面端</span>
     </n-divider>
-
     <n-form-item label="开启">
       <n-switch v-model:value="model.enableDesktop" size="small" :round="false" />
     </n-form-item>
@@ -65,13 +63,22 @@ const newTabState = useNewTabState()
     </n-form-item>
 
     <n-divider title-placement="left">
+      <span class="text-[12px]">Hub</span>
+    </n-divider>
+    <n-form-item label="接口">
+      <n-input v-model:value="model.hubUrl" class="w-[80%]" />
+    </n-form-item>
+    <n-form-item label="Token">
+      <n-input v-model:value="model.hubToken" class="w-[80%]" />
+    </n-form-item>
+
+    <n-divider title-placement="left">
       <span class="text-[12px]">全局</span>
     </n-divider>
 
     <n-form-item label="增量初始化">
       <n-switch :value="initConfigLoading === 'increase'" :loading="initConfigLoading === 'increase'" size="small" :round="false" @update:value="initConfig('increase')" />
     </n-form-item>
-
     <n-form-item label="重置初始化">
       <n-switch :value="initConfigLoading === 'all'" :loading="initConfigLoading === 'all'" size="small" :round="false" @update:value="initConfig('all')" />
     </n-form-item>

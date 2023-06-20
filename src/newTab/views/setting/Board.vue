@@ -13,6 +13,9 @@ const getConfig = async () => {
   if (!configAll)
     return false
 
+  // eslint-disable-next-line no-console
+  console.log('[ menus ] >', configAll)
+
   configShowModule.value = modules
 
   configAll.forEach((item) => {
@@ -75,7 +78,6 @@ watchDebounced(() => newConfigModel.value, async (newValue, oldValue) => {
 
 <template>
   <n-form
-    ref="formRef"
     :model="configModel"
     size="small"
     label-placement="left"
