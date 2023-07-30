@@ -16,4 +16,9 @@ export default new class LogModel extends Base {
     const dealData = { ...data, type, add_at: dayjs().unix() }
     return await this.currentTable.add(dealData)
   }
+
+  async clear() {
+    const count = await this.currentTable.count()
+    return count > 200 ? await this.currentTable.clear() : false
+  }
 }()

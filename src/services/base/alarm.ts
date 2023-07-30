@@ -59,6 +59,7 @@ class Alarm {
     switch (module) {
       case MODULES.BASE: {
         await hub.saveCookie()
+        await LogModel.clear()
         break
       }
       case MODULES.SSPAI: {
